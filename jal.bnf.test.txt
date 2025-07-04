@@ -1,0 +1,218 @@
+public static class a_$ (
+  id = "awd",
+  name = "awd") {
+  public static myString: Ljava/lang/String;
+
+  <init>()V {
+   test:
+    aaload
+    aastore 0x00
+    aconst_null
+    aload 1
+    aload_0
+    aload_1
+    aload_2
+    aload_3
+    aload_4
+    anewarray Ljava/lang/String;
+    areturn
+    arraylength
+    astore
+    astore_0
+    astore_1
+    astore_2
+    astore_3
+    athrow
+    baload
+    bastore 0x00
+    bipush 42
+    caload
+    castore 12
+    checkcast Ljava/lang/String;
+    d2f
+    d2i
+    d2l
+    dadd
+    daload
+    dastore 0x00
+    dcmpg
+    dcmpl
+    dconst_0
+    dconst_1
+    ddiv
+    dload 1
+    dload_0
+    dload_1
+    dload_2
+    dload_3
+    drem
+    dreturn
+    dstore 235
+    dstore_0
+    dstore_1
+    dstore_2
+    dstore_3
+    dup
+    dup_x1
+    dup_x2
+    dup2
+    dup2_x1
+    dup2_x2
+    f2d
+    f2i
+    f2l
+    fadd
+    faload
+    fastore 0x00
+    fcmpg
+    fcmpl
+    fconst_0
+    fconst_1
+    fconst_2
+    fdiv
+    fload 1
+    fload_0
+    fload_1
+    fload_2
+    fload_3
+    frem
+    freturn
+    fstore
+    fstore_0
+    fstore_1
+    fstore_2
+    fstore_3
+    fsub
+    getfield Ljava/lang/String;->awdw$1_35:Ljava/lang/String;
+    getstatic Ljava/lang/System;->out:Ljava/io/PrintStream;
+    goto test
+    goto_w 24
+    i2b
+    i2c
+    i2d
+    i2f
+    i2l
+    i2s
+    iadd
+    iaload
+    iand
+    iastore 0x00
+    iconst_0
+    iconst_1
+    iconst_2
+    iconst_3
+    iconst_4
+    iconst_5
+    iconst_6
+    iconst_7
+    iconst_8
+    if_acmpeq 0x00
+    if_acmpne 0x00
+    if_icmpeq 0x00
+    if_icmpne 0x00
+    if_icmplt 0x00
+    if_icmpge 0x00
+    if_icmpgt 0x00
+    if_icmple 0x00
+    ifeq 0x00
+    ifne 0x00
+    iflt 0x00
+    ifge 0x00
+    ifgt 0x00
+    ifle 0x00
+    ifnonnull 0x00
+    ifnull 0x00
+    iinc 0x00, 0x01
+    iload 1
+    iload_0
+    iload_1
+    iload_2
+    iload_3
+    imul
+    ineg
+    instanceof Ljava/lang/String;
+    invokedynamic myMethod(Ljava/lang/String;) Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; "arg1" "arg2"
+    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; 2 0
+    invokespecial Ljava/lang/String;-><init>()V
+    invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;)V
+    invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    ior
+    irem
+    ireturn
+    ishl
+    ishr
+    istore 235
+    istore_0
+    istore_1
+    istore_2
+    istore_3
+    isub
+    iushr
+    ixor
+    jsr 2525
+    jsr_w 24412424124
+    l2d
+    l2f
+    l2i
+    ladd
+    laload
+    land
+    lastore 0x00
+    lcmp
+    lconst_0
+    lconst_1
+    ldc "135135"
+    ldc_w "135135135135"
+    ldc2_w "1234567890123456789L"
+    lload 1
+    lload_0
+    lload_1
+    lload_2
+    lload_3
+    lmul
+    lneg
+    lookupswitch {
+      0x00: 424;
+      default: awd
+    }
+    lor
+    lrem
+    lreturn
+    lshl
+    lshr
+    lstore 235
+    lstore_0
+    lstore_1
+    lstore_2
+    lstore_3
+    lsub
+    lushr
+    lxor
+    monitorenter
+    monitorexit
+    multianewarray Ljava/lang/String; 3
+    new Ljava/lang/String;
+    newarray Ljava/lang/String;
+    nop
+    pop
+    pop2
+    putfield Ljava/lang/String;->awdw$1_35:Ljava/lang/String;
+    putstatic Ljava/lang/String;->myString:Ljava/lang/String;
+    ret 0x00
+    return
+    saload
+    sastore 0x00
+    sipush 42
+    swap
+    tableswitch 1 {
+       424
+    } default awd
+    wide aload 24 242
+  }
+
+  <clinit>()V {
+  }
+  public static synthetic myMethod(Ljava/lang/String;)V {
+
+  }
+}
