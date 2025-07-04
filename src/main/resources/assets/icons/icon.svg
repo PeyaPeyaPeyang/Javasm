@@ -1,0 +1,8 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <rect width="128" height="128" rx="16" fill="#2b2b2b"/>
+    <rect x="8" y="8" width="112" height="112" rx="12" fill="#3c3f41"/>
+    <path d="M48 40h32v8H48z" fill="#4C70E5"/>
+    <path d="M48 56h32v8H48z" fill="#0FA873"/>
+    <path d="M48 72h32v8H48z" fill="#5FB332"/>
+    <text x="59" y="106" font-size="24" text-anchor="middle" fill="#ffc66d" font-family="monospace" font-weight="bold">.jasm</text>
+</svg>
