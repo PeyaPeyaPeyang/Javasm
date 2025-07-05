@@ -7,10 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsIfAcmpOP extends JALInstruction {
 
-  @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
-
-  @Nullable
+  @NotNull
   JALLabelName getLabelName();
 
 }

@@ -19,8 +19,11 @@ public interface JALTypes {
   IElementType CLASS_DEFINITION = new JALElementType("CLASS_DEFINITION");
   IElementType CLASS_META = new JALElementType("CLASS_META");
   IElementType CLASS_META_ITEM = new JALElementType("CLASS_META_ITEM");
-  IElementType CLASS_META_KEY = new JALElementType("CLASS_META_KEY");
-  IElementType CLASS_META_VALUE = new JALElementType("CLASS_META_VALUE");
+  IElementType CLASS_NAME = new JALElementType("CLASS_NAME");
+  IElementType CLASS_PROP_INTERFACES = new JALElementType("CLASS_PROP_INTERFACES");
+  IElementType CLASS_PROP_MAJOR = new JALElementType("CLASS_PROP_MAJOR");
+  IElementType CLASS_PROP_MINOR = new JALElementType("CLASS_PROP_MINOR");
+  IElementType CLASS_PROP_SUPER_CLASS = new JALElementType("CLASS_PROP_SUPER_CLASS");
   IElementType FIELD_DEFINITION = new JALElementType("FIELD_DEFINITION");
   IElementType FIELD_NAME = new JALElementType("FIELD_NAME");
   IElementType INSTRUCTION = new JALElementType("INSTRUCTION");
@@ -200,6 +203,7 @@ public interface JALTypes {
   IElementType COMMA = new JALTokenType(",");
   IElementType DOT = new JALTokenType(".");
   IElementType EQ = new JALTokenType("=");
+  IElementType FULL_QUALIFIED_CLASS_NAME = new JALTokenType("FULL_QUALIFIED_CLASS_NAME");
   IElementType ID = new JALTokenType("id");
   IElementType INSN_AALOAD = new JALTokenType("aaload");
   IElementType INSN_AASTORE = new JALTokenType("aastore");
@@ -409,6 +413,8 @@ public interface JALTypes {
   IElementType INSN_TABLESWITCH = new JALTokenType("tableswitch");
   IElementType INSN_WIDE = new JALTokenType("wide");
   IElementType KWD_ACC_ATTR_ABSTRACT = new JALTokenType("abstract");
+  IElementType KWD_ACC_ATTR_ANNOTATION = new JALTokenType("annotation");
+  IElementType KWD_ACC_ATTR_ENUM = new JALTokenType("enum");
   IElementType KWD_ACC_ATTR_FINAL = new JALTokenType("final");
   IElementType KWD_ACC_ATTR_NATIVE = new JALTokenType("native");
   IElementType KWD_ACC_ATTR_STATIC = new JALTokenType("static");
@@ -421,6 +427,10 @@ public interface JALTypes {
   IElementType KWD_ACC_PROTECTED = new JALTokenType("protected");
   IElementType KWD_ACC_PUBLIC = new JALTokenType("public");
   IElementType KWD_CLASS = new JALTokenType("class");
+  IElementType KWD_CLASS_PROP_INTERFACES = new JALTokenType("interfaces");
+  IElementType KWD_CLASS_PROP_MAJOR = new JALTokenType("major_version");
+  IElementType KWD_CLASS_PROP_MINOR = new JALTokenType("minor_version");
+  IElementType KWD_CLASS_PROP_SUPER_CLASS = new JALTokenType("super_class");
   IElementType KWD_INTERFACE = new JALTokenType("interface");
   IElementType KWD_MNAME_CLINIT = new JALTokenType("<clinit>");
   IElementType KWD_MNAME_INIT = new JALTokenType("<init>");
@@ -435,6 +445,7 @@ public interface JALTypes {
   IElementType REF = new JALTokenType("->");
   IElementType RP = new JALTokenType(")");
   IElementType SEMI = new JALTokenType(";");
+  IElementType SLASH = new JALTokenType("/");
   IElementType STRING = new JALTokenType("string");
   IElementType TYPE_DESC_BOOLEAN = new JALTokenType("Z");
   IElementType TYPE_DESC_BYTE = new JALTokenType("B");
@@ -483,11 +494,20 @@ public interface JALTypes {
       else if (type == CLASS_META_ITEM) {
         return new JALClassMetaItemImpl(node);
       }
-      else if (type == CLASS_META_KEY) {
-        return new JALClassMetaKeyImpl(node);
+      else if (type == CLASS_NAME) {
+        return new JALClassNameImpl(node);
       }
-      else if (type == CLASS_META_VALUE) {
-        return new JALClassMetaValueImpl(node);
+      else if (type == CLASS_PROP_INTERFACES) {
+        return new JALClassPropInterfacesImpl(node);
+      }
+      else if (type == CLASS_PROP_MAJOR) {
+        return new JALClassPropMajorImpl(node);
+      }
+      else if (type == CLASS_PROP_MINOR) {
+        return new JALClassPropMinorImpl(node);
+      }
+      else if (type == CLASS_PROP_SUPER_CLASS) {
+        return new JALClassPropSuperClassImpl(node);
       }
       else if (type == FIELD_DEFINITION) {
         return new JALFieldDefinitionImpl(node);

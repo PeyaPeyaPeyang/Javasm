@@ -28,15 +28,27 @@ public class JALClassMetaItemImpl extends ASTWrapperPsiElement implements JALCla
   }
 
   @Override
-  @NotNull
-  public JALClassMetaKey getClassMetaKey() {
-    return findNotNullChildByClass(JALClassMetaKey.class);
+  @Nullable
+  public JALClassPropInterfaces getClassPropInterfaces() {
+    return findChildByClass(JALClassPropInterfaces.class);
   }
 
   @Override
   @Nullable
-  public JALClassMetaValue getClassMetaValue() {
-    return findChildByClass(JALClassMetaValue.class);
+  public JALClassPropMajor getClassPropMajor() {
+    return findChildByClass(JALClassPropMajor.class);
+  }
+
+  @Override
+  @Nullable
+  public JALClassPropMinor getClassPropMinor() {
+    return findChildByClass(JALClassPropMinor.class);
+  }
+
+  @Override
+  @Nullable
+  public JALClassPropSuperClass getClassPropSuperClass() {
+    return findChildByClass(JALClassPropSuperClass.class);
   }
 
 }

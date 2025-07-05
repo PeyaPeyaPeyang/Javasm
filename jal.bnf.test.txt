@@ -1,7 +1,11 @@
-public static class a_$ (
-  id = "awd",
-  name = "awd") {
+public static class Main (
+  major_version=65,
+  minor_version=0) {
   public static myString: Ljava/lang/String;
+
+  public static main([Ljava/lang/String;)V {
+
+  }
 
   <init>()V {
    test:
@@ -132,7 +136,7 @@ public static class a_$ (
     ineg
     instanceof Ljava/lang/String;
     invokedynamic myMethod(Ljava/lang/String;)V Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; "arg1" "arg2"
-    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; 2 0
+    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; 2
     invokespecial Ljava/lang/String;-><init>()V
     invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;)V
     invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;Ljava/lang/String;)V
@@ -211,8 +215,5 @@ public static class a_$ (
   }
 
   <clinit>()V {
-  }
-  public static synthetic myMethod(Ljava/lang/String;)V {
-
   }
 }

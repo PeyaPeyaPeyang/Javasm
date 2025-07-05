@@ -7,10 +7,16 @@ import com.intellij.psi.PsiElement;
 
 public interface JALClassMetaItem extends PsiElement {
 
-  @NotNull
-  JALClassMetaKey getClassMetaKey();
+  @Nullable
+  JALClassPropInterfaces getClassPropInterfaces();
 
   @Nullable
-  JALClassMetaValue getClassMetaValue();
+  JALClassPropMajor getClassPropMajor();
+
+  @Nullable
+  JALClassPropMinor getClassPropMinor();
+
+  @Nullable
+  JALClassPropSuperClass getClassPropSuperClass();
 
 }

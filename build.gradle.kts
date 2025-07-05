@@ -1,4 +1,5 @@
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.tasks.RunIdeTask
 
 plugins {
     id("java")
@@ -24,13 +25,17 @@ dependencies {
         testFramework(org.jetbrains.intellij.platform.gradle.TestFrameworkType.Platform)
 
         // Add necessary plugin dependencies for compilation here, example:
-        // bundledPlugin("com.intellij.java")
+        bundledPlugin("com.intellij.java")
     }
 
     compileOnly("org.projectlombok:lombok:1.18.38")
     annotationProcessor("org.projectlombok:lombok:1.18.38")
 
     implementation("org.ow2.asm:asm:9.8")
+    implementation("org.ow2.asm:asm-commons:9.8")
+    implementation("org.ow2.asm:asm-util:9.8")
+
+    implementation(project(":javasm-jps-plugin"))
 }
 
 intellijPlatform {
@@ -38,7 +43,6 @@ intellijPlatform {
         ideaVersion {
             sinceBuild = "251"
         }
-
 
         description.set(providers.fileContents(layout.projectDirectory.file("README.md")).asText.map {
             markdownToHTML(it)

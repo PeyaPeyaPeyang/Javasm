@@ -11,14 +11,14 @@ import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import tokyo.peya.plugin.javasm.langjal.psi.*;
 
-public class JALClassMetaValueImpl extends ASTWrapperPsiElement implements JALClassMetaValue {
+public class JALClassPropSuperClassImpl extends ASTWrapperPsiElement implements JALClassPropSuperClass {
 
-  public JALClassMetaValueImpl(@NotNull ASTNode node) {
+  public JALClassPropSuperClassImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull JALVisitor visitor) {
-    visitor.visitClassMetaValue(this);
+    visitor.visitClassPropSuperClass(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class JALClassMetaValueImpl extends ASTWrapperPsiElement implements JALCl
 
   @Override
   @Nullable
-  public PsiElement getNumber() {
-    return findChildByType(NUMBER);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getString() {
-    return findChildByType(STRING);
+  public JALClassName getClassName() {
+    return findChildByClass(JALClassName.class);
   }
 
 }

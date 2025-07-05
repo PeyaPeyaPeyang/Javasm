@@ -8,9 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsGotoW extends JALInstruction {
 
   @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
-
-  @Nullable
   JALLabelName getLabelName();
 
 }

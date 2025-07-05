@@ -47,8 +47,8 @@ public class JALClassDefinitionImpl extends ASTWrapperPsiElement implements JALC
 
   @Override
   @Nullable
-  public PsiElement getId() {
-    return findChildByType(ID);
+  public JALClassName getClassName() {
+    return findChildByClass(JALClassName.class);
   }
 
 }

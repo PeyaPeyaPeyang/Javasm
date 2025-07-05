@@ -17,6 +17,6 @@ public interface JALClassDefinition extends PsiElement {
   JALClassMeta getClassMeta();
 
   @Nullable
-  PsiElement getId();
+  JALClassName getClassName();
 
 }

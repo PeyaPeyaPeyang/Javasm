@@ -81,6 +81,7 @@ public class JALParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_SYNTHETIC
+  //                  | KWD_ACC_ATTR_ANNOTATION | KWD_ACC_ATTR_ENUM
   public static boolean accAttrClass(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "accAttrClass")) return false;
     boolean r;
@@ -89,6 +90,8 @@ public class JALParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_FINAL);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_ABSTRACT);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_SYNTHETIC);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_ANNOTATION);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_ENUM);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -258,7 +261,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // accModClass (KWD_CLASS| KWD_INTERFACE) id (LP classMeta? RP)? LBR classBody RBR
+  // accModClass (KWD_CLASS| KWD_INTERFACE) className (LP classMeta? RP)? LBR classBody RBR
   public static boolean classDefinition(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classDefinition")) return false;
     boolean r, p;
@@ -266,7 +269,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = accModClass(b, l + 1);
     r = r && classDefinition_1(b, l + 1);
     p = r; // pin = 2
-    r = r && report_error_(b, consumeToken(b, ID));
+    r = r && report_error_(b, className(b, l + 1));
     r = p && report_error_(b, classDefinition_3(b, l + 1)) && r;
     r = p && report_error_(b, consumeToken(b, LBR)) && r;
     r = p && report_error_(b, classBody(b, l + 1)) && r;
@@ -314,12 +317,11 @@ public class JALParser implements PsiParser, LightPsiParser {
   // classMetaItem (COMMA classMetaItem)*
   public static boolean classMeta(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classMeta")) return false;
-    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    Marker m = enter_section_(b);
+    Marker m = enter_section_(b, l, _NONE_, CLASS_META, "<class meta>");
     r = classMetaItem(b, l + 1);
     r = r && classMeta_1(b, l + 1);
-    exit_section_(b, m, CLASS_META, r);
+    exit_section_(b, l, m, r, false, null);
     return r;
   }
 
@@ -346,43 +348,107 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // classMetaKey EQ classMetaValue
+  // classPropMajor | classPropMinor | classPropSuperClass | classPropInterfaces
   public static boolean classMetaItem(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classMetaItem")) return false;
-    if (!nextTokenIs(b, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CLASS_META_ITEM, "<class meta item>");
+    r = classPropMajor(b, l + 1);
+    if (!r) r = classPropMinor(b, l + 1);
+    if (!r) r = classPropSuperClass(b, l + 1);
+    if (!r) r = classPropInterfaces(b, l + 1);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // id | FULL_QUALIFIED_CLASS_NAME
+  public static boolean className(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "className")) return false;
+    if (!nextTokenIs(b, "<class name>", FULL_QUALIFIED_CLASS_NAME, ID)) return false;
+    boolean r;
+    Marker m = enter_section_(b, l, _NONE_, CLASS_NAME, "<class name>");
+    r = consumeToken(b, ID);
+    if (!r) r = consumeToken(b, FULL_QUALIFIED_CLASS_NAME);
+    exit_section_(b, l, m, r, false, null);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // KWD_CLASS_PROP_INTERFACES EQ className (COMMA className)*
+  public static boolean classPropInterfaces(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropInterfaces")) return false;
+    if (!nextTokenIs(b, KWD_CLASS_PROP_INTERFACES)) return false;
     boolean r, p;
-    Marker m = enter_section_(b, l, _NONE_, CLASS_META_ITEM, null);
-    r = classMetaKey(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_INTERFACES, null);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_INTERFACES, EQ);
     p = r; // pin = 1
-    r = r && report_error_(b, consumeToken(b, EQ));
-    r = p && classMetaValue(b, l + 1) && r;
+    r = r && report_error_(b, className(b, l + 1));
+    r = p && classPropInterfaces_3(b, l + 1) && r;
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
+  }
+
+  // (COMMA className)*
+  private static boolean classPropInterfaces_3(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropInterfaces_3")) return false;
+    while (true) {
+      int c = current_position_(b);
+      if (!classPropInterfaces_3_0(b, l + 1)) break;
+      if (!empty_element_parsed_guard_(b, "classPropInterfaces_3", c)) break;
+    }
+    return true;
+  }
+
+  // COMMA className
+  private static boolean classPropInterfaces_3_0(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropInterfaces_3_0")) return false;
+    boolean r;
+    Marker m = enter_section_(b);
+    r = consumeToken(b, COMMA);
+    r = r && className(b, l + 1);
+    exit_section_(b, m, null, r);
+    return r;
+  }
+
+  /* ********************************************************** */
+  // KWD_CLASS_PROP_MAJOR EQ INSN_ARG_UNSIG_8BYTES
+  public static boolean classPropMajor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropMajor")) return false;
+    if (!nextTokenIs(b, KWD_CLASS_PROP_MAJOR)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_MAJOR, null);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_MAJOR, EQ, INSN_ARG_UNSIG_8BYTES);
+    p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   /* ********************************************************** */
-  // id
-  public static boolean classMetaKey(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "classMetaKey")) return false;
-    if (!nextTokenIs(b, ID)) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = consumeToken(b, ID);
-    exit_section_(b, m, CLASS_META_KEY, r);
-    return r;
+  // KWD_CLASS_PROP_MINOR EQ INSN_ARG_UNSIG_8BYTES
+  public static boolean classPropMinor(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropMinor")) return false;
+    if (!nextTokenIs(b, KWD_CLASS_PROP_MINOR)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_MINOR, null);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_MINOR, EQ, INSN_ARG_UNSIG_8BYTES);
+    p = r; // pin = 1
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
-  // string | number
-  public static boolean classMetaValue(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "classMetaValue")) return false;
-    if (!nextTokenIs(b, "<class meta value>", NUMBER, STRING)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, CLASS_META_VALUE, "<class meta value>");
-    r = consumeToken(b, STRING);
-    if (!r) r = consumeToken(b, NUMBER);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+  // KWD_CLASS_PROP_SUPER_CLASS EQ className
+  public static boolean classPropSuperClass(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "classPropSuperClass")) return false;
+    if (!nextTokenIs(b, KWD_CLASS_PROP_SUPER_CLASS)) return false;
+    boolean r, p;
+    Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_SUPER_CLASS, null);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_SUPER_CLASS, EQ);
+    p = r; // pin = 1
+    r = r && className(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -1625,7 +1691,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_GOTO (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_GOTO labelName
   public static boolean jvmInsGoto(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsGoto")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_GOTO)) return false;
@@ -1633,22 +1699,13 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_GOTO, "<JVMInstruction>");
     r = consumeToken(b, INSN_GOTO);
     p = r; // pin = 1
-    r = r && jvmInsGoto_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsGoto_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsGoto_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_GOTO_W (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_GOTO_W labelName
   public static boolean jvmInsGotoW(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsGotoW")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_GOTO_W)) return false;
@@ -1656,18 +1713,9 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_GOTO_W, "<JVMInstruction>");
     r = consumeToken(b, INSN_GOTO_W);
     p = r; // pin = 1
-    r = r && jvmInsGotoW_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsGotoW_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsGotoW_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
   }
 
   /* ********************************************************** */
@@ -1826,8 +1874,8 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_IF_ACMPEQ (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ACMPNE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ACMPEQ labelName
+  //                    | INSN_IF_ACMPNE labelName
   public static boolean jvmInsIfAcmpOP(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfAcmpOP")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IF_ACMPEQ, INSN_IF_ACMPNE)) return false;
@@ -1839,53 +1887,35 @@ public class JALParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // INSN_IF_ACMPEQ (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ACMPEQ labelName
   private static boolean jvmInsIfAcmpOP_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfAcmpOP_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ACMPEQ);
-    r = r && jvmInsIfAcmpOP_0_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfAcmpOP_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfAcmpOP_0_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ACMPNE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ACMPNE labelName
   private static boolean jvmInsIfAcmpOP_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfAcmpOP_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ACMPNE);
-    r = r && jvmInsIfAcmpOP_1_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfAcmpOP_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfAcmpOP_1_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_IF_ICMPEQ (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ICMPNE (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ICMPLT (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ICMPGE (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ICMPGT (labelName | jvmInsArgUnsigned8Bytes)
-  //                    | INSN_IF_ICMPLE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPEQ labelName
+  //                    | INSN_IF_ICMPNE labelName
+  //                    | INSN_IF_ICMPLT labelName
+  //                    | INSN_IF_ICMPGE labelName
+  //                    | INSN_IF_ICMPGT labelName
+  //                    | INSN_IF_ICMPLE labelName
   public static boolean jvmInsIfIcmpOP(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP")) return false;
     boolean r;
@@ -1900,128 +1930,74 @@ public class JALParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // INSN_IF_ICMPEQ (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPEQ labelName
   private static boolean jvmInsIfIcmpOP_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPEQ);
-    r = r && jvmInsIfIcmpOP_0_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_0_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ICMPNE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPNE labelName
   private static boolean jvmInsIfIcmpOP_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPNE);
-    r = r && jvmInsIfIcmpOP_1_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_1_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ICMPLT (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPLT labelName
   private static boolean jvmInsIfIcmpOP_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPLT);
-    r = r && jvmInsIfIcmpOP_2_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_2_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_2_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ICMPGE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPGE labelName
   private static boolean jvmInsIfIcmpOP_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_3")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPGE);
-    r = r && jvmInsIfIcmpOP_3_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_3_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_3_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ICMPGT (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPGT labelName
   private static boolean jvmInsIfIcmpOP_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_4")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPGT);
-    r = r && jvmInsIfIcmpOP_4_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_4_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_4_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IF_ICMPLE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IF_ICMPLE labelName
   private static boolean jvmInsIfIcmpOP_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_5")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IF_ICMPLE);
-    r = r && jvmInsIfIcmpOP_5_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfIcmpOP_5_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfIcmpOP_5_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_IFNONNULL (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFNONNULL labelName
   public static boolean jvmInsIfNonnull(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfNonnull")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IFNONNULL)) return false;
@@ -2029,22 +2005,13 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_IF_NONNULL, "<JVMInstruction>");
     r = consumeToken(b, INSN_IFNONNULL);
     p = r; // pin = 1
-    r = r && jvmInsIfNonnull_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfNonnull_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfNonnull_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_IFNULL (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFNULL labelName
   public static boolean jvmInsIfNull(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfNull")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IFNULL)) return false;
@@ -2052,27 +2019,18 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_IF_NULL, "<JVMInstruction>");
     r = consumeToken(b, INSN_IFNULL);
     p = r; // pin = 1
-    r = r && jvmInsIfNull_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfNull_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfNull_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_IFEQ (labelName | jvmInsArgUnsigned8Bytes)
-  //                | INSN_IFNE (labelName | jvmInsArgUnsigned8Bytes)
-  //                | INSN_IFLT (labelName | jvmInsArgUnsigned8Bytes)
-  //                | INSN_IFGE (labelName | jvmInsArgUnsigned8Bytes)
-  //                | INSN_IFGT (labelName | jvmInsArgUnsigned8Bytes)
-  //                | INSN_IFLE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFEQ labelName
+  //                | INSN_IFNE labelName
+  //                | INSN_IFLT labelName
+  //                | INSN_IFGE labelName
+  //                | INSN_IFGT labelName
+  //                | INSN_IFLE labelName
   public static boolean jvmInsIfOP(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP")) return false;
     boolean r;
@@ -2087,123 +2045,69 @@ public class JALParser implements PsiParser, LightPsiParser {
     return r;
   }
 
-  // INSN_IFEQ (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFEQ labelName
   private static boolean jvmInsIfOP_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_0")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFEQ);
-    r = r && jvmInsIfOP_0_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_0_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_0_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IFNE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFNE labelName
   private static boolean jvmInsIfOP_1(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_1")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFNE);
-    r = r && jvmInsIfOP_1_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_1_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_1_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IFLT (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFLT labelName
   private static boolean jvmInsIfOP_2(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_2")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFLT);
-    r = r && jvmInsIfOP_2_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_2_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_2_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IFGE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFGE labelName
   private static boolean jvmInsIfOP_3(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_3")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFGE);
-    r = r && jvmInsIfOP_3_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_3_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_3_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IFGT (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFGT labelName
   private static boolean jvmInsIfOP_4(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_4")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFGT);
-    r = r && jvmInsIfOP_4_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
     return r;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_4_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_4_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
-  // INSN_IFLE (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_IFLE labelName
   private static boolean jvmInsIfOP_5(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIfOP_5")) return false;
     boolean r;
     Marker m = enter_section_(b);
     r = consumeToken(b, INSN_IFLE);
-    r = r && jvmInsIfOP_5_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsIfOP_5_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsIfOP_5_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
     return r;
   }
 
@@ -2317,7 +2221,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes "0"
+  // INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes
   public static boolean jvmInsInvokeinterface(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsInvokeinterface")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_INVOKEINTERFACE)) return false;
@@ -2326,8 +2230,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INSN_INVOKEINTERFACE);
     p = r; // pin = 1
     r = r && report_error_(b, jvmInsArgMethodRef(b, l + 1));
-    r = p && report_error_(b, jvmInsArgUnsigned8Bytes(b, l + 1)) && r;
-    r = p && consumeToken(b, "0") && r;
+    r = p && jvmInsArgUnsigned8Bytes(b, l + 1) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2499,7 +2402,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_JSR (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_JSR labelName
   public static boolean jvmInsJsr(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsJsr")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_JSR)) return false;
@@ -2507,22 +2410,13 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_JSR, "<JVMInstruction>");
     r = consumeToken(b, INSN_JSR);
     p = r; // pin = 1
-    r = r && jvmInsJsr_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsJsr_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsJsr_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
-  }
-
   /* ********************************************************** */
-  // INSN_JSR_W (labelName | jvmInsArgUnsigned8Bytes)
+  // INSN_JSR_W labelName
   public static boolean jvmInsJsrW(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsJsrW")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_JSR_W)) return false;
@@ -2530,18 +2424,9 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_JSR_W, "<JVMInstruction>");
     r = consumeToken(b, INSN_JSR_W);
     p = r; // pin = 1
-    r = r && jvmInsJsrW_1(b, l + 1);
+    r = r && labelName(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
-  }
-
-  // labelName | jvmInsArgUnsigned8Bytes
-  private static boolean jvmInsJsrW_1(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsJsrW_1")) return false;
-    boolean r;
-    r = labelName(b, l + 1);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    return r;
   }
 
   /* ********************************************************** */
@@ -3287,33 +3172,31 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // LBK? typeDescriptorPrimitive | TYPE_DESC_OBJECT
+  // LBK? (typeDescriptorPrimitive | TYPE_DESC_OBJECT)
   public static boolean typeDescriptor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeDescriptor")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, TYPE_DESCRIPTOR, "<type descriptor>");
     r = typeDescriptor_0(b, l + 1);
-    if (!r) r = consumeToken(b, TYPE_DESC_OBJECT);
+    r = r && typeDescriptor_1(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
-  // LBK? typeDescriptorPrimitive
+  // LBK?
   private static boolean typeDescriptor_0(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "typeDescriptor_0")) return false;
-    boolean r;
-    Marker m = enter_section_(b);
-    r = typeDescriptor_0_0(b, l + 1);
-    r = r && typeDescriptorPrimitive(b, l + 1);
-    exit_section_(b, m, null, r);
-    return r;
-  }
-
-  // LBK?
-  private static boolean typeDescriptor_0_0(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "typeDescriptor_0_0")) return false;
     consumeToken(b, LBK);
     return true;
+  }
+
+  // typeDescriptorPrimitive | TYPE_DESC_OBJECT
+  private static boolean typeDescriptor_1(PsiBuilder b, int l) {
+    if (!recursion_guard_(b, l, "typeDescriptor_1")) return false;
+    boolean r;
+    r = typeDescriptorPrimitive(b, l + 1);
+    if (!r) r = consumeToken(b, TYPE_DESC_OBJECT);
+    return r;
   }
 
   /* ********************************************************** */

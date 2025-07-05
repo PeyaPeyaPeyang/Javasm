@@ -5,9 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface JALClassMetaKey extends PsiElement {
+public interface JALClassPropInterfaces extends PsiElement {
 
   @NotNull
-  PsiElement getId();
+  List<JALClassName> getClassNameList();
 
 }

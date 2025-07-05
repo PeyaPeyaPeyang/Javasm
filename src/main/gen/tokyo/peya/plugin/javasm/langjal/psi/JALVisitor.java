@@ -51,11 +51,23 @@ public class JALVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
-  public void visitClassMetaKey(@NotNull JALClassMetaKey o) {
+  public void visitClassName(@NotNull JALClassName o) {
     visitPsiElement(o);
   }
 
-  public void visitClassMetaValue(@NotNull JALClassMetaValue o) {
+  public void visitClassPropInterfaces(@NotNull JALClassPropInterfaces o) {
+    visitPsiElement(o);
+  }
+
+  public void visitClassPropMajor(@NotNull JALClassPropMajor o) {
+    visitPsiElement(o);
+  }
+
+  public void visitClassPropMinor(@NotNull JALClassPropMinor o) {
+    visitPsiElement(o);
+  }
+
+  public void visitClassPropSuperClass(@NotNull JALClassPropSuperClass o) {
     visitPsiElement(o);
   }
 

@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface JALClassMetaValue extends PsiElement {
+public interface JALClassPropSuperClass extends PsiElement {
 
   @Nullable
-  PsiElement getNumber();
-
-  @Nullable
-  PsiElement getString();
+  JALClassName getClassName();
 
 }

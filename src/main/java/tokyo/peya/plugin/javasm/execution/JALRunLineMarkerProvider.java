@@ -1,6 +1,5 @@
 package tokyo.peya.plugin.javasm.execution;
 
-import com.intellij.codeInsight.daemon.LineMarkerProviderDescriptor;
 import com.intellij.execution.lineMarker.ExecutorAction;
 import com.intellij.execution.lineMarker.RunLineMarkerContributor;
 import com.intellij.icons.AllIcons;
@@ -10,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.plugin.javasm.langjal.psi.JALClassDefinition;
 import tokyo.peya.plugin.javasm.langjal.psi.JALMethodDefinition;
-import tokyo.peya.plugin.javasm.langjal.psi.JALTokenType;
 import tokyo.peya.plugin.javasm.langjal.psi.JALTypes;
 
 public class JALRunLineMarkerProvider extends RunLineMarkerContributor
@@ -28,6 +26,9 @@ public class JALRunLineMarkerProvider extends RunLineMarkerContributor
             return null;
 
         PsiElement element = psiElement.getParent();
+        if (!PSIExecutorUtil.isInSourceRoot(element.getContainingFile()))
+            return null;
+
         if (element instanceof JALClassDefinition classDefinition)
         {
             if (!PSIExecutorUtil.hasMainMethod(classDefinition))

@@ -17,6 +17,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
@@ -33,5 +34,9 @@
                 language="JAL"/>
         <runLineMarkerContributor language="JAL"
                                   implementationClass="tokyo.peya.plugin.javasm.execution.JALRunLineMarkerProvider"/>
+        <runConfigurationProducer implementation="tokyo.peya.plugin.javasm.execution.JALRunConfigurationProducer"/>
+        <compiler.buildTargetScopeProvider
+                implementation="tokyo.peya.plugin.javasm.builder.JALBuildTargetScopeProvider"/>
+        <compileServer.plugin classpath="javasm-jps-plugin-0.0.1.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.8.jar;asm-commons-9.8.jar;asm-util-9.8.jar;asm-tree-9.8.jar;asm-analysis-9.8.jar;" />
     </extensions>
 </idea-plugin>

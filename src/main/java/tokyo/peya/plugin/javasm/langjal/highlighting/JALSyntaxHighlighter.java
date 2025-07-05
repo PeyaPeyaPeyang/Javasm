@@ -10,7 +10,6 @@ import com.intellij.psi.tree.IElementType;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.plugin.javasm.langjal.parser.JALLexerAdapter;
 import tokyo.peya.plugin.javasm.langjal.parser.JALTokenSets;
-import tokyo.peya.plugin.javasm.langjal.psi.JALTokenType;
 import tokyo.peya.plugin.javasm.langjal.psi.JALTypes;
 
 public class JALSyntaxHighlighter extends SyntaxHighlighterBase

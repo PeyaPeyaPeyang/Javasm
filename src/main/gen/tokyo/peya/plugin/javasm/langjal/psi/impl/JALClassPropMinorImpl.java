@@ -11,14 +11,14 @@ import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import tokyo.peya.plugin.javasm.langjal.psi.*;
 
-public class JALClassMetaKeyImpl extends ASTWrapperPsiElement implements JALClassMetaKey {
+public class JALClassPropMinorImpl extends ASTWrapperPsiElement implements JALClassPropMinor {
 
-  public JALClassMetaKeyImpl(@NotNull ASTNode node) {
+  public JALClassPropMinorImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   public void accept(@NotNull JALVisitor visitor) {
-    visitor.visitClassMetaKey(this);
+    visitor.visitClassPropMinor(this);
   }
 
   @Override
@@ -28,9 +28,9 @@ public class JALClassMetaKeyImpl extends ASTWrapperPsiElement implements JALClas
   }
 
   @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  @Nullable
+  public PsiElement getInsnArgUnsig8Bytes() {
+    return findChildByType(INSN_ARG_UNSIG_8BYTES);
   }
 
 }

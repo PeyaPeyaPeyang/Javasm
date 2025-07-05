@@ -28,15 +28,9 @@ public class JALJvmInsIfAcmpOPImpl extends JALInstructionImpl implements JALJvmI
   }
 
   @Override
-  @Nullable
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findChildByClass(JALJvmInsArgUnsigned8Bytes.class);
-  }
-
-  @Override
-  @Nullable
+  @NotNull
   public JALLabelName getLabelName() {
-    return findChildByClass(JALLabelName.class);
+    return findNotNullChildByClass(JALLabelName.class);
   }
 
 }
