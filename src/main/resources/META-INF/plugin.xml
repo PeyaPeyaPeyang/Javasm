@@ -21,10 +21,17 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType implementationClass="tokyo.peya.plugin.javasm.langasm.filetype.JALFileType"
-                  name="JAL File"
+        <fileType implementationClass="tokyo.peya.plugin.javasm.langjal.filetype.JALFileType"
+                  name="Java Assembly Language File"
                   extensions="jal"
                   fieldName="INSTANCE"
                   language="JAL"/>
+        <lang.parserDefinition language="JAL"
+                               implementationClass="tokyo.peya.plugin.javasm.langjal.parser.JALParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                implementationClass="tokyo.peya.plugin.javasm.langjal.highlighting.JALSyntaxHighlighterFactory"
+                language="JAL"/>
+        <runLineMarkerContributor language="JAL"
+                                  implementationClass="tokyo.peya.plugin.javasm.execution.JALRunLineMarkerProvider"/>
     </extensions>
 </idea-plugin>

@@ -34,15 +34,15 @@ public class JALFieldDefinitionImpl extends ASTWrapperPsiElement implements JALF
   }
 
   @Override
-  @Nullable
-  public PsiElement getTypeDesc() {
-    return findChildByType(TYPE_DESC);
+  @NotNull
+  public JALFieldName getFieldName() {
+    return findNotNullChildByClass(JALFieldName.class);
   }
 
   @Override
-  @NotNull
-  public PsiElement getId() {
-    return findNotNullChildByType(ID);
+  @Nullable
+  public JALTypeDescriptor getTypeDescriptor() {
+    return findChildByClass(JALTypeDescriptor.class);
   }
 
 }

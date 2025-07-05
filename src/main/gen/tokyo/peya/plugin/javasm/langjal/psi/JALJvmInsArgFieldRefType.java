@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsArgFieldRefType extends JALInstruction {
 
   @NotNull
-  PsiElement getTypeDesc();
+  JALTypeDescriptor getTypeDescriptor();
 
 }

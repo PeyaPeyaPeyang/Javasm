@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsArgMethodRefOwnerType extends JALInstruction {
 
   @NotNull
-  PsiElement getTypeDesc();
+  JALTypeDescriptor getTypeDescriptor();
 
 }

@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsInstanceof extends JALInstruction {
 
   @Nullable
-  PsiElement getTypeDesc();
+  JALTypeDescriptor getTypeDescriptor();
 
 }

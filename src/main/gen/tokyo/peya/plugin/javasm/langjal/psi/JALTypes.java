@@ -22,6 +22,7 @@ public interface JALTypes {
   IElementType CLASS_META_KEY = new JALElementType("CLASS_META_KEY");
   IElementType CLASS_META_VALUE = new JALElementType("CLASS_META_VALUE");
   IElementType FIELD_DEFINITION = new JALElementType("FIELD_DEFINITION");
+  IElementType FIELD_NAME = new JALElementType("FIELD_NAME");
   IElementType INSTRUCTION = new JALElementType("INSTRUCTION");
   IElementType JVM_INS_AALOAD = new JALElementType("JVM_INS_AALOAD");
   IElementType JVM_INS_AASTORE = new JALElementType("JVM_INS_AASTORE");
@@ -38,7 +39,6 @@ public interface JALTypes {
   IElementType JVM_INS_ARG_LOOKUP_SWITCH_CASE = new JALElementType("JVM_INS_ARG_LOOKUP_SWITCH_CASE");
   IElementType JVM_INS_ARG_LOOKUP_SWITCH_CASE_NAME = new JALElementType("JVM_INS_ARG_LOOKUP_SWITCH_CASE_NAME");
   IElementType JVM_INS_ARG_METHOD_REF = new JALElementType("JVM_INS_ARG_METHOD_REF");
-  IElementType JVM_INS_ARG_METHOD_REF_DESC = new JALElementType("JVM_INS_ARG_METHOD_REF_DESC");
   IElementType JVM_INS_ARG_METHOD_REF_OWNER_TYPE = new JALElementType("JVM_INS_ARG_METHOD_REF_OWNER_TYPE");
   IElementType JVM_INS_ARG_METHOD_SPECIAL_REF = new JALElementType("JVM_INS_ARG_METHOD_SPECIAL_REF");
   IElementType JVM_INS_ARG_SCALAR_TYPE = new JALElementType("JVM_INS_ARG_SCALAR_TYPE");
@@ -188,7 +188,12 @@ public interface JALTypes {
   IElementType JVM_INS_WIDE = new JALElementType("JVM_INS_WIDE");
   IElementType LABEL = new JALElementType("LABEL");
   IElementType LABEL_NAME = new JALElementType("LABEL_NAME");
+  IElementType METHOD_BODY_ITEM = new JALElementType("METHOD_BODY_ITEM");
   IElementType METHOD_DEFINITION = new JALElementType("METHOD_DEFINITION");
+  IElementType METHOD_DESCRIPTOR = new JALElementType("METHOD_DESCRIPTOR");
+  IElementType METHOD_DESCRIPTOR_ARGS = new JALElementType("METHOD_DESCRIPTOR_ARGS");
+  IElementType TYPE_DESCRIPTOR = new JALElementType("TYPE_DESCRIPTOR");
+  IElementType TYPE_DESCRIPTOR_PRIMITIVE = new JALElementType("TYPE_DESCRIPTOR_PRIMITIVE");
 
   IElementType BLOCK_COMMENT = new JALTokenType("block_comment");
   IElementType COLON = new JALTokenType(":");
@@ -424,14 +429,23 @@ public interface JALTypes {
   IElementType LBR = new JALTokenType("{");
   IElementType LINE_COMMENT = new JALTokenType("line_comment");
   IElementType LP = new JALTokenType("(");
-  IElementType METHOD_DESC = new JALTokenType("METHOD_DESC");
   IElementType NUMBER = new JALTokenType("number");
   IElementType RBK = new JALTokenType("]");
   IElementType RBR = new JALTokenType("}");
+  IElementType REF = new JALTokenType("->");
   IElementType RP = new JALTokenType(")");
   IElementType SEMI = new JALTokenType(";");
   IElementType STRING = new JALTokenType("string");
-  IElementType TYPE_DESC = new JALTokenType("TYPE_DESC");
+  IElementType TYPE_DESC_BOOLEAN = new JALTokenType("Z");
+  IElementType TYPE_DESC_BYTE = new JALTokenType("B");
+  IElementType TYPE_DESC_CHAR = new JALTokenType("C");
+  IElementType TYPE_DESC_DOUBLE = new JALTokenType("D");
+  IElementType TYPE_DESC_FLOAT = new JALTokenType("F");
+  IElementType TYPE_DESC_INT = new JALTokenType("I");
+  IElementType TYPE_DESC_LONG = new JALTokenType("J");
+  IElementType TYPE_DESC_OBJECT = new JALTokenType("TYPE_DESC_OBJECT");
+  IElementType TYPE_DESC_SHORT = new JALTokenType("S");
+  IElementType TYPE_DESC_VOID = new JALTokenType("V");
 
   class Factory {
     public static PsiElement createElement(ASTNode node) {
@@ -478,6 +492,9 @@ public interface JALTypes {
       else if (type == FIELD_DEFINITION) {
         return new JALFieldDefinitionImpl(node);
       }
+      else if (type == FIELD_NAME) {
+        return new JALFieldNameImpl(node);
+      }
       else if (type == JVM_INS_AALOAD) {
         return new JALJvmInsAaloadImpl(node);
       }
@@ -522,9 +539,6 @@ public interface JALTypes {
       }
       else if (type == JVM_INS_ARG_METHOD_REF) {
         return new JALJvmInsArgMethodRefImpl(node);
-      }
-      else if (type == JVM_INS_ARG_METHOD_REF_DESC) {
-        return new JALJvmInsArgMethodRefDescImpl(node);
       }
       else if (type == JVM_INS_ARG_METHOD_REF_OWNER_TYPE) {
         return new JALJvmInsArgMethodRefOwnerTypeImpl(node);
@@ -973,8 +987,23 @@ public interface JALTypes {
       else if (type == LABEL_NAME) {
         return new JALLabelNameImpl(node);
       }
+      else if (type == METHOD_BODY_ITEM) {
+        return new JALMethodBodyItemImpl(node);
+      }
       else if (type == METHOD_DEFINITION) {
         return new JALMethodDefinitionImpl(node);
+      }
+      else if (type == METHOD_DESCRIPTOR) {
+        return new JALMethodDescriptorImpl(node);
+      }
+      else if (type == METHOD_DESCRIPTOR_ARGS) {
+        return new JALMethodDescriptorArgsImpl(node);
+      }
+      else if (type == TYPE_DESCRIPTOR) {
+        return new JALTypeDescriptorImpl(node);
+      }
+      else if (type == TYPE_DESCRIPTOR_PRIMITIVE) {
+        return new JALTypeDescriptorPrimitiveImpl(node);
       }
       throw new AssertionError("Unknown element type: " + type);
     }

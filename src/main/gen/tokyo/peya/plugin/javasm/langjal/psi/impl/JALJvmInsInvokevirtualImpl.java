@@ -29,8 +29,8 @@ public class JALJvmInsInvokevirtualImpl extends JALInstructionImpl implements JA
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgMethodRef getJvmInsArgMethodRef() {
+    return findChildByClass(JALJvmInsArgMethodRef.class);
   }
 
 }

@@ -29,8 +29,8 @@ public class JALJvmInsInvokestaticImpl extends JALInstructionImpl implements JAL
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgMethodRef getJvmInsArgMethodRef() {
+    return findChildByClass(JALJvmInsArgMethodRef.class);
   }
 
 }

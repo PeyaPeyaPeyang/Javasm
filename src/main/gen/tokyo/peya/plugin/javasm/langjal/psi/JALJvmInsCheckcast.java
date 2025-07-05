@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsCheckcast extends JALInstruction {
 
   @Nullable
-  PsiElement getTypeDesc();
+  JALTypeDescriptor getTypeDescriptor();
 
 }

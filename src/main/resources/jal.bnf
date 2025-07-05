@@ -1,9 +1,13 @@
 {
-  parserClass="tokyo.peya.plugin.javasm.langasm.parser.JalParser"
-  psiPackage="tokyo.peya.plugin.javasm.langasm.psi"
-  psiImplPackage="tokyo.peya.plugin.javasm.langasm.psi.impl"
-  extends="com.intellij.lang.parser.GeneratedParserUtilBase"
+  parserClass="tokyo.peya.plugin.javasm.langjal.parser.JALParser"
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiPackage="tokyo.peya.plugin.javasm.langjal.psi"
+  psiImplPackage="tokyo.peya.plugin.javasm.langjal.psi.impl"
   psiClassPrefix="JAL"
+  elementTypeHolderClass="tokyo.peya.plugin.javasm.langjal.psi.JALTypes"
+  elementTypeClass="tokyo.peya.plugin.javasm.langjal.psi.JALElementType"
+  tokenTypeClass="tokyo.peya.plugin.javasm.langjal.psi.JALTokenType"
 
   tokens=[
     SEMI=";"
@@ -17,6 +21,7 @@
     RBR="}"
     LBK="["
     RBK="]"
+    REF="->"
 
     KWD_CLASS="class"
     KWD_INTERFACE="interface"
@@ -252,17 +257,24 @@
 
     INSN_ARG_UNSIG_8BYTES="regexp:0x[0-9a-fA-F]{1,8}|\d+"
 
-    TYPE_DESC="regexp:\[*([BCDFIJSZ]|L([^;\n\r]+);)"
-    METHOD_DESC="regexp:\((\[*([BCDFIJSZV]|L([^;\n\r]+);))*\)(\[*[BCDFIJSZV]|L([^;\n\r]+);)?"
-    // <editor-fold desc="Meta characters">
+    TYPE_DESC_BYTE="B"
+    TYPE_DESC_CHAR="C"
+    TYPE_DESC_DOUBLE="D"
+    TYPE_DESC_FLOAT="F"
+    TYPE_DESC_INT="I"
+    TYPE_DESC_LONG="J"
+    TYPE_DESC_SHORT="S"
+    TYPE_DESC_VOID="V"
+    TYPE_DESC_BOOLEAN="Z"
+    TYPE_DESC_OBJECT="regexp:L([^;\n\r]+);"
 
+    // <editor-fold desc="Meta characters">
     space="regexp:\s+"
     id="regexp:[\w$]+"
     string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\")"
     number="regexp:\d+"
     line_comment="regexp://.*"
     block_comment="regexp:/\*(.|\n)*\*/"
-
     // </editor-fold>
   ]
 
@@ -279,23 +291,27 @@ classMeta ::= classMetaItem (COMMA classMetaItem)*
 classBody ::= classBodyItem*
 
 classMetaItem ::= classMetaKey EQ classMetaValue { pin=1 }
-classMetaKey ::= id { pin=1 }
+classMetaKey ::= id
 classMetaValue ::= string | number
 
 private classBodyItem ::= fieldDefinition | methodDefinition
-fieldDefinition ::= accModField id COLON TYPE_DESC { pin=3 }
-methodDefinition ::= accModMethod methodName METHOD_DESC methodBody { pin=3 }
+fieldDefinition ::= accModField fieldName COLON typeDescriptor { pin=3 }
+fieldName ::= id
+methodDefinition ::= accModMethod methodName methodDescriptor methodBody { pin=3 }
 
 private methodName ::= id | KWD_MNAME_INIT | KWD_MNAME_CLINIT
 private methodBody ::= LBR methodBodyItem RBR { pin=1 }
-private methodBodyItem ::= (instruction | label)*
+methodBodyItem ::= (instruction | label)*
 
-label ::= labelName COLON { pin=2 }
-private labelName ::= jvmInsArgUnsigned8Bytes | id { pin=1 }
+typeDescriptor ::= LBK? typeDescriptorPrimitive | TYPE_DESC_OBJECT
+typeDescriptorPrimitive ::= TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
+                   | TYPE_DESC_LONG | TYPE_DESC_SHORT | TYPE_DESC_VOID | TYPE_DESC_BOOLEAN
+methodDescriptor ::= LP methodDescriptorArgs RP typeDescriptor { pin=1 }
+methodDescriptorArgs::= typeDescriptor*
 
-accModClass ::= accessLevel? accAttrClass*
-accModField ::= accessLevel? accAttrField*
-accModMethod ::= accessLevel? accAttrMethod*
+accModClass ::= accessLevel? accAttrClass* { pin=2 }
+accModField ::= accessLevel? accAttrField* { pin=2 }
+accModMethod ::= accessLevel? accAttrMethod* { pin=2 }
 accessLevel ::= KWD_ACC_PUBLIC | KWD_ACC_PRIVATE | KWD_ACC_PROTECTED
 accAttrClass ::= KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_SYNTHETIC
 accAttrMethod ::= KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_NATIVE
@@ -303,17 +319,19 @@ accAttrMethod ::= KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRA
                   | KWD_ACC_ATTR_SYNTHETIC
 accAttrField ::= KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_TRANSIENT | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_STRICTFP | KWD_ACC_ATTR_SYNTHETIC
 
+label ::= labelName COLON { pin=2 }
+labelName ::= id | jvmInsArgUnsigned8Bytes
+
 jvmInsArgUnsigned8Bytes ::= INSN_ARG_UNSIG_8BYTES
 jvmInsArgScalarType ::= string | number | jvmInsArgUnsigned8Bytes
 
-jvmInsArgFieldRef ::= jvmInsArgFieldRefType "->" jvmInsArgFieldRefName COLON jvmInsArgFieldRefType {pin = 1}
-jvmInsArgFieldRefType ::= TYPE_DESC
+jvmInsArgFieldRef ::= jvmInsArgFieldRefType REF jvmInsArgFieldRefName COLON jvmInsArgFieldRefType {pin = 1}
+jvmInsArgFieldRefType ::= typeDescriptor
 jvmInsArgFieldRefName ::= id
 
-jvmInsArgMethodRef ::= (jvmInsArgMethodRefOwnerType "->")? methodName jvmInsArgMethodRefDesc {pin = 1}
-jvmInsArgMethodSpecialRef ::= jvmInsArgMethodRefOwnerType "->" (KWD_MNAME_INIT | KWD_MNAME_CLINIT) jvmInsArgMethodRefDesc {pin = 1}
-jvmInsArgMethodRefOwnerType ::= TYPE_DESC
-jvmInsArgMethodRefDesc ::= METHOD_DESC
+jvmInsArgMethodRef ::= (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor {pin = 3}
+jvmInsArgMethodSpecialRef ::= (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor {pin = 2}
+jvmInsArgMethodRefOwnerType ::= typeDescriptor
 
 jvmInsArgLocalRef ::= jvmInsArgUnsigned8Bytes | id
 
@@ -351,7 +369,7 @@ jvmInsAastore ::= INSN_AASTORE jvmInsArgLocalRef {pin = 1}
 jvmInsAconstNull ::= INSN_ACONST_NULL
 jvmInsAload ::= INSN_ALOAD jvmInsArgLocalRef {pin = 1}
 jvmInsAloadN ::= INSN_ALOAD_0 | INSN_ALOAD_1 | INSN_ALOAD_2 | INSN_ALOAD_3 | INSN_ALOAD_4
-jvmInsAnewArray ::= INSN_ANEWARRAY TYPE_DESC {pin = 1}
+jvmInsAnewArray ::= INSN_ANEWARRAY typeDescriptor {pin = 1}
 jvmInsAreturn ::= INSN_ARETURN
 jvmInsArraylength ::= INSN_ARRAYLENGTH
 jvmInsAstore ::= INSN_ASTORE
@@ -362,7 +380,7 @@ jvmInsBastore ::= INSN_BASTORE jvmInsArgLocalRef {pin = 1}
 jvmInsBipush ::= INSN_BIPUSH jvmInsArgUnsigned8Bytes {pin = 1}
 jvmInsCaload ::= INSN_CALOAD
 jvmInsCastore ::= INSN_CASTORE jvmInsArgLocalRef {pin = 1}
-jvmInsCheckcast ::= INSN_CHECKCAST TYPE_DESC {pin = 1}
+jvmInsCheckcast ::= INSN_CHECKCAST typeDescriptor {pin = 1}
 jvmInsD2F ::= INSN_D2F
 jvmInsD2I ::= INSN_D2I
 jvmInsD2L ::= INSN_D2L
@@ -443,7 +461,7 @@ jvmInsIload ::= INSN_ILOAD jvmInsArgLocalRef {pin = 1}
 jvmInsIloadN ::= INSN_ILOAD_0 | INSN_ILOAD_1 | INSN_ILOAD_2 | INSN_ILOAD_3
 jvmInsImul ::= INSN_IMUL
 jvmInsIneg ::= INSN_INEG
-jvmInsInstanceof ::= INSN_INSTANCEOF TYPE_DESC {pin = 1}
+jvmInsInstanceof ::= INSN_INSTANCEOF typeDescriptor {pin = 1}
 jvmInsInvokedynamic ::= INSN_INVOKEDYNAMIC jvmInsArgMethodRef jvmInsArgMethodRef jvmInsArgScalarType* {pin = 1}
 jvmInsInvokeinterface ::= INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes "0" {pin = 1}
 jvmInsInvokespecial ::= INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef {pin = 1}
@@ -491,9 +509,9 @@ jvmInsLushr ::= INSN_LUSHR
 jvmInsLxor ::= INSN_LXOR
 jvmInsMonitorenter ::= INSN_MONITORENTER
 jvmInsMonitorexit ::= INSN_MONITOREXIT
-jvmInsMultianewarray ::= INSN_MULTIANEWARRAY TYPE_DESC jvmInsArgUnsigned8Bytes {pin = 1}
-jvmInsNew ::= INSN_NEW TYPE_DESC {pin = 1}
-jvmInsNewarray ::= INSN_NEWARRAY TYPE_DESC {pin = 1}
+jvmInsMultianewarray ::= INSN_MULTIANEWARRAY typeDescriptor jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsNew ::= INSN_NEW typeDescriptor {pin = 1}
+jvmInsNewarray ::= INSN_NEWARRAY typeDescriptor {pin = 1}
 jvmInsNop ::= INSN_NOP
 jvmInsPop ::= INSN_POP
 jvmInsPop2 ::= INSN_POP2

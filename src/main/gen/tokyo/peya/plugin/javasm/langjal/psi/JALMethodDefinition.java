@@ -10,14 +10,11 @@ public interface JALMethodDefinition extends PsiElement {
   @NotNull
   JALAccModMethod getAccModMethod();
 
-  @NotNull
-  List<JALInstruction> getInstructionList();
+  @Nullable
+  JALMethodBodyItem getMethodBodyItem();
 
   @NotNull
-  List<JALLabel> getLabelList();
-
-  @NotNull
-  PsiElement getMethodDesc();
+  JALMethodDescriptor getMethodDescriptor();
 
   @Nullable
   PsiElement getId();

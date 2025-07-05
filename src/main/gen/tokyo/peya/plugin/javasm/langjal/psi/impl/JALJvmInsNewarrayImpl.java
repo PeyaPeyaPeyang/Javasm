@@ -29,8 +29,8 @@ public class JALJvmInsNewarrayImpl extends JALInstructionImpl implements JALJvmI
 
   @Override
   @Nullable
-  public PsiElement getTypeDesc() {
-    return findChildByType(TYPE_DESC);
+  public JALTypeDescriptor getTypeDescriptor() {
+    return findChildByClass(JALTypeDescriptor.class);
   }
 
 }

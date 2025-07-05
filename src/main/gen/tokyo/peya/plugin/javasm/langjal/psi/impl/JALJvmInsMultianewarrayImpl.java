@@ -35,8 +35,8 @@ public class JALJvmInsMultianewarrayImpl extends JALInstructionImpl implements J
 
   @Override
   @Nullable
-  public PsiElement getTypeDesc() {
-    return findChildByType(TYPE_DESC);
+  public JALTypeDescriptor getTypeDescriptor() {
+    return findChildByClass(JALTypeDescriptor.class);
   }
 
 }

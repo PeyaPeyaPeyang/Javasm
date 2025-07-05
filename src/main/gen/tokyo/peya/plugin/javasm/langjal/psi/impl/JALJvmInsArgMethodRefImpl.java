@@ -28,9 +28,15 @@ public class JALJvmInsArgMethodRefImpl extends JALInstructionImpl implements JAL
   }
 
   @Override
+  @Nullable
+  public JALJvmInsArgMethodRefOwnerType getJvmInsArgMethodRefOwnerType() {
+    return findChildByClass(JALJvmInsArgMethodRefOwnerType.class);
+  }
+
+  @Override
   @NotNull
-  public List<JALInstruction> getInstructionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALInstruction.class);
+  public JALMethodDescriptor getMethodDescriptor() {
+    return findNotNullChildByClass(JALMethodDescriptor.class);
   }
 
   @Override

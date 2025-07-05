@@ -11,6 +11,6 @@ public interface JALJvmInsMultianewarray extends JALInstruction {
   JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
 
   @Nullable
-  PsiElement getTypeDesc();
+  JALTypeDescriptor getTypeDescriptor();
 
 }

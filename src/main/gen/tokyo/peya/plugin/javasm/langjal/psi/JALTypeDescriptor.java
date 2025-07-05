@@ -5,9 +5,12 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface JALJvmInsArgMethodRefDesc extends JALInstruction {
+public interface JALTypeDescriptor extends PsiElement {
 
-  @NotNull
-  PsiElement getMethodDesc();
+  @Nullable
+  JALTypeDescriptorPrimitive getTypeDescriptorPrimitive();
+
+  @Nullable
+  PsiElement getTypeDescObject();
 
 }

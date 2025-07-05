@@ -10,10 +10,10 @@ public interface JALFieldDefinition extends PsiElement {
   @NotNull
   JALAccModField getAccModField();
 
-  @Nullable
-  PsiElement getTypeDesc();
-
   @NotNull
-  PsiElement getId();
+  JALFieldName getFieldName();
+
+  @Nullable
+  JALTypeDescriptor getTypeDescriptor();
 
 }

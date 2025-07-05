@@ -29,8 +29,8 @@ public class JALJvmInsArgMethodRefOwnerTypeImpl extends JALInstructionImpl imple
 
   @Override
   @NotNull
-  public PsiElement getTypeDesc() {
-    return findNotNullChildByType(TYPE_DESC);
+  public JALTypeDescriptor getTypeDescriptor() {
+    return findNotNullChildByClass(JALTypeDescriptor.class);
   }
 
 }

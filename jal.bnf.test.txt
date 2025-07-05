@@ -131,7 +131,7 @@ public static class a_$ (
     imul
     ineg
     instanceof Ljava/lang/String;
-    invokedynamic myMethod(Ljava/lang/String;) Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; "arg1" "arg2"
+    invokedynamic myMethod(Ljava/lang/String;)V Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; "arg1" "arg2"
     invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; 2 0
     invokespecial Ljava/lang/String;-><init>()V
     invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;)V

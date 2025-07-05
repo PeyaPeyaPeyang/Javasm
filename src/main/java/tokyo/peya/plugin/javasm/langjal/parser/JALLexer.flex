@@ -1,5 +1,6 @@
-package tokyo.peya.plugin.javasm.langjal;
+package tokyo.peya.plugin.javasm.langjal.parser;
 
+import com.intellij.lexer.FlexLexer;
 import com.intellij.psi.tree.IElementType;
 
 import static com.intellij.psi.TokenType.BAD_CHARACTER;
@@ -25,8 +26,7 @@ EOL=\R
 WHITE_SPACE=\s+
 
 INSN_ARG_UNSIG_8BYTES=0x[0-9a-fA-F]{1,8}|[0-9]+
-TYPE_DESC=\[*([BCDFIJSZ]|L([^;\n\r]+);)
-METHOD_DESC=\((\[*([BCDFIJSZV]|L([^;\n\r]+);))*\)(\[*[BCDFIJSZV]|L([^;\n\r]+);)?
+TYPE_DESC_OBJECT=L([^;\n\r]+);
 SPACE=[ \t\n\x0B\f\r]+
 ID=[\w$]+
 STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\'|\\)*\")
@@ -49,6 +49,7 @@ BLOCK_COMMENT="/"\*(.|\n)*\*"/"
   "}"                           { return RBR; }
   "["                           { return LBK; }
   "]"                           { return RBK; }
+  "->"                          { return REF; }
   "class"                       { return KWD_CLASS; }
   "interface"                   { return KWD_INTERFACE; }
   "public"                      { return KWD_ACC_PUBLIC; }
@@ -272,10 +273,18 @@ BLOCK_COMMENT="/"\*(.|\n)*\*"/"
   "swap"                        { return INSN_SWAP; }
   "tableswitch"                 { return INSN_TABLESWITCH; }
   "wide"                        { return INSN_WIDE; }
+  "B"                           { return TYPE_DESC_BYTE; }
+  "C"                           { return TYPE_DESC_CHAR; }
+  "D"                           { return TYPE_DESC_DOUBLE; }
+  "F"                           { return TYPE_DESC_FLOAT; }
+  "I"                           { return TYPE_DESC_INT; }
+  "J"                           { return TYPE_DESC_LONG; }
+  "S"                           { return TYPE_DESC_SHORT; }
+  "V"                           { return TYPE_DESC_VOID; }
+  "Z"                           { return TYPE_DESC_BOOLEAN; }
 
   {INSN_ARG_UNSIG_8BYTES}       { return INSN_ARG_UNSIG_8BYTES; }
-  {TYPE_DESC}                   { return TYPE_DESC; }
-  {METHOD_DESC}                 { return METHOD_DESC; }
+  {TYPE_DESC_OBJECT}            { return TYPE_DESC_OBJECT; }
   {SPACE}                       { return SPACE; }
   {ID}                          { return ID; }
   {STRING}                      { return STRING; }

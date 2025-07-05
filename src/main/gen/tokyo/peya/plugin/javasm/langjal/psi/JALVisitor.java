@@ -63,6 +63,10 @@ public class JALVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitFieldName(@NotNull JALFieldName o) {
+    visitPsiElement(o);
+  }
+
   public void visitInstruction(@NotNull JALInstruction o) {
     visitPsiElement(o);
   }
@@ -124,10 +128,6 @@ public class JALVisitor extends PsiElementVisitor {
   }
 
   public void visitJvmInsArgMethodRef(@NotNull JALJvmInsArgMethodRef o) {
-    visitInstruction(o);
-  }
-
-  public void visitJvmInsArgMethodRefDesc(@NotNull JALJvmInsArgMethodRefDesc o) {
     visitInstruction(o);
   }
 
@@ -727,7 +727,27 @@ public class JALVisitor extends PsiElementVisitor {
     visitPsiElement(o);
   }
 
+  public void visitMethodBodyItem(@NotNull JALMethodBodyItem o) {
+    visitPsiElement(o);
+  }
+
   public void visitMethodDefinition(@NotNull JALMethodDefinition o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMethodDescriptor(@NotNull JALMethodDescriptor o) {
+    visitPsiElement(o);
+  }
+
+  public void visitMethodDescriptorArgs(@NotNull JALMethodDescriptorArgs o) {
+    visitPsiElement(o);
+  }
+
+  public void visitTypeDescriptor(@NotNull JALTypeDescriptor o) {
+    visitPsiElement(o);
+  }
+
+  public void visitTypeDescriptorPrimitive(@NotNull JALTypeDescriptorPrimitive o) {
     visitPsiElement(o);
   }
 

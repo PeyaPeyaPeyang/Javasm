@@ -7,7 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsArgMethodSpecialRef extends JALInstruction {
 
-  @NotNull
-  List<JALInstruction> getInstructionList();
+  @Nullable
+  JALJvmInsArgMethodRefOwnerType getJvmInsArgMethodRefOwnerType();
+
+  @Nullable
+  JALMethodDescriptor getMethodDescriptor();
 
 }

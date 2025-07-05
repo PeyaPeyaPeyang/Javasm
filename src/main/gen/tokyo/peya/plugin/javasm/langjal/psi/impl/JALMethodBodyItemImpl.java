@@ -8,17 +8,17 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.util.PsiTreeUtil;
 import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
+import com.intellij.extapi.psi.ASTWrapperPsiElement;
 import tokyo.peya.plugin.javasm.langjal.psi.*;
 
-public class JALJvmInsArgMethodRefDescImpl extends JALInstructionImpl implements JALJvmInsArgMethodRefDesc {
+public class JALMethodBodyItemImpl extends ASTWrapperPsiElement implements JALMethodBodyItem {
 
-  public JALJvmInsArgMethodRefDescImpl(@NotNull ASTNode node) {
+  public JALMethodBodyItemImpl(@NotNull ASTNode node) {
     super(node);
   }
 
-  @Override
   public void accept(@NotNull JALVisitor visitor) {
-    visitor.visitJvmInsArgMethodRefDesc(this);
+    visitor.visitMethodBodyItem(this);
   }
 
   @Override
@@ -29,8 +29,14 @@ public class JALJvmInsArgMethodRefDescImpl extends JALInstructionImpl implements
 
   @Override
   @NotNull
-  public PsiElement getMethodDesc() {
-    return findNotNullChildByType(METHOD_DESC);
+  public List<JALInstruction> getInstructionList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALInstruction.class);
+  }
+
+  @Override
+  @NotNull
+  public List<JALLabel> getLabelList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALLabel.class);
   }
 
 }

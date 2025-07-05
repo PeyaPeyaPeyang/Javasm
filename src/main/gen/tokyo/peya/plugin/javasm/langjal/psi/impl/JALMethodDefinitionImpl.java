@@ -34,21 +34,15 @@ public class JALMethodDefinitionImpl extends ASTWrapperPsiElement implements JAL
   }
 
   @Override
-  @NotNull
-  public List<JALInstruction> getInstructionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALInstruction.class);
+  @Nullable
+  public JALMethodBodyItem getMethodBodyItem() {
+    return findChildByClass(JALMethodBodyItem.class);
   }
 
   @Override
   @NotNull
-  public List<JALLabel> getLabelList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALLabel.class);
-  }
-
-  @Override
-  @NotNull
-  public PsiElement getMethodDesc() {
-    return findNotNullChildByType(METHOD_DESC);
+  public JALMethodDescriptor getMethodDescriptor() {
+    return findNotNullChildByClass(JALMethodDescriptor.class);
   }
 
   @Override
