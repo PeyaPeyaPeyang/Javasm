@@ -33,10 +33,4 @@ public class JALJvmInsInvokeinterfaceImpl extends JALInstructionImpl implements 
     return findChildByClass(JALJvmInsArgMethodRef.class);
   }
 
-  @Override
-  @Nullable
-  public PsiElement getNumber() {
-    return findChildByType(NUMBER);
-  }
-
 }

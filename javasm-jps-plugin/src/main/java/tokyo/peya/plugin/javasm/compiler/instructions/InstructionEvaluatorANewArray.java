@@ -9,13 +9,16 @@ import tokyo.peya.plugin.javasm.compiler.EvaluatorCommons;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<JALParser.JvmInsNewContext>
+public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<JALParser.JvmInsAnewArrayContext>
 {
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
-                                                     JALParser.@NotNull JvmInsNewContext ctxt)
+                                                     JALParser.@NotNull JvmInsAnewArrayContext ctxt)
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
+        if (!typeDescriptor.getText().startsWith("L"))
+            throw new IllegalArgumentException("Reference type expected for anewarray, but got " + typeDescriptor.getText());
+
         // Ljava/lang/String; -> java.lang.String に変換
         String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
 
@@ -24,8 +27,8 @@ public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.JvmInsNewContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsAnewArrayContext map(JALParser.@NotNull InstructionContext instruction)
     {
-        return instruction.jvmInsNew();
+        return instruction.jvmInsAnewArray();
     }
 }

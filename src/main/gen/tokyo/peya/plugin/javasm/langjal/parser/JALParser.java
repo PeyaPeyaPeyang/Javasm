@@ -1929,7 +1929,7 @@ public class JALParser implements PsiParser, LightPsiParser {
 
   /* ********************************************************** */
   // INSN_ICONST_M1 | INSN_ICONST_0 | INSN_ICONST_1 | INSN_ICONST_2 | INSN_ICONST_3 | INSN_ICONST_4
-  //                   | INSN_ICONST_5 | INSN_ICONST_6 | INSN_ICONST_7 | INSN_ICONST_8
+  //                   | INSN_ICONST_5
   public static boolean jvmInsIconstN(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIconstN")) return false;
     boolean r;
@@ -1941,9 +1941,6 @@ public class JALParser implements PsiParser, LightPsiParser {
     if (!r) r = consumeToken(b, INSN_ICONST_3);
     if (!r) r = consumeToken(b, INSN_ICONST_4);
     if (!r) r = consumeToken(b, INSN_ICONST_5);
-    if (!r) r = consumeToken(b, INSN_ICONST_6);
-    if (!r) r = consumeToken(b, INSN_ICONST_7);
-    if (!r) r = consumeToken(b, INSN_ICONST_8);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
@@ -2324,7 +2321,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_INVOKEINTERFACE jvmInsArgMethodRef number
+  // INSN_INVOKEINTERFACE jvmInsArgMethodRef
   public static boolean jvmInsInvokeinterface(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsInvokeinterface")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_INVOKEINTERFACE)) return false;
@@ -2332,8 +2329,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_INVOKEINTERFACE, "<JVMInstruction>");
     r = consumeToken(b, INSN_INVOKEINTERFACE);
     p = r; // pin = 1
-    r = r && report_error_(b, jvmInsArgMethodRef(b, l + 1));
-    r = p && consumeToken(b, NUMBER) && r;
+    r = r && jvmInsArgMethodRef(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -3141,25 +3137,24 @@ public class JALParser implements PsiParser, LightPsiParser {
   // labelName COLON
   public static boolean label(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "label")) return false;
-    if (!nextTokenIs(b, "<label>", ID, NUMBER)) return false;
+    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, LABEL, "<label>");
+    Marker m = enter_section_(b);
     r = labelName(b, l + 1);
     r = r && consumeToken(b, COLON);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, LABEL, r);
     return r;
   }
 
   /* ********************************************************** */
-  // id | number
+  // id
   public static boolean labelName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "labelName")) return false;
-    if (!nextTokenIs(b, "<label name>", ID, NUMBER)) return false;
+    if (!nextTokenIs(b, ID)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _NONE_, LABEL_NAME, "<label name>");
+    Marker m = enter_section_(b);
     r = consumeToken(b, ID);
-    if (!r) r = consumeToken(b, NUMBER);
-    exit_section_(b, l, m, r, false, null);
+    exit_section_(b, m, LABEL_NAME, r);
     return r;
   }
 

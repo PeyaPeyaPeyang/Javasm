@@ -10,13 +10,13 @@ import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 %%
 
 %{
-  public _JALLexer() {
+  public JALLexer() {
     this((java.io.Reader)null);
   }
 %}
 
 %public
-%class _JALLexer
+%class JALLexer
 %implements FlexLexer
 %function advance
 %type IElementType
@@ -29,7 +29,7 @@ TYPE_DESC_OBJECT=L([^;\n\r]+);
 SPACE=[ \t\n\x0B\f\r]+
 NUMBER=-?(0x[\da-fA-F][lL]?|[0-9]+(\.[0-9]+)?[fFdD]?)
 BOOLEAN=true|false
-ID=[\w$]+
+ID=[A-Za-z__][\w$_]*
 STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\'|\\)*\")
 LINE_COMMENT="//".*
 BLOCK_COMMENT="/"\*(.|\n)*\*"/"
@@ -185,9 +185,6 @@ FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
   "iconst_3"                        { return INSN_ICONST_3; }
   "iconst_4"                        { return INSN_ICONST_4; }
   "iconst_5"                        { return INSN_ICONST_5; }
-  "iconst_6"                        { return INSN_ICONST_6; }
-  "iconst_7"                        { return INSN_ICONST_7; }
-  "iconst_8"                        { return INSN_ICONST_8; }
   "idiv"                            { return INSN_IDIV; }
   "if_acmpeq"                       { return INSN_IF_ACMPEQ; }
   "if_acmpne"                       { return INSN_IF_ACMPNE; }

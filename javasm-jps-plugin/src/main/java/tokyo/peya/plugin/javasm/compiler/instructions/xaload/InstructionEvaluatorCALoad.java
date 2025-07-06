@@ -5,16 +5,16 @@ import tokyo.peya.plugin.javasm.compiler.AbstractSingleInstructionEvaluator;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorCALoad extends AbstractSingleInstructionEvaluator<JALParser.JvmInsBaloadContext>
+public class InstructionEvaluatorCALoad extends AbstractSingleInstructionEvaluator<JALParser.JvmInsCaloadContext>
 {
     public InstructionEvaluatorCALoad()
     {
-        super(EOpcodes.BALOAD);
+        super(EOpcodes.CALOAD);
     }
 
     @Override
-    protected JALParser.JvmInsBaloadContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsCaloadContext map(JALParser.@NotNull InstructionContext instruction)
     {
-        return instruction.jvmInsBaload();
+        return instruction.jvmInsCaload();
     }
 }

@@ -28,15 +28,9 @@ public class JALLabelNameImpl extends ASTWrapperPsiElement implements JALLabelNa
   }
 
   @Override
-  @Nullable
+  @NotNull
   public PsiElement getId() {
-    return findChildByType(ID);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getNumber() {
-    return findChildByType(NUMBER);
+    return findNotNullChildByType(ID);
   }
 
 }

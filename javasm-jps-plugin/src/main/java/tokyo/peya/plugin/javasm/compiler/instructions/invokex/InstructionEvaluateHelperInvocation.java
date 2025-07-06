@@ -16,21 +16,30 @@ public class InstructionEvaluateHelperInvocation
         JALParser.JvmInsArgMethodRefOwnerTypeContext methodOwner = ref.jvmInsArgMethodRefOwnerType();
         JALParser.MethodNameContext methodName = ref.methodName();
         JALParser.MethodDescriptorContext methodDescriptor = ref.methodDescriptor();
+        return evaluate(
+                methodOwner.getText(),
+                methodName.getText(),
+                methodDescriptor.getText(),
+                opcode
+        );
+    }
+
+    public static EvaluatedInstruction evaluate(String ownerType, String methodName, String methodDescriptor, int opcode)
+    {
+        // Ljava/lang/String; -> java/lang/String に変換
+        String ownerTypeUnwrapped = EvaluatorCommons.unwrapClassTypeDescriptor(ownerType);
 
         if (opcode == EOpcodes.INVOKESPECIAL)
         {
-            String methodNameText = methodName.getText();
-            if (!(methodNameText.equals("<init>") || methodNameText.equals("<clinit>")))
+            if (!(methodName.equals("<init>") || methodName.equals("<clinit>")))
                 throw new IllegalArgumentException("Method name must be <init> or <clinit> for invokespecial instruction");
         }
 
-        // Ljava/lang/String; -> java/lang/String に変換
-        String ownerType = EvaluatorCommons.unwrapClassTypeDescriptor(methodOwner.getText());
         MethodInsnNode insn = new MethodInsnNode(
                 opcode,
-                ownerType,
-                methodName.getText(),
-                methodDescriptor.getText()
+                ownerTypeUnwrapped,
+                methodName,
+                methodDescriptor
         );
         return EvaluatedInstruction.of(insn);
     }

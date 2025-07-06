@@ -310,9 +310,6 @@ public interface JALTypes {
   IElementType INSN_ICONST_3 = new JALTokenType("iconst_3");
   IElementType INSN_ICONST_4 = new JALTokenType("iconst_4");
   IElementType INSN_ICONST_5 = new JALTokenType("iconst_5");
-  IElementType INSN_ICONST_6 = new JALTokenType("iconst_6");
-  IElementType INSN_ICONST_7 = new JALTokenType("iconst_7");
-  IElementType INSN_ICONST_8 = new JALTokenType("iconst_8");
   IElementType INSN_ICONST_M1 = new JALTokenType("iconst_m1");
   IElementType INSN_IDIV = new JALTokenType("idiv");
   IElementType INSN_IFEQ = new JALTokenType("ifeq");

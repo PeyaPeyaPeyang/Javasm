@@ -14,17 +14,17 @@ public class InstructionEvaluatorIConstN extends AbstractInstructionEvaluator<JA
     {
         if (has(ctxt.INSN_ICONST_M1()))
             return visitSingle(EOpcodes.ICONST_M1);
-        if (has(ctxt.INSN_ICONST_0()))
-            return visitSingle(EOpcodes.ICONST_0);
-        if (has(ctxt.INSN_ICONST_1()))
-            return visitSingle(EOpcodes.ICONST_1);
-        if (has(ctxt.INSN_ICONST_2()))
-            return visitSingle(EOpcodes.ICONST_2);
-        if (has(ctxt.INSN_ICONST_3()))
-            return visitSingle(EOpcodes.ICONST_3);
-        if (has(ctxt.INSN_ICONST_4()))
-            return visitSingle(EOpcodes.ICONST_4);
-        if (has(ctxt.INSN_ICONST_5()))
+        else if (has(ctxt.INSN_ICONST_0()))
+             return visitSingle(EOpcodes.ICONST_0);
+        else if (has(ctxt.INSN_ICONST_1()))
+             return visitSingle(EOpcodes.ICONST_1);
+        else if (has(ctxt.INSN_ICONST_2()))
+             return visitSingle(EOpcodes.ICONST_2);
+        else if (has(ctxt.INSN_ICONST_3()))
+             return visitSingle(EOpcodes.ICONST_3);
+        else if (has(ctxt.INSN_ICONST_4()))
+             return visitSingle(EOpcodes.ICONST_4);
+        else if (has(ctxt.INSN_ICONST_5()))
             return visitSingle(EOpcodes.ICONST_5);
 
         throw new IllegalArgumentException("Unknown instruction: " + ctxt.getText());

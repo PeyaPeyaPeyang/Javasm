@@ -158,9 +158,6 @@ INSN_ICONST_2: 'iconst_2';
 INSN_ICONST_3: 'iconst_3';
 INSN_ICONST_4: 'iconst_4';
 INSN_ICONST_5: 'iconst_5';
-INSN_ICONST_6: 'iconst_6';
-INSN_ICONST_7: 'iconst_7';
-INSN_ICONST_8: 'iconst_8';
 INSN_IDIV: 'idiv';
 INSN_IF_ACMPEQ: 'if_acmpeq';
 INSN_IF_ACMPNE: 'if_acmpne';
@@ -275,7 +272,7 @@ TYPE_DESC_OBJECT: 'L' [a-zA-Z0-9_/$]+ ';';
 SPACE: [ \t\r\n]+ -> skip;
 NUMBER:   '-'? ( '0x' [0-9a-fA-F]+ [lL]? | [0-9]+ ('.' [0-9]+)? [fFdDlL]?);
 BOOLEAN: 'true' | 'false';
-ID: [a-zA-Z0-9_$]+ ;
+ID: [a-zA-Z$_] [a-zA-Z0-9$_]*;
 STRING: '\'' ( ~['\\] | '\\' . )* '\'' | '"' ( ~["\\] | '\\' . )* '"' ;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
@@ -326,7 +323,7 @@ accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE 
                  | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ENUM;
 
 label : labelName COLON;
-labelName : ID | NUMBER;
+labelName : ID;
 
 jvmInsArgScalarType : STRING | NUMBER | BOOLEAN;
 
@@ -454,7 +451,7 @@ jvmInsIaload: INSN_IALOAD;
 jvmInsIand: INSN_IAND;
 jvmInsIastore: INSN_IASTORE;
 jvmInsIconstN: INSN_ICONST_M1 | INSN_ICONST_0 | INSN_ICONST_1 | INSN_ICONST_2 | INSN_ICONST_3 | INSN_ICONST_4
-               | INSN_ICONST_5 | INSN_ICONST_6 | INSN_ICONST_7 | INSN_ICONST_8;
+               | INSN_ICONST_5;
 jvmInsIdiv: INSN_IDIV;
 jvmInsIfAcmpOP: INSN_IF_ACMPEQ labelName
                 | INSN_IF_ACMPNE labelName;
@@ -479,7 +476,7 @@ jvmInsImul: INSN_IMUL;
 jvmInsIneg: INSN_INEG;
 jvmInsInstanceof: INSN_INSTANCEOF typeDescriptor;
 jvmInsInvokedynamic: INSN_INVOKEDYNAMIC methodName methodDescriptor jvmInsArgInvokeDynamicMethodTypeMethodHandle jvmInsArgInvokeDynamicRef*;
-jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef NUMBER;
+jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef;
 jvmInsInvokespecial: INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef;
 jvmInsInvokestatic: INSN_INVOKESTATIC jvmInsArgMethodRef;
 jvmInsInvokevirtual: INSN_INVOKEVIRTUAL jvmInsArgMethodRef;

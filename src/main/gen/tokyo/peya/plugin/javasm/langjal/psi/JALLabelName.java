@@ -7,10 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface JALLabelName extends PsiElement {
 
-  @Nullable
+  @NotNull
   PsiElement getId();
-
-  @Nullable
-  PsiElement getNumber();
 
 }

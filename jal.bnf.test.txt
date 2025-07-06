@@ -110,23 +110,23 @@ public class Main (
     iconst_6
     iconst_7
     iconst_8
-    if_acmpeq 0x00
-    if_acmpne 0x00
-    if_icmpeq 0x00
-    if_icmpne 0x00
-    if_icmplt 0x00
-    if_icmpge 0x00
-    if_icmpgt 0x00
-    if_icmple 0x00
-    ifeq 0x00
-    ifne 0x00
-    iflt 0x00
-    ifge 0x00
-    ifgt 0x00
-    ifle 0x00
-    ifnonnull 0x00
-    ifnull 0x00
-    iinc 0x00, 0x01
+    if_acmpeq test
+    if_acmpne test
+    if_icmpeq test
+    if_icmpne test
+    if_icmplt test
+    if_icmpge test
+    if_icmpgt test
+    if_icmple test
+    ifeq test
+    ifne test
+    iflt test
+    ifge test
+    ifgt test
+    ifle test
+    ifnonnull test
+    ifnull test
+    iinc 0, 0x01
     iload 1
     iload_0
     iload_1
@@ -136,7 +136,7 @@ public class Main (
     ineg
     instanceof Ljava/lang/String;
     invokedynamic myMethod (Ljava/lang/String;)Ljava/lang/String; MethodHandle|getstatic|Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; MethodType|(Ljava/lang/String;)V
-    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; 2
+    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String;
     invokespecial Ljava/lang/String;-><init>()V
     invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;)V
     invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;Ljava/lang/String;)V

@@ -34,7 +34,22 @@ public class InstructionEvaluatorInvokeDynamic extends AbstractInstructionEvalua
                 bootstrapMethod,
                 bootstrapArgs.toArray(new Object[0])
         );
-        return EvaluatedInstruction.of(insn);
+        return EvaluatedInstruction.of(insn, calcSize(ctxt));
+    }
+
+    private static int calcSize(JALParser.JvmInsInvokedynamicContext ctxt)
+    {
+        int size = 0;
+        if (ctxt.jvmInsArgInvokeDynamicMethodTypeMethodHandle() != null)
+            size += 1; // Handle
+        for (JALParser.JvmInsArgInvokeDynamicRefContext arg : ctxt.jvmInsArgInvokeDynamicRef())
+        {
+            if (arg.jvmInsArgInvokeDynamicMethodType() != null)
+                size += 1; // Method type
+            else if (arg.jvmInsArgScalarType() != null)
+                size += 1; // Scalar type
+        }
+        return size;
     }
 
     private static Object evaluateBootstrapArg(JALParser.JvmInsArgInvokeDynamicRefContext arg)

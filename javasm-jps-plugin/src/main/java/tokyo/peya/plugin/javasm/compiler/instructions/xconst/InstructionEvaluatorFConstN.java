@@ -14,8 +14,10 @@ public class InstructionEvaluatorFConstN extends AbstractInstructionEvaluator<JA
     {
         if (has(ctxt.INSN_FCONST_0()))
             return visitSingle(EOpcodes.FCONST_0);
-        if (has(ctxt.INSN_FCONST_1()))
+        else if (has(ctxt.INSN_FCONST_1()))
             return visitSingle(EOpcodes.FCONST_1);
+        else if (has(ctxt.INSN_FCONST_2()))
+            return visitSingle(EOpcodes.FCONST_2);
 
         throw new IllegalArgumentException("Unknown instruction: " + ctxt.getText());
     }

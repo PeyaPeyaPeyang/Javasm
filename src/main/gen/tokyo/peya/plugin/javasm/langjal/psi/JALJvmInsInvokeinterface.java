@@ -10,7 +10,4 @@ public interface JALJvmInsInvokeinterface extends JALInstruction {
   @Nullable
   JALJvmInsArgMethodRef getJvmInsArgMethodRef();
 
-  @Nullable
-  PsiElement getNumber();
-
 }

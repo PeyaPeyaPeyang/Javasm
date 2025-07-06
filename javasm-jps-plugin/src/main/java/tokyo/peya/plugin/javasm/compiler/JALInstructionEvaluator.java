@@ -3,6 +3,8 @@ package tokyo.peya.plugin.javasm.compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorANewArray;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorAThrow;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorArrayLength;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorBiPush;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorCheckCast;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorGoto;
@@ -22,6 +24,7 @@ import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorReturn
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorSiPush;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorTableSwitch;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.InstructionEvaluatorIInc;
+import tokyo.peya.plugin.javasm.compiler.instructions.calc.InstructionEvaluatorLCmp;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorIAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorLAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xdiv.InstructionEvaluatorDDiv;
@@ -83,11 +86,13 @@ import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluator
 import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorGetStatic;
 import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorPutField;
 import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorPutStatic;
+import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfACmpOP;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfICmpOP;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNonNull;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNull;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfOP;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeDynamic;
+import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeInterface;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeSpecial;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeStatic;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeVirtual;
@@ -267,6 +272,8 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorI2C(),
             new InstructionEvaluatorI2S(),
 
+            new InstructionEvaluatorLCmp(),
+
             new InstructionEvaluatorFCmpOp(),
             new InstructionEvaluatorDCmpOp(),
 
@@ -276,6 +283,9 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorDReturn(),
             new InstructionEvaluatorAReturn(),
             new InstructionEvaluatorReturn(),
+
+            new InstructionEvaluatorArrayLength(),
+            new InstructionEvaluatorAThrow(),
 
             new InstructionEvaluatorMonitorEnter(),
             new InstructionEvaluatorMonitorExit(),
@@ -317,8 +327,10 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorInvokeVirtual(),
             new InstructionEvaluatorInvokeSpecial(),
             new InstructionEvaluatorInvokeStatic(),
+            new InstructionEvaluatorInvokeInterface(),
 
             new InstructionEvaluatorNew(),
+            new InstructionEvaluatorNewArray(),
             new InstructionEvaluatorANewArray(),
 
             new InstructionEvaluatorCheckCast(),
@@ -326,6 +338,7 @@ public class JALInstructionEvaluator
 
             new InstructionEvaluatorIfOP(),
             new InstructionEvaluatorIfICmpOP(),
+            new InstructionEvaluatorIfACmpOP(),
             new InstructionEvaluatorIfNull(),
             new InstructionEvaluatorIfNonNull(),
 

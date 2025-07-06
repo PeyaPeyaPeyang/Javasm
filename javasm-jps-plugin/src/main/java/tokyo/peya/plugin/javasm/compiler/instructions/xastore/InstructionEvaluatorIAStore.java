@@ -5,16 +5,16 @@ import tokyo.peya.plugin.javasm.compiler.AbstractSingleInstructionEvaluator;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorIAStore extends AbstractSingleInstructionEvaluator<JALParser.JvmInsLastoreContext>
+public class InstructionEvaluatorIAStore extends AbstractSingleInstructionEvaluator<JALParser.JvmInsIastoreContext>
 {
     public InstructionEvaluatorIAStore()
     {
-        super(EOpcodes.LASTORE);
+        super(EOpcodes.IASTORE);
     }
 
     @Override
-    protected JALParser.JvmInsLastoreContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsIastoreContext map(JALParser.@NotNull InstructionContext instruction)
     {
-        return instruction.jvmInsLastore();
+        return instruction.jvmInsIastore();
     }
 }
