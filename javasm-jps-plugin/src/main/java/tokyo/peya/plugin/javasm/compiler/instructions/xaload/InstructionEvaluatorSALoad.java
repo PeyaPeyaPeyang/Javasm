@@ -13,7 +13,7 @@ public class InstructionEvaluatorSALoad extends AbstractSingleInstructionEvaluat
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsSaloadContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsSaloadContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsSaload();
     }

@@ -19,12 +19,14 @@ public class InstructionEvaluatorLStore extends AbstractInstructionEvaluator<JAL
                 EOpcodes.LSTORE,
                 evaluator,
                 ctxt.jvmInsArgLocalRef(),
-                "L"
+                "L",
+                "lstore",
+                ctxt.INSN_WIDE()
         );
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsLstoreContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsLstoreContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsLstore();
     }

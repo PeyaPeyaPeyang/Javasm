@@ -5,12 +5,9 @@ import java.util.List;
 import org.jetbrains.annotations.*;
 import com.intellij.psi.PsiElement;
 
-public interface JALJvmInsWide extends JALInstruction {
+public interface JALJvmInsArgInvokeDynamicMethodTypeMethodHandle extends JALInstruction {
 
   @Nullable
-  JALInstruction getInstruction();
-
-  @Nullable
-  PsiElement getNumber();
+  JALJvmInsArgMethodRef getJvmInsArgMethodRef();
 
 }

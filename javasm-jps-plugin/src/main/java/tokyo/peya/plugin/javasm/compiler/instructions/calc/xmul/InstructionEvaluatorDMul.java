@@ -13,7 +13,7 @@ public class InstructionEvaluatorDMul extends AbstractSingleInstructionEvaluator
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsDmulContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsDmulContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsDmul();
     }

@@ -18,7 +18,7 @@ public class InstructionEvaluatorInvokeStatic extends AbstractInstructionEvaluat
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsInvokevirtualContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsInvokevirtualContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsInvokevirtual();
     }

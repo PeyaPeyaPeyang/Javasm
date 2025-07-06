@@ -13,7 +13,7 @@ public class InstructionEvaluatorDNeg extends AbstractSingleInstructionEvaluator
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsDnegContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsDnegContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsDneg();
     }

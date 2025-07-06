@@ -10,13 +10,13 @@ import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 %%
 
 %{
-  public JALLexer() {
+  public _JALLexer() {
     this((java.io.Reader)null);
   }
 %}
 
 %public
-%class JALLexer
+%class _JALLexer
 %implements FlexLexer
 %function advance
 %type IElementType
@@ -27,7 +27,8 @@ WHITE_SPACE=\s+
 
 TYPE_DESC_OBJECT=L([^;\n\r]+);
 SPACE=[ \t\n\x0B\f\r]+
-NUMBER=-?(0x)?[0-9]+
+NUMBER=-?(0x[\da-fA-F][lL]?|[0-9]+(\.[0-9]+)?[fFdD]?)
+BOOLEAN=true|false
 ID=[\w$]+
 STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\'|\\)*\")
 LINE_COMMENT="//".*
@@ -77,6 +78,9 @@ FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
   "<init>"                          { return KWD_MNAME_INIT; }
   "<clinit>"                        { return KWD_MNAME_CLINIT; }
   "default"                         { return KWD_SWITCH_DEFAULT; }
+  "MethodType|"                     { return KWD_METHOD_TYPE; }
+  "MethodHandle|"                   { return KWD_METHOD_HANDLE; }
+  "newinvokespecial"                { return KWD_METHOD_HANDLE_TAG_NEWINVOKE; }
   "aaload"                          { return INSN_AALOAD; }
   "aastore"                         { return INSN_AASTORE; }
   "aconst_null"                     { return INSN_ACONST_NULL; }
@@ -296,6 +300,7 @@ FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
   {TYPE_DESC_OBJECT}                { return TYPE_DESC_OBJECT; }
   {SPACE}                           { return SPACE; }
   {NUMBER}                          { return NUMBER; }
+  {BOOLEAN}                         { return BOOLEAN; }
   {ID}                              { return ID; }
   {STRING}                          { return STRING; }
   {LINE_COMMENT}                    { return LINE_COMMENT; }

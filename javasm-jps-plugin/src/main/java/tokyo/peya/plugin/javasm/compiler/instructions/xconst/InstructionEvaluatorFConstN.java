@@ -21,7 +21,7 @@ public class InstructionEvaluatorFConstN extends AbstractInstructionEvaluator<JA
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsFconstNContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsFconstNContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsFconstN();
     }

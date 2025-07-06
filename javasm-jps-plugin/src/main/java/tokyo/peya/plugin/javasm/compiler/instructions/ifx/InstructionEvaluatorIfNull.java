@@ -23,7 +23,7 @@ public class InstructionEvaluatorIfNull extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsIfNullContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsIfNullContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsIfNull();
     }

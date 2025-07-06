@@ -10,6 +10,7 @@ import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorGotoW;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorInstanceOf;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorJsr;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorJsrW;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorLookupSwitch;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorEnter;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorExit;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMultiANewArray;
@@ -19,6 +20,8 @@ import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop2;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorRet;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorSiPush;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorTableSwitch;
+import tokyo.peya.plugin.javasm.compiler.instructions.calc.InstructionEvaluatorIInc;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorIAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorLAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xdiv.InstructionEvaluatorDDiv;
@@ -84,6 +87,7 @@ import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIf
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNonNull;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNull;
 import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfOP;
+import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeDynamic;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeSpecial;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeStatic;
 import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeVirtual;
@@ -294,6 +298,8 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorDStore(),
             new InstructionEvaluatorAStore(),
 
+            new InstructionEvaluatorIInc(),
+
             new InstructionEvaluatorRet(),
 
             // ---- カテゴリ 3 ----
@@ -333,7 +339,13 @@ public class JALInstructionEvaluator
             // ---- カテゴリ 5 ----
 
             new InstructionEvaluatorGotoW(),
-            new InstructionEvaluatorJsrW()
+            new InstructionEvaluatorJsrW(),
+
+            // ---- 可変長 ----
+            new InstructionEvaluatorTableSwitch(),
+            new InstructionEvaluatorLookupSwitch(),
+
+            new InstructionEvaluatorInvokeDynamic()
     );
 
     @Nullable

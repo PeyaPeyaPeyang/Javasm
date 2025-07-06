@@ -24,7 +24,7 @@ public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsNewContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsNewContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsNew();
     }

@@ -13,7 +13,7 @@ public class InstructionEvaluatorDup extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsDupContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsDupContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsDup();
     }

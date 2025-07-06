@@ -18,7 +18,7 @@ public class InstructionEvaluatorPutStatic extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsPutstaticContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsPutstaticContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsPutstatic();
     }

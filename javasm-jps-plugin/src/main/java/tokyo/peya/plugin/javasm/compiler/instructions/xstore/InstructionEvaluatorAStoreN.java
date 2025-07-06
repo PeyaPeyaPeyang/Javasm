@@ -25,7 +25,7 @@ public class InstructionEvaluatorAStoreN extends AbstractInstructionEvaluator<JA
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsAstoreNContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsAstoreNContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsAstoreN();
     }

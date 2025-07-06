@@ -21,7 +21,7 @@ public class InstructionEvaluatorFCmpOp extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsFcmpgOPContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsFcmpgOPContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsFcmpgOP();
     }

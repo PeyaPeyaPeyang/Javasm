@@ -29,6 +29,12 @@ public class JALJvmInsArgScalarTypeImpl extends JALInstructionImpl implements JA
 
   @Override
   @Nullable
+  public PsiElement getBoolean() {
+    return findChildByType(BOOLEAN);
+  }
+
+  @Override
+  @Nullable
   public PsiElement getNumber() {
     return findChildByType(NUMBER);
   }

@@ -10,4 +10,10 @@ public interface JALJvmInsInvokedynamic extends JALInstruction {
   @NotNull
   List<JALInstruction> getInstructionList();
 
+  @Nullable
+  JALMethodDescriptor getMethodDescriptor();
+
+  @Nullable
+  PsiElement getId();
+
 }

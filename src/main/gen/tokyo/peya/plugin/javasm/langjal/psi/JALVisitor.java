@@ -123,6 +123,18 @@ public class JALVisitor extends PsiElementVisitor {
     visitInstruction(o);
   }
 
+  public void visitJvmInsArgInvokeDynamicMethodType(@NotNull JALJvmInsArgInvokeDynamicMethodType o) {
+    visitInstruction(o);
+  }
+
+  public void visitJvmInsArgInvokeDynamicMethodTypeMethodHandle(@NotNull JALJvmInsArgInvokeDynamicMethodTypeMethodHandle o) {
+    visitInstruction(o);
+  }
+
+  public void visitJvmInsArgInvokeDynamicRef(@NotNull JALJvmInsArgInvokeDynamicRef o) {
+    visitInstruction(o);
+  }
+
   public void visitJvmInsArgLocalRef(@NotNull JALJvmInsArgLocalRef o) {
     visitInstruction(o);
   }
@@ -720,10 +732,6 @@ public class JALVisitor extends PsiElementVisitor {
   }
 
   public void visitJvmInsTableswitch(@NotNull JALJvmInsTableswitch o) {
-    visitInstruction(o);
-  }
-
-  public void visitJvmInsWide(@NotNull JALJvmInsWide o) {
     visitInstruction(o);
   }
 

@@ -37,6 +37,9 @@ public interface JALTypes {
   IElementType JVM_INS_ARG_FIELD_REF = new JALElementType("JVM_INS_ARG_FIELD_REF");
   IElementType JVM_INS_ARG_FIELD_REF_NAME = new JALElementType("JVM_INS_ARG_FIELD_REF_NAME");
   IElementType JVM_INS_ARG_FIELD_REF_TYPE = new JALElementType("JVM_INS_ARG_FIELD_REF_TYPE");
+  IElementType JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE = new JALElementType("JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE");
+  IElementType JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE_METHOD_HANDLE = new JALElementType("JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE_METHOD_HANDLE");
+  IElementType JVM_INS_ARG_INVOKE_DYNAMIC_REF = new JALElementType("JVM_INS_ARG_INVOKE_DYNAMIC_REF");
   IElementType JVM_INS_ARG_LOCAL_REF = new JALElementType("JVM_INS_ARG_LOCAL_REF");
   IElementType JVM_INS_ARG_LOOKUP_SWITCH = new JALElementType("JVM_INS_ARG_LOOKUP_SWITCH");
   IElementType JVM_INS_ARG_LOOKUP_SWITCH_CASE = new JALElementType("JVM_INS_ARG_LOOKUP_SWITCH_CASE");
@@ -187,7 +190,6 @@ public interface JALTypes {
   IElementType JVM_INS_SIPUSH = new JALElementType("JVM_INS_SIPUSH");
   IElementType JVM_INS_SWAP = new JALElementType("JVM_INS_SWAP");
   IElementType JVM_INS_TABLESWITCH = new JALElementType("JVM_INS_TABLESWITCH");
-  IElementType JVM_INS_WIDE = new JALElementType("JVM_INS_WIDE");
   IElementType LABEL = new JALElementType("LABEL");
   IElementType LABEL_NAME = new JALElementType("LABEL_NAME");
   IElementType METHOD_BODY_ITEM = new JALElementType("METHOD_BODY_ITEM");
@@ -198,6 +200,7 @@ public interface JALTypes {
   IElementType TYPE_DESCRIPTOR_PRIMITIVE = new JALElementType("TYPE_DESCRIPTOR_PRIMITIVE");
 
   IElementType BLOCK_COMMENT = new JALTokenType("block_comment");
+  IElementType BOOLEAN = new JALTokenType("boolean");
   IElementType COLON = new JALTokenType(":");
   IElementType COMMA = new JALTokenType(",");
   IElementType DOT = new JALTokenType(".");
@@ -433,6 +436,9 @@ public interface JALTypes {
   IElementType KWD_CLASS_PROP_MINOR = new JALTokenType("minor_version");
   IElementType KWD_CLASS_PROP_SUPER_CLASS = new JALTokenType("super_class");
   IElementType KWD_INTERFACE = new JALTokenType("interface");
+  IElementType KWD_METHOD_HANDLE = new JALTokenType("MethodHandle|");
+  IElementType KWD_METHOD_HANDLE_TAG_NEWINVOKE = new JALTokenType("newinvokespecial");
+  IElementType KWD_METHOD_TYPE = new JALTokenType("MethodType|");
   IElementType KWD_MNAME_CLINIT = new JALTokenType("<clinit>");
   IElementType KWD_MNAME_INIT = new JALTokenType("<init>");
   IElementType KWD_SWITCH_DEFAULT = new JALTokenType("default");
@@ -545,6 +551,12 @@ public interface JALTypes {
       }
       else if (type == JVM_INS_ARG_FIELD_REF_TYPE) {
         return new JALJvmInsArgFieldRefTypeImpl(node);
+      }
+      else if (type == JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE) {
+        return new JALJvmInsArgInvokeDynamicMethodTypeImpl(node);
+      }
+      else if (type == JVM_INS_ARG_INVOKE_DYNAMIC_METHOD_TYPE_METHOD_HANDLE) {
+        return new JALJvmInsArgInvokeDynamicMethodTypeMethodHandleImpl(node);
       }
       else if (type == JVM_INS_ARG_LOCAL_REF) {
         return new JALJvmInsArgLocalRefImpl(node);
@@ -995,9 +1007,6 @@ public interface JALTypes {
       }
       else if (type == JVM_INS_TABLESWITCH) {
         return new JALJvmInsTableswitchImpl(node);
-      }
-      else if (type == JVM_INS_WIDE) {
-        return new JALJvmInsWideImpl(node);
       }
       else if (type == LABEL) {
         return new JALLabelImpl(node);

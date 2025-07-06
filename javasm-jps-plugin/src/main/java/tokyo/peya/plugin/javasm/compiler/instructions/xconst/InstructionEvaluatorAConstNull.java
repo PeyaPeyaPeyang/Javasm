@@ -13,7 +13,7 @@ public class InstructionEvaluatorAConstNull extends AbstractSingleInstructionEva
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsAconstNullContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsAconstNullContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsAconstNull();
     }

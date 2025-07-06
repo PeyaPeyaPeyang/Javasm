@@ -33,4 +33,16 @@ public class JALJvmInsInvokedynamicImpl extends JALInstructionImpl implements JA
     return PsiTreeUtil.getChildrenOfTypeAsList(this, JALInstruction.class);
   }
 
+  @Override
+  @Nullable
+  public JALMethodDescriptor getMethodDescriptor() {
+    return findChildByClass(JALMethodDescriptor.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getId() {
+    return findChildByType(ID);
+  }
+
 }

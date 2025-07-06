@@ -10,15 +10,15 @@ import com.intellij.psi.util.PsiTreeUtil;
 import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 import tokyo.peya.plugin.javasm.langjal.psi.*;
 
-public class JALJvmInsWideImpl extends JALInstructionImpl implements JALJvmInsWide {
+public class JALJvmInsArgInvokeDynamicMethodTypeMethodHandleImpl extends JALInstructionImpl implements JALJvmInsArgInvokeDynamicMethodTypeMethodHandle {
 
-  public JALJvmInsWideImpl(@NotNull ASTNode node) {
+  public JALJvmInsArgInvokeDynamicMethodTypeMethodHandleImpl(@NotNull ASTNode node) {
     super(node);
   }
 
   @Override
   public void accept(@NotNull JALVisitor visitor) {
-    visitor.visitJvmInsWide(this);
+    visitor.visitJvmInsArgInvokeDynamicMethodTypeMethodHandle(this);
   }
 
   @Override
@@ -29,14 +29,8 @@ public class JALJvmInsWideImpl extends JALInstructionImpl implements JALJvmInsWi
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
-  }
-
-  @Override
-  @Nullable
-  public PsiElement getNumber() {
-    return findChildByType(NUMBER);
+  public JALJvmInsArgMethodRef getJvmInsArgMethodRef() {
+    return findChildByClass(JALJvmInsArgMethodRef.class);
   }
 
 }

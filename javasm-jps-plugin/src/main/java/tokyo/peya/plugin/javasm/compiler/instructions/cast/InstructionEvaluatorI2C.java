@@ -13,7 +13,7 @@ public class InstructionEvaluatorI2C extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsI2CContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsI2CContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsI2C();
     }

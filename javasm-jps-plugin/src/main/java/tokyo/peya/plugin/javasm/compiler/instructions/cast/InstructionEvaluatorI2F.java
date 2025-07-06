@@ -13,7 +13,7 @@ public class InstructionEvaluatorI2F extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsI2FContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsI2FContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsI2F();
     }

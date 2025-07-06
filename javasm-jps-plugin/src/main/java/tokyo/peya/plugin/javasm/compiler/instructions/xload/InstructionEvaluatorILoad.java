@@ -15,11 +15,17 @@ public class InstructionEvaluatorILoad extends AbstractInstructionEvaluator<JALP
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsIloadContext ctxt)
     {
-        return InstructionEvaluateHelperXLoad.evaluate(evaluator, ctxt.jvmInsArgLocalRef(), Opcodes.ILOAD, "iload");
+        return InstructionEvaluateHelperXLoad.evaluate(
+                evaluator,
+                ctxt.jvmInsArgLocalRef(),
+                Opcodes.ILOAD,
+                "iload",
+                ctxt.INSN_WIDE()
+        );
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsIloadContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsIloadContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsIload();
     }

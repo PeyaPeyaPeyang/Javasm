@@ -24,7 +24,7 @@ public class InstructionEvaluatorCheckCast extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsCheckcastContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsCheckcastContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsCheckcast();
     }

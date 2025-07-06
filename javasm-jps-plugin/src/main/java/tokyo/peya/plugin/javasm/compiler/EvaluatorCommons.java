@@ -1,12 +1,13 @@
 package tokyo.peya.plugin.javasm.compiler;
 
+import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
+import java.util.function.Function;
 
 public class EvaluatorCommons
 {
@@ -43,35 +44,74 @@ public class EvaluatorCommons
 
     public static int asInteger(@NotNull TerminalNode node)
     {
-        BigDecimal value = parse(node.getText());
-        if (value.scale() > 0 || value.precision() > 10)
-            throw new IllegalArgumentException("Integer literal is too large: " + node.getText());
-
-        return value.intValue();
+        Number number = toNumber(node.getText());
+        if (number == null)
+            throw new IllegalArgumentException("Invalid integer value: " + node.getText());
+        return number.intValue();
     }
 
-    public static BigDecimal parse(@Nullable String input)
+    public static Number toNumber(@Nullable String number)
     {
-        if (input == null || input.isEmpty())
-            return BigDecimal.ZERO;
+        if (number == null || number.isEmpty())
+            return null;
 
-        String trimmed = input.trim().toLowerCase();
+        Function<String, ? extends Number> parseFunction = getImplictParseNumberFunction(number);
+        if (parseFunction != null)
+            number = number.substring(0, number.length() - 1); // 接尾辞を削除
+        else
+        {
+            if (number.startsWith("0x") || number.startsWith("-0x"))
+                parseFunction = Long::parseLong;
+            else if (number.contains("."))
+                parseFunction = Double::parseDouble;
+            else
+                parseFunction = Integer::parseInt;
+        }
+
         try
         {
-            // 16進数（BigDecimalは直接対応してないので、一旦BigIntegerで）
-            if (trimmed.startsWith("0x"))
-            {
-                BigInteger bi = new BigInteger(trimmed.substring(2), 16);
-                return new BigDecimal(bi);
-            }
-            // 10進数
-            else
-                return new BigDecimal(trimmed);
+            return parseFunction.apply(number);
         }
         catch (NumberFormatException e)
         {
-            return null;
+            throw new IllegalArgumentException("Invalid number format: " + number, e);
         }
+    }
+
+    private static Function<String, ? extends Number> getImplictParseNumberFunction(@NotNull String number)
+    {
+        String type = getNumberType(number);
+        return switch (type)
+        {
+            case "float" -> Float::parseFloat;
+            case "double" -> Double::parseDouble;
+            case "long", "hex-long" -> Long::parseLong;
+            default -> null; // null を返すことで fallback させる
+        };
+    }
+    public static String getNumberType(String number)
+    {
+        if (number == null || number.isEmpty())
+            return null;
+
+        if (number.startsWith("0x") || number.startsWith("-0x"))
+        {
+            if (number.endsWith("l") || number.endsWith("L"))
+                return "hex-long";
+            else
+                return "hex-int";
+        }
+
+        if (number.endsWith("f") || number.endsWith("F"))
+            return "float";
+        else if (number.endsWith("d") || number.endsWith("D"))
+            return "double";
+        else if (number.endsWith("l") || number.endsWith("L"))
+            return "long";
+        else if (number.contains("."))
+            return "double";
+        else
+            return "int";
     }
 
     public static String unwrapClassTypeDescriptor(@NotNull String typeName)
@@ -82,5 +122,15 @@ public class EvaluatorCommons
             return typeName.substring(2, typeName.length() - 1);
         else
             throw new IllegalArgumentException("Invalid class type descriptor: " + typeName + ", expected a class type descriptor.");
+    }
+
+    public static boolean toBoolean(String value)
+    {
+        if ("true".equalsIgnoreCase(value) || "1".equals(value))
+            return true;
+        else if ("false".equalsIgnoreCase(value) || "0".equals(value))
+            return false;
+        else
+            throw new IllegalArgumentException("Invalid boolean value: " + value);
     }
 }

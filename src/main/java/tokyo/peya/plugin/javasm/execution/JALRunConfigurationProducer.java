@@ -44,7 +44,8 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
     public boolean isConfigurationFromContext(
             @NotNull ApplicationConfiguration configuration,
             @NotNull ConfigurationContext context
-    ) {
+    )
+    {
         PsiElement location = context.getPsiLocation();
         if (location == null || isNonJAL(location.getContainingFile())) return false;
 
@@ -55,7 +56,6 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
 
         return mainClassName.equals(configuration.getMainClassName());
     }
-
 
     private boolean isNonJAL(PsiFile file)
     {

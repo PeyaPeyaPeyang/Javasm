@@ -12,6 +12,7 @@ import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -61,18 +62,31 @@ public class JALMethodEvaluator
     private void finaliseMethod()
     {
         this.evaluateLocals();
+        this.finaliseInstructionAndLabels();
     }
 
     private void finaliseInstructionAndLabels()
     {
-        for (InstructionInfo instruction : this.instructions)
+        for (int i = 0; i < this.instructions.size(); i++)
         {
+            // ラベルを登録
+            for (LabelInfo label : this.labels)
+                if (label.instructionIndex() == i)
+                {
+                    LabelNode labelNode = label.node();
+                    this.method.instructions.insert(labelNode);
+                }
 
+            InstructionInfo instruction = this.instructions.get(i);
+            this.method.instructions.add(instruction.insn());
         }
     }
 
     private void evaluateLocals()
     {
+        if (this.locals.isEmpty())
+            return;  // ローカル変数がない場合は何もしない
+
         this.context.postInfo("Evaluating locals for method " + this.method.name + this.method.desc);
         this.prepareLocalEvaluation();
 
@@ -101,7 +115,6 @@ public class JALMethodEvaluator
 
     private void prepareLocalEvaluation()
     {
-        // 開始ラベルを持っていないローカル変数がある場合は、グローバルな開始ラベルを設定する。
         if (checkAllLocalsHaveStart(this.locals))
         {
             LabelInfo startLabel = new LabelInfo("MBEGIN", this.globalStartLocalLabel, this.bytecodeOffset);

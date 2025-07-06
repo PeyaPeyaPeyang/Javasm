@@ -50,6 +50,10 @@ KWD_MNAME_INIT: '<init>';
 KWD_MNAME_CLINIT: '<clinit>';
 KWD_SWITCH_DEFAULT: 'default';
 
+KWD_METHOD_TYPE: 'MethodType|';
+KWD_METHOD_HANDLE: 'MethodHandle|';
+KWD_METHOD_HANDLE_TAG_NEWINVOKE: 'newinvokespecial';
+
 INSN_AALOAD: 'aaload';
 INSN_AASTORE: 'aastore';
 INSN_ACONST_NULL: 'aconst_null';
@@ -269,7 +273,8 @@ TYPE_DESC_BOOLEAN: 'Z';
 TYPE_DESC_OBJECT: 'L' [a-zA-Z0-9_/$]+ ';';
 
 SPACE: [ \t\r\n]+ -> skip;
-NUMBER: '-'? ('0x' HEXDIGIT+ | DIGIT+);
+NUMBER:   '-'? ( '0x' [0-9a-fA-F]+ [lL]? | [0-9]+ ('.' [0-9]+)? [fFdDlL]?);
+BOOLEAN: 'true' | 'false';
 ID: [a-zA-Z0-9_$]+ ;
 STRING: '\'' ( ~['\\] | '\\' . )* '\'' | '"' ( ~["\\] | '\\' . )* '"' ;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
@@ -277,9 +282,6 @@ BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 NEWLINE : [\r\n]+ ;
 
 FULL_QUALIFIED_CLASS_NAME: [a-zA-Z0-9_$]+ (SLASH [a-zA-Z0-9_$]+)*;
-
-fragment DIGIT : [0-9] ;
-fragment HEXDIGIT : [0-9a-fA-F] ;
 
 // -------------------------------------------------------------------- //
 
@@ -326,11 +328,19 @@ accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE 
 label : labelName COLON;
 labelName : ID | NUMBER;
 
-jvmInsArgScalarType : STRING | NUMBER;
+jvmInsArgScalarType : STRING | NUMBER | BOOLEAN;
 
 jvmInsArgFieldRef : jvmInsArgFieldRefType REF jvmInsArgFieldRefName COLON jvmInsArgFieldRefType;
 jvmInsArgFieldRefType : typeDescriptor;
 jvmInsArgFieldRefName : ID;
+
+jvmInsArgInvokeDynamicRef: jvmInsArgScalarType | jvmInsArgInvokeDynamicMethodType | jvmInsArgInvokeDynamicMethodTypeMethodHandle;
+jvmInsArgInvokeDynamicMethodType: KWD_METHOD_TYPE methodDescriptor;
+jvmInsArgInvokeDynamicMethodTypeMethodHandle: KWD_METHOD_HANDLE (INSN_GETFIELD | INSN_GETSTATIC | INSN_PUTFIELD
+                                                        | INSN_PUTSTATIC | INSN_INVOKEVIRTUAL
+                                                        | INSN_INVOKESPECIAL | INSN_INVOKESTATIC
+                                                        | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE)
+                                                         '|' jvmInsArgMethodRef;
 
 jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
 jvmInsArgMethodSpecialRef : (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor;
@@ -368,17 +378,17 @@ instruction: jvmInsAaload | jvmInsAastore  | jvmInsAconstNull | jvmInsAload | jv
                 | jvmInsLshr | jvmInsLstore | jvmInsLstoreN | jvmInsLsub | jvmInsLushr | jvmInsLxor | jvmInsMonitorenter
                 | jvmInsMonitorexit | jvmInsMultianewarray | jvmInsNew | jvmInsNewarray | jvmInsNop | jvmInsPop
                 | jvmInsPop2 | jvmInsPutfield | jvmInsPutstatic | jvmInsRet | jvmInsReturn | jvmInsSaload
-                | jvmInsSastore | jvmInsSipush | jvmInsSwap | jvmInsTableswitch | jvmInsWide;
+                | jvmInsSastore | jvmInsSipush | jvmInsSwap | jvmInsTableswitch;
 
 jvmInsAaload: INSN_AALOAD;
 jvmInsAastore: INSN_AASTORE;
 jvmInsAconstNull: INSN_ACONST_NULL;
-jvmInsAload: INSN_ALOAD jvmInsArgLocalRef;
+jvmInsAload: INSN_WIDE? INSN_ALOAD jvmInsArgLocalRef;
 jvmInsAloadN: INSN_ALOAD_0 | INSN_ALOAD_1 | INSN_ALOAD_2 | INSN_ALOAD_3 | INSN_ALOAD_4;
 jvmInsAnewArray: INSN_ANEWARRAY typeDescriptor;
 jvmInsAreturn: INSN_ARETURN;
 jvmInsArraylength: INSN_ARRAYLENGTH;
-jvmInsAstore: INSN_ASTORE jvmInsArgLocalRef;
+jvmInsAstore: INSN_WIDE? INSN_ASTORE jvmInsArgLocalRef;
 jvmInsAstoreN: INSN_ASTORE_0 | INSN_ASTORE_1 | INSN_ASTORE_2 | INSN_ASTORE_3;
 jvmInsAthrow: INSN_ATHROW;
 jvmInsBaload: INSN_BALOAD;
@@ -396,13 +406,13 @@ jvmInsDastore: INSN_DASTORE;
 jvmInsDcmpOP: INSN_DCMPG | INSN_DCMPL;
 jvmInsDconstN: INSN_DCONST_0 | INSN_DCONST_1;
 jvmInsDdiv: INSN_DDIV;
-jvmInsDload: INSN_DLOAD jvmInsArgLocalRef;
+jvmInsDload: INSN_WIDE? INSN_DLOAD jvmInsArgLocalRef;
 jvmInsDloadN: INSN_DLOAD_0 | INSN_DLOAD_1 | INSN_DLOAD_2 | INSN_DLOAD_3;
 jvmInsDmul: INSN_DMUL;
 jvmInsDneg: INSN_DNEG;
 jvmInsDrem: INSN_DREM;
 jvmInsDreturn: INSN_DRETURN;
-jvmInsDstore: INSN_DSTORE jvmInsArgLocalRef;
+jvmInsDstore: INSN_WIDE? INSN_DSTORE jvmInsArgLocalRef;
 jvmInsDstoreN: INSN_DSTORE_0 | INSN_DSTORE_1 | INSN_DSTORE_2 | INSN_DSTORE_3;
 jvmInsDsub: INSN_DSUB;
 jvmInsDup: INSN_DUP;
@@ -416,17 +426,17 @@ jvmInsF2I: INSN_F2I;
 jvmInsF2L: INSN_F2L;
 jvmInsFadd: INSN_FADD;
 jvmInsFaload: INSN_FALOAD;
-jvmInsFastore: INSN_FASTORE;
+jvmInsFastore: INSN_WIDE? INSN_FASTORE;
 jvmInsFcmpgOP: INSN_FCMPG | INSN_FCMPL;
 jvmInsFconstN: INSN_FCONST_0 | INSN_FCONST_1 | INSN_FCONST_2;
 jvmInsFdiv: INSN_FDIV;
-jvmInsFload: INSN_FLOAD jvmInsArgLocalRef;
+jvmInsFload: INSN_WIDE? INSN_FLOAD jvmInsArgLocalRef;
 jvmInsFloadN: INSN_FLOAD_0 | INSN_FLOAD_1 | INSN_FLOAD_2 | INSN_FLOAD_3;
 jvmInsFmul: INSN_FMUL;
 jvmInsFneg: INSN_FNEG;
 jvmInsFrem: INSN_FREM;
 jvmInsFreturn: INSN_FRETURN;
-jvmInsFstore: INSN_FSTORE jvmInsArgLocalRef;
+jvmInsFstore: INSN_WIDE? INSN_FSTORE jvmInsArgLocalRef;
 jvmInsFstoreN: INSN_FSTORE_0 | INSN_FSTORE_1 | INSN_FSTORE_2 | INSN_FSTORE_3;
 jvmInsFsub: INSN_FSUB;
 jvmInsGetfield: INSN_GETFIELD jvmInsArgFieldRef;
@@ -462,13 +472,13 @@ jvmInsIfOP: INSN_IFEQ labelName
             | INSN_IFLE labelName;
 jvmInsIfNonnull: INSN_IFNONNULL labelName;
 jvmInsIfNull: INSN_IFNULL labelName;
-jvmInsIinc: INSN_IINC jvmInsArgLocalRef COMMA NUMBER;
-jvmInsIload: INSN_ILOAD jvmInsArgLocalRef;
+jvmInsIinc: INSN_WIDE? INSN_IINC jvmInsArgLocalRef COMMA NUMBER;
+jvmInsIload: INSN_WIDE? INSN_ILOAD jvmInsArgLocalRef;
 jvmInsIloadN: INSN_ILOAD_0 | INSN_ILOAD_1 | INSN_ILOAD_2 | INSN_ILOAD_3;
 jvmInsImul: INSN_IMUL;
 jvmInsIneg: INSN_INEG;
 jvmInsInstanceof: INSN_INSTANCEOF typeDescriptor;
-jvmInsInvokedynamic: INSN_INVOKEDYNAMIC jvmInsArgMethodRef jvmInsArgMethodRef jvmInsArgScalarType*;
+jvmInsInvokedynamic: INSN_INVOKEDYNAMIC methodName methodDescriptor jvmInsArgInvokeDynamicMethodTypeMethodHandle jvmInsArgInvokeDynamicRef*;
 jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef NUMBER;
 jvmInsInvokespecial: INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef;
 jvmInsInvokestatic: INSN_INVOKESTATIC jvmInsArgMethodRef;
@@ -478,7 +488,7 @@ jvmInsIrem: INSN_IREM;
 jvmInsIreturn: INSN_IRETURN;
 jvmInsIshl: INSN_ISHL;
 jvmInsIshr: INSN_ISHR;
-jvmInsIstore: INSN_ISTORE jvmInsArgLocalRef;
+jvmInsIstore: INSN_WIDE? INSN_ISTORE jvmInsArgLocalRef;
 jvmInsIstoreN: INSN_ISTORE_0 | INSN_ISTORE_1 | INSN_ISTORE_2 | INSN_ISTORE_3;
 jvmInsIsub: INSN_ISUB;
 jvmInsIushr: INSN_IUSHR;
@@ -498,7 +508,7 @@ jvmInsLdc: INSN_LDC jvmInsArgScalarType;
 jvmInsLdcW: INSN_LDC_W jvmInsArgScalarType;
 jvmInsLdc2W: INSN_LDC2_W jvmInsArgScalarType;
 jvmInsLdiv: INSN_LDIV;
-jvmInsLload: INSN_LLOAD jvmInsArgLocalRef;
+jvmInsLload: INSN_WIDE? INSN_LLOAD jvmInsArgLocalRef;
 jvmInsLloadN: INSN_LLOAD_0 | INSN_LLOAD_1 | INSN_LLOAD_2 | INSN_LLOAD_3;
 jvmInsLmul: INSN_LMUL;
 jvmInsLneg: INSN_LNEG;
@@ -508,7 +518,7 @@ jvmInsLrem: INSN_LREM;
 jvmInsLreturn: INSN_LRETURN;
 jvmInsLshl: INSN_LSHL;
 jvmInsLshr: INSN_LSHR;
-jvmInsLstore: INSN_LSTORE jvmInsArgLocalRef;
+jvmInsLstore: INSN_WIDE? INSN_LSTORE jvmInsArgLocalRef;
 jvmInsLstoreN: INSN_LSTORE_0 | INSN_LSTORE_1 | INSN_LSTORE_2 | INSN_LSTORE_3;
 jvmInsLsub: INSN_LSUB;
 jvmInsLushr: INSN_LUSHR;
@@ -523,12 +533,10 @@ jvmInsPop: INSN_POP;
 jvmInsPop2: INSN_POP2;
 jvmInsPutfield: INSN_PUTFIELD jvmInsArgFieldRef;
 jvmInsPutstatic: INSN_PUTSTATIC jvmInsArgFieldRef;
-jvmInsRet: INSN_RET jvmInsArgLocalRef;
+jvmInsRet: INSN_WIDE? INSN_RET jvmInsArgLocalRef;
 jvmInsReturn: INSN_RETURN;
 jvmInsSaload: INSN_SALOAD;
 jvmInsSastore: INSN_SASTORE;
 jvmInsSipush: INSN_SIPUSH NUMBER;
 jvmInsSwap: INSN_SWAP;
 jvmInsTableswitch: INSN_TABLESWITCH jvmInsArgTableSwitch;
-jvmInsWide: INSN_WIDE (jvmInsIload | jvmInsFload | jvmInsAload | jvmInsLload | jvmInsDload | jvmInsIstore | jvmInsFstore
-                       | jvmInsAstore | jvmInsDstore | jvmInsRet) NUMBER;

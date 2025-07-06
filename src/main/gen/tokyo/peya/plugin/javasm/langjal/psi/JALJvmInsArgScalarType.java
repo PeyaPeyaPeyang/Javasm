@@ -8,6 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsArgScalarType extends JALInstruction {
 
   @Nullable
+  PsiElement getBoolean();
+
+  @Nullable
   PsiElement getNumber();
 
   @Nullable

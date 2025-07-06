@@ -42,7 +42,7 @@ public class InstructionEvaluatorIfICmpOP extends AbstractInstructionEvaluator<J
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsIfIcmpOPContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsIfIcmpOPContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsIfIcmpOP();
     }

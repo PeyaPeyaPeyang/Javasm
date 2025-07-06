@@ -13,7 +13,7 @@ public class InstructionEvaluatorMonitorExit extends AbstractSingleInstructionEv
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsMonitorexitContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsMonitorexitContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsMonitorexit();
     }

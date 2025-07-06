@@ -26,7 +26,7 @@ public class InstructionEvaluatorSiPush extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsSipushContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsSipushContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsSipush();
     }

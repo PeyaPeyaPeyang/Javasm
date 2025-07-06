@@ -13,7 +13,7 @@ public class InstructionEvaluatorNop extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsNopContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsNopContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsNop();
     }

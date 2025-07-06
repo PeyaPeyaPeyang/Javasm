@@ -13,7 +13,7 @@ public class InstructionEvaluatorPop extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsPopContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsPopContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsPop();
     }

@@ -1,6 +1,8 @@
 package tokyo.peya.plugin.javasm.compiler.instructions.xload;
 
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
@@ -11,14 +13,24 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 public class InstructionEvaluateHelperXLoad
 {
     public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
-                                                         JALParser.JvmInsArgLocalRefContext ref,
+                                                         @NotNull JALParser.JvmInsArgLocalRefContext ref,
                                                          int opcode,
-                                                         @NotNull String callerInsn)
+                                                         @NotNull String callerInsn,
+                                                         @Nullable TerminalNode wide)
     {
         LocalVariableInfo local = evaluator.resolveLocal(ref, callerInsn);
 
-        VarInsnNode insn = new VarInsnNode(opcode, local.index());
-        return EvaluatedInstruction.of(insn);
+        int idx = local.index();
+        boolean isWide = wide != null;
+        if (idx >= 0xFF && !isWide)
+            throw new IllegalArgumentException(String.format(
+                    "Local variable index %d is too large for %s instruction. Use wide variant with.",
+                    idx, callerInsn
+            ));
+
+        int size = isWide ? 4 : 2;
+        VarInsnNode insn = new VarInsnNode(opcode, idx);
+        return EvaluatedInstruction.of(insn, size);
     }
 
     public static @NotNull EvaluatedInstruction evaluateN(@NotNull JALMethodEvaluator evaluator, int opcode, int idx)

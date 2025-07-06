@@ -17,12 +17,22 @@ public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALPar
     {
         LocalVariableInfo local = evaluator.resolveLocal(ctxt.jvmInsArgLocalRef(), "ret");
 
+        int idx = local.index();
+        boolean isWide = ctxt.INSN_WIDE() != null;
+        if (idx >= 0xFF && !isWide)
+            throw new IllegalArgumentException(String.format(
+                    "Local variable index %d is too large for ret instruction. Use wide variant with.",
+                    idx
+            ));
+
         VarInsnNode insn = new VarInsnNode(EOpcodes.RET, local.index());
-        return EvaluatedInstruction.of(insn);
+
+        int size = isWide ? 4 : 2;
+        return EvaluatedInstruction.of(insn, size);
     }
 
     @Override
-    protected JALParser.@NotNull JvmInsRetContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsRetContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsRet();
     }
