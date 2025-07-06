@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Label;
 
 public record LabelInfo(
-        @NotNull String labelName,
+        @NotNull String name,
         @NotNull Label label,
-        int bytecodeOffset
+        int instructionIndex
 ) {}

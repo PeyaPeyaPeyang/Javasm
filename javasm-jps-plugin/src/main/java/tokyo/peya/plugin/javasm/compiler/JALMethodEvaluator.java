@@ -1,17 +1,20 @@
 package tokyo.peya.plugin.javasm.compiler;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class JALMethodEvaluator
@@ -20,9 +23,15 @@ public class JALMethodEvaluator
     private final ClassNode clazz;
     private final MethodNode method;
 
+    @Getter(AccessLevel.NONE)
     private final List<LocalVariableInfo> locals;
+    @Getter(AccessLevel.NONE)
     private final List<LabelInfo> labels;
+    @Getter(AccessLevel.NONE)
     private final List<InstructionInfo> instructions;
+
+    private final Label globalStartLocalLabel;
+    private final Label globalEndLocalLabel;
 
     private int bytecodeOffset;
 
@@ -35,6 +44,9 @@ public class JALMethodEvaluator
         this.locals = new LinkedList<>();
         this.labels = new ArrayList<>();
         this.instructions = new ArrayList<>();
+
+        this.globalStartLocalLabel = new Label();
+        this.globalEndLocalLabel = new Label();
     }
 
     public void evaluateMethod(@NotNull JALParser.MethodDefinitionContext method)
@@ -43,6 +55,76 @@ public class JALMethodEvaluator
 
         this.evaluateMethodMetadata(method);
         this.evaluateMethodBody(method.methodBody());
+        this.finaliseMethod();
+    }
+
+    private void finaliseMethod()
+    {
+        this.evaluateLocals();
+    }
+
+    private void evaluateLocals()
+    {
+        this.context.postInfo("Evaluating locals for method " + this.method.name + this.method.desc);
+        this.prepareLocalEvaluation();
+
+        for (LocalVariableInfo local : this.locals)
+        {
+            Label start = this.globalStartLocalLabel;
+            Label end = this.globalEndLocalLabel;
+            if (local.start() != null)
+                start = local.start().label();
+            if (local.end() != null)
+                end = local.end().label();
+
+            // ローカル変数をメソッドに登録
+            this.method.visitLocalVariable(
+                    local.name(),
+                    local.type(),
+                    null, // signature は未使用
+                    start,
+                    end,
+                    local.index()
+            );
+        }
+    }
+
+    private void prepareLocalEvaluation()
+    {
+        // 開始ラベルを持っていないローカル変数がある場合は、グローバルな開始ラベルを設定する。
+        if (checkAllLocalsHaveStart(this.locals))
+        {
+            LabelInfo startLabel = new LabelInfo("MBEGIN", this.globalStartLocalLabel, this.bytecodeOffset);
+            LabelNode node = (LabelNode) (this.globalStartLocalLabel.info = new LabelNode());
+
+            this.labels.add(startLabel);
+            this.method.instructions.insertBefore(node, this.method.instructions.getFirst());
+            // ↑ START なので，いっちゃんさいしょ
+        }
+        // 終了ラベルを持っていないローカル変数がある場合は、グローバルな終了ラベルを設定する。
+        if (checkAllLocalsHaveEnd(this.locals))
+        {
+            LabelInfo endLabel = new LabelInfo("MEND", this.globalEndLocalLabel, this.bytecodeOffset);
+            LabelNode node = (LabelNode) (this.globalEndLocalLabel.info = new LabelNode());
+
+            this.labels.add(endLabel);
+            this.method.instructions.add(node);
+            // ↑ END なので，いっちゃんさいご
+        }
+    }
+
+    private static boolean checkAllLocalsHaveStart(@NotNull List<LocalVariableInfo> locals)
+    {
+        return locals.stream()
+                .map(LocalVariableInfo::start)
+                .noneMatch(Objects::isNull);
+    }
+
+    private static boolean checkAllLocalsHaveEnd(@NotNull List<LocalVariableInfo> locals)
+    {
+        return locals.stream()
+                .map(LocalVariableInfo::end)
+                .noneMatch(Objects::isNull);
     }
 
     private void evaluateMethodMetadata(@NotNull JALParser.MethodDefinitionContext method)
@@ -59,6 +141,8 @@ public class JALMethodEvaluator
 
     private void evaluateMethodBody(@NotNull JALParser.MethodBodyContext body)
     {
+        this.context.postInfo("Evaluating method body for " + this.method.name + this.method.desc);
+
         this.method.visitCode();
 
         // 各命令を順に評価していく
@@ -111,13 +195,7 @@ public class JALMethodEvaluator
     private LabelInfo evaluateLabel(@NotNull JALParser.LabelContext label)
     {
         String labelName = label.labelName().getText();
-        Label labelObj = new Label();
-        this.method.visitLabel(labelObj);
-
-        LabelInfo labelInfo = new LabelInfo(labelName, labelObj, this.bytecodeOffset);
-        this.labels.add(labelInfo);
-
-        return labelInfo;
+        return this.registerLabel(labelName);
     }
 
     private InstructionInfo addInstruction(@NotNull InstructionInfo instruction)
@@ -295,6 +373,49 @@ public class JALMethodEvaluator
 
         // メソッドへの登録は後ほど。
         return newLocal;
+    }
+
+    @NotNull
+    public LabelInfo resolveLabel(@NotNull String labelName)
+    {
+        LabelInfo resolvedLabel = this.resolveLabelSafe(labelName);
+        if (resolvedLabel == null)
+            throw new IllegalArgumentException("Label '" + labelName + "' is not defined in this method.");
+
+        return resolvedLabel;  // すでに登録されているラベルを返す
+    }
+
+    @Nullable
+    public LabelInfo resolveLabelSafe(@NotNull String labelName)
+    {
+        for (LabelInfo existingLabel : this.labels)
+        {
+            if (existingLabel.name().equals(labelName))
+                return existingLabel;  // すでに登録されているラベルを返す
+        }
+
+        return null;  // ラベルが見つからない場合は null を返す
+    }
+
+    @NotNull
+    public LabelInfo registerLabel(@NotNull String labelName)
+    {
+        LabelInfo existingLabel = this.resolveLabelSafe(labelName);
+        if (existingLabel != null)
+            throw new IllegalArgumentException(
+                    "Label '" + labelName + "' is already defined at instruction index "
+                            + existingLabel.instructionIndex()
+            );
+
+        // 新しいラベルを登録
+        Label newLabel = new Label();
+        LabelInfo labelInfo = new LabelInfo(labelName, newLabel, this.instructions.size());
+        this.labels.add(labelInfo);
+
+        // メソッドへの登録もここで行う
+        this.method.visitLabel(newLabel);
+
+        return labelInfo;
     }
 
     private void warnLocalPerformance(@NotNull LocalVariableInfo localVar, @NotNull String callerInsn)
