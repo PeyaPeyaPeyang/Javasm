@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsBipush extends JALInstruction {
 
   @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
+  PsiElement getNumber();
 
 }

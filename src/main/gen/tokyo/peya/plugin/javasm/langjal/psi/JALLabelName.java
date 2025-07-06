@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface JALLabelName extends PsiElement {
 
   @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
+  PsiElement getId();
 
   @Nullable
-  PsiElement getId();
+  PsiElement getNumber();
 
 }

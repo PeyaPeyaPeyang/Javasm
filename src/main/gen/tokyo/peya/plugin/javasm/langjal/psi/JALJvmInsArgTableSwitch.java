@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsArgTableSwitch extends JALInstruction {
 
   @NotNull
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
+  List<JALLabelName> getLabelNameList();
 
   @NotNull
-  List<JALLabelName> getLabelNameList();
+  PsiElement getNumber();
 
 }

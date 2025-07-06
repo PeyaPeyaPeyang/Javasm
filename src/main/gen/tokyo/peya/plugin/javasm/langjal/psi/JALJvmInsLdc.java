@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsLdc extends JALInstruction {
 
   @Nullable
-  JALInstruction getInstruction();
+  JALJvmInsArgScalarType getJvmInsArgScalarType();
 
 }

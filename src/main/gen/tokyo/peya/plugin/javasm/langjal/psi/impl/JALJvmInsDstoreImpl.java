@@ -29,8 +29,8 @@ public class JALJvmInsDstoreImpl extends JALInstructionImpl implements JALJvmIns
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgLocalRef getJvmInsArgLocalRef() {
+    return findChildByClass(JALJvmInsArgLocalRef.class);
   }
 
 }

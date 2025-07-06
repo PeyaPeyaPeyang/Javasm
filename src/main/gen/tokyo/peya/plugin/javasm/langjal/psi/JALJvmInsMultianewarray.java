@@ -8,9 +8,9 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsMultianewarray extends JALInstruction {
 
   @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
+  JALTypeDescriptor getTypeDescriptor();
 
   @Nullable
-  JALTypeDescriptor getTypeDescriptor();
+  PsiElement getNumber();
 
 }

@@ -7,7 +7,10 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsWide extends JALInstruction {
 
-  @NotNull
-  List<JALInstruction> getInstructionList();
+  @Nullable
+  JALInstruction getInstruction();
+
+  @Nullable
+  PsiElement getNumber();
 
 }

@@ -10,4 +10,7 @@ public interface JALJvmInsArgLocalRef extends JALInstruction {
   @Nullable
   PsiElement getId();
 
+  @Nullable
+  PsiElement getNumber();
+
 }

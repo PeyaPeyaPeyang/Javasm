@@ -29,8 +29,8 @@ public class JALClassPropMinorImpl extends ASTWrapperPsiElement implements JALCl
 
   @Override
   @Nullable
-  public PsiElement getInsnArgUnsig8Bytes() {
-    return findChildByType(INSN_ARG_UNSIG_8BYTES);
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
   }
 
 }

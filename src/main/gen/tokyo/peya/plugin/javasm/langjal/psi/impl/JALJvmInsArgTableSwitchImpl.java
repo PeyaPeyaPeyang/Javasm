@@ -29,14 +29,14 @@ public class JALJvmInsArgTableSwitchImpl extends JALInstructionImpl implements J
 
   @Override
   @NotNull
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findNotNullChildByClass(JALJvmInsArgUnsigned8Bytes.class);
+  public List<JALLabelName> getLabelNameList() {
+    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALLabelName.class);
   }
 
   @Override
   @NotNull
-  public List<JALLabelName> getLabelNameList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALLabelName.class);
+  public PsiElement getNumber() {
+    return findNotNullChildByType(NUMBER);
   }
 
 }

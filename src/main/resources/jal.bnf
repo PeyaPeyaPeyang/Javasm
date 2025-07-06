@@ -269,8 +269,6 @@
     INSN_WIDE="wide"
     // </editor-fold>
 
-    INSN_ARG_UNSIG_8BYTES="regexp:0x[0-9a-fA-F]{1,8}|\d+"
-
     TYPE_DESC_BYTE="B"
     TYPE_DESC_CHAR="C"
     TYPE_DESC_DOUBLE="D"
@@ -284,9 +282,9 @@
 
     // <editor-fold desc="Meta characters">
     space="regexp:\s+"
+    number="regexp:-?(0x)?\d+"
     id="regexp:[\w$]+"
     string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\")"
-    number="regexp:\d+"
     line_comment="regexp://.*"
     block_comment="regexp:/\*(.|\n)*\*/"
     // </editor-fold>
@@ -308,8 +306,8 @@ classMeta ::= classMetaItem (COMMA classMetaItem)*
 classBody ::= classBodyItem*
 
 classMetaItem ::= classPropMajor | classPropMinor | classPropSuperClass | classPropInterfaces
-classPropMajor ::= KWD_CLASS_PROP_MAJOR EQ INSN_ARG_UNSIG_8BYTES { pin=1 }
-classPropMinor ::= KWD_CLASS_PROP_MINOR EQ INSN_ARG_UNSIG_8BYTES { pin=1 }
+classPropMajor ::= KWD_CLASS_PROP_MAJOR EQ number { pin=1 }
+classPropMinor ::= KWD_CLASS_PROP_MINOR EQ number { pin=1 }
 classPropSuperClass ::= KWD_CLASS_PROP_SUPER_CLASS EQ className { pin=1 }
 classPropInterfaces ::= KWD_CLASS_PROP_INTERFACES EQ className (COMMA className)* { pin=1 }
 
@@ -342,10 +340,9 @@ accAttrField ::= KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATIL
                  | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ENUM
 
 label ::= labelName COLON { pin=2 }
-labelName ::= id | jvmInsArgUnsigned8Bytes
+labelName ::= id | number
 
-jvmInsArgUnsigned8Bytes ::= INSN_ARG_UNSIG_8BYTES
-jvmInsArgScalarType ::= string | number | jvmInsArgUnsigned8Bytes
+jvmInsArgScalarType ::= string | number
 
 jvmInsArgFieldRef ::= jvmInsArgFieldRefType REF jvmInsArgFieldRefName COLON jvmInsArgFieldRefType {pin = 1}
 jvmInsArgFieldRefType ::= typeDescriptor
@@ -355,13 +352,13 @@ jvmInsArgMethodRef ::= (jvmInsArgMethodRefOwnerType REF)? methodName methodDescr
 jvmInsArgMethodSpecialRef ::= (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor {pin = 2}
 jvmInsArgMethodRefOwnerType ::= typeDescriptor
 
-jvmInsArgLocalRef ::= jvmInsArgUnsigned8Bytes | id
+jvmInsArgLocalRef ::= number | id
 
 jvmInsArgLookupSwitch ::= LBR jvmInsArgLookupSwitchCase (SEMI jvmInsArgLookupSwitchCase)* RBR {pin = 1}
 jvmInsArgLookupSwitchCase ::= jvmInsArgLookupSwitchCaseName COLON labelName {pin = 2}
-jvmInsArgLookupSwitchCaseName ::= jvmInsArgUnsigned8Bytes | KWD_SWITCH_DEFAULT
+jvmInsArgLookupSwitchCaseName ::= number | KWD_SWITCH_DEFAULT
 
-jvmInsArgTableSwitch ::= jvmInsArgUnsigned8Bytes LBR labelName* RBR  KWD_SWITCH_DEFAULT labelName {pin = 2}
+jvmInsArgTableSwitch ::= number LBR labelName* RBR  KWD_SWITCH_DEFAULT labelName {pin = 2}
 
 instruction ::= jvmInsAaload | jvmInsAastore  | jvmInsAconstNull | jvmInsAload | jvmInsAloadN  | jvmInsAnewArray
                 | jvmInsAreturn | jvmInsArraylength | jvmInsAstore | jvmInsAstoreN | jvmInsAthrow | jvmInsBaload
@@ -399,7 +396,7 @@ jvmInsAstoreN ::= INSN_ASTORE_0 | INSN_ASTORE_1 | INSN_ASTORE_2 | INSN_ASTORE_3
 jvmInsAthrow ::= INSN_ATHROW
 jvmInsBaload ::= INSN_BALOAD
 jvmInsBastore ::= INSN_BASTORE
-jvmInsBipush ::= INSN_BIPUSH jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsBipush ::= INSN_BIPUSH number {pin = 1}
 jvmInsCaload ::= INSN_CALOAD
 jvmInsCastore ::= INSN_CASTORE
 jvmInsCheckcast ::= INSN_CHECKCAST typeDescriptor {pin = 1}
@@ -478,14 +475,14 @@ jvmInsIfOP ::= INSN_IFEQ labelName
                | INSN_IFLE labelName
 jvmInsIfNonnull ::= INSN_IFNONNULL labelName {pin = 1}
 jvmInsIfNull ::= INSN_IFNULL labelName {pin = 1}
-jvmInsIinc ::= INSN_IINC jvmInsArgLocalRef COMMA jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsIinc ::= INSN_IINC jvmInsArgLocalRef COMMA number {pin = 1}
 jvmInsIload ::= INSN_ILOAD jvmInsArgLocalRef {pin = 1}
 jvmInsIloadN ::= INSN_ILOAD_0 | INSN_ILOAD_1 | INSN_ILOAD_2 | INSN_ILOAD_3
 jvmInsImul ::= INSN_IMUL
 jvmInsIneg ::= INSN_INEG
 jvmInsInstanceof ::= INSN_INSTANCEOF typeDescriptor {pin = 1}
 jvmInsInvokedynamic ::= INSN_INVOKEDYNAMIC jvmInsArgMethodRef jvmInsArgMethodRef jvmInsArgScalarType* {pin = 1}
-jvmInsInvokeinterface ::= INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsInvokeinterface ::= INSN_INVOKEINTERFACE jvmInsArgMethodRef number {pin = 1}
 jvmInsInvokespecial ::= INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef {pin = 1}
 jvmInsInvokestatic ::= INSN_INVOKESTATIC jvmInsArgMethodRef {pin = 1}
 jvmInsInvokevirtual ::= INSN_INVOKEVIRTUAL jvmInsArgMethodRef {pin = 1}
@@ -531,7 +528,7 @@ jvmInsLushr ::= INSN_LUSHR
 jvmInsLxor ::= INSN_LXOR
 jvmInsMonitorenter ::= INSN_MONITORENTER
 jvmInsMonitorexit ::= INSN_MONITOREXIT
-jvmInsMultianewarray ::= INSN_MULTIANEWARRAY typeDescriptor jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsMultianewarray ::= INSN_MULTIANEWARRAY typeDescriptor number {pin = 1}
 jvmInsNew ::= INSN_NEW typeDescriptor {pin = 1}
 jvmInsNewarray ::= INSN_NEWARRAY typeDescriptor {pin = 1}
 jvmInsNop ::= INSN_NOP
@@ -543,10 +540,10 @@ jvmInsRet ::= INSN_RET jvmInsArgLocalRef {pin = 1}
 jvmInsReturn ::= INSN_RETURN
 jvmInsSaload ::= INSN_SALOAD
 jvmInsSastore ::= INSN_SASTORE
-jvmInsSipush ::= INSN_SIPUSH jvmInsArgUnsigned8Bytes {pin = 1}
+jvmInsSipush ::= INSN_SIPUSH number {pin = 1}
 jvmInsSwap ::= INSN_SWAP
 jvmInsTableswitch ::= INSN_TABLESWITCH jvmInsArgTableSwitch {pin = 1}
 jvmInsWide ::= INSN_WIDE (
                  jvmInsIload | jvmInsFload | jvmInsAload | jvmInsLload | jvmInsDload | jvmInsIstore | jvmInsFstore
                  | jvmInsAstore | jvmInsDstore | jvmInsRet
-               ) jvmInsArgUnsigned8Bytes {pin = 1}
+               ) number {pin = 1}

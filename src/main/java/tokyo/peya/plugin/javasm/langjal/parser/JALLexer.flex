@@ -25,12 +25,11 @@ import static tokyo.peya.plugin.javasm.langjal.psi.JALTypes.*;
 EOL=\R
 WHITE_SPACE=\s+
 
-INSN_ARG_UNSIG_8BYTES=0x[0-9a-fA-F]{1,8}|[0-9]+
 TYPE_DESC_OBJECT=L([^;\n\r]+);
 SPACE=[ \t\n\x0B\f\r]+
+NUMBER=-?(0x)?[0-9]+
 ID=[\w$]+
 STRING=('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\'|\\)*\")
-NUMBER=[0-9]+
 LINE_COMMENT="//".*
 BLOCK_COMMENT="/"\*(.|\n)*\*"/"
 FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
@@ -294,12 +293,11 @@ FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
   "V"                               { return TYPE_DESC_VOID; }
   "Z"                               { return TYPE_DESC_BOOLEAN; }
 
-  {INSN_ARG_UNSIG_8BYTES}           { return INSN_ARG_UNSIG_8BYTES; }
   {TYPE_DESC_OBJECT}                { return TYPE_DESC_OBJECT; }
   {SPACE}                           { return SPACE; }
+  {NUMBER}                          { return NUMBER; }
   {ID}                              { return ID; }
   {STRING}                          { return STRING; }
-  {NUMBER}                          { return NUMBER; }
   {LINE_COMMENT}                    { return LINE_COMMENT; }
   {BLOCK_COMMENT}                   { return BLOCK_COMMENT; }
   {FULL_QUALIFIED_CLASS_NAME}       { return FULL_QUALIFIED_CLASS_NAME; }

@@ -27,10 +27,4 @@ public class JALJvmInsIastoreImpl extends JALInstructionImpl implements JALJvmIn
     else super.accept(visitor);
   }
 
-  @Override
-  @Nullable
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findChildByClass(JALJvmInsArgUnsigned8Bytes.class);
-  }
-
 }

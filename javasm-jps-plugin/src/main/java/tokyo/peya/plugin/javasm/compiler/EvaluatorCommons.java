@@ -8,22 +8,22 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 public class EvaluatorCommons
 {
-    static int asAccessLevel(@Nullable JALParser.AccessLevelContext accessLevel)
+    public static int asAccessLevel(@Nullable JALParser.AccessLevelContext accessLevel)
     {
         if (accessLevel == null)
             return 0;
 
         if (accessLevel.KWD_ACC_PUBLIC() != null)
-            return Opcodes.ACC_PUBLIC;
+            return EOpcodes.ACC_PUBLIC;
         if (accessLevel.KWD_ACC_PRIVATE() != null)
-            return Opcodes.ACC_PRIVATE;
+            return EOpcodes.ACC_PRIVATE;
         if (accessLevel.KWD_ACC_PROTECTED() != null)
-            return Opcodes.ACC_PROTECTED;
+            return EOpcodes.ACC_PROTECTED;
 
         throw new IllegalArgumentException("Unknown access level: " + accessLevel.getText());
     }
 
-    private static String asString(@NotNull TerminalNode node)
+    public static String asString(@NotNull TerminalNode node)
     {
         String text = node.getText();
         if (text == null || text.isEmpty())
@@ -39,19 +39,34 @@ public class EvaluatorCommons
                    .replace("\\\\", "\\");
     }
 
-    static int asInt(@NotNull TerminalNode node)
+    public static int asInt(@NotNull TerminalNode node)
     {
         String text = node.getText();
         if (text == null || text.isEmpty())
             return 0;
 
-        try
+        // 0x から始まる or 10 進
+        if (text.startsWith("0x"))
         {
-            return Integer.parseInt(text);
+            try
+            {
+                return Integer.parseInt(text.substring(2), 16);
+            }
+            catch (NumberFormatException e)
+            {
+                return 0;
+            }
         }
-        catch (NumberFormatException e)
+        else
         {
-            return 0;
+            try
+            {
+                return Integer.parseInt(text);
+            }
+            catch (NumberFormatException e)
+            {
+                return 0;
+            }
         }
     }
 }

@@ -29,8 +29,8 @@ public class JALJvmInsRetImpl extends JALInstructionImpl implements JALJvmInsRet
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgLocalRef getJvmInsArgLocalRef() {
+    return findChildByClass(JALJvmInsArgLocalRef.class);
   }
 
 }

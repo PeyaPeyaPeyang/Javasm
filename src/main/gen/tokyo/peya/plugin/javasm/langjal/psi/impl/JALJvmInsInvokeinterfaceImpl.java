@@ -28,9 +28,15 @@ public class JALJvmInsInvokeinterfaceImpl extends JALInstructionImpl implements 
   }
 
   @Override
-  @NotNull
-  public List<JALInstruction> getInstructionList() {
-    return PsiTreeUtil.getChildrenOfTypeAsList(this, JALInstruction.class);
+  @Nullable
+  public JALJvmInsArgMethodRef getJvmInsArgMethodRef() {
+    return findChildByClass(JALJvmInsArgMethodRef.class);
+  }
+
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
   }
 
 }

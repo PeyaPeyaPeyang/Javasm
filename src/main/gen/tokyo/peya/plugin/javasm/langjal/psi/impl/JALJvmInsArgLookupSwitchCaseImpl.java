@@ -29,8 +29,8 @@ public class JALJvmInsArgLookupSwitchCaseImpl extends JALInstructionImpl impleme
 
   @Override
   @NotNull
-  public JALInstruction getInstruction() {
-    return findNotNullChildByClass(JALInstruction.class);
+  public JALJvmInsArgLookupSwitchCaseName getJvmInsArgLookupSwitchCaseName() {
+    return findNotNullChildByClass(JALJvmInsArgLookupSwitchCaseName.class);
   }
 
   @Override

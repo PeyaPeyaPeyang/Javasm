@@ -29,14 +29,14 @@ public class JALLabelNameImpl extends ASTWrapperPsiElement implements JALLabelNa
 
   @Override
   @Nullable
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findChildByClass(JALJvmInsArgUnsigned8Bytes.class);
+  public PsiElement getId() {
+    return findChildByType(ID);
   }
 
   @Override
   @Nullable
-  public PsiElement getId() {
-    return findChildByType(ID);
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
   }
 
 }

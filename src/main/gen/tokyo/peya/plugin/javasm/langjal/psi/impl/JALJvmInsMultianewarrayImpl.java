@@ -29,14 +29,14 @@ public class JALJvmInsMultianewarrayImpl extends JALInstructionImpl implements J
 
   @Override
   @Nullable
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findChildByClass(JALJvmInsArgUnsigned8Bytes.class);
+  public JALTypeDescriptor getTypeDescriptor() {
+    return findChildByClass(JALTypeDescriptor.class);
   }
 
   @Override
   @Nullable
-  public JALTypeDescriptor getTypeDescriptor() {
-    return findChildByClass(JALTypeDescriptor.class);
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
   }
 
 }

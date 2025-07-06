@@ -1,4 +1,4 @@
-package tokyo.peya.plugin.javasm.compiler;
+package tokyo.peya.plugin.javasm.builder;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;

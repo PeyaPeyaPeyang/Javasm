@@ -10,7 +10,6 @@ import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.ModuleBuildTarget;
 import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.ProjectBuildException;
-import tokyo.peya.plugin.javasm.compiler.JALDirtyCompiler;
 
 import java.io.IOException;
 import java.util.List;

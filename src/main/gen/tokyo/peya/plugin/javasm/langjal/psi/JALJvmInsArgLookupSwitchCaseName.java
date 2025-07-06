@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsArgLookupSwitchCaseName extends JALInstruction {
 
+  @Nullable
+  PsiElement getNumber();
+
 }

@@ -29,8 +29,8 @@ public class JALJvmInsIloadImpl extends JALInstructionImpl implements JALJvmInsI
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgLocalRef getJvmInsArgLocalRef() {
+    return findChildByClass(JALJvmInsArgLocalRef.class);
   }
 
 }

@@ -1,4 +1,4 @@
-package tokyo.peya.plugin.javasm.compiler;
+package tokyo.peya.plugin.javasm.builder;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.BinaryContent;
 import org.jetbrains.jps.incremental.CompileContext;
-import org.jetbrains.jps.incremental.CompiledClass;
 import org.jetbrains.jps.incremental.ModuleBuildTarget;
 import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
+import tokyo.peya.plugin.javasm.compiler.JALClassEvaluator;
+import tokyo.peya.plugin.javasm.compiler.JALCompileErrorStrategy;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALLexer;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
@@ -76,7 +77,10 @@ public class JALCompiler
         if (classDefinition == null)
             return new ClassNode();
 
-        ClassNode evaluatedClass = JALClassEvaluator.evaluateClassAST(classDefinition);
+        ClassNode evaluatedClass = JALClassEvaluator.evaluateClassAST(
+                new JALEvaluatingContextImpl(this.ctxt, this.file),
+                classDefinition
+        );
         this.writeClass(evaluatedClass);
 
         return evaluatedClass;

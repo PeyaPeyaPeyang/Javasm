@@ -7,7 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsIastore extends JALInstruction {
 
-  @Nullable
-  JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes();
-
 }

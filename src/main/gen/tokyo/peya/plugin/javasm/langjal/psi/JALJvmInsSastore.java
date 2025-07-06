@@ -7,7 +7,4 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsSastore extends JALInstruction {
 
-  @Nullable
-  JALInstruction getInstruction();
-
 }

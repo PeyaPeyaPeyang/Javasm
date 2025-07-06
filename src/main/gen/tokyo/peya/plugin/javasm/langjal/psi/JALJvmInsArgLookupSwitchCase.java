@@ -8,7 +8,7 @@ import com.intellij.psi.PsiElement;
 public interface JALJvmInsArgLookupSwitchCase extends JALInstruction {
 
   @NotNull
-  JALInstruction getInstruction();
+  JALJvmInsArgLookupSwitchCaseName getJvmInsArgLookupSwitchCaseName();
 
   @Nullable
   JALLabelName getLabelName();

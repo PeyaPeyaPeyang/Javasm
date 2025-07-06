@@ -159,10 +159,6 @@ public class JALVisitor extends PsiElementVisitor {
     visitInstruction(o);
   }
 
-  public void visitJvmInsArgUnsigned8Bytes(@NotNull JALJvmInsArgUnsigned8Bytes o) {
-    visitInstruction(o);
-  }
-
   public void visitJvmInsArraylength(@NotNull JALJvmInsArraylength o) {
     visitInstruction(o);
   }

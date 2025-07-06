@@ -27,10 +27,4 @@ public class JALJvmInsCastoreImpl extends JALInstructionImpl implements JALJvmIn
     else super.accept(visitor);
   }
 
-  @Override
-  @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
-  }
-
 }

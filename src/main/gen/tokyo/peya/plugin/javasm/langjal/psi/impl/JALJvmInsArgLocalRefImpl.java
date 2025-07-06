@@ -33,4 +33,10 @@ public class JALJvmInsArgLocalRefImpl extends JALInstructionImpl implements JALJ
     return findChildByType(ID);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
+  }
+
 }

@@ -8,6 +8,6 @@ import com.intellij.psi.PsiElement;
 public interface JALClassPropMajor extends PsiElement {
 
   @Nullable
-  PsiElement getInsnArgUnsig8Bytes();
+  PsiElement getNumber();
 
 }

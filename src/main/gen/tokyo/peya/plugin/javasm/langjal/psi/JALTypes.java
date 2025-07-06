@@ -46,7 +46,6 @@ public interface JALTypes {
   IElementType JVM_INS_ARG_METHOD_SPECIAL_REF = new JALElementType("JVM_INS_ARG_METHOD_SPECIAL_REF");
   IElementType JVM_INS_ARG_SCALAR_TYPE = new JALElementType("JVM_INS_ARG_SCALAR_TYPE");
   IElementType JVM_INS_ARG_TABLE_SWITCH = new JALElementType("JVM_INS_ARG_TABLE_SWITCH");
-  IElementType JVM_INS_ARG_UNSIGNED_8_BYTES = new JALElementType("JVM_INS_ARG_UNSIGNED_8_BYTES");
   IElementType JVM_INS_ARRAYLENGTH = new JALElementType("JVM_INS_ARRAYLENGTH");
   IElementType JVM_INS_ASTORE = new JALElementType("JVM_INS_ASTORE");
   IElementType JVM_INS_ASTORE_N = new JALElementType("JVM_INS_ASTORE_N");
@@ -216,7 +215,6 @@ public interface JALTypes {
   IElementType INSN_ALOAD_4 = new JALTokenType("aload_4");
   IElementType INSN_ANEWARRAY = new JALTokenType("anewarray");
   IElementType INSN_ARETURN = new JALTokenType("areturn");
-  IElementType INSN_ARG_UNSIG_8BYTES = new JALTokenType("INSN_ARG_UNSIG_8BYTES");
   IElementType INSN_ARRAYLENGTH = new JALTokenType("arraylength");
   IElementType INSN_ASTORE = new JALTokenType("astore");
   IElementType INSN_ASTORE_0 = new JALTokenType("astore_0");
@@ -574,9 +572,6 @@ public interface JALTypes {
       }
       else if (type == JVM_INS_ARG_TABLE_SWITCH) {
         return new JALJvmInsArgTableSwitchImpl(node);
-      }
-      else if (type == JVM_INS_ARG_UNSIGNED_8_BYTES) {
-        return new JALJvmInsArgUnsigned8BytesImpl(node);
       }
       else if (type == JVM_INS_ARRAYLENGTH) {
         return new JALJvmInsArraylengthImpl(node);

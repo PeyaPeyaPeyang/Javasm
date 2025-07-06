@@ -257,8 +257,6 @@ INSN_SWAP: 'swap';
 INSN_TABLESWITCH: 'tableswitch';
 INSN_WIDE: 'wide';
 
-INSN_ARG_UNSIG_8BYTES: '0x' [0-9a-fA-F]+ | [0-9]+;
-
 TYPE_DESC_BYTE: 'B';
 TYPE_DESC_CHAR: 'C';
 TYPE_DESC_DOUBLE: 'D';
@@ -271,14 +269,17 @@ TYPE_DESC_BOOLEAN: 'Z';
 TYPE_DESC_OBJECT: 'L' [a-zA-Z0-9_/$]+ ';';
 
 SPACE: [ \t\r\n]+ -> skip;
+NUMBER: '-'? ('0x' HEXDIGIT+ | DIGIT+);
 ID: [a-zA-Z0-9_$]+ ;
 STRING: '\'' ( ~['\\] | '\\' . )* '\'' | '"' ( ~["\\] | '\\' . )* '"' ;
-NUMBER: [0-9]+ ;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
 NEWLINE : [\r\n]+ ;
 
 FULL_QUALIFIED_CLASS_NAME: [a-zA-Z0-9_$]+ (SLASH [a-zA-Z0-9_$]+)*;
+
+fragment DIGIT : [0-9] ;
+fragment HEXDIGIT : [0-9a-fA-F] ;
 
 // -------------------------------------------------------------------- //
 
@@ -290,8 +291,8 @@ classMeta : classMetaItem (COMMA classMetaItem)*;
 classBody : classBodyItem*;
 
 classMetaItem: classPropMajor | classPropMinor | classPropSuperClass | classPropInterfaces;
-classPropMajor: KWD_CLASS_PROP_MAJOR EQ INSN_ARG_UNSIG_8BYTES;
-classPropMinor: KWD_CLASS_PROP_MINOR EQ INSN_ARG_UNSIG_8BYTES;
+classPropMajor: KWD_CLASS_PROP_MAJOR EQ NUMBER;
+classPropMinor: KWD_CLASS_PROP_MINOR EQ NUMBER;
 classPropSuperClass: KWD_CLASS_PROP_SUPER_CLASS EQ className;
 classPropInterfaces: KWD_CLASS_PROP_INTERFACES EQ className (COMMA className)*;
 
@@ -323,10 +324,9 @@ accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE 
                  | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ENUM;
 
 label : labelName COLON;
-labelName : ID | jvmInsArgUnsigned8Bytes;
+labelName : ID | NUMBER;
 
-jvmInsArgUnsigned8Bytes : INSN_ARG_UNSIG_8BYTES;
-jvmInsArgScalarType : STRING | NUMBER | jvmInsArgUnsigned8Bytes;
+jvmInsArgScalarType : STRING | NUMBER;
 
 jvmInsArgFieldRef : jvmInsArgFieldRefType REF jvmInsArgFieldRefName COLON jvmInsArgFieldRefType;
 jvmInsArgFieldRefType : typeDescriptor;
@@ -336,13 +336,13 @@ jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescrip
 jvmInsArgMethodSpecialRef : (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor;
 jvmInsArgMethodRefOwnerType : typeDescriptor;
 
-jvmInsArgLocalRef : jvmInsArgUnsigned8Bytes | ID;
+jvmInsArgLocalRef : NUMBER | ID;
 
 jvmInsArgLookupSwitch : LBR jvmInsArgLookupSwitchCase (SEMI jvmInsArgLookupSwitchCase)* RBR;
 jvmInsArgLookupSwitchCase : jvmInsArgLookupSwitchCaseName COLON labelName;
-jvmInsArgLookupSwitchCaseName : jvmInsArgUnsigned8Bytes | KWD_SWITCH_DEFAULT;
+jvmInsArgLookupSwitchCaseName : NUMBER | KWD_SWITCH_DEFAULT;
 
-jvmInsArgTableSwitch : jvmInsArgUnsigned8Bytes LBR labelName* RBR KWD_SWITCH_DEFAULT labelName;
+jvmInsArgTableSwitch : NUMBER LBR labelName* RBR KWD_SWITCH_DEFAULT labelName;
 
 // ------------------------------------------------------------  //
 
@@ -383,7 +383,7 @@ jvmInsAstoreN: INSN_ASTORE_0 | INSN_ASTORE_1 | INSN_ASTORE_2 | INSN_ASTORE_3;
 jvmInsAthrow: INSN_ATHROW;
 jvmInsBaload: INSN_BALOAD;
 jvmInsBastore: INSN_BASTORE;
-jvmInsBipush: INSN_BIPUSH jvmInsArgUnsigned8Bytes;
+jvmInsBipush: INSN_BIPUSH NUMBER;
 jvmInsCaload: INSN_CALOAD;
 jvmInsCastore: INSN_CASTORE;
 jvmInsCheckcast: INSN_CHECKCAST typeDescriptor;
@@ -462,14 +462,14 @@ jvmInsIfOP: INSN_IFEQ labelName
             | INSN_IFLE labelName;
 jvmInsIfNonnull: INSN_IFNONNULL labelName;
 jvmInsIfNull: INSN_IFNULL labelName;
-jvmInsIinc: INSN_IINC jvmInsArgLocalRef COMMA jvmInsArgUnsigned8Bytes;
+jvmInsIinc: INSN_IINC jvmInsArgLocalRef COMMA NUMBER;
 jvmInsIload: INSN_ILOAD jvmInsArgLocalRef;
 jvmInsIloadN: INSN_ILOAD_0 | INSN_ILOAD_1 | INSN_ILOAD_2 | INSN_ILOAD_3;
 jvmInsImul: INSN_IMUL;
 jvmInsIneg: INSN_INEG;
 jvmInsInstanceof: INSN_INSTANCEOF typeDescriptor;
 jvmInsInvokedynamic: INSN_INVOKEDYNAMIC jvmInsArgMethodRef jvmInsArgMethodRef jvmInsArgScalarType*;
-jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes;
+jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef NUMBER;
 jvmInsInvokespecial: INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef;
 jvmInsInvokestatic: INSN_INVOKESTATIC jvmInsArgMethodRef;
 jvmInsInvokevirtual: INSN_INVOKEVIRTUAL jvmInsArgMethodRef;
@@ -515,7 +515,7 @@ jvmInsLushr: INSN_LUSHR;
 jvmInsLxor: INSN_LXOR;
 jvmInsMonitorenter: INSN_MONITORENTER;
 jvmInsMonitorexit: INSN_MONITOREXIT;
-jvmInsMultianewarray: INSN_MULTIANEWARRAY typeDescriptor jvmInsArgUnsigned8Bytes;
+jvmInsMultianewarray: INSN_MULTIANEWARRAY typeDescriptor NUMBER;
 jvmInsNew: INSN_NEW typeDescriptor;
 jvmInsNewarray: INSN_NEWARRAY typeDescriptor;
 jvmInsNop: INSN_NOP;
@@ -527,8 +527,8 @@ jvmInsRet: INSN_RET jvmInsArgLocalRef;
 jvmInsReturn: INSN_RETURN;
 jvmInsSaload: INSN_SALOAD;
 jvmInsSastore: INSN_SASTORE;
-jvmInsSipush: INSN_SIPUSH jvmInsArgUnsigned8Bytes;
+jvmInsSipush: INSN_SIPUSH NUMBER;
 jvmInsSwap: INSN_SWAP;
 jvmInsTableswitch: INSN_TABLESWITCH jvmInsArgTableSwitch;
 jvmInsWide: INSN_WIDE (jvmInsIload | jvmInsFload | jvmInsAload | jvmInsLload | jvmInsDload | jvmInsIstore | jvmInsFstore
-                       | jvmInsAstore | jvmInsDstore | jvmInsRet) jvmInsArgUnsigned8Bytes;
+                       | jvmInsAstore | jvmInsDstore | jvmInsRet) NUMBER;

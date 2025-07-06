@@ -1,6 +1,7 @@
 package tokyo.peya.plugin.javasm.compiler;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
@@ -10,17 +11,17 @@ import java.util.List;
 
 public class JALClassEvaluator
 {
-    public static ClassNode evaluateClassAST(JALParser.ClassDefinitionContext clazz)
+    public static ClassNode evaluateClassAST(@NotNull EvaluatingContext ctxt, @NotNull JALParser.ClassDefinitionContext clazz)
     {
         ClassNode classNode = new ClassNode();
         visitClassInformation(classNode, clazz);
-        visitClassBody(classNode, clazz.classBody());
+        visitClassBody(ctxt, classNode, clazz.classBody());
 
         return classNode;
     }
 
-    private static void visitClassBody(ClassNode classNode,
-                                       JALParser.ClassBodyContext body)
+    private static void visitClassBody(@NotNull EvaluatingContext ctxt, @NotNull ClassNode classNode,
+                                       @Nullable JALParser.ClassBodyContext body)
     {
         if (body == null)
             return;
@@ -30,7 +31,7 @@ public class JALClassEvaluator
         {
             if (item.methodDefinition() != null)
             {
-                JALMethodEvaluator evaluator = new JALMethodEvaluator(classNode);
+                JALMethodEvaluator evaluator = new JALMethodEvaluator(ctxt, classNode);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
         }
@@ -53,9 +54,9 @@ public class JALClassEvaluator
             for (JALParser.ClassMetaItemContext item : metaItems)
             {
                 if (item.classPropMajor() != null)
-                    major = EvaluatorCommons.asInt(item.classPropMajor().INSN_ARG_UNSIG_8BYTES());
+                    major = EvaluatorCommons.asInt(item.classPropMajor().NUMBER());
                 else if (item.classPropMinor() != null)
-                    minor = EvaluatorCommons.asInt(item.classPropMinor().INSN_ARG_UNSIG_8BYTES());
+                    minor = EvaluatorCommons.asInt(item.classPropMinor().NUMBER());
                 else if (item.classPropSuperClass() != null)
                     superClassName =  item.classPropSuperClass().className().getText();
                 else if (item.classPropInterfaces() != null)
@@ -67,7 +68,7 @@ public class JALClassEvaluator
             }
         }
 
-        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major) : Opcodes.ASM9;
+        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major) : EOpcodes.ASM9;
 
         if (superClassName == null || superClassName.isEmpty())
             superClassName = "java/lang/Object"; // デフォルトのスーパークラス
@@ -91,19 +92,19 @@ public class JALClassEvaluator
         for (JALParser.AccAttrClassContext attr: attributes)
         {
             if (attr.KWD_ACC_ATTR_FINAL() != null)
-                modifier |= Opcodes.ACC_FINAL;
+                modifier |= EOpcodes.ACC_FINAL;
             else if (attr.KWD_ACC_ATTR_SUPER() != null)
-                modifier |= Opcodes.ACC_SUPER;
+                modifier |= EOpcodes.ACC_SUPER;
             else if (attr.KWD_INTERFACE() != null)
-                modifier |= Opcodes.ACC_INTERFACE;
+                modifier |= EOpcodes.ACC_INTERFACE;
             else if (attr.KWD_ACC_ATTR_ABSTRACT() != null)
-                modifier |= Opcodes.ACC_ABSTRACT;
+                modifier |= EOpcodes.ACC_ABSTRACT;
             else if (attr.KWD_ACC_ATTR_SYNTHETIC() != null)
-                modifier |= Opcodes.ACC_SYNTHETIC;
+                modifier |= EOpcodes.ACC_SYNTHETIC;
             else if (attr.KWD_ACC_ATTR_ANNOTATION() != null)
-                modifier |= Opcodes.ACC_ANNOTATION;
+                modifier |= EOpcodes.ACC_ANNOTATION;
             else if (attr.KWD_ACC_ATTR_ENUM() != null)
-                modifier |= Opcodes.ACC_ENUM;
+                modifier |= EOpcodes.ACC_ENUM;
         }
 
         return modifier;

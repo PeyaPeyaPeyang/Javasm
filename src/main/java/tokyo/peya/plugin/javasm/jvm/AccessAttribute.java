@@ -2,22 +2,22 @@ package tokyo.peya.plugin.javasm.jvm;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.objectweb.asm.Opcodes;
+import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 
 @Getter
 @AllArgsConstructor
 public enum AccessAttribute
 {
-    ABSTRACT("abstract", Opcodes.ACC_ABSTRACT),
-    FINAL("final", Opcodes.ACC_FINAL),
-    NATIVE("native", Opcodes.ACC_NATIVE),
-    STATIC("static", Opcodes.ACC_STATIC),
-    SYNCHRONIZED("synchronized", Opcodes.ACC_SYNCHRONIZED),
-    TRANSIENT("transient", Opcodes.ACC_TRANSIENT),
-    VOLATILE("volatile", Opcodes.ACC_VOLATILE),
-    BRIDGE("strictfp", Opcodes.ACC_STRICT),
-    SYNTHETIC("synthetic", Opcodes.ACC_SYNTHETIC),
-    STRICT("bridge", Opcodes.ACC_BRIDGE);
+    ABSTRACT("abstract", EOpcodes.ACC_ABSTRACT),
+    FINAL("final", EOpcodes.ACC_FINAL),
+    NATIVE("native", EOpcodes.ACC_NATIVE),
+    STATIC("static", EOpcodes.ACC_STATIC),
+    SYNCHRONIZED("synchronized", EOpcodes.ACC_SYNCHRONIZED),
+    TRANSIENT("transient", EOpcodes.ACC_TRANSIENT),
+    VOLATILE("volatile", EOpcodes.ACC_VOLATILE),
+    BRIDGE("strictfp", EOpcodes.ACC_STRICT),
+    SYNTHETIC("synthetic", EOpcodes.ACC_SYNTHETIC),
+    STRICT("bridge", EOpcodes.ACC_BRIDGE);
 
     private final String name;
     private final int asmFlag;

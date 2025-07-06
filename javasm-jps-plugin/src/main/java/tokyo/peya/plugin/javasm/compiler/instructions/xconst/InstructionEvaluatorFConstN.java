@@ -1,0 +1,28 @@
+package tokyo.peya.plugin.javasm.compiler.instructions.xconst;
+
+import org.jetbrains.annotations.NotNull;
+import tokyo.peya.plugin.javasm.compiler.AbstractInstructionEvaluator;
+import tokyo.peya.plugin.javasm.compiler.EOpcodes;
+import tokyo.peya.plugin.javasm.compiler.EvaluatingContext;
+import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
+import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
+
+public class InstructionEvaluatorFConstN extends AbstractInstructionEvaluator<JALParser.JvmInsFconstNContext>
+{
+    @Override
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull EvaluatingContext evalContxt, JALParser.@NotNull JvmInsFconstNContext ctxt)
+    {
+        if (has(ctxt.INSN_FCONST_0()))
+            return visitSingle(EOpcodes.FCONST_0);
+        if (has(ctxt.INSN_FCONST_1()))
+            return visitSingle(EOpcodes.FCONST_1);
+
+        throw new IllegalArgumentException("Unknown instruction: " + ctxt.getText());
+    }
+
+    @Override
+    protected JALParser.@NotNull JvmInsFconstNContext map(JALParser.@NotNull InstructionContext instruction)
+    {
+        return instruction.jvmInsFconstN();
+    }
+}

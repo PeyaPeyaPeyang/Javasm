@@ -29,8 +29,8 @@ public class JALJvmInsLdcImpl extends JALInstructionImpl implements JALJvmInsLdc
 
   @Override
   @Nullable
-  public JALInstruction getInstruction() {
-    return findChildByClass(JALInstruction.class);
+  public JALJvmInsArgScalarType getJvmInsArgScalarType() {
+    return findChildByClass(JALJvmInsArgScalarType.class);
   }
 
 }

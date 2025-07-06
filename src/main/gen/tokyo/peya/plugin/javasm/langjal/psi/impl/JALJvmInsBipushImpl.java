@@ -29,8 +29,8 @@ public class JALJvmInsBipushImpl extends JALInstructionImpl implements JALJvmIns
 
   @Override
   @Nullable
-  public JALJvmInsArgUnsigned8Bytes getJvmInsArgUnsigned8Bytes() {
-    return findChildByClass(JALJvmInsArgUnsigned8Bytes.class);
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
   }
 
 }

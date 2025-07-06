@@ -27,4 +27,10 @@ public class JALJvmInsArgLookupSwitchCaseNameImpl extends JALInstructionImpl imp
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public PsiElement getNumber() {
+    return findChildByType(NUMBER);
+  }
+
 }

@@ -41,42 +41,42 @@ public class JALParser implements PsiParser, LightPsiParser {
       JVM_INS_ARG_FIELD_REF, JVM_INS_ARG_FIELD_REF_NAME, JVM_INS_ARG_FIELD_REF_TYPE, JVM_INS_ARG_LOCAL_REF,
       JVM_INS_ARG_LOOKUP_SWITCH, JVM_INS_ARG_LOOKUP_SWITCH_CASE, JVM_INS_ARG_LOOKUP_SWITCH_CASE_NAME, JVM_INS_ARG_METHOD_REF,
       JVM_INS_ARG_METHOD_REF_OWNER_TYPE, JVM_INS_ARG_METHOD_SPECIAL_REF, JVM_INS_ARG_SCALAR_TYPE, JVM_INS_ARG_TABLE_SWITCH,
-      JVM_INS_ARG_UNSIGNED_8_BYTES, JVM_INS_ARRAYLENGTH, JVM_INS_ASTORE, JVM_INS_ASTORE_N,
-      JVM_INS_ATHROW, JVM_INS_BALOAD, JVM_INS_BASTORE, JVM_INS_BIPUSH,
-      JVM_INS_CALOAD, JVM_INS_CASTORE, JVM_INS_CHECKCAST, JVM_INS_DADD,
-      JVM_INS_DALOAD, JVM_INS_DASTORE, JVM_INS_DCMP_OP, JVM_INS_DCONST_N,
-      JVM_INS_DDIV, JVM_INS_DLOAD, JVM_INS_DLOAD_N, JVM_INS_DMUL,
-      JVM_INS_DNEG, JVM_INS_DREM, JVM_INS_DRETURN, JVM_INS_DSTORE,
-      JVM_INS_DSTORE_N, JVM_INS_DSUB, JVM_INS_DUP, JVM_INS_DUP_2,
-      JVM_INS_DUP_2_X_1, JVM_INS_DUP_2_X_2, JVM_INS_DUP_X_1, JVM_INS_DUP_X_2,
-      JVM_INS_D_2_F, JVM_INS_D_2_I, JVM_INS_D_2_L, JVM_INS_FADD,
-      JVM_INS_FALOAD, JVM_INS_FASTORE, JVM_INS_FCMPG_OP, JVM_INS_FCONST_N,
-      JVM_INS_FDIV, JVM_INS_FLOAD, JVM_INS_FLOAD_N, JVM_INS_FMUL,
-      JVM_INS_FNEG, JVM_INS_FREM, JVM_INS_FRETURN, JVM_INS_FSTORE,
-      JVM_INS_FSTORE_N, JVM_INS_FSUB, JVM_INS_F_2_D, JVM_INS_F_2_I,
-      JVM_INS_F_2_L, JVM_INS_GETFIELD, JVM_INS_GETSTATIC, JVM_INS_GOTO,
-      JVM_INS_GOTO_W, JVM_INS_IADD, JVM_INS_IALOAD, JVM_INS_IAND,
-      JVM_INS_IASTORE, JVM_INS_ICONST_N, JVM_INS_IDIV, JVM_INS_IF_ACMP_OP,
-      JVM_INS_IF_ICMP_OP, JVM_INS_IF_NONNULL, JVM_INS_IF_NULL, JVM_INS_IF_OP,
-      JVM_INS_IINC, JVM_INS_ILOAD, JVM_INS_ILOAD_N, JVM_INS_IMUL,
-      JVM_INS_INEG, JVM_INS_INSTANCEOF, JVM_INS_INVOKEDYNAMIC, JVM_INS_INVOKEINTERFACE,
-      JVM_INS_INVOKESPECIAL, JVM_INS_INVOKESTATIC, JVM_INS_INVOKEVIRTUAL, JVM_INS_IOR,
-      JVM_INS_IREM, JVM_INS_IRETURN, JVM_INS_ISHL, JVM_INS_ISHR,
-      JVM_INS_ISTORE, JVM_INS_ISTORE_N, JVM_INS_ISUB, JVM_INS_IUSHR,
-      JVM_INS_IXOR, JVM_INS_I_2_B, JVM_INS_I_2_C, JVM_INS_I_2_D,
-      JVM_INS_I_2_F, JVM_INS_I_2_L, JVM_INS_I_2_S, JVM_INS_JSR,
-      JVM_INS_JSR_W, JVM_INS_LADD, JVM_INS_LALOAD, JVM_INS_LAND,
-      JVM_INS_LASTORE, JVM_INS_LCMP, JVM_INS_LCONST_N, JVM_INS_LDC,
-      JVM_INS_LDC_2_W, JVM_INS_LDC_W, JVM_INS_LDIV, JVM_INS_LLOAD,
-      JVM_INS_LLOAD_N, JVM_INS_LMUL, JVM_INS_LNEG, JVM_INS_LOOKUPSWITCH,
-      JVM_INS_LOR, JVM_INS_LREM, JVM_INS_LRETURN, JVM_INS_LSHL,
-      JVM_INS_LSHR, JVM_INS_LSTORE, JVM_INS_LSTORE_N, JVM_INS_LSUB,
-      JVM_INS_LUSHR, JVM_INS_LXOR, JVM_INS_L_2_D, JVM_INS_L_2_F,
-      JVM_INS_L_2_I, JVM_INS_MONITORENTER, JVM_INS_MONITOREXIT, JVM_INS_MULTIANEWARRAY,
-      JVM_INS_NEW, JVM_INS_NEWARRAY, JVM_INS_NOP, JVM_INS_POP,
-      JVM_INS_POP_2, JVM_INS_PUTFIELD, JVM_INS_PUTSTATIC, JVM_INS_RET,
-      JVM_INS_RETURN, JVM_INS_SALOAD, JVM_INS_SASTORE, JVM_INS_SIPUSH,
-      JVM_INS_SWAP, JVM_INS_TABLESWITCH, JVM_INS_WIDE),
+      JVM_INS_ARRAYLENGTH, JVM_INS_ASTORE, JVM_INS_ASTORE_N, JVM_INS_ATHROW,
+      JVM_INS_BALOAD, JVM_INS_BASTORE, JVM_INS_BIPUSH, JVM_INS_CALOAD,
+      JVM_INS_CASTORE, JVM_INS_CHECKCAST, JVM_INS_DADD, JVM_INS_DALOAD,
+      JVM_INS_DASTORE, JVM_INS_DCMP_OP, JVM_INS_DCONST_N, JVM_INS_DDIV,
+      JVM_INS_DLOAD, JVM_INS_DLOAD_N, JVM_INS_DMUL, JVM_INS_DNEG,
+      JVM_INS_DREM, JVM_INS_DRETURN, JVM_INS_DSTORE, JVM_INS_DSTORE_N,
+      JVM_INS_DSUB, JVM_INS_DUP, JVM_INS_DUP_2, JVM_INS_DUP_2_X_1,
+      JVM_INS_DUP_2_X_2, JVM_INS_DUP_X_1, JVM_INS_DUP_X_2, JVM_INS_D_2_F,
+      JVM_INS_D_2_I, JVM_INS_D_2_L, JVM_INS_FADD, JVM_INS_FALOAD,
+      JVM_INS_FASTORE, JVM_INS_FCMPG_OP, JVM_INS_FCONST_N, JVM_INS_FDIV,
+      JVM_INS_FLOAD, JVM_INS_FLOAD_N, JVM_INS_FMUL, JVM_INS_FNEG,
+      JVM_INS_FREM, JVM_INS_FRETURN, JVM_INS_FSTORE, JVM_INS_FSTORE_N,
+      JVM_INS_FSUB, JVM_INS_F_2_D, JVM_INS_F_2_I, JVM_INS_F_2_L,
+      JVM_INS_GETFIELD, JVM_INS_GETSTATIC, JVM_INS_GOTO, JVM_INS_GOTO_W,
+      JVM_INS_IADD, JVM_INS_IALOAD, JVM_INS_IAND, JVM_INS_IASTORE,
+      JVM_INS_ICONST_N, JVM_INS_IDIV, JVM_INS_IF_ACMP_OP, JVM_INS_IF_ICMP_OP,
+      JVM_INS_IF_NONNULL, JVM_INS_IF_NULL, JVM_INS_IF_OP, JVM_INS_IINC,
+      JVM_INS_ILOAD, JVM_INS_ILOAD_N, JVM_INS_IMUL, JVM_INS_INEG,
+      JVM_INS_INSTANCEOF, JVM_INS_INVOKEDYNAMIC, JVM_INS_INVOKEINTERFACE, JVM_INS_INVOKESPECIAL,
+      JVM_INS_INVOKESTATIC, JVM_INS_INVOKEVIRTUAL, JVM_INS_IOR, JVM_INS_IREM,
+      JVM_INS_IRETURN, JVM_INS_ISHL, JVM_INS_ISHR, JVM_INS_ISTORE,
+      JVM_INS_ISTORE_N, JVM_INS_ISUB, JVM_INS_IUSHR, JVM_INS_IXOR,
+      JVM_INS_I_2_B, JVM_INS_I_2_C, JVM_INS_I_2_D, JVM_INS_I_2_F,
+      JVM_INS_I_2_L, JVM_INS_I_2_S, JVM_INS_JSR, JVM_INS_JSR_W,
+      JVM_INS_LADD, JVM_INS_LALOAD, JVM_INS_LAND, JVM_INS_LASTORE,
+      JVM_INS_LCMP, JVM_INS_LCONST_N, JVM_INS_LDC, JVM_INS_LDC_2_W,
+      JVM_INS_LDC_W, JVM_INS_LDIV, JVM_INS_LLOAD, JVM_INS_LLOAD_N,
+      JVM_INS_LMUL, JVM_INS_LNEG, JVM_INS_LOOKUPSWITCH, JVM_INS_LOR,
+      JVM_INS_LREM, JVM_INS_LRETURN, JVM_INS_LSHL, JVM_INS_LSHR,
+      JVM_INS_LSTORE, JVM_INS_LSTORE_N, JVM_INS_LSUB, JVM_INS_LUSHR,
+      JVM_INS_LXOR, JVM_INS_L_2_D, JVM_INS_L_2_F, JVM_INS_L_2_I,
+      JVM_INS_MONITORENTER, JVM_INS_MONITOREXIT, JVM_INS_MULTIANEWARRAY, JVM_INS_NEW,
+      JVM_INS_NEWARRAY, JVM_INS_NOP, JVM_INS_POP, JVM_INS_POP_2,
+      JVM_INS_PUTFIELD, JVM_INS_PUTSTATIC, JVM_INS_RET, JVM_INS_RETURN,
+      JVM_INS_SALOAD, JVM_INS_SASTORE, JVM_INS_SIPUSH, JVM_INS_SWAP,
+      JVM_INS_TABLESWITCH, JVM_INS_WIDE),
   };
 
   /* ********************************************************** */
@@ -414,26 +414,26 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // KWD_CLASS_PROP_MAJOR EQ INSN_ARG_UNSIG_8BYTES
+  // KWD_CLASS_PROP_MAJOR EQ number
   public static boolean classPropMajor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classPropMajor")) return false;
     if (!nextTokenIs(b, KWD_CLASS_PROP_MAJOR)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_MAJOR, null);
-    r = consumeTokens(b, 1, KWD_CLASS_PROP_MAJOR, EQ, INSN_ARG_UNSIG_8BYTES);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_MAJOR, EQ, NUMBER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
 
   /* ********************************************************** */
-  // KWD_CLASS_PROP_MINOR EQ INSN_ARG_UNSIG_8BYTES
+  // KWD_CLASS_PROP_MINOR EQ number
   public static boolean classPropMinor(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "classPropMinor")) return false;
     if (!nextTokenIs(b, KWD_CLASS_PROP_MINOR)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, CLASS_PROP_MINOR, null);
-    r = consumeTokens(b, 1, KWD_CLASS_PROP_MINOR, EQ, INSN_ARG_UNSIG_8BYTES);
+    r = consumeTokens(b, 1, KWD_CLASS_PROP_MINOR, EQ, NUMBER);
     p = r; // pin = 1
     exit_section_(b, l, m, r, p, null);
     return r || p;
@@ -674,17 +674,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_AASTORE jvmInsArgLocalRef
+  // INSN_AASTORE
   public static boolean jvmInsAastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsAastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_AASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_AASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_AASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -794,13 +792,13 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // jvmInsArgUnsigned8Bytes | id
+  // number | id
   public static boolean jvmInsArgLocalRef(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsArgLocalRef")) return false;
-    if (!nextTokenIs(b, "<JVMInstruction>", ID, INSN_ARG_UNSIG_8BYTES)) return false;
+    if (!nextTokenIs(b, "<JVMInstruction>", ID, NUMBER)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, JVM_INS_ARG_LOCAL_REF, "<JVMInstruction>");
-    r = jvmInsArgUnsigned8Bytes(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_LOCAL_REF, "<JVMInstruction>");
+    r = consumeToken(b, NUMBER);
     if (!r) r = consumeToken(b, ID);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -848,7 +846,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   // jvmInsArgLookupSwitchCaseName COLON labelName
   public static boolean jvmInsArgLookupSwitchCase(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsArgLookupSwitchCase")) return false;
-    if (!nextTokenIs(b, "<JVMInstruction>", INSN_ARG_UNSIG_8BYTES, KWD_SWITCH_DEFAULT)) return false;
+    if (!nextTokenIs(b, "<JVMInstruction>", KWD_SWITCH_DEFAULT, NUMBER)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_LOOKUP_SWITCH_CASE, "<JVMInstruction>");
     r = jvmInsArgLookupSwitchCaseName(b, l + 1);
@@ -860,13 +858,13 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // jvmInsArgUnsigned8Bytes | KWD_SWITCH_DEFAULT
+  // number | KWD_SWITCH_DEFAULT
   public static boolean jvmInsArgLookupSwitchCaseName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsArgLookupSwitchCaseName")) return false;
-    if (!nextTokenIs(b, "<JVMInstruction>", INSN_ARG_UNSIG_8BYTES, KWD_SWITCH_DEFAULT)) return false;
+    if (!nextTokenIs(b, "<JVMInstruction>", KWD_SWITCH_DEFAULT, NUMBER)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, JVM_INS_ARG_LOOKUP_SWITCH_CASE_NAME, "<JVMInstruction>");
-    r = jvmInsArgUnsigned8Bytes(b, l + 1);
+    Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_LOOKUP_SWITCH_CASE_NAME, "<JVMInstruction>");
+    r = consumeToken(b, NUMBER);
     if (!r) r = consumeToken(b, KWD_SWITCH_DEFAULT);
     exit_section_(b, l, m, r, false, null);
     return r;
@@ -956,27 +954,26 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // string | number | jvmInsArgUnsigned8Bytes
+  // string | number
   public static boolean jvmInsArgScalarType(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsArgScalarType")) return false;
+    if (!nextTokenIs(b, "<JVMInstruction>", NUMBER, STRING)) return false;
     boolean r;
-    Marker m = enter_section_(b, l, _COLLAPSE_, JVM_INS_ARG_SCALAR_TYPE, "<JVMInstruction>");
+    Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_SCALAR_TYPE, "<JVMInstruction>");
     r = consumeToken(b, STRING);
     if (!r) r = consumeToken(b, NUMBER);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // jvmInsArgUnsigned8Bytes LBR labelName* RBR  KWD_SWITCH_DEFAULT labelName
+  // number LBR labelName* RBR  KWD_SWITCH_DEFAULT labelName
   public static boolean jvmInsArgTableSwitch(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsArgTableSwitch")) return false;
-    if (!nextTokenIs(b, "<JVMInstruction>", INSN_ARG_UNSIG_8BYTES)) return false;
+    if (!nextTokenIs(b, "<JVMInstruction>", NUMBER)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_TABLE_SWITCH, "<JVMInstruction>");
-    r = jvmInsArgUnsigned8Bytes(b, l + 1);
-    r = r && consumeToken(b, LBR);
+    r = consumeTokens(b, 2, NUMBER, LBR);
     p = r; // pin = 2
     r = r && report_error_(b, jvmInsArgTableSwitch_2(b, l + 1));
     r = p && report_error_(b, consumeTokens(b, -1, RBR, KWD_SWITCH_DEFAULT)) && r;
@@ -994,18 +991,6 @@ public class JALParser implements PsiParser, LightPsiParser {
       if (!empty_element_parsed_guard_(b, "jvmInsArgTableSwitch_2", c)) break;
     }
     return true;
-  }
-
-  /* ********************************************************** */
-  // INSN_ARG_UNSIG_8BYTES
-  public static boolean jvmInsArgUnsigned8Bytes(PsiBuilder b, int l) {
-    if (!recursion_guard_(b, l, "jvmInsArgUnsigned8Bytes")) return false;
-    if (!nextTokenIs(b, "<JVMInstruction>", INSN_ARG_UNSIG_8BYTES)) return false;
-    boolean r;
-    Marker m = enter_section_(b, l, _NONE_, JVM_INS_ARG_UNSIGNED_8_BYTES, "<JVMInstruction>");
-    r = consumeToken(b, INSN_ARG_UNSIG_8BYTES);
-    exit_section_(b, l, m, r, false, null);
-    return r;
   }
 
   /* ********************************************************** */
@@ -1071,29 +1056,26 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_BASTORE jvmInsArgLocalRef
+  // INSN_BASTORE
   public static boolean jvmInsBastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsBastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_BASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_BASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_BASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
-  // INSN_BIPUSH jvmInsArgUnsigned8Bytes
+  // INSN_BIPUSH number
   public static boolean jvmInsBipush(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsBipush")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_BIPUSH)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_BIPUSH, "<JVMInstruction>");
-    r = consumeToken(b, INSN_BIPUSH);
+    r = consumeTokens(b, 1, INSN_BIPUSH, NUMBER);
     p = r; // pin = 1
-    r = r && jvmInsArgUnsigned8Bytes(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -1111,17 +1093,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_CASTORE jvmInsArgLocalRef
+  // INSN_CASTORE
   public static boolean jvmInsCastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsCastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_CASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_CASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_CASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1199,17 +1179,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_DASTORE jvmInsArgUnsigned8Bytes
+  // INSN_DASTORE
   public static boolean jvmInsDastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsDastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_DASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_DASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_DASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgUnsigned8Bytes(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1499,17 +1477,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_FASTORE jvmInsArgLocalRef
+  // INSN_FASTORE
   public static boolean jvmInsFastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsFastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_FASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_FASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_FASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -1829,17 +1805,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_IASTORE jvmInsArgUnsigned8Bytes
+  // INSN_IASTORE
   public static boolean jvmInsIastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_IASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_IASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgUnsigned8Bytes(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -2114,7 +2088,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_IINC jvmInsArgLocalRef COMMA jvmInsArgUnsigned8Bytes
+  // INSN_IINC jvmInsArgLocalRef COMMA number
   public static boolean jvmInsIinc(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIinc")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IINC)) return false;
@@ -2123,8 +2097,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INSN_IINC);
     p = r; // pin = 1
     r = r && report_error_(b, jvmInsArgLocalRef(b, l + 1));
-    r = p && report_error_(b, consumeToken(b, COMMA)) && r;
-    r = p && jvmInsArgUnsigned8Bytes(b, l + 1) && r;
+    r = p && report_error_(b, consumeTokens(b, -1, COMMA, NUMBER)) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2223,7 +2196,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_INVOKEINTERFACE jvmInsArgMethodRef jvmInsArgUnsigned8Bytes
+  // INSN_INVOKEINTERFACE jvmInsArgMethodRef number
   public static boolean jvmInsInvokeinterface(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsInvokeinterface")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_INVOKEINTERFACE)) return false;
@@ -2232,7 +2205,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INSN_INVOKEINTERFACE);
     p = r; // pin = 1
     r = r && report_error_(b, jvmInsArgMethodRef(b, l + 1));
-    r = p && jvmInsArgUnsigned8Bytes(b, l + 1) && r;
+    r = p && consumeToken(b, NUMBER) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2504,17 +2477,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_LASTORE jvmInsArgLocalRef
+  // INSN_LASTORE
   public static boolean jvmInsLastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsLastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_LASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_LASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_LASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
@@ -2811,7 +2782,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_MULTIANEWARRAY typeDescriptor jvmInsArgUnsigned8Bytes
+  // INSN_MULTIANEWARRAY typeDescriptor number
   public static boolean jvmInsMultianewarray(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsMultianewarray")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_MULTIANEWARRAY)) return false;
@@ -2820,7 +2791,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INSN_MULTIANEWARRAY);
     p = r; // pin = 1
     r = r && report_error_(b, typeDescriptor(b, l + 1));
-    r = p && jvmInsArgUnsigned8Bytes(b, l + 1) && r;
+    r = p && consumeToken(b, NUMBER) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -2956,29 +2927,26 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_SASTORE jvmInsArgLocalRef
+  // INSN_SASTORE
   public static boolean jvmInsSastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsSastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_SASTORE)) return false;
-    boolean r, p;
+    boolean r;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_SASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_SASTORE);
-    p = r; // pin = 1
-    r = r && jvmInsArgLocalRef(b, l + 1);
-    exit_section_(b, l, m, r, p, null);
-    return r || p;
+    exit_section_(b, l, m, r, false, null);
+    return r;
   }
 
   /* ********************************************************** */
-  // INSN_SIPUSH jvmInsArgUnsigned8Bytes
+  // INSN_SIPUSH number
   public static boolean jvmInsSipush(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsSipush")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_SIPUSH)) return false;
     boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_SIPUSH, "<JVMInstruction>");
-    r = consumeToken(b, INSN_SIPUSH);
+    r = consumeTokens(b, 1, INSN_SIPUSH, NUMBER);
     p = r; // pin = 1
-    r = r && jvmInsArgUnsigned8Bytes(b, l + 1);
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -3013,7 +2981,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   // INSN_WIDE (
   //                  jvmInsIload | jvmInsFload | jvmInsAload | jvmInsLload | jvmInsDload | jvmInsIstore | jvmInsFstore
   //                  | jvmInsAstore | jvmInsDstore | jvmInsRet
-  //                ) jvmInsArgUnsigned8Bytes
+  //                ) number
   public static boolean jvmInsWide(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsWide")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_WIDE)) return false;
@@ -3022,7 +2990,7 @@ public class JALParser implements PsiParser, LightPsiParser {
     r = consumeToken(b, INSN_WIDE);
     p = r; // pin = 1
     r = r && report_error_(b, jvmInsWide_1(b, l + 1));
-    r = p && jvmInsArgUnsigned8Bytes(b, l + 1) && r;
+    r = p && consumeToken(b, NUMBER) && r;
     exit_section_(b, l, m, r, p, null);
     return r || p;
   }
@@ -3049,7 +3017,7 @@ public class JALParser implements PsiParser, LightPsiParser {
   // labelName COLON
   public static boolean label(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "label")) return false;
-    if (!nextTokenIs(b, "<label>", ID, INSN_ARG_UNSIG_8BYTES)) return false;
+    if (!nextTokenIs(b, "<label>", ID, NUMBER)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, LABEL, "<label>");
     r = labelName(b, l + 1);
@@ -3059,14 +3027,14 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // id | jvmInsArgUnsigned8Bytes
+  // id | number
   public static boolean labelName(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "labelName")) return false;
-    if (!nextTokenIs(b, "<label name>", ID, INSN_ARG_UNSIG_8BYTES)) return false;
+    if (!nextTokenIs(b, "<label name>", ID, NUMBER)) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, LABEL_NAME, "<label name>");
     r = consumeToken(b, ID);
-    if (!r) r = jvmInsArgUnsigned8Bytes(b, l + 1);
+    if (!r) r = consumeToken(b, NUMBER);
     exit_section_(b, l, m, r, false, null);
     return r;
   }

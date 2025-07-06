@@ -6,11 +6,7 @@ import tokyo.peya.plugin.javasm.langjal.psi.JALTypes;
 public interface JALTokenSets
 {
     TokenSet COMMENT = TokenSet.create(JALTypes.LINE_COMMENT, JALTypes.BLOCK_COMMENT);
-    TokenSet NUMBER = TokenSet.create(
-            JALTypes.NUMBER,
-            JALTypes.INSN_ARG_UNSIG_8BYTES,
-            JALTypes.JVM_INS_ARG_UNSIGNED_8_BYTES
-    );
+    TokenSet NUMBER = TokenSet.create(JALTypes.NUMBER);
     TokenSet LABEL = TokenSet.create(JALTypes.LABEL, JALTypes.LABEL_NAME);
     TokenSet BRACES = TokenSet.create(JALTypes.LBR, JALTypes.RBR);
     TokenSet BRACKETS = TokenSet.create(JALTypes.LBK, JALTypes.RBK);
@@ -57,7 +53,6 @@ public interface JALTokenSets
             JALTypes.INSN_ALOAD_4,
             JALTypes.INSN_ANEWARRAY,
             JALTypes.INSN_ARETURN,
-            JALTypes.INSN_ARG_UNSIG_8BYTES,
             JALTypes.INSN_ARRAYLENGTH,
             JALTypes.INSN_ASTORE,
             JALTypes.INSN_ASTORE_0,
