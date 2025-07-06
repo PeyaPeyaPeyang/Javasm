@@ -37,6 +37,8 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
             return EOpcodes.IFGT;
         if (ctxt.INSN_IFLE() != null)
             return EOpcodes.IFLE;
+
+        throw new IllegalArgumentException("Unknown IF opcode");
     }
 
     @Override
