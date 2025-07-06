@@ -439,7 +439,7 @@ jvmInsFmul ::= INSN_FMUL
 jvmInsFneg ::= INSN_FNEG
 jvmInsFrem ::= INSN_FREM
 jvmInsFreturn ::= INSN_FRETURN
-jvmInsFstore ::= INSN_FSTORE
+jvmInsFstore ::= INSN_FSTORE jvmInsArgLocalRef {pin = 1}
 jvmInsFstoreN ::= INSN_FSTORE_0 | INSN_FSTORE_1 | INSN_FSTORE_2 | INSN_FSTORE_3
 jvmInsFsub ::= INSN_FSUB
 jvmInsGetfield ::= INSN_GETFIELD jvmInsArgFieldRef {pin = 1}

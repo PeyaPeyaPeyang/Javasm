@@ -7,4 +7,7 @@ import com.intellij.psi.PsiElement;
 
 public interface JALJvmInsFstore extends JALInstruction {
 
+  @Nullable
+  JALJvmInsArgLocalRef getJvmInsArgLocalRef();
+
 }

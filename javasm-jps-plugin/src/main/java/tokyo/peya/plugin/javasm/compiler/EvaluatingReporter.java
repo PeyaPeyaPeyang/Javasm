@@ -1,8 +1,10 @@
 package tokyo.peya.plugin.javasm.compiler;
 
+import groovyjarjarantlr.ParseTreeToken;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 
-public interface EvaluatingContext
+public interface EvaluatingReporter
 {
     void postError(@NotNull String message);
     void postWarning(@NotNull String message);
@@ -12,4 +14,5 @@ public interface EvaluatingContext
     void postError(@NotNull String message, @NotNull Throwable cause, long line, long column, long length);
 
     void postWarning(@NotNull String message, long line, long column, long length);
+    void postWarning(@NotNull String message, @NotNull ParserRuleContext ctxt);
 }

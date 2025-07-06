@@ -1,28 +1,23 @@
 package tokyo.peya.plugin.javasm.compiler;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.InsnNode;
 
 public record EvaluatedInstruction(
         AbstractInsnNode insn,
         int customSize // wide, lookupswitch, tableswitch, など
 )
 {
-    public EvaluatedInstruction(int opcode, int customSize)
-    {
-        this(new InsnNode(opcode), customSize);
-    }
-    public EvaluatedInstruction(int opcode)
-    {
-        this(opcode, 0);
-    }
-
     public EvaluatedInstruction(@Nullable AbstractInsnNode insn)
     {
         this(insn, 0);
     }
 
+    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn)
+    {
+        return new EvaluatedInstruction(insn);
+    }
 
     public int getInstructionSize()
     {

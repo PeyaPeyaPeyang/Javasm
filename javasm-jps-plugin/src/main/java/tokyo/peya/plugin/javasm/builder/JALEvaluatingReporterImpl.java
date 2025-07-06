@@ -1,11 +1,13 @@
 package tokyo.peya.plugin.javasm.builder;
 
+import groovyjarjarantlr.ParseTreeToken;
 import lombok.AllArgsConstructor;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import tokyo.peya.plugin.javasm.compiler.EvaluatingContext;
+import tokyo.peya.plugin.javasm.compiler.EvaluatingReporter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,7 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @AllArgsConstructor
-public class JALEvaluatingContextImpl implements EvaluatingContext
+public class JALEvaluatingReporterImpl implements EvaluatingReporter
 {
     public static final String COMPILER_NAME = "JavaSM JAL Compiler";
 
@@ -85,6 +87,15 @@ public class JALEvaluatingContextImpl implements EvaluatingContext
     @Override
     public void postWarning(@NotNull String message, long line, long column, long length)
     {
+        this.postOnLine(message, BuildMessage.Kind.WARNING, line, column, length);
+    }
+
+    @Override
+    public void postWarning(@NotNull String message, @NotNull ParserRuleContext ctxt)
+    {
+        long line = ctxt.getStart().getLine();
+        long column = ctxt.getStart().getCharPositionInLine() + 1; // ANTLRは0始まりなので+1
+        long length = ctxt.getStop().getStopIndex() - ctxt.getStart().getStartIndex() + 1;
         this.postOnLine(message, BuildMessage.Kind.WARNING, line, column, length);
     }
 

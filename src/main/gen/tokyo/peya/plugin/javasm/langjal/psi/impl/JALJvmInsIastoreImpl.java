@@ -27,4 +27,10 @@ public class JALJvmInsIastoreImpl extends JALInstructionImpl implements JALJvmIn
     else super.accept(visitor);
   }
 
+  @Override
+  @Nullable
+  public JALJvmInsArgLocalRef getJvmInsArgLocalRef() {
+    return findChildByClass(JALJvmInsArgLocalRef.class);
+  }
+
 }

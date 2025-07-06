@@ -1,32 +1,38 @@
 package tokyo.peya.plugin.javasm.compiler;
 
+import lombok.Getter;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
-import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+@Getter
 public class JALMethodEvaluator
 {
-    private final EvaluatingContext evaluatingContext;
+    private final EvaluatingReporter context;
     private final ClassNode clazz;
     private final MethodNode method;
+
+    private final List<LocalVariableInfo> locals;
     private final List<LabelInfo> labels;
     private final List<InstructionInfo> instructions;
 
     private int bytecodeOffset;
 
-    public JALMethodEvaluator(@NotNull EvaluatingContext ctxt, @NotNull ClassNode cn)
+    public JALMethodEvaluator(@NotNull EvaluatingReporter reporter, @NotNull ClassNode cn)
     {
-        this.evaluatingContext = ctxt;
+        this.context = reporter;
         this.clazz = cn;
         this.method = new MethodNode();
 
+        this.locals = new LinkedList<>();
         this.labels = new ArrayList<>();
         this.instructions = new ArrayList<>();
     }
@@ -65,9 +71,8 @@ public class JALMethodEvaluator
             {
                 // 命令を評価して，必要に応じてラベルを設定
                 InstructionInfo info = JALInstructionEvaluator.evaluateInstruction(
-                        this.evaluatingContext,
+                        this,
                         bodyItem.instruction(),
-                        this.bytecodeOffset,
                         lastLabel
                 );
                 if (info == null)
@@ -152,4 +157,153 @@ public class JALMethodEvaluator
         return accessor;
     }
 
+    @Nullable
+    public LocalVariableInfo resolveLocalSafe(int localIndex)
+    {
+        for (LocalVariableInfo foundLocal : this.locals)  // リストのサイズと index は無関係。
+            if (foundLocal.index() == localIndex)
+                return foundLocal;
+        return null;
+    }
+
+    @Nullable
+    public LocalVariableInfo resolveLocalSafe(@NotNull String localName)
+    {
+        for (LocalVariableInfo localVar : this.locals)
+            if (localName.equals(localVar.name()))
+                return localVar;
+
+        return null;
+    }
+
+    @NotNull
+    public LocalVariableInfo resolve(@NotNull JALParser.JvmInsArgLocalRefContext localRef, @NotNull String callerInsn)
+    {
+        TerminalNode localID = localRef.ID();
+        TerminalNode localNumber = localRef.NUMBER();
+        if (localID != null)
+        {
+            String localName = localID.getText();
+            // ローカル変数名を参照
+            LocalVariableInfo localVar = this.resolveLocalSafe(localName);
+            if (localVar != null)
+                return localVar;
+
+            throw new IllegalArgumentException("Local variable with name '" + localName + "' is not defined.");
+        }
+        else if (localNumber != null)
+        {
+            int localIndex = EvaluatorCommons.asInt(localNumber);
+            if (localIndex < 0)
+                throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
+
+            // ローカル変数番号を参照
+            LocalVariableInfo localVar = this.resolveLocalSafe(localIndex);
+            if (localVar != null)
+            {
+                if (localIndex >= 3 && callerInsn.endsWith("load")) // xload 系のときに警告
+                    this.warnLocalPerformance(localVar, callerInsn);
+                return localVar;
+            }
+
+            throw new IllegalArgumentException("Local variable at index " + localIndex + " is not defined.");
+        }
+
+        throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
+    }
+
+
+    @Nullable
+    public LocalVariableInfo resolveSafe(@NotNull JALParser.JvmInsArgLocalRefContext localRef)
+    {
+        TerminalNode localID = localRef.ID();
+        TerminalNode localNumber = localRef.NUMBER();
+        if (localID != null)
+            return this.resolveLocalSafe(localID.getText());
+        else if (localNumber != null)
+        {
+            int localIndex = EvaluatorCommons.asInt(localNumber);
+            if (localIndex < 0)
+                return null;
+
+            // ローカル変数番号を参照
+            return this.resolveLocalSafe(localIndex);
+        }
+
+        return null;  // 無効な参照
+    }
+
+    @NotNull
+    public LocalVariableInfo registerLocal(
+            @NotNull JALParser.JvmInsArgLocalRefContext localRef,
+            @NotNull String type
+    )
+    {
+        // this.local.size() は index と無関係。
+        TerminalNode localID = localRef.ID();
+        TerminalNode localNumber = localRef.NUMBER();
+
+        LocalVariableInfo registeredLocal = this.resolveSafe(localRef);
+        if (registeredLocal != null)
+        {
+            if (localID == null)
+                return registeredLocal;  // すでに登録されているので，そのまま返す。
+            else // ID 指定なのにすでに登録されている場合は問題。
+                throw new IllegalArgumentException(
+                        "Local variable with name '" + localID.getText() + "' is already defined as " + registeredLocal.name()
+                );
+        }
+
+        if (localID != null)
+        {
+            String localName = localID.getText();
+            registeredLocal = new LocalVariableInfo(localName, type, this.locals.size());
+        }
+        else if (localNumber != null)
+        {
+            int localIndex = EvaluatorCommons.asInt(localNumber);
+            if (localIndex < 0)
+                throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
+
+            registeredLocal = new LocalVariableInfo(localIndex, type);
+        }
+        else
+            throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
+
+        this.locals.add(registeredLocal);
+        // メソッドへの登録は後ほど。
+
+        return registeredLocal;
+    }
+
+    @NotNull
+    public LocalVariableInfo registerLocal(int idx, @NotNull String type)
+    {
+        if (idx < 0)
+            throw new IllegalArgumentException("Local variable index cannot be negative: " + idx);
+
+        // すでに登録されているか確認
+        LocalVariableInfo existingLocal = this.resolveLocalSafe(idx);
+        if (existingLocal != null)  // インデックス指定なのに，すでにあるのは問題。
+            throw new IllegalArgumentException(
+                    "Local variable at index " + idx + " is already defined as " + existingLocal.name()
+            );
+
+        // 新しいローカル変数を登録
+        LocalVariableInfo newLocal = new LocalVariableInfo(idx, type);
+        this.locals.add(newLocal);
+
+        // メソッドへの登録は後ほど。
+        return newLocal;
+    }
+
+    private void warnLocalPerformance(@NotNull LocalVariableInfo localVar, @NotNull String callerInsn)
+    {
+        // xLOAD_<n> が定義されているので，代わりにそっちを使ったほうが効率が良い(e.g. iload_1)
+        this.context.postWarning(String.format(
+                "Local variable %s is accessed in instruction '%s', " +
+                        "but it is recommended to use %s_%d instead for better performance.",
+                localVar.name(), callerInsn, localVar.name(), localVar.index()
+        ));
+    }
 }

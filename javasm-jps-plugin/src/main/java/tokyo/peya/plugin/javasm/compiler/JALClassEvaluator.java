@@ -2,7 +2,6 @@ package tokyo.peya.plugin.javasm.compiler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
@@ -11,16 +10,16 @@ import java.util.List;
 
 public class JALClassEvaluator
 {
-    public static ClassNode evaluateClassAST(@NotNull EvaluatingContext ctxt, @NotNull JALParser.ClassDefinitionContext clazz)
+    public static ClassNode evaluateClassAST(@NotNull EvaluatingReporter reporter, @NotNull JALParser.ClassDefinitionContext clazz)
     {
         ClassNode classNode = new ClassNode();
         visitClassInformation(classNode, clazz);
-        visitClassBody(ctxt, classNode, clazz.classBody());
+        visitClassBody(reporter, classNode, clazz.classBody());
 
         return classNode;
     }
 
-    private static void visitClassBody(@NotNull EvaluatingContext ctxt, @NotNull ClassNode classNode,
+    private static void visitClassBody(@NotNull EvaluatingReporter reporter, @NotNull ClassNode classNode,
                                        @Nullable JALParser.ClassBodyContext body)
     {
         if (body == null)
@@ -31,7 +30,7 @@ public class JALClassEvaluator
         {
             if (item.methodDefinition() != null)
             {
-                JALMethodEvaluator evaluator = new JALMethodEvaluator(ctxt, classNode);
+                JALMethodEvaluator evaluator = new JALMethodEvaluator(reporter, classNode);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
         }

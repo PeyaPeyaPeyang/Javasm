@@ -3,7 +3,6 @@ package tokyo.peya.plugin.javasm.compiler;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Opcodes;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 public class EvaluatorCommons
@@ -46,27 +45,16 @@ public class EvaluatorCommons
             return 0;
 
         // 0x から始まる or 10 進
-        if (text.startsWith("0x"))
+        try
         {
-            try
-            {
+            if (text.startsWith("0x"))
                 return Integer.parseInt(text.substring(2), 16);
-            }
-            catch (NumberFormatException e)
-            {
-                return 0;
-            }
-        }
-        else
-        {
-            try
-            {
+            else
                 return Integer.parseInt(text);
-            }
-            catch (NumberFormatException e)
-            {
-                return 0;
-            }
+        }
+        catch (NumberFormatException e)
+        {
+            return 0;
         }
     }
 }

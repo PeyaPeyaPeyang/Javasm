@@ -3,14 +3,14 @@ package tokyo.peya.plugin.javasm.compiler.instructions.xconst;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.plugin.javasm.compiler.AbstractInstructionEvaluator;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
-import tokyo.peya.plugin.javasm.compiler.EvaluatingContext;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
+import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 public class InstructionEvaluatorIConstN extends AbstractInstructionEvaluator<JALParser.JvmInsIconstNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull EvaluatingContext evalContxt, JALParser.@NotNull JvmInsIconstNContext ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsIconstNContext ctxt)
     {
         if (has(ctxt.INSN_ICONST_M1()))
             return visitSingle(EOpcodes.ICONST_M1);

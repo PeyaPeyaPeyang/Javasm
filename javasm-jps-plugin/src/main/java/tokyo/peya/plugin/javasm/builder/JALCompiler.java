@@ -78,7 +78,7 @@ public class JALCompiler
             return new ClassNode();
 
         ClassNode evaluatedClass = JALClassEvaluator.evaluateClassAST(
-                new JALEvaluatingContextImpl(this.ctxt, this.file),
+                new JALEvaluatingReporterImpl(this.ctxt, this.file),
                 classDefinition
         );
         this.writeClass(evaluatedClass);

@@ -2,10 +2,12 @@ package tokyo.peya.plugin.javasm.compiler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorBiPush;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorEnter;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorExit;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop2;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorRet;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorIAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorLAnd;
@@ -86,22 +88,32 @@ import tokyo.peya.plugin.javasm.compiler.instructions.xaload.InstructionEvaluato
 import tokyo.peya.plugin.javasm.compiler.instructions.xconst.InstructionEvaluatorDConstN;
 import tokyo.peya.plugin.javasm.compiler.instructions.xconst.InstructionEvaluatorFConstN;
 import tokyo.peya.plugin.javasm.compiler.instructions.xconst.InstructionEvaluatorIConstN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorALoad;
 import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorALoadN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorDLoad;
 import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorDLoadN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorFLoad;
 import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorFLoadN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorILoad;
 import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorILoadN;
 import tokyo.peya.plugin.javasm.compiler.instructions.xconst.InstructionEvaluatorLConstN;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorNop;
+import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorLLoad;
 import tokyo.peya.plugin.javasm.compiler.instructions.xload.InstructionEvaluatorLLoadN;
 import tokyo.peya.plugin.javasm.compiler.instructions.xreturn.InstructionEvaluatorAReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.xreturn.InstructionEvaluatorDReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.xreturn.InstructionEvaluatorFReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.xreturn.InstructionEvaluatorIReturn;
 import tokyo.peya.plugin.javasm.compiler.instructions.xreturn.InstructionEvaluatorLReturn;
+import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorAStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorAStoreN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorDStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorDStoreN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorFStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorFStoreN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorIStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorIStoreN;
+import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorLStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xstore.InstructionEvaluatorLStoreN;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
@@ -110,6 +122,7 @@ import java.util.List;
 public class JALInstructionEvaluator
 {
     private static final List<AbstractInstructionEvaluator<?>> EVALUATORS = List.of(
+            // ---- カテゴリ 1 ----
             new InstructionEvaluatorNop(),
             new InstructionEvaluatorAConstNull(),
 
@@ -237,24 +250,44 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorReturn(),
 
             new InstructionEvaluatorMonitorEnter(),
-            new InstructionEvaluatorMonitorExit()
+            new InstructionEvaluatorMonitorExit(),
+
+            // ---- カテゴリ 2 ----
+
+            new InstructionEvaluatorBiPush(),
+
+            new InstructionEvaluatorILoad(),
+            new InstructionEvaluatorLLoad(),
+            new InstructionEvaluatorFLoad(),
+            new InstructionEvaluatorDLoad(),
+            new InstructionEvaluatorALoad(),
+
+            new InstructionEvaluatorIStore(),
+            new InstructionEvaluatorLStore(),
+            new InstructionEvaluatorFStore(),
+            new InstructionEvaluatorDStore(),
+            new InstructionEvaluatorAStore(),
+
+            new InstructionEvaluatorRet()
     );
 
     @Nullable
-    static InstructionInfo evaluateInstruction(@NotNull EvaluatingContext ctxt,
+    static InstructionInfo evaluateInstruction(@NotNull JALMethodEvaluator methodEvaluator,
                                                @NotNull JALParser.InstructionContext instruction,
-                                               int bytecodeOffset,
                                                @Nullable LabelInfo lastLabel)
-
-
     {
         try
         {
             for (AbstractInstructionEvaluator<?> evaluator : EVALUATORS)
                 if (evaluator.isApplicable(instruction))
                 {
-                    EvaluatedInstruction evaluated = evaluator.evaluate(ctxt, instruction);
-                    return new InstructionInfo(evaluated.insn(), bytecodeOffset, lastLabel, evaluated.getInstructionSize());
+                    EvaluatedInstruction evaluated = evaluator.evaluate(methodEvaluator, instruction);
+                    return new InstructionInfo(
+                            evaluated.insn(),
+                            methodEvaluator.getBytecodeOffset(),
+                            lastLabel,
+                            evaluated.getInstructionSize()
+                    );
                 }
 
             throw new UnsupportedOperationException("Unsupported instruction: " + instruction.getText());
@@ -265,7 +298,7 @@ public class JALInstructionEvaluator
             long offset = instruction.getStart().getCharPositionInLine();
             long problemLengthInLine = instruction.getStop().getCharPositionInLine() - offset + 1;
 
-            ctxt.postError(
+            methodEvaluator.getContext().postError(
                     "An error occurred while evaluating instruction: " + instruction.getText(),
                     e,
                     line,

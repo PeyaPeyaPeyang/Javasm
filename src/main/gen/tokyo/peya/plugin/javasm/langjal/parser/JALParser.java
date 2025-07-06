@@ -1603,15 +1603,17 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_FSTORE
+  // INSN_FSTORE jvmInsArgLocalRef
   public static boolean jvmInsFstore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsFstore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_FSTORE)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_FSTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_FSTORE);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && jvmInsArgLocalRef(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */
@@ -1805,15 +1807,17 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // INSN_IASTORE
+  // INSN_IASTORE jvmInsArgLocalRef
   public static boolean jvmInsIastore(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "jvmInsIastore")) return false;
     if (!nextTokenIs(b, "<JVMInstruction>", INSN_IASTORE)) return false;
-    boolean r;
+    boolean r, p;
     Marker m = enter_section_(b, l, _NONE_, JVM_INS_IASTORE, "<JVMInstruction>");
     r = consumeToken(b, INSN_IASTORE);
-    exit_section_(b, l, m, r, false, null);
-    return r;
+    p = r; // pin = 1
+    r = r && jvmInsArgLocalRef(b, l + 1);
+    exit_section_(b, l, m, r, p, null);
+    return r || p;
   }
 
   /* ********************************************************** */

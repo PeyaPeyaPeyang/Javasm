@@ -13,7 +13,7 @@ public abstract class AbstractSingleInstructionEvaluator<T extends ParserRuleCon
     }
 
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull EvaluatingContext evalContxt, @NotNull T ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, @NotNull T ctxt)
     {
         return visitSingle(this.opcode);
     }

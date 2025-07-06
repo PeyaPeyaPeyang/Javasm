@@ -378,7 +378,7 @@ jvmInsAloadN: INSN_ALOAD_0 | INSN_ALOAD_1 | INSN_ALOAD_2 | INSN_ALOAD_3 | INSN_A
 jvmInsAnewArray: INSN_ANEWARRAY typeDescriptor;
 jvmInsAreturn: INSN_ARETURN;
 jvmInsArraylength: INSN_ARRAYLENGTH;
-jvmInsAstore: INSN_ASTORE;
+jvmInsAstore: INSN_ASTORE jvmInsArgLocalRef;
 jvmInsAstoreN: INSN_ASTORE_0 | INSN_ASTORE_1 | INSN_ASTORE_2 | INSN_ASTORE_3;
 jvmInsAthrow: INSN_ATHROW;
 jvmInsBaload: INSN_BALOAD;
@@ -426,7 +426,7 @@ jvmInsFmul: INSN_FMUL;
 jvmInsFneg: INSN_FNEG;
 jvmInsFrem: INSN_FREM;
 jvmInsFreturn: INSN_FRETURN;
-jvmInsFstore: INSN_FSTORE;
+jvmInsFstore: INSN_FSTORE jvmInsArgLocalRef;
 jvmInsFstoreN: INSN_FSTORE_0 | INSN_FSTORE_1 | INSN_FSTORE_2 | INSN_FSTORE_3;
 jvmInsFsub: INSN_FSUB;
 jvmInsGetfield: INSN_GETFIELD jvmInsArgFieldRef;
