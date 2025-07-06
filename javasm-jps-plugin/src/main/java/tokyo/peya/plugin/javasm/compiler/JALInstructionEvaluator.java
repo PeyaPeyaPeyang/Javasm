@@ -6,10 +6,13 @@ import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorANewAr
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorBiPush;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorCheckCast;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorGoto;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorGotoW;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorInstanceOf;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorJsr;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorJsrW;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorEnter;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorExit;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMultiANewArray;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorNew;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop2;
@@ -196,12 +199,12 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorLAdd(),
             new InstructionEvaluatorFAdd(),
             new InstructionEvaluatorDAdd(),
-            
+
             new InstructionEvaluatorISub(),
             new InstructionEvaluatorLSub(),
             new InstructionEvaluatorFSub(),
             new InstructionEvaluatorDSub(),
-            
+
             new InstructionEvaluatorIMul(),
             new InstructionEvaluatorLMul(),
             new InstructionEvaluatorFMul(),
@@ -211,12 +214,12 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorLDiv(),
             new InstructionEvaluatorFDiv(),
             new InstructionEvaluatorDDiv(),
-            
+
             new InstructionEvaluatorIRem(),
             new InstructionEvaluatorLRem(),
             new InstructionEvaluatorFRem(),
             new InstructionEvaluatorDRem(),
-            
+
             new InstructionEvaluatorINeg(),
             new InstructionEvaluatorLNeg(),
             new InstructionEvaluatorFNeg(),
@@ -322,6 +325,15 @@ public class JALInstructionEvaluator
 
             new InstructionEvaluatorGoto(),
             new InstructionEvaluatorJsr(),
+
+            // ---- カテゴリ 4 ----
+
+            new InstructionEvaluatorMultiANewArray(),
+
+            // ---- カテゴリ 5 ----
+
+            new InstructionEvaluatorGotoW(),
+            new InstructionEvaluatorJsrW()
     );
 
     @Nullable
