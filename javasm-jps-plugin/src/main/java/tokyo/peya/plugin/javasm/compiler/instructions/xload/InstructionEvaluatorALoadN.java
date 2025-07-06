@@ -10,7 +10,8 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 public class InstructionEvaluatorALoadN extends AbstractInstructionEvaluator<JALParser.JvmInsAloadNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsAloadNContext ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+                                                     JALParser.@NotNull JvmInsAloadNContext ctxt)
     {
         if (has(ctxt.INSN_ALOAD_0()))
             return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.ALOAD_0, 0);

@@ -10,7 +10,8 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 public class InstructionEvaluatorLStoreN extends AbstractInstructionEvaluator<JALParser.JvmInsLstoreNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsLstoreNContext ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+                                                     JALParser.@NotNull JvmInsLstoreNContext ctxt)
     {
         if (has(ctxt.INSN_LSTORE_0()))
             return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.LSTORE_0, 0, evaluator, "L");

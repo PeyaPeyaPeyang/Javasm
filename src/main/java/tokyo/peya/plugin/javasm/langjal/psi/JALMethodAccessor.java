@@ -14,8 +14,8 @@ public class JALMethodAccessor
     {
         List<JALAccAttrMethod> attributes = method.getAccAttrMethodList();
         List<String> attributeNames = attributes.stream()
-                .map(JALAccAttrMethod::getText)
-                .toList();
+                                                .map(JALAccAttrMethod::getText)
+                                                .toList();
 
         return new AccessAttributeSet(attributeNames.toArray(new String[0]));
     }

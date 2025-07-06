@@ -10,7 +10,8 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 public class InstructionEvaluatorDConstN extends AbstractInstructionEvaluator<JALParser.JvmInsDconstNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsDconstNContext ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+                                                     JALParser.@NotNull JvmInsDconstNContext ctxt)
     {
         if (has(ctxt.INSN_DCONST_0()))
             return visitSingle(EOpcodes.DCONST_0);

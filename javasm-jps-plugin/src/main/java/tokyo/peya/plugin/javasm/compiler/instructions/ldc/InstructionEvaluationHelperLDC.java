@@ -28,7 +28,8 @@ public class InstructionEvaluationHelperLDC
         if (string != null)
         {
             if (ldcType == LDC2_W || ldcType == LDC_W)
-                throw new IllegalArgumentException("ldc2_w cannot be used with string literals, please use ldc or ldc_w instead.");
+                throw new IllegalArgumentException(
+                        "ldc2_w cannot be used with string literals, please use ldc or ldc_w instead.");
 
             String value = string.getText();
             value = value.substring(1, value.length() - 1); // Remove quotes
@@ -47,9 +48,10 @@ public class InstructionEvaluationHelperLDC
         if (ldcType == LDC2_W && !isCategory2)
             throw new IllegalArgumentException("ldc2_w can only be used with double or long values, but found: " + numberType);
         else if (ldcType == LDC && isCategory2)
-            throw new IllegalArgumentException("ldc cannot be used with double or long values, please use ldc2_w instead.");
+            throw new IllegalArgumentException(
+                    "ldc cannot be used with double or long values, please use ldc2_w instead.");
 
-        int instructionSize = ldcType == LDC ? 1 : (ldcType == LDC_W ? 2 : 3);
+        int instructionSize = ldcType == LDC ? 1: (ldcType == LDC_W ? 2: 3);
         ldcInsnNode = new LdcInsnNode(numberValue);
         return EvaluatedInstruction.of(ldcInsnNode, instructionSize);
     }

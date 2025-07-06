@@ -10,7 +10,8 @@ import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 public class InstructionEvaluatorDCmpOp extends AbstractInstructionEvaluator<JALParser.JvmInsDcmpOPContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, JALParser.@NotNull JvmInsDcmpOPContext ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+                                                     JALParser.@NotNull JvmInsDcmpOPContext ctxt)
     {
         if (has(ctxt.INSN_DCMPG()))
             return visitSingle(EOpcodes.DCMPG);

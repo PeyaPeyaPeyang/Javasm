@@ -23,6 +23,12 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
         return EvaluatedInstruction.of(insn);
     }
 
+    @Override
+    protected JALParser.JvmInsIfOPContext map(JALParser.@NotNull InstructionContext instruction)
+    {
+        return instruction.jvmInsIfOP();
+    }
+
     private static int getOpcode(JALParser.JvmInsIfOPContext ctxt)
     {
         if (ctxt.INSN_IFEQ() != null)
@@ -39,11 +45,5 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
             return EOpcodes.IFLE;
 
         throw new IllegalArgumentException("Unknown IF opcode");
-    }
-
-    @Override
-    protected JALParser.JvmInsIfOPContext map(JALParser.@NotNull InstructionContext instruction)
-    {
-        return instruction.jvmInsIfOP();
     }
 }

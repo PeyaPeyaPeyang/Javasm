@@ -31,7 +31,7 @@ public class InstructionEvaluateHelperXStore
                     idx, callerInsn
             ));
 
-        int size = isWide ? 4 : 2;
+        int size = isWide ? 4: 2;
         VarInsnNode insn = new VarInsnNode(opcode, idx);
         return EvaluatedInstruction.of(insn, size);
     }

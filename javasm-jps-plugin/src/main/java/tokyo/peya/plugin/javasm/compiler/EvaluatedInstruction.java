@@ -14,29 +14,6 @@ public record EvaluatedInstruction(
         this(insn, 0);
     }
 
-    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn)
-    {
-        return new EvaluatedInstruction(insn);
-    }
-
-    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn, int size)
-    {
-        checkSizeProvided(insn.getOpcode(), size);
-        return new EvaluatedInstruction(insn, size);
-    }
-
-    private static void checkSizeProvided(int opcode, int size)
-    {
-        if (size > 0)
-            return;
-
-        if (opcode == EOpcodes.TABLESWITCH
-            || opcode == EOpcodes.LOOKUPSWITCH
-            || opcode == EOpcodes.WIDE
-            || opcode == EOpcodes.INVOKEDYNAMIC)
-            throw new IllegalArgumentException("Instruction with opcode(" + opcode + ") requires a custom size to be specified.");
-    }
-
     public int getInstructionSize()
     {
         if (this.customSize > 0)
@@ -95,5 +72,28 @@ public record EvaluatedInstruction(
                     "Unable to determine instruction size for opcode(" + this.insn.getOpcode() + "). " +
                             "This is variable-sized or not supported yet.");
         };
+    }
+
+    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn)
+    {
+        return new EvaluatedInstruction(insn);
+    }
+
+    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn, int size)
+    {
+        checkSizeProvided(insn.getOpcode(), size);
+        return new EvaluatedInstruction(insn, size);
+    }
+
+    private static void checkSizeProvided(int opcode, int size)
+    {
+        if (size > 0)
+            return;
+
+        if (opcode == EOpcodes.TABLESWITCH
+                || opcode == EOpcodes.LOOKUPSWITCH
+                || opcode == EOpcodes.WIDE
+                || opcode == EOpcodes.INVOKEDYNAMIC)
+            throw new IllegalArgumentException("Instruction with opcode(" + opcode + ") requires a custom size to be specified.");
     }
 }

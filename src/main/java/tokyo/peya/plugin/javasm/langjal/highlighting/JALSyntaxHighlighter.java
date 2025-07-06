@@ -23,7 +23,10 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
     public static final TextAttributesKey COMMENT =
             TextAttributesKey.createTextAttributesKey("JAL_COMMENT", DefaultLanguageHighlighterColors.LINE_COMMENT);
     public static final TextAttributesKey BLOCK_COMMENT =
-            TextAttributesKey.createTextAttributesKey("JAL_BLOCK_COMMENT", DefaultLanguageHighlighterColors.BLOCK_COMMENT);
+            TextAttributesKey.createTextAttributesKey(
+                    "JAL_BLOCK_COMMENT",
+                    DefaultLanguageHighlighterColors.BLOCK_COMMENT
+            );
     public static final TextAttributesKey OPERATOR =
             TextAttributesKey.createTextAttributesKey("JAL_OPERATOR", DefaultLanguageHighlighterColors.OPERATION_SIGN);
     public static final TextAttributesKey BRACES =
@@ -41,15 +44,24 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
     public static final TextAttributesKey FIELD =
             TextAttributesKey.createTextAttributesKey("JAL_FIELD", DefaultLanguageHighlighterColors.GLOBAL_VARIABLE);
     public static final TextAttributesKey METHOD_DECLARATION =
-            TextAttributesKey.createTextAttributesKey("JAL_METHOD_DECLARATION", DefaultLanguageHighlighterColors.FUNCTION_DECLARATION);
+            TextAttributesKey.createTextAttributesKey(
+                    "JAL_METHOD_DECLARATION",
+                    DefaultLanguageHighlighterColors.FUNCTION_DECLARATION
+            );
     public static final TextAttributesKey METHOD_CALL =
-            TextAttributesKey.createTextAttributesKey("JAL_METHOD_CALL", DefaultLanguageHighlighterColors.FUNCTION_CALL);
+            TextAttributesKey.createTextAttributesKey(
+                    "JAL_METHOD_CALL",
+                    DefaultLanguageHighlighterColors.FUNCTION_CALL
+            );
     public static final TextAttributesKey CLASS_META =
             TextAttributesKey.createTextAttributesKey("JAL_CLASS_META", DefaultLanguageHighlighterColors.PARAMETER);
     public static final TextAttributesKey CLASS_NAME =
             TextAttributesKey.createTextAttributesKey("JAL_CLASS_NAME", DefaultLanguageHighlighterColors.CLASS_NAME);
     public static final TextAttributesKey CLASS_REFERENCE =
-            TextAttributesKey.createTextAttributesKey("JAL_CLASS_REFERENCE", DefaultLanguageHighlighterColors.CLASS_REFERENCE);
+            TextAttributesKey.createTextAttributesKey(
+                    "JAL_CLASS_REFERENCE",
+                    DefaultLanguageHighlighterColors.CLASS_REFERENCE
+            );
     public static final TextAttributesKey BAD_CHARACTER =
             TextAttributesKey.createTextAttributesKey("JAL_BAD_CHARACTER", HighlighterColors.BAD_CHARACTER);
 
@@ -91,7 +103,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             return NUMBER_KEYS;
         else if (JALTokenSets.KEYWORDS.contains(iElementType))
             return KEY_KEYS;
-        else  if (JALTypes.STRING.equals(iElementType))
+        else if (JALTypes.STRING.equals(iElementType))
             return STRING_KEYS;
         else if (JALTypes.LINE_COMMENT.equals(iElementType))
             return COMMENT_KEYS;
@@ -113,8 +125,8 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             return LABEL_KEYS;
         else if (JALTypes.FIELD_NAME.equals(iElementType))
             return FIELD_KEYS;
-     //   else if (JALTypes.NAME.equals(iElementType))
-       //     return METHOD_DECLARATION_KEYS;
+            //   else if (JALTypes.NAME.equals(iElementType))
+            //     return METHOD_DECLARATION_KEYS;
         else if (JALTokenSets.INSTRUCTIONS.contains(iElementType))
             return METHOD_CALL_KEYS;
         else if (JALTypes.CLASS_META.equals(iElementType))

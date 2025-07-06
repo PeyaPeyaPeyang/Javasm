@@ -1,12 +1,10 @@
 package tokyo.peya.plugin.javasm.compiler;
 
-import com.sun.xml.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-import java.math.BigDecimal;
 import java.util.function.Function;
 
 public class EvaluatorCommons
@@ -89,6 +87,7 @@ public class EvaluatorCommons
             default -> null; // null を返すことで fallback させる
         };
     }
+
     public static String getNumberType(String number)
     {
         if (number == null || number.isEmpty())

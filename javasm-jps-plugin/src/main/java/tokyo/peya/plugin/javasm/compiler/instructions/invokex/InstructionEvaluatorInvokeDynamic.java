@@ -11,10 +11,10 @@ import tokyo.peya.plugin.javasm.compiler.EvaluatorCommons;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-import java.lang.invoke.LambdaMetafactory;
 import java.util.List;
 
-public class InstructionEvaluatorInvokeDynamic extends AbstractInstructionEvaluator<JALParser.JvmInsInvokedynamicContext>
+public class InstructionEvaluatorInvokeDynamic
+        extends AbstractInstructionEvaluator<JALParser.JvmInsInvokedynamicContext>
 {
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
@@ -25,8 +25,8 @@ public class InstructionEvaluatorInvokeDynamic extends AbstractInstructionEvalua
         Handle bootstrapMethod = toHandle(ctxt.jvmInsArgInvokeDynamicMethodTypeMethodHandle());
         List<JALParser.JvmInsArgInvokeDynamicRefContext> args = ctxt.jvmInsArgInvokeDynamicRef();
         List<Object> bootstrapArgs = args.stream()
-                .map(InstructionEvaluatorInvokeDynamic::evaluateBootstrapArg)
-                .toList();
+                                         .map(InstructionEvaluatorInvokeDynamic::evaluateBootstrapArg)
+                                         .toList();
 
         InvokeDynamicInsnNode insn = new InvokeDynamicInsnNode(
                 methodName,
@@ -35,6 +35,12 @@ public class InstructionEvaluatorInvokeDynamic extends AbstractInstructionEvalua
                 bootstrapArgs.toArray(new Object[0])
         );
         return EvaluatedInstruction.of(insn, calcSize(ctxt));
+    }
+
+    @Override
+    protected JALParser.JvmInsInvokedynamicContext map(JALParser.@NotNull InstructionContext instruction)
+    {
+        return instruction.jvmInsInvokedynamic();
     }
 
     private static int calcSize(JALParser.JvmInsInvokedynamicContext ctxt)
@@ -121,11 +127,5 @@ public class InstructionEvaluatorInvokeDynamic extends AbstractInstructionEvalua
             return EOpcodes.H_NEWINVOKESPECIAL;
         else
             throw new IllegalArgumentException("Unknown method handle type: " + handle.getText());
-    }
-
-    @Override
-    protected JALParser.JvmInsInvokedynamicContext map(JALParser.@NotNull InstructionContext instruction)
-    {
-        return instruction.jvmInsInvokedynamic();
     }
 }

@@ -7,7 +7,8 @@ import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorInvokeInterface extends AbstractInstructionEvaluator<JALParser.JvmInsInvokeinterfaceContext>
+public class InstructionEvaluatorInvokeInterface
+        extends AbstractInstructionEvaluator<JALParser.JvmInsInvokeinterfaceContext>
 {
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,

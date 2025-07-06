@@ -6,7 +6,6 @@ import tokyo.peya.plugin.javasm.compiler.AbstractInstructionEvaluator;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
-import tokyo.peya.plugin.javasm.compiler.instructions.ldc.InstructionEvaluationHelperLDC;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 public class InstructionEvaluatorNew extends AbstractInstructionEvaluator<JALParser.JvmInsNewContext>

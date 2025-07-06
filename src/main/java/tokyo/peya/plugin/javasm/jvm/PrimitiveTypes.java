@@ -33,7 +33,7 @@ public enum PrimitiveTypes implements Type
         for (PrimitiveTypes type : PrimitiveTypes.values())
             if (type.getDescriptor() == descriptorChar)
                 return type;
-            
+
         return null; // 該当するプリミティブ型がない場合はnullを返す
     }
 }

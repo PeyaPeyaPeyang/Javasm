@@ -23,6 +23,12 @@ public class InstructionEvaluatorIfICmpOP extends AbstractInstructionEvaluator<J
         return EvaluatedInstruction.of(insn);
     }
 
+    @Override
+    protected JALParser.JvmInsIfIcmpOPContext map(JALParser.@NotNull InstructionContext instruction)
+    {
+        return instruction.jvmInsIfIcmpOP();
+    }
+
     private static int getOpcode(JALParser.JvmInsIfIcmpOPContext ctxt)
     {
         if (ctxt.INSN_IF_ICMPEQ() != null)
@@ -39,11 +45,5 @@ public class InstructionEvaluatorIfICmpOP extends AbstractInstructionEvaluator<J
             return EOpcodes.IF_ICMPLE;
 
         throw new IllegalArgumentException("Unknown IF_ICMP opcode");
-    }
-
-    @Override
-    protected JALParser.JvmInsIfIcmpOPContext map(JALParser.@NotNull InstructionContext instruction)
-    {
-        return instruction.jvmInsIfIcmpOP();
     }
 }

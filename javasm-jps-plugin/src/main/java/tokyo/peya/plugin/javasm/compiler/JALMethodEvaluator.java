@@ -12,7 +12,6 @@ import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -136,20 +135,6 @@ public class JALMethodEvaluator
         }
     }
 
-    private static boolean checkAllLocalsHaveStart(@NotNull List<LocalVariableInfo> locals)
-    {
-        return locals.stream()
-                .map(LocalVariableInfo::start)
-                .noneMatch(Objects::isNull);
-    }
-
-    private static boolean checkAllLocalsHaveEnd(@NotNull List<LocalVariableInfo> locals)
-    {
-        return locals.stream()
-                .map(LocalVariableInfo::end)
-                .noneMatch(Objects::isNull);
-    }
-
     private void evaluateMethodMetadata(@NotNull JALParser.MethodDefinitionContext method)
     {
         String desc = method.methodDescriptor().getText();
@@ -164,7 +149,7 @@ public class JALMethodEvaluator
     private void evaluateLabels(@NotNull JALParser.MethodBodyContext body)
     {
         int instructionCount = 0;
-        for (JALParser.MethodBodyItemContext bodyItem: body.methodBodyItem())
+        for (JALParser.MethodBodyItemContext bodyItem : body.methodBodyItem())
         {
             if (bodyItem.label() != null)
             {
@@ -176,6 +161,7 @@ public class JALMethodEvaluator
                 instructionCount++;
         }
     }
+
     private void evaluateMethodBody(@NotNull JALParser.MethodBodyContext body)
     {
         this.context.postInfo("Evaluating method body for " + this.method.name + this.method.desc);
@@ -190,7 +176,7 @@ public class JALMethodEvaluator
     {
         // 各命令を順に評価していく
         LabelInfo lastLabel = null;
-        for (JALParser.MethodBodyItemContext bodyItem: body.methodBodyItem())
+        for (JALParser.MethodBodyItemContext bodyItem : body.methodBodyItem())
         {
             if (bodyItem.label() != null)
                 lastLabel = this.resolveLabel(bodyItem.label().labelName().getText());
@@ -222,18 +208,6 @@ public class JALMethodEvaluator
         }
     }
 
-    private static boolean shouldAppendReturnOnLast(InstructionInfo instruction)
-    {
-        return switch (instruction.opcode())
-        {
-            case EOpcodes.IRETURN, EOpcodes.LRETURN, EOpcodes.FRETURN,
-                 EOpcodes.DRETURN, EOpcodes.ARETURN, EOpcodes.RETURN,
-                 EOpcodes.ATHROW, EOpcodes.GOTO -> false; // これらの命令はRETURNを追加しない
-            default -> true; // 他の命令が最後の場合はRETURNを追加する
-        };
-    }
-
-
     private InstructionInfo addInstruction(@NotNull InstructionInfo instruction)
     {
         this.instructions.add(instruction);
@@ -261,7 +235,8 @@ public class JALMethodEvaluator
     }
 
     @NotNull
-    public LocalVariableInfo resolveLocal(@NotNull JALParser.JvmInsArgLocalRefContext localRef, @NotNull String callerInsn)
+    public LocalVariableInfo resolveLocal(@NotNull JALParser.JvmInsArgLocalRefContext localRef,
+                                          @NotNull String callerInsn)
     {
         TerminalNode localID = localRef.ID();
         TerminalNode localNumber = localRef.NUMBER();
@@ -295,7 +270,6 @@ public class JALMethodEvaluator
 
         throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
     }
-
 
     @Nullable
     public LocalVariableInfo resolveSafe(@NotNull JALParser.JvmInsArgLocalRefContext localRef)
@@ -427,6 +401,7 @@ public class JALMethodEvaluator
     {
         return this.registerLabel(labelName, this.instructions.size());
     }
+
     private void warnLocalPerformance(@NotNull LocalVariableInfo localVar, @NotNull String callerInsn)
     {
         // xLOAD_<n> が定義されているので，代わりにそっちを使ったほうが効率が良い(e.g. iload_1)
@@ -437,10 +412,35 @@ public class JALMethodEvaluator
         ));
     }
 
+    private static boolean checkAllLocalsHaveStart(@NotNull List<LocalVariableInfo> locals)
+    {
+        return locals.stream()
+                     .map(LocalVariableInfo::start)
+                     .noneMatch(Objects::isNull);
+    }
+
+    private static boolean checkAllLocalsHaveEnd(@NotNull List<LocalVariableInfo> locals)
+    {
+        return locals.stream()
+                     .map(LocalVariableInfo::end)
+                     .noneMatch(Objects::isNull);
+    }
+
+    private static boolean shouldAppendReturnOnLast(InstructionInfo instruction)
+    {
+        return switch (instruction.opcode())
+        {
+            case EOpcodes.IRETURN, EOpcodes.LRETURN, EOpcodes.FRETURN,
+                 EOpcodes.DRETURN, EOpcodes.ARETURN, EOpcodes.RETURN,
+                 EOpcodes.ATHROW, EOpcodes.GOTO -> false; // これらの命令はRETURNを追加しない
+            default -> true; // 他の命令が最後の場合はRETURNを追加する
+        };
+    }
+
     private static int asAccess(JALParser.AccModMethodContext methodNode)
     {
         int accessor = EvaluatorCommons.asAccessLevel(methodNode.accessLevel());
-        for (JALParser.AccAttrMethodContext ctxt: methodNode.accAttrMethod())
+        for (JALParser.AccAttrMethodContext ctxt : methodNode.accAttrMethod())
         {
             if (ctxt.KWD_ACC_ATTR_STATIC() != null)
                 accessor |= EOpcodes.ACC_STATIC;

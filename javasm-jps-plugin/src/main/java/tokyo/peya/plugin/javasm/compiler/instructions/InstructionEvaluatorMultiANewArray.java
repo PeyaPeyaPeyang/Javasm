@@ -8,7 +8,8 @@ import tokyo.peya.plugin.javasm.compiler.EvaluatorCommons;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorMultiANewArray extends AbstractInstructionEvaluator<JALParser.JvmInsMultianewarrayContext>
+public class InstructionEvaluatorMultiANewArray
+        extends AbstractInstructionEvaluator<JALParser.JvmInsMultianewarrayContext>
 {
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,

@@ -62,7 +62,7 @@ public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor>
                                                                                       @NotNull BuildDataPaths buildDataPaths)
     {
         List<JALBuildRootDescriptor> rootDescriptors = new ArrayList<>();
-        for (JpsModuleSourceRoot roots: this.module.getSourceRoots())
+        for (JpsModuleSourceRoot roots : this.module.getSourceRoots())
         {
             File rootFile = JpsPathUtil.urlToFile(roots.getUrl());
             if (rootFile.isDirectory())
@@ -77,7 +77,7 @@ public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor>
 
     @Override
     public JALBuildRootDescriptor findRootDescriptor(@NotNull String id,
-                                                    @NotNull BuildRootIndex rootIndex)
+                                                     @NotNull BuildRootIndex rootIndex)
     {
         Collection<JALBuildRootDescriptor> descriptors = rootIndex.getTargetRoots(this, null);
 

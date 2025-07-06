@@ -1,7 +1,6 @@
 package tokyo.peya.plugin.javasm.compiler.instructions.invokex;
 
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
@@ -24,7 +23,8 @@ public class InstructionEvaluateHelperInvocation
         );
     }
 
-    public static EvaluatedInstruction evaluate(String ownerType, String methodName, String methodDescriptor, int opcode)
+    public static EvaluatedInstruction evaluate(String ownerType, String methodName, String methodDescriptor,
+                                                int opcode)
     {
         // Ljava/lang/String; -> java/lang/String に変換
         String ownerTypeUnwrapped = EvaluatorCommons.unwrapClassTypeDescriptor(ownerType);
@@ -32,7 +32,8 @@ public class InstructionEvaluateHelperInvocation
         if (opcode == EOpcodes.INVOKESPECIAL)
         {
             if (!(methodName.equals("<init>") || methodName.equals("<clinit>")))
-                throw new IllegalArgumentException("Method name must be <init> or <clinit> for invokespecial instruction");
+                throw new IllegalArgumentException(
+                        "Method name must be <init> or <clinit> for invokespecial instruction");
         }
 
         MethodInsnNode insn = new MethodInsnNode(

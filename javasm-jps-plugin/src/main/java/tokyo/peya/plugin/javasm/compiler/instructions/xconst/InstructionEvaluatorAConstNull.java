@@ -5,7 +5,8 @@ import tokyo.peya.plugin.javasm.compiler.AbstractSingleInstructionEvaluator;
 import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorAConstNull extends AbstractSingleInstructionEvaluator<JALParser.JvmInsAconstNullContext>
+public class InstructionEvaluatorAConstNull
+        extends AbstractSingleInstructionEvaluator<JALParser.JvmInsAconstNullContext>
 {
     public InstructionEvaluatorAConstNull()
     {

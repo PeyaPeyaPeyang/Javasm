@@ -27,7 +27,7 @@ public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALPar
 
         VarInsnNode insn = new VarInsnNode(EOpcodes.RET, local.index());
 
-        int size = isWide ? 4 : 2;
+        int size = isWide ? 4: 2;
         return EvaluatedInstruction.of(insn, size);
     }
 

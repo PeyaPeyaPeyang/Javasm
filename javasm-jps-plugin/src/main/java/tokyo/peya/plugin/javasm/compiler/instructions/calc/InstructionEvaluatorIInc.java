@@ -2,11 +2,7 @@ package tokyo.peya.plugin.javasm.compiler.instructions.calc;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IincInsnNode;
-import org.objectweb.asm.tree.TypeInsnNode;
-import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.plugin.javasm.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.plugin.javasm.compiler.AbstractSingleInstructionEvaluator;
-import tokyo.peya.plugin.javasm.compiler.EOpcodes;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
 import tokyo.peya.plugin.javasm.compiler.EvaluatorCommons;
 import tokyo.peya.plugin.javasm.compiler.JALMethodEvaluator;
@@ -40,7 +36,7 @@ public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALPa
                 ));
         }
 
-        int size = isWide ? 6 : 3;
+        int size = isWide ? 6: 3;
         IincInsnNode insn = new IincInsnNode(idx, increment);
         return EvaluatedInstruction.of(insn, size);
     }

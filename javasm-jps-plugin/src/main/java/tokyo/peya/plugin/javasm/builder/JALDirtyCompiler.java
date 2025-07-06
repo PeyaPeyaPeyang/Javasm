@@ -64,8 +64,8 @@ public class JALDirtyCompiler
         {
             this.compileContext.processMessage(new CompilerMessage(
                     JAL_COMPILER_ID,
-                CompilerMessage.Kind.ERROR,
-                "Output directory is not specified for target: " + target.getModule()
+                    CompilerMessage.Kind.ERROR,
+                    "Output directory is not specified for target: " + target.getModule()
             ));
             return ExitCode.ABORT;
         }
@@ -87,9 +87,9 @@ public class JALDirtyCompiler
         if (files.isEmpty())
         {
             this.compileContext.processMessage(new CompilerMessage(
-                JAL_COMPILER_ID,
-                CompilerMessage.Kind.WARNING,
-                "No JAL files to compile in target: " + target.getModule()
+                    JAL_COMPILER_ID,
+                    CompilerMessage.Kind.WARNING,
+                    "No JAL files to compile in target: " + target.getModule()
             ));
             return ExitCode.NOTHING_DONE;
         }
@@ -98,8 +98,8 @@ public class JALDirtyCompiler
     }
 
     private ExitCode compileJALFiles(
-        ListMultimap<ModuleBuildTarget, Path> files,
-        Path outputDir
+            ListMultimap<ModuleBuildTarget, Path> files,
+            Path outputDir
     ) throws ProjectBuildException, IOException
     {
         ExitCode exitCode = ExitCode.OK;
@@ -108,7 +108,13 @@ public class JALDirtyCompiler
             ModuleBuildTarget target = entry.getKey();
             Path jalFile = entry.getValue();
 
-            JALCompiler compiler = new JALCompiler(target, this.compileContext, this.outputConsumer, jalFile, outputDir);
+            JALCompiler compiler = new JALCompiler(
+                    target,
+                    this.compileContext,
+                    this.outputConsumer,
+                    jalFile,
+                    outputDir
+            );
             ClassNode compiledClass = compiler.compile();
             if (compiledClass == null)
             {

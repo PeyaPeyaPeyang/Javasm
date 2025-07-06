@@ -14,8 +14,8 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
     @Nullable
     protected abstract T map(@NotNull JALParser.InstructionContext instruction);
 
-
-    public EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.InstructionContext instruction)
+    public EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+                                         @NotNull JALParser.InstructionContext instruction)
     {
         if (!isApplicable(instruction))
             throw new IllegalArgumentException("Instruction is not applicable: " + instruction.getText());

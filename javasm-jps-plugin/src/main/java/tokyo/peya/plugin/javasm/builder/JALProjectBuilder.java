@@ -21,7 +21,6 @@ public class JALProjectBuilder extends ModuleLevelBuilder
         super(BuilderCategory.TRANSLATOR);
     }
 
-    
     @Override
     public ExitCode build(CompileContext compileContext,
                           ModuleChunk moduleChunk,

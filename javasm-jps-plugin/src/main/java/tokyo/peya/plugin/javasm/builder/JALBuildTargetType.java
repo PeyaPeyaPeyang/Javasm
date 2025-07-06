@@ -20,11 +20,6 @@ public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
         super(TYPE_ID);
     }
 
-    public static JALBuildTargetType getInstance()
-    {
-        return INSTANCE;
-    }
-
     @Override
     public @NotNull List<JALBuildTarget> computeAllTargets(@NotNull JpsModel jpsModel)
     {
@@ -34,15 +29,23 @@ public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
     @Override
     public @NotNull BuildTargetLoader<JALBuildTarget> createLoader(@NotNull JpsModel model)
     {
-        return new BuildTargetLoader<>() {
+        return new BuildTargetLoader<>()
+        {
             @Override
-            public @Nullable JALBuildTarget createTarget(@NotNull String targetId) {
-                for (JpsModule module : model.getProject().getModules()) {
+            public @Nullable JALBuildTarget createTarget(@NotNull String targetId)
+            {
+                for (JpsModule module : model.getProject().getModules())
+                {
                     if (module.getName().equals(targetId))
                         return new JALBuildTarget(module);
                 }
                 return null;
             }
         };
+    }
+
+    public static JALBuildTargetType getInstance()
+    {
+        return INSTANCE;
     }
 }

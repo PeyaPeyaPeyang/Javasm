@@ -10,7 +10,8 @@ import java.util.List;
 
 public class JALClassEvaluator
 {
-    public static ClassNode evaluateClassAST(@NotNull EvaluatingReporter reporter, @NotNull JALParser.ClassDefinitionContext clazz)
+    public static ClassNode evaluateClassAST(@NotNull EvaluatingReporter reporter,
+                                             @NotNull JALParser.ClassDefinitionContext clazz)
     {
         ClassNode classNode = new ClassNode();
         visitClassInformation(classNode, clazz);
@@ -37,7 +38,7 @@ public class JALClassEvaluator
     }
 
     private static void visitClassInformation(ClassNode classNode,
-                                       JALParser.ClassDefinitionContext definitionContext)
+                                              JALParser.ClassDefinitionContext definitionContext)
     {
         int major = -1;
         int minor = -1;
@@ -57,7 +58,7 @@ public class JALClassEvaluator
                 else if (item.classPropMinor() != null)
                     minor = EvaluatorCommons.asInteger(item.classPropMinor().NUMBER());
                 else if (item.classPropSuperClass() != null)
-                    superClassName =  item.classPropSuperClass().className().getText();
+                    superClassName = item.classPropSuperClass().className().getText();
                 else if (item.classPropInterfaces() != null)
                     interfaceName = item.classPropInterfaces().className()
                                         .stream()
@@ -67,7 +68,7 @@ public class JALClassEvaluator
             }
         }
 
-        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major) : EOpcodes.ASM9;
+        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major): EOpcodes.ASM9;
 
         if (superClassName == null || superClassName.isEmpty())
             superClassName = "java/lang/Object"; // デフォルトのスーパークラス
@@ -88,7 +89,7 @@ public class JALClassEvaluator
         List<JALParser.AccAttrClassContext> attributes = accessModifier.accAttrClass();
 
         int modifier = EvaluatorCommons.asAccessLevel(accessLevel);
-        for (JALParser.AccAttrClassContext attr: attributes)
+        for (JALParser.AccAttrClassContext attr : attributes)
         {
             if (attr.KWD_ACC_ATTR_FINAL() != null)
                 modifier |= EOpcodes.ACC_FINAL;

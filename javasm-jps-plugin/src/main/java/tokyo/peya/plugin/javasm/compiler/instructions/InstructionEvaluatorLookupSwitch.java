@@ -51,17 +51,6 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
         return EvaluatedInstruction.of(lookupSwitchInsnNode, calcSize(ctxt));
     }
 
-    private static int calcSize(@NotNull JALParser.JvmInsLookupswitchContext ctxt)
-    {
-        JALParser.JvmInsArgLookupSwitchContext args = ctxt.jvmInsArgLookupSwitch();
-        List<JALParser.JvmInsArgLookupSwitchCaseContext> cases = args.jvmInsArgLookupSwitchCase();
-        int size = 1 + 4 + 4 * cases.size(); // opcode + default offset + number of pairs
-        for (JALParser.JvmInsArgLookupSwitchCaseContext c : cases)
-            if (c.jvmInsArgLookupSwitchCaseName().KWD_SWITCH_DEFAULT() == null)
-                size += 2; // key + label
-        return size;
-    }
-
     private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
     {
         LabelInfo labelInfo = evaluator.resolveLabel(labelName.getText());
@@ -72,5 +61,16 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
     protected JALParser.JvmInsLookupswitchContext map(JALParser.@NotNull InstructionContext instruction)
     {
         return instruction.jvmInsLookupswitch();
+    }
+
+    private static int calcSize(@NotNull JALParser.JvmInsLookupswitchContext ctxt)
+    {
+        JALParser.JvmInsArgLookupSwitchContext args = ctxt.jvmInsArgLookupSwitch();
+        List<JALParser.JvmInsArgLookupSwitchCaseContext> cases = args.jvmInsArgLookupSwitchCase();
+        int size = 1 + 4 + 4 * cases.size(); // opcode + default offset + number of pairs
+        for (JALParser.JvmInsArgLookupSwitchCaseContext c : cases)
+            if (c.jvmInsArgLookupSwitchCaseName().KWD_SWITCH_DEFAULT() == null)
+                size += 2; // key + label
+        return size;
     }
 }

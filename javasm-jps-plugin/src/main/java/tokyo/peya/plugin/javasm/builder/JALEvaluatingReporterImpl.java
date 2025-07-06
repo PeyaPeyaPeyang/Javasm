@@ -1,6 +1,5 @@
 package tokyo.peya.plugin.javasm.builder;
 
-import groovyjarjarantlr.ParseTreeToken;
 import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
