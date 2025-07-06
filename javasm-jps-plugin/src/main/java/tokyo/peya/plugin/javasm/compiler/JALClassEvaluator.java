@@ -1,6 +1,5 @@
 package tokyo.peya.plugin.javasm.compiler;
 
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
@@ -15,8 +14,26 @@ public class JALClassEvaluator
     {
         ClassNode classNode = new ClassNode();
         visitClassInformation(classNode, clazz);
+        visitClassBody(classNode, clazz.classBody());
 
         return classNode;
+    }
+
+    private static void visitClassBody(ClassNode classNode,
+                                       JALParser.ClassBodyContext body)
+    {
+        if (body == null)
+            return;
+
+        List<JALParser.ClassBodyItemContext> items = body.classBodyItem();
+        for (JALParser.ClassBodyItemContext item : items)
+        {
+            if (item.methodDefinition() != null)
+            {
+                JALMethodEvaluator evaluator = new JALMethodEvaluator(classNode);
+                evaluator.evaluateMethod(item.methodDefinition());
+            }
+        }
     }
 
     private static void visitClassInformation(ClassNode classNode,
@@ -36,9 +53,9 @@ public class JALClassEvaluator
             for (JALParser.ClassMetaItemContext item : metaItems)
             {
                 if (item.classPropMajor() != null)
-                    major = asInt(item.classPropMajor().INSN_ARG_UNSIG_8BYTES());
+                    major = EvaluatorCommons.asInt(item.classPropMajor().INSN_ARG_UNSIG_8BYTES());
                 else if (item.classPropMinor() != null)
-                    minor = asInt(item.classPropMinor().INSN_ARG_UNSIG_8BYTES());
+                    minor = EvaluatorCommons.asInt(item.classPropMinor().INSN_ARG_UNSIG_8BYTES());
                 else if (item.classPropSuperClass() != null)
                     superClassName =  item.classPropSuperClass().className().getText();
                 else if (item.classPropInterfaces() != null)
@@ -50,7 +67,10 @@ public class JALClassEvaluator
             }
         }
 
-        int version = (major >= 0 && minor >= 0) ? (major << 16 | minor) : Opcodes.ASM9;
+        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major) : Opcodes.ASM9;
+
+        if (superClassName == null || superClassName.isEmpty())
+            superClassName = "java/lang/Object"; // デフォルトのスーパークラス
 
         classNode.visit(
                 version,
@@ -67,63 +87,26 @@ public class JALClassEvaluator
         JALParser.AccessLevelContext accessLevel = accessModifier.accessLevel();
         List<JALParser.AccAttrClassContext> attributes = accessModifier.accAttrClass();
 
-        int modifier = asAccessLevel(accessLevel);
+        int modifier = EvaluatorCommons.asAccessLevel(accessLevel);
         for (JALParser.AccAttrClassContext attr: attributes)
         {
-            if (attr.KWD_ACC_ATTR_ABSTRACT() != null)
-                modifier |= Opcodes.ACC_ABSTRACT;
-            else if (attr.KWD_ACC_ATTR_FINAL() != null)
+            if (attr.KWD_ACC_ATTR_FINAL() != null)
                 modifier |= Opcodes.ACC_FINAL;
-            else if (attr.KWD_ACC_ATTR_STATIC() != null)
-                modifier |= Opcodes.ACC_STATIC;
+            else if (attr.KWD_ACC_ATTR_SUPER() != null)
+                modifier |= Opcodes.ACC_SUPER;
+            else if (attr.KWD_INTERFACE() != null)
+                modifier |= Opcodes.ACC_INTERFACE;
+            else if (attr.KWD_ACC_ATTR_ABSTRACT() != null)
+                modifier |= Opcodes.ACC_ABSTRACT;
             else if (attr.KWD_ACC_ATTR_SYNTHETIC() != null)
                 modifier |= Opcodes.ACC_SYNTHETIC;
+            else if (attr.KWD_ACC_ATTR_ANNOTATION() != null)
+                modifier |= Opcodes.ACC_ANNOTATION;
+            else if (attr.KWD_ACC_ATTR_ENUM() != null)
+                modifier |= Opcodes.ACC_ENUM;
         }
 
         return modifier;
     }
 
-    private static int asAccessLevel(JALParser.AccessLevelContext accessLevel)
-    {
-        if (accessLevel.KWD_ACC_PRIVATE() != null)
-            return Opcodes.ACC_PUBLIC;
-        else if (accessLevel.KWD_ACC_PROTECTED() != null)
-            return Opcodes.ACC_PROTECTED;
-        else if (accessLevel.KWD_ACC_PUBLIC() != null)
-            return Opcodes.ACC_PRIVATE;
-        else
-            return 0;
-    }
-
-    private static String asString(@NotNull TerminalNode node)
-    {
-        String text = node.getText();
-        if (text == null || text.isEmpty())
-            return null;
-
-        if (text.startsWith("\"") && text.endsWith("\""))
-            text = text.substring(1, text.length() - 1);
-        else if (text.startsWith("'") && text.endsWith("'"))
-            text = text.substring(1, text.length() - 1);
-
-        return text.replace("\\\"", "\"")
-                   .replace("\\'", "'")
-                   .replace("\\\\", "\\");
-    }
-
-    private static int asInt(@NotNull TerminalNode node)
-    {
-        String text = node.getText();
-        if (text == null || text.isEmpty())
-            return 0;
-
-        try
-        {
-            return Integer.parseInt(text);
-        }
-        catch (NumberFormatException e)
-        {
-            return 0;
-        }
-    }
 }

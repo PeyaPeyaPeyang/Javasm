@@ -80,14 +80,15 @@ public class JALParser implements PsiParser, LightPsiParser {
   };
 
   /* ********************************************************** */
-  // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_SYNTHETIC
-  //                  | KWD_ACC_ATTR_ANNOTATION | KWD_ACC_ATTR_ENUM
+  // KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_SUPER | KWD_INTERFACE | KWD_ACC_ATTR_ABSTRACT
+  //                  | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ANNOTATION | KWD_ACC_ATTR_ENUM
   public static boolean accAttrClass(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "accAttrClass")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ACC_ATTR_CLASS, "<accessAttribute>");
-    r = consumeToken(b, KWD_ACC_ATTR_STATIC);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_FINAL);
+    r = consumeToken(b, KWD_ACC_ATTR_FINAL);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_SUPER);
+    if (!r) r = consumeToken(b, KWD_INTERFACE);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_ABSTRACT);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_SYNTHETIC);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_ANNOTATION);
@@ -97,24 +98,25 @@ public class JALParser implements PsiParser, LightPsiParser {
   }
 
   /* ********************************************************** */
-  // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_TRANSIENT | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_STRICTFP | KWD_ACC_ATTR_SYNTHETIC
+  // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_TRANSIENT
+  //                  | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ENUM
   public static boolean accAttrField(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "accAttrField")) return false;
     boolean r;
     Marker m = enter_section_(b, l, _NONE_, ACC_ATTR_FIELD, "<accessAttribute>");
     r = consumeToken(b, KWD_ACC_ATTR_STATIC);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_FINAL);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_TRANSIENT);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_VOLATILE);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_STRICTFP);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_TRANSIENT);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_SYNTHETIC);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_ENUM);
     exit_section_(b, l, m, r, false, null);
     return r;
   }
 
   /* ********************************************************** */
-  // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_NATIVE
-  //                   | KWD_ACC_ATTR_SYNCHRONIZED | KWD_ACC_ATTR_TRANSIENT | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_STRICTFP
+  // KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_SYNCHRONIZED | KWD_ACC_ATTR_BRIDGE
+  //                   | KWD_ACC_ATTR_VARARGS | KWD_ACC_ATTR_NATIVE | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_STRICTFP
   //                   | KWD_ACC_ATTR_SYNTHETIC
   public static boolean accAttrMethod(PsiBuilder b, int l) {
     if (!recursion_guard_(b, l, "accAttrMethod")) return false;
@@ -122,11 +124,11 @@ public class JALParser implements PsiParser, LightPsiParser {
     Marker m = enter_section_(b, l, _NONE_, ACC_ATTR_METHOD, "<accessAttribute>");
     r = consumeToken(b, KWD_ACC_ATTR_STATIC);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_FINAL);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_ABSTRACT);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_NATIVE);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_SYNCHRONIZED);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_TRANSIENT);
-    if (!r) r = consumeToken(b, KWD_ACC_ATTR_VOLATILE);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_BRIDGE);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_VARARGS);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_NATIVE);
+    if (!r) r = consumeToken(b, KWD_ACC_ATTR_ABSTRACT);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_STRICTFP);
     if (!r) r = consumeToken(b, KWD_ACC_ATTR_SYNTHETIC);
     exit_section_(b, l, m, r, false, null);

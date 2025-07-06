@@ -28,12 +28,15 @@ KWD_ACC_PRIVATE: 'private';
 KWD_ACC_PROTECTED: 'protected';
 KWD_ACC_ATTR_STATIC: 'static';
 KWD_ACC_ATTR_FINAL: 'final';
-KWD_ACC_ATTR_ABSTRACT: 'abstract';
-KWD_ACC_ATTR_NATIVE: 'native';
+KWD_ACC_ATTR_SUPER: 'super';
 KWD_ACC_ATTR_SYNCHRONIZED: 'synchronized';
-KWD_ACC_ATTR_TRANSIENT: 'transient';
-KWD_ACC_ATTR_VOLATILE: 'volatile';
+KWD_ACC_ATTR_BRIDGE: 'bridge';
+KWD_ACC_ATTR_VARARGS: 'varargs';
+KWD_ACC_ATTR_NATIVE: 'native';
+KWD_ACC_ATTR_ABSTRACT: 'abstract';
 KWD_ACC_ATTR_STRICTFP: 'strictfp';
+KWD_ACC_ATTR_VOLATILE: 'volatile';
+KWD_ACC_ATTR_TRANSIENT: 'transient';
 KWD_ACC_ATTR_SYNTHETIC: 'synthetic';
 KWD_ACC_ATTR_ANNOTATION: 'annotation';
 KWD_ACC_ATTR_ENUM: 'enum';
@@ -311,12 +314,13 @@ accModClass : accessLevel? accAttrClass*;
 accModField : accessLevel? accAttrField*;
 accModMethod : accessLevel? accAttrMethod*;
 accessLevel : KWD_ACC_PUBLIC | KWD_ACC_PRIVATE | KWD_ACC_PROTECTED;
-accAttrClass : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_SYNTHETIC
-               | KWD_ACC_ATTR_ANNOTATION | KWD_ACC_ATTR_ENUM;
-accAttrMethod : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_NATIVE
-                  | KWD_ACC_ATTR_SYNCHRONIZED | KWD_ACC_ATTR_TRANSIENT | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_STRICTFP
+accAttrClass : KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_SUPER | KWD_INTERFACE | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_SYNTHETIC
+                 | KWD_ACC_ATTR_ANNOTATION | KWD_ACC_ATTR_ENUM;
+accAttrMethod : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_SYNCHRONIZED | KWD_ACC_ATTR_BRIDGE
+                  | KWD_ACC_ATTR_VARARGS | KWD_ACC_ATTR_NATIVE | KWD_ACC_ATTR_ABSTRACT | KWD_ACC_ATTR_STRICTFP
                   | KWD_ACC_ATTR_SYNTHETIC;
-accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_TRANSIENT | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_STRICTFP | KWD_ACC_ATTR_SYNTHETIC;
+accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE | KWD_ACC_ATTR_TRANSIENT
+                 | KWD_ACC_ATTR_SYNTHETIC | KWD_ACC_ATTR_ENUM;
 
 label : labelName COLON;
 labelName : ID | jvmInsArgUnsigned8Bytes;
@@ -366,9 +370,8 @@ instruction: jvmInsAaload | jvmInsAastore  | jvmInsAconstNull | jvmInsAload | jv
                 | jvmInsPop2 | jvmInsPutfield | jvmInsPutstatic | jvmInsRet | jvmInsReturn | jvmInsSaload
                 | jvmInsSastore | jvmInsSipush | jvmInsSwap | jvmInsTableswitch | jvmInsWide;
 
-
 jvmInsAaload: INSN_AALOAD;
-jvmInsAastore: INSN_AASTORE jvmInsArgLocalRef;
+jvmInsAastore: INSN_AASTORE;
 jvmInsAconstNull: INSN_ACONST_NULL;
 jvmInsAload: INSN_ALOAD jvmInsArgLocalRef;
 jvmInsAloadN: INSN_ALOAD_0 | INSN_ALOAD_1 | INSN_ALOAD_2 | INSN_ALOAD_3 | INSN_ALOAD_4;
@@ -379,17 +382,17 @@ jvmInsAstore: INSN_ASTORE;
 jvmInsAstoreN: INSN_ASTORE_0 | INSN_ASTORE_1 | INSN_ASTORE_2 | INSN_ASTORE_3;
 jvmInsAthrow: INSN_ATHROW;
 jvmInsBaload: INSN_BALOAD;
-jvmInsBastore: INSN_BASTORE jvmInsArgLocalRef;
+jvmInsBastore: INSN_BASTORE;
 jvmInsBipush: INSN_BIPUSH jvmInsArgUnsigned8Bytes;
 jvmInsCaload: INSN_CALOAD;
-jvmInsCastore: INSN_CASTORE jvmInsArgLocalRef;
+jvmInsCastore: INSN_CASTORE;
 jvmInsCheckcast: INSN_CHECKCAST typeDescriptor;
 jvmInsD2F: INSN_D2F;
 jvmInsD2I: INSN_D2I;
 jvmInsD2L: INSN_D2L;
 jvmInsDadd: INSN_DADD;
 jvmInsDaload: INSN_DALOAD;
-jvmInsDastore: INSN_DASTORE jvmInsArgUnsigned8Bytes;
+jvmInsDastore: INSN_DASTORE;
 jvmInsDcmpOP: INSN_DCMPG | INSN_DCMPL;
 jvmInsDconstN: INSN_DCONST_0 | INSN_DCONST_1;
 jvmInsDdiv: INSN_DDIV;
@@ -413,7 +416,7 @@ jvmInsF2I: INSN_F2I;
 jvmInsF2L: INSN_F2L;
 jvmInsFadd: INSN_FADD;
 jvmInsFaload: INSN_FALOAD;
-jvmInsFastore: INSN_FASTORE jvmInsArgLocalRef;
+jvmInsFastore: INSN_FASTORE;
 jvmInsFcmpgOP: INSN_FCMPG | INSN_FCMPL;
 jvmInsFconstN: INSN_FCONST_0 | INSN_FCONST_1 | INSN_FCONST_2;
 jvmInsFdiv: INSN_FDIV;
@@ -439,7 +442,7 @@ jvmInsI2S: INSN_I2S;
 jvmInsIadd: INSN_IADD;
 jvmInsIaload: INSN_IALOAD;
 jvmInsIand: INSN_IAND;
-jvmInsIastore: INSN_IASTORE jvmInsArgUnsigned8Bytes;
+jvmInsIastore: INSN_IASTORE;
 jvmInsIconstN: INSN_ICONST_M1 | INSN_ICONST_0 | INSN_ICONST_1 | INSN_ICONST_2 | INSN_ICONST_3 | INSN_ICONST_4
                | INSN_ICONST_5 | INSN_ICONST_6 | INSN_ICONST_7 | INSN_ICONST_8;
 jvmInsIdiv: INSN_IDIV;
@@ -488,7 +491,7 @@ jvmInsL2I: INSN_L2I;
 jvmInsLadd: INSN_LADD;
 jvmInsLaload: INSN_LALOAD;
 jvmInsLand: INSN_LAND;
-jvmInsLastore: INSN_LASTORE jvmInsArgLocalRef;
+jvmInsLastore: INSN_LASTORE;
 jvmInsLcmp: INSN_LCMP;
 jvmInsLconstN: INSN_LCONST_0 | INSN_LCONST_1;
 jvmInsLdc: INSN_LDC jvmInsArgScalarType;
@@ -523,7 +526,7 @@ jvmInsPutstatic: INSN_PUTSTATIC jvmInsArgFieldRef;
 jvmInsRet: INSN_RET jvmInsArgLocalRef;
 jvmInsReturn: INSN_RETURN;
 jvmInsSaload: INSN_SALOAD;
-jvmInsSastore: INSN_SASTORE jvmInsArgLocalRef;
+jvmInsSastore: INSN_SASTORE;
 jvmInsSipush: INSN_SIPUSH jvmInsArgUnsigned8Bytes;
 jvmInsSwap: INSN_SWAP;
 jvmInsTableswitch: INSN_TABLESWITCH jvmInsArgTableSwitch;

@@ -59,12 +59,15 @@ FULL_QUALIFIED_CLASS_NAME=([A-Za-z_][\w$]+("/"[A-Za-z_][\w$]+)*)
   "protected"                       { return KWD_ACC_PROTECTED; }
   "static"                          { return KWD_ACC_ATTR_STATIC; }
   "final"                           { return KWD_ACC_ATTR_FINAL; }
-  "abstract"                        { return KWD_ACC_ATTR_ABSTRACT; }
-  "native"                          { return KWD_ACC_ATTR_NATIVE; }
+  "super"                           { return KWD_ACC_ATTR_SUPER; }
   "synchronized"                    { return KWD_ACC_ATTR_SYNCHRONIZED; }
-  "transient"                       { return KWD_ACC_ATTR_TRANSIENT; }
-  "volatile"                        { return KWD_ACC_ATTR_VOLATILE; }
+  "bridge"                          { return KWD_ACC_ATTR_BRIDGE; }
+  "varargs"                         { return KWD_ACC_ATTR_VARARGS; }
+  "native"                          { return KWD_ACC_ATTR_NATIVE; }
+  "abstract"                        { return KWD_ACC_ATTR_ABSTRACT; }
   "strictfp"                        { return KWD_ACC_ATTR_STRICTFP; }
+  "volatile"                        { return KWD_ACC_ATTR_VOLATILE; }
+  "transient"                       { return KWD_ACC_ATTR_TRANSIENT; }
   "synthetic"                       { return KWD_ACC_ATTR_SYNTHETIC; }
   "annotation"                      { return KWD_ACC_ATTR_ANNOTATION; }
   "enum"                            { return KWD_ACC_ATTR_ENUM; }

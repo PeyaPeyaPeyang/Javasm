@@ -414,14 +414,17 @@ public interface JALTypes {
   IElementType INSN_WIDE = new JALTokenType("wide");
   IElementType KWD_ACC_ATTR_ABSTRACT = new JALTokenType("abstract");
   IElementType KWD_ACC_ATTR_ANNOTATION = new JALTokenType("annotation");
+  IElementType KWD_ACC_ATTR_BRIDGE = new JALTokenType("bridge");
   IElementType KWD_ACC_ATTR_ENUM = new JALTokenType("enum");
   IElementType KWD_ACC_ATTR_FINAL = new JALTokenType("final");
   IElementType KWD_ACC_ATTR_NATIVE = new JALTokenType("native");
   IElementType KWD_ACC_ATTR_STATIC = new JALTokenType("static");
   IElementType KWD_ACC_ATTR_STRICTFP = new JALTokenType("strictfp");
+  IElementType KWD_ACC_ATTR_SUPER = new JALTokenType("super");
   IElementType KWD_ACC_ATTR_SYNCHRONIZED = new JALTokenType("synchronized");
   IElementType KWD_ACC_ATTR_SYNTHETIC = new JALTokenType("synthetic");
   IElementType KWD_ACC_ATTR_TRANSIENT = new JALTokenType("transient");
+  IElementType KWD_ACC_ATTR_VARARGS = new JALTokenType("varargs");
   IElementType KWD_ACC_ATTR_VOLATILE = new JALTokenType("volatile");
   IElementType KWD_ACC_PRIVATE = new JALTokenType("private");
   IElementType KWD_ACC_PROTECTED = new JALTokenType("protected");
