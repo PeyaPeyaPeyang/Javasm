@@ -20,7 +20,7 @@ public class InstructionEvaluatorInstanceOf extends AbstractInstructionEvaluator
         String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.INSTANCEOF, typeName);
-        return new EvaluatedInstruction(type);
+        return EvaluatedInstruction.of(type);
     }
 
     @Override

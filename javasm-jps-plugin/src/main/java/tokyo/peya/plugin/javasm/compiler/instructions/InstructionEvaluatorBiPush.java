@@ -20,7 +20,7 @@ public class InstructionEvaluatorBiPush extends AbstractInstructionEvaluator<JAL
             throw new IllegalArgumentException(
                     "Value out of range for bipush: " + value + ", expected " + Byte.MIN_VALUE + " ~ " + Byte.MAX_VALUE
             );
-        return new EvaluatedInstruction(new IntInsnNode(EOpcodes.BIPUSH, value));
+        return EvaluatedInstruction.of(new IntInsnNode(EOpcodes.BIPUSH, value));
     }
 
     @Override

@@ -19,7 +19,7 @@ public class InstructionEvaluatorGoto extends AbstractInstructionEvaluator<JALPa
         LabelInfo label = evaluator.resolveLabel(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.GOTO, label.node());
-        return new EvaluatedInstruction(insn);
+        return EvaluatedInstruction.of(insn);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class InstructionEvaluatorNew extends AbstractInstructionEvaluator<JALPar
             throw new IllegalArgumentException("Invalid type descriptor: " + typeName + ", expected a class type descriptor.");
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.NEW, typeName);
-        return new EvaluatedInstruction(type);
+        return EvaluatedInstruction.of(type);
     }
 
     @Override

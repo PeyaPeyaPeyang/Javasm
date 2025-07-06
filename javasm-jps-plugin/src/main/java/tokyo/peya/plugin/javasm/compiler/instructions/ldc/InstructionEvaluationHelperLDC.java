@@ -34,7 +34,7 @@ public class InstructionEvaluationHelperLDC
             String value = string.getText();
             value = value.substring(1, value.length() - 1); // Remove quotes
             LdcInsnNode ldcInsnNode = new LdcInsnNode(value);
-            return new EvaluatedInstruction(ldcInsnNode);
+            return EvaluatedInstruction.of(ldcInsnNode);
         }
 
         BigDecimal bg = EvaluatorCommons.parse(number.getText());

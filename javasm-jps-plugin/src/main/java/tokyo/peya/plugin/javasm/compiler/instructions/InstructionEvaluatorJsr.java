@@ -19,7 +19,7 @@ public class InstructionEvaluatorJsr extends AbstractInstructionEvaluator<JALPar
         LabelInfo label = evaluator.resolveLabel(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.JSR, label.node());
-        return new EvaluatedInstruction(insn);
+        return EvaluatedInstruction.of(insn);
     }
 
     @Override

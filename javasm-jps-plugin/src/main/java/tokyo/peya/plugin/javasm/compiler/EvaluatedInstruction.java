@@ -9,7 +9,7 @@ public record EvaluatedInstruction(
         int customSize // wide, lookupswitch, tableswitch, など
 )
 {
-    public EvaluatedInstruction(@Nullable AbstractInsnNode insn)
+    private EvaluatedInstruction(@Nullable AbstractInsnNode insn)
     {
         this(insn, 0);
     }
@@ -17,6 +17,24 @@ public record EvaluatedInstruction(
     public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn)
     {
         return new EvaluatedInstruction(insn);
+    }
+
+    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn, int size)
+    {
+        checkSizeProvided(insn.getOpcode(), size);
+        return new EvaluatedInstruction(insn, size);
+    }
+
+    private static void checkSizeProvided(int opcode, int size)
+    {
+        if (size > 0)
+            return;
+
+        if (opcode == EOpcodes.TABLESWITCH
+            || opcode == EOpcodes.LOOKUPSWITCH
+            || opcode == EOpcodes.WIDE
+            || opcode == EOpcodes.INVOKEDYNAMIC)
+            throw new IllegalArgumentException("Instruction with opcode(" + opcode + ") requires a custom size to be specified.");
     }
 
     public int getInstructionSize()
@@ -71,8 +89,8 @@ public record EvaluatedInstruction(
                  EOpcodes.IF_ICMPGT, EOpcodes.IF_ICMPLE, EOpcodes.IF_ACMPEQ, EOpcodes.IF_ACMPNE,
                  EOpcodes.IFNULL, EOpcodes.IFNONNULL, EOpcodes.GOTO, EOpcodes.JSR -> 3;
             case EOpcodes.MULTIANEWARRAY -> 4;
-            case EOpcodes.GOTO_W, EOpcodes.JSR_W -> 5;
-            /* case EOpcodes.TABLESWITCH, EOpcodes.LOOKUPSWITCH, EOPCodes.WIDE: 196, EOpcodes.INVOKEDYNAMIC, EOpcodes.INVOKEINTERFACE ->*/
+            case EOpcodes.INVOKEINTERFACE, EOpcodes.GOTO_W, EOpcodes.JSR_W -> 5;
+            /* case EOpcodes.TABLESWITCH, EOpcodes.LOOKUPSWITCH, EOPCodes.WIDE: 196 ->*/
             default -> throw new IllegalArgumentException(
                     "Unable to determine instruction size for opcode(" + this.insn.getOpcode() + "). " +
                             "This is variable-sized or not supported yet.");

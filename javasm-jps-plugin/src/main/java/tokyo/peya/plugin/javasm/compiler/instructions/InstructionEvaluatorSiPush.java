@@ -22,7 +22,7 @@ public class InstructionEvaluatorSiPush extends AbstractInstructionEvaluator<JAL
             );
 
         IntInsnNode insn = new IntInsnNode(EOpcodes.SIPUSH, value);
-        return new EvaluatedInstruction(insn);
+        return EvaluatedInstruction.of(insn);
     }
 
     @Override

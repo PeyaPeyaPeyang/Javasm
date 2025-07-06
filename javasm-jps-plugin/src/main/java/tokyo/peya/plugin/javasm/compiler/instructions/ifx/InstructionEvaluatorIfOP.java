@@ -20,7 +20,7 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
         LabelInfo label = evaluator.resolveLabel(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(opcode, label.node());
-        return new EvaluatedInstruction(insn);
+        return EvaluatedInstruction.of(insn);
     }
 
     private static int getOpcode(JALParser.JvmInsIfOPContext ctxt)

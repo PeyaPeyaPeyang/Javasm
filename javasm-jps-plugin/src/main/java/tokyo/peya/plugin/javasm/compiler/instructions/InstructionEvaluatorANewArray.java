@@ -20,7 +20,7 @@ public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<
         String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.ANEWARRAY, typeName);
-        return new EvaluatedInstruction(type);
+        return EvaluatedInstruction.of(type);
     }
 
     @Override

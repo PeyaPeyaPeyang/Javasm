@@ -19,7 +19,7 @@ public class InstructionEvaluatorIfNonNull extends AbstractInstructionEvaluator<
         LabelInfo label = evaluator.resolveLabel(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.IFNONNULL, label.node());
-        return new EvaluatedInstruction(insn);
+        return EvaluatedInstruction.of(insn);
     }
 
     @Override
