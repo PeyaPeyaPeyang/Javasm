@@ -282,7 +282,7 @@
 
     // <editor-fold desc="Meta characters">
     space="regexp:\s+"
-    number="regexp:-?(0x)?\d+"
+    number="regexp:-?(0x)?[\d.]+"
     id="regexp:[\w$]+"
     string="regexp:('([^'\\]|\\.)*'|\"([^\"\\]|\\\"|\\'|\\)*\")"
     line_comment="regexp://.*"

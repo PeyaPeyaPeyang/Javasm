@@ -63,6 +63,14 @@ public class JALMethodEvaluator
         this.evaluateLocals();
     }
 
+    private void finaliseInstructionAndLabels()
+    {
+        for (InstructionInfo instruction : this.instructions)
+        {
+
+        }
+    }
+
     private void evaluateLocals()
     {
         this.context.postInfo("Evaluating locals for method " + this.method.name + this.method.desc);
@@ -87,6 +95,8 @@ public class JALMethodEvaluator
                     local.index()
             );
         }
+
+        this.finaliseLocalEvaluation();
     }
 
     private void prepareLocalEvaluation()
@@ -95,20 +105,20 @@ public class JALMethodEvaluator
         if (checkAllLocalsHaveStart(this.locals))
         {
             LabelInfo startLabel = new LabelInfo("MBEGIN", this.globalStartLocalLabel, this.bytecodeOffset);
-            LabelNode node = (LabelNode) (this.globalStartLocalLabel.info = new LabelNode());
-
             this.labels.add(startLabel);
-            this.method.instructions.insertBefore(node, this.method.instructions.getFirst());
+            this.method.instructions.insertBefore(startLabel.node(), this.method.instructions.getFirst());
             // ↑ START なので，いっちゃんさいしょ
         }
+    }
+
+    private void finaliseLocalEvaluation()
+    {
         // 終了ラベルを持っていないローカル変数がある場合は、グローバルな終了ラベルを設定する。
         if (checkAllLocalsHaveEnd(this.locals))
         {
             LabelInfo endLabel = new LabelInfo("MEND", this.globalEndLocalLabel, this.bytecodeOffset);
-            LabelNode node = (LabelNode) (this.globalEndLocalLabel.info = new LabelNode());
-
             this.labels.add(endLabel);
-            this.method.instructions.add(node);
+            this.method.instructions.add(endLabel.node());
             // ↑ END なので，いっちゃんさいご
         }
     }
@@ -138,19 +148,39 @@ public class JALMethodEvaluator
         this.method.access = access;
     }
 
-
+    private void evaluateLabels(@NotNull JALParser.MethodBodyContext body)
+    {
+        int instructionCount = 0;
+        for (JALParser.MethodBodyItemContext bodyItem: body.methodBodyItem())
+        {
+            if (bodyItem.label() != null)
+            {
+                // ラベルを登録
+                String labelName = bodyItem.label().labelName().getText();
+                this.registerLabel(labelName, instructionCount);
+            }
+            else if (bodyItem.instruction() != null)
+                instructionCount++;
+        }
+    }
     private void evaluateMethodBody(@NotNull JALParser.MethodBodyContext body)
     {
         this.context.postInfo("Evaluating method body for " + this.method.name + this.method.desc);
 
         this.method.visitCode();
+        this.evaluateLabels(body);
+        this.evaluateInstructions(body);
+        this.method.visitEnd();
+    }
 
+    private void evaluateInstructions(@NotNull JALParser.MethodBodyContext body)
+    {
         // 各命令を順に評価していく
         LabelInfo lastLabel = null;
         for (JALParser.MethodBodyItemContext bodyItem: body.methodBodyItem())
         {
             if (bodyItem.label() != null)
-                lastLabel = this.evaluateLabel(bodyItem.label());
+                lastLabel = this.resolveLabel(bodyItem.label().labelName().getText());
             else if (bodyItem.instruction() != null)
             {
                 // 命令を評価して，必要に応じてラベルを設定
@@ -177,8 +207,6 @@ public class JALMethodEvaluator
                     1
             ));
         }
-        
-        this.method.visitEnd();
     }
 
     private static boolean shouldAppendReturnOnLast(InstructionInfo instruction)
@@ -192,47 +220,12 @@ public class JALMethodEvaluator
         };
     }
 
-    private LabelInfo evaluateLabel(@NotNull JALParser.LabelContext label)
-    {
-        String labelName = label.labelName().getText();
-        return this.registerLabel(labelName);
-    }
 
     private InstructionInfo addInstruction(@NotNull InstructionInfo instruction)
     {
         this.instructions.add(instruction);
         this.bytecodeOffset += instruction.instructionSize();
-        this.method.instructions.add(instruction.insn());
-
         return instruction;
-    }
-
-    private static int asAccess(JALParser.AccModMethodContext methodNode)
-    {
-        int accessor = EvaluatorCommons.asAccessLevel(methodNode.accessLevel());
-        for (JALParser.AccAttrMethodContext ctxt: methodNode.accAttrMethod())
-        {
-            if (ctxt.KWD_ACC_ATTR_STATIC() != null)
-                accessor |= EOpcodes.ACC_STATIC;
-            else if (ctxt.KWD_ACC_ATTR_FINAL() != null)
-                accessor |= EOpcodes.ACC_FINAL;
-            else if (ctxt.KWD_ACC_ATTR_SYNCHRONIZED() != null)
-                accessor |= EOpcodes.ACC_SYNCHRONIZED;
-            else if (ctxt.KWD_ACC_ATTR_BRIDGE() != null)
-                accessor |= EOpcodes.ACC_BRIDGE;
-            else if (ctxt.KWD_ACC_ATTR_VARARGS() != null)
-                accessor |= EOpcodes.ACC_VARARGS;
-            else if (ctxt.KWD_ACC_ATTR_NATIVE() != null)
-                accessor |= EOpcodes.ACC_NATIVE;
-            else if (ctxt.KWD_ACC_ATTR_ABSTRACT() != null)
-                accessor |= EOpcodes.ACC_ABSTRACT;
-            else if (ctxt.KWD_ACC_ATTR_STRICTFP() != null)
-                accessor |= EOpcodes.ACC_STRICT;
-            else if (ctxt.KWD_ACC_ATTR_SYNTHETIC() != null)
-                accessor |= EOpcodes.ACC_SYNTHETIC;
-        }
-
-        return accessor;
     }
 
     @Nullable
@@ -255,7 +248,7 @@ public class JALMethodEvaluator
     }
 
     @NotNull
-    public LocalVariableInfo resolve(@NotNull JALParser.JvmInsArgLocalRefContext localRef, @NotNull String callerInsn)
+    public LocalVariableInfo resolveLocal(@NotNull JALParser.JvmInsArgLocalRefContext localRef, @NotNull String callerInsn)
     {
         TerminalNode localID = localRef.ID();
         TerminalNode localNumber = localRef.NUMBER();
@@ -271,7 +264,7 @@ public class JALMethodEvaluator
         }
         else if (localNumber != null)
         {
-            int localIndex = EvaluatorCommons.asInt(localNumber);
+            int localIndex = EvaluatorCommons.asInteger(localNumber);
             if (localIndex < 0)
                 throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
 
@@ -300,7 +293,7 @@ public class JALMethodEvaluator
             return this.resolveLocalSafe(localID.getText());
         else if (localNumber != null)
         {
-            int localIndex = EvaluatorCommons.asInt(localNumber);
+            int localIndex = EvaluatorCommons.asInteger(localNumber);
             if (localIndex < 0)
                 return null;
 
@@ -339,7 +332,7 @@ public class JALMethodEvaluator
         }
         else if (localNumber != null)
         {
-            int localIndex = EvaluatorCommons.asInt(localNumber);
+            int localIndex = EvaluatorCommons.asInteger(localNumber);
             if (localIndex < 0)
                 throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
 
@@ -398,7 +391,7 @@ public class JALMethodEvaluator
     }
 
     @NotNull
-    public LabelInfo registerLabel(@NotNull String labelName)
+    private LabelInfo registerLabel(@NotNull String labelName, int instructionIndex)
     {
         LabelInfo existingLabel = this.resolveLabelSafe(labelName);
         if (existingLabel != null)
@@ -409,15 +402,18 @@ public class JALMethodEvaluator
 
         // 新しいラベルを登録
         Label newLabel = new Label();
-        LabelInfo labelInfo = new LabelInfo(labelName, newLabel, this.instructions.size());
+        LabelInfo labelInfo = new LabelInfo(labelName, newLabel, instructionIndex);
         this.labels.add(labelInfo);
 
-        // メソッドへの登録もここで行う
-        this.method.visitLabel(newLabel);
-
+        // メソッドへの登録はあと
         return labelInfo;
     }
 
+    @NotNull
+    public LabelInfo registerLabel(@NotNull String labelName)
+    {
+        return this.registerLabel(labelName, this.instructions.size());
+    }
     private void warnLocalPerformance(@NotNull LocalVariableInfo localVar, @NotNull String callerInsn)
     {
         // xLOAD_<n> が定義されているので，代わりにそっちを使ったほうが効率が良い(e.g. iload_1)
@@ -426,5 +422,33 @@ public class JALMethodEvaluator
                         "but it is recommended to use %s_%d instead for better performance.",
                 localVar.name(), callerInsn, localVar.name(), localVar.index()
         ));
+    }
+
+    private static int asAccess(JALParser.AccModMethodContext methodNode)
+    {
+        int accessor = EvaluatorCommons.asAccessLevel(methodNode.accessLevel());
+        for (JALParser.AccAttrMethodContext ctxt: methodNode.accAttrMethod())
+        {
+            if (ctxt.KWD_ACC_ATTR_STATIC() != null)
+                accessor |= EOpcodes.ACC_STATIC;
+            else if (ctxt.KWD_ACC_ATTR_FINAL() != null)
+                accessor |= EOpcodes.ACC_FINAL;
+            else if (ctxt.KWD_ACC_ATTR_SYNCHRONIZED() != null)
+                accessor |= EOpcodes.ACC_SYNCHRONIZED;
+            else if (ctxt.KWD_ACC_ATTR_BRIDGE() != null)
+                accessor |= EOpcodes.ACC_BRIDGE;
+            else if (ctxt.KWD_ACC_ATTR_VARARGS() != null)
+                accessor |= EOpcodes.ACC_VARARGS;
+            else if (ctxt.KWD_ACC_ATTR_NATIVE() != null)
+                accessor |= EOpcodes.ACC_NATIVE;
+            else if (ctxt.KWD_ACC_ATTR_ABSTRACT() != null)
+                accessor |= EOpcodes.ACC_ABSTRACT;
+            else if (ctxt.KWD_ACC_ATTR_STRICTFP() != null)
+                accessor |= EOpcodes.ACC_STRICT;
+            else if (ctxt.KWD_ACC_ATTR_SYNTHETIC() != null)
+                accessor |= EOpcodes.ACC_SYNTHETIC;
+        }
+
+        return accessor;
     }
 }

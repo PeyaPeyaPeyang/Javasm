@@ -71,6 +71,7 @@ public record EvaluatedInstruction(
                  EOpcodes.IF_ICMPGT, EOpcodes.IF_ICMPLE, EOpcodes.IF_ACMPEQ, EOpcodes.IF_ACMPNE,
                  EOpcodes.IFNULL, EOpcodes.IFNONNULL, EOpcodes.GOTO, EOpcodes.JSR -> 3;
             case EOpcodes.MULTIANEWARRAY -> 4;
+            case EOpcodes.GOTO_W, EOpcodes.JSR_W -> 5;
             /* case EOpcodes.TABLESWITCH, EOpcodes.LOOKUPSWITCH, EOPCodes.WIDE: 196, EOpcodes.INVOKEDYNAMIC, EOpcodes.INVOKEINTERFACE ->*/
             default -> throw new IllegalArgumentException(
                     "Unable to determine instruction size for opcode(" + this.insn.getOpcode() + "). " +

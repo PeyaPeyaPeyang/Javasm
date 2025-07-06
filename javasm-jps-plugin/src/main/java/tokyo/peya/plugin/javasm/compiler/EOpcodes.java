@@ -58,4 +58,7 @@ public interface EOpcodes extends Opcodes
     int LDC2_W = 20;
 
     int WIDE = 196;
+
+    int GOTO_W = 200;
+    int JSR_W = 201;
 }

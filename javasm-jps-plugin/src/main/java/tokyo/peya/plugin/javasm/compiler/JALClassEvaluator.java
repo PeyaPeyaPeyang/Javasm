@@ -53,9 +53,9 @@ public class JALClassEvaluator
             for (JALParser.ClassMetaItemContext item : metaItems)
             {
                 if (item.classPropMajor() != null)
-                    major = EvaluatorCommons.asInt(item.classPropMajor().NUMBER());
+                    major = EvaluatorCommons.asInteger(item.classPropMajor().NUMBER());
                 else if (item.classPropMinor() != null)
-                    minor = EvaluatorCommons.asInt(item.classPropMinor().NUMBER());
+                    minor = EvaluatorCommons.asInteger(item.classPropMinor().NUMBER());
                 else if (item.classPropSuperClass() != null)
                     superClassName =  item.classPropSuperClass().className().getText();
                 else if (item.classPropInterfaces() != null)

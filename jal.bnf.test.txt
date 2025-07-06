@@ -1,4 +1,4 @@
-public static class Main (
+public class Main (
   major_version=65,
   minor_version=0) {
   public static myString: Ljava/lang/String;
@@ -10,7 +10,7 @@ public static class Main (
   <init>()V {
    test:
     aaload
-    aastore 0x00
+    aastore
     aconst_null
     aload 1
     aload_0
@@ -28,17 +28,17 @@ public static class Main (
     astore_3
     athrow
     baload
-    bastore 0x00
+    bastore
     bipush 42
     caload
-    castore 12
+    castore
     checkcast Ljava/lang/String;
     d2f
     d2i
     d2l
     dadd
     daload
-    dastore 0x00
+    dastore
     dcmpg
     dcmpl
     dconst_0
@@ -67,7 +67,7 @@ public static class Main (
     f2l
     fadd
     faload
-    fastore 0x00
+    fastore
     fcmpg
     fcmpl
     fconst_0
@@ -81,7 +81,7 @@ public static class Main (
     fload_3
     frem
     freturn
-    fstore
+    fstore 345
     fstore_0
     fstore_1
     fstore_2
@@ -100,7 +100,7 @@ public static class Main (
     iadd
     iaload
     iand
-    iastore 0x00
+    iastore
     iconst_0
     iconst_1
     iconst_2
@@ -161,7 +161,7 @@ public static class Main (
     ladd
     laload
     land
-    lastore 0x00
+    lastore
     lcmp
     lconst_0
     lconst_1
@@ -205,7 +205,7 @@ public static class Main (
     ret 0x00
     return
     saload
-    sastore 0x00
+    sastore
     sipush 42
     swap
     tableswitch 1 {

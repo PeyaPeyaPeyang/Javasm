@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.plugin.javasm.langjal.compiler.JALParser;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 public class EvaluatorCommons
 {
     public static int asAccessLevel(@Nullable JALParser.AccessLevelContext accessLevel)
@@ -38,23 +41,46 @@ public class EvaluatorCommons
                    .replace("\\\\", "\\");
     }
 
-    public static int asInt(@NotNull TerminalNode node)
+    public static int asInteger(@NotNull TerminalNode node)
     {
-        String text = node.getText();
-        if (text == null || text.isEmpty())
-            return 0;
+        BigDecimal value = parse(node.getText());
+        if (value.scale() > 0 || value.precision() > 10)
+            throw new IllegalArgumentException("Integer literal is too large: " + node.getText());
 
-        // 0x から始まる or 10 進
+        return value.intValue();
+    }
+
+    public static BigDecimal parse(@Nullable String input)
+    {
+        if (input == null || input.isEmpty())
+            return BigDecimal.ZERO;
+
+        String trimmed = input.trim().toLowerCase();
         try
         {
-            if (text.startsWith("0x"))
-                return Integer.parseInt(text.substring(2), 16);
+            // 16進数（BigDecimalは直接対応してないので、一旦BigIntegerで）
+            if (trimmed.startsWith("0x"))
+            {
+                BigInteger bi = new BigInteger(trimmed.substring(2), 16);
+                return new BigDecimal(bi);
+            }
+            // 10進数
             else
-                return Integer.parseInt(text);
+                return new BigDecimal(trimmed);
         }
         catch (NumberFormatException e)
         {
-            return 0;
+            return null;
         }
+    }
+
+    public static String unwrapClassTypeDescriptor(@NotNull String typeName)
+    {
+        if (typeName.startsWith("L") && typeName.endsWith(";"))
+            return typeName.substring(1, typeName.length() - 1);
+        else if (typeName.startsWith("[L") && typeName.endsWith(";"))
+            return typeName.substring(2, typeName.length() - 1);
+        else
+            throw new IllegalArgumentException("Invalid class type descriptor: " + typeName + ", expected a class type descriptor.");
     }
 }

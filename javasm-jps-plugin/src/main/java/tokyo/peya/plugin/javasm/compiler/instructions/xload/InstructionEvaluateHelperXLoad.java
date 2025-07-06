@@ -1,7 +1,6 @@
 package tokyo.peya.plugin.javasm.compiler.instructions.xload;
 
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.plugin.javasm.compiler.EvaluatedInstruction;
@@ -16,7 +15,7 @@ public class InstructionEvaluateHelperXLoad
                                                          int opcode,
                                                          @NotNull String callerInsn)
     {
-        LocalVariableInfo local = evaluator.resolve(ref, callerInsn);
+        LocalVariableInfo local = evaluator.resolveLocal(ref, callerInsn);
 
         VarInsnNode insn = new VarInsnNode(opcode, local.index());
         return EvaluatedInstruction.of(insn);

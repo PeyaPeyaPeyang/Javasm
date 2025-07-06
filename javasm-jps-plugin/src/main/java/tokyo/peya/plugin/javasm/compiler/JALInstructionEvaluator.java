@@ -2,13 +2,20 @@ package tokyo.peya.plugin.javasm.compiler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorANewArray;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorBiPush;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorCheckCast;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorGoto;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorInstanceOf;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorJsr;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorEnter;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorMonitorExit;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorNew;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorPop2;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorRet;
 import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorReturn;
+import tokyo.peya.plugin.javasm.compiler.instructions.InstructionEvaluatorSiPush;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorIAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xand.InstructionEvaluatorLAnd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xdiv.InstructionEvaluatorDDiv;
@@ -66,6 +73,20 @@ import tokyo.peya.plugin.javasm.compiler.instructions.calc.xadd.InstructionEvalu
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xadd.InstructionEvaluatorFAdd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xadd.InstructionEvaluatorIAdd;
 import tokyo.peya.plugin.javasm.compiler.instructions.calc.xadd.InstructionEvaluatorLAdd;
+import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorGetField;
+import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorGetStatic;
+import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorPutField;
+import tokyo.peya.plugin.javasm.compiler.instructions.field.InstructionEvaluatorPutStatic;
+import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfICmpOP;
+import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNonNull;
+import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfNull;
+import tokyo.peya.plugin.javasm.compiler.instructions.ifx.InstructionEvaluatorIfOP;
+import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeSpecial;
+import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeStatic;
+import tokyo.peya.plugin.javasm.compiler.instructions.invokex.InstructionEvaluatorInvokeVirtual;
+import tokyo.peya.plugin.javasm.compiler.instructions.ldc.InstructionEvaluatorLDC;
+import tokyo.peya.plugin.javasm.compiler.instructions.ldc.InstructionEvaluatorLDCW;
+import tokyo.peya.plugin.javasm.compiler.instructions.ldc.InstructionEvaluatorLDCW2;
 import tokyo.peya.plugin.javasm.compiler.instructions.xastore.InstructionEvaluatorAAStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xastore.InstructionEvaluatorBAStore;
 import tokyo.peya.plugin.javasm.compiler.instructions.xastore.InstructionEvaluatorCAStore;
@@ -256,6 +277,8 @@ public class JALInstructionEvaluator
 
             new InstructionEvaluatorBiPush(),
 
+            new InstructionEvaluatorLDC(),
+
             new InstructionEvaluatorILoad(),
             new InstructionEvaluatorLLoad(),
             new InstructionEvaluatorFLoad(),
@@ -268,7 +291,37 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorDStore(),
             new InstructionEvaluatorAStore(),
 
-            new InstructionEvaluatorRet()
+            new InstructionEvaluatorRet(),
+
+            // ---- カテゴリ 3 ----
+
+            new InstructionEvaluatorSiPush(),
+
+            new InstructionEvaluatorLDCW(),
+            new InstructionEvaluatorLDCW2(),
+
+            new InstructionEvaluatorGetStatic(),
+            new InstructionEvaluatorPutStatic(),
+            new InstructionEvaluatorGetField(),
+            new InstructionEvaluatorPutField(),
+
+            new InstructionEvaluatorInvokeVirtual(),
+            new InstructionEvaluatorInvokeSpecial(),
+            new InstructionEvaluatorInvokeStatic(),
+
+            new InstructionEvaluatorNew(),
+            new InstructionEvaluatorANewArray(),
+
+            new InstructionEvaluatorCheckCast(),
+            new InstructionEvaluatorInstanceOf(),
+
+            new InstructionEvaluatorIfOP(),
+            new InstructionEvaluatorIfICmpOP(),
+            new InstructionEvaluatorIfNull(),
+            new InstructionEvaluatorIfNonNull(),
+
+            new InstructionEvaluatorGoto(),
+            new InstructionEvaluatorJsr(),
     );
 
     @Nullable
