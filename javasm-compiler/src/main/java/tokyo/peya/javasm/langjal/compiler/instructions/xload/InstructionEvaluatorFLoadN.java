@@ -14,13 +14,13 @@ public class InstructionEvaluatorFLoadN extends AbstractInstructionEvaluator<JAL
                                                      JALParser.@NotNull JvmInsFloadNContext ctxt)
     {
         if (has(ctxt.INSN_FLOAD_0()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD_0, 0);
+            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 0);
         else if (has(ctxt.INSN_FLOAD_1()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD_1, 1);
+            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 1);
         else if (has(ctxt.INSN_FLOAD_2()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD_2, 2);
+            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 2);
         else if (has(ctxt.INSN_FLOAD_3()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD_3, 3);
+            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 3);
 
         throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
     }
