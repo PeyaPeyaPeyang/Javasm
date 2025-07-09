@@ -335,11 +335,10 @@ jvmInsArgFieldRefName : ID;
 
 jvmInsArgInvokeDynamicRef: jvmInsArgScalarType | jvmInsArgInvokeDynamicMethodType | jvmInsArgInvokeDynamicMethodTypeMethodHandle;
 jvmInsArgInvokeDynamicMethodType: KWD_METHOD_TYPE methodDescriptor;
-jvmInsArgInvokeDynamicMethodTypeMethodHandle: KWD_METHOD_HANDLE (INSN_GETFIELD | INSN_GETSTATIC | INSN_PUTFIELD
-                                                        | INSN_PUTSTATIC | INSN_INVOKEVIRTUAL
-                                                        | INSN_INVOKESPECIAL | INSN_INVOKESTATIC
-                                                        | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE)
-                                                         '|' jvmInsArgMethodRef;
+jvmInsArgInvokeDynamicMethodTypeMethodHandle: KWD_METHOD_HANDLE jvmInsArgInvokeDynamicMethodHandleType '|' jvmInsArgMethodRef;
+jvmInsArgInvokeDynamicMethodHandleType: INSN_GETFIELD | INSN_GETSTATIC | INSN_PUTFIELD
+                                        | INSN_PUTSTATIC | INSN_INVOKEVIRTUAL | INSN_INVOKESPECIAL | INSN_INVOKESTATIC
+                                        | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE;
 
 jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
 jvmInsArgMethodSpecialRef : (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor;

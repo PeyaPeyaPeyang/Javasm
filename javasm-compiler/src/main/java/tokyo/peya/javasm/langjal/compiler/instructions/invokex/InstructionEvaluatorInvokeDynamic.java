@@ -96,18 +96,18 @@ public class InstructionEvaluatorInvokeDynamic
         String ownerType = ref.jvmInsArgMethodRefOwnerType().getText();
         String methodName = ref.methodName().getText();
         String methodDesc = ref.methodDescriptor().getText();
-        int tag = toTag(handle);
+        int tag = toTag(handle.jvmInsArgInvokeDynamicMethodHandleType());
 
         return new Handle(
                 tag,
                 ownerType,
                 methodName,
                 methodDesc,
-                handle.INSN_INVOKEINTERFACE() != null
+                tag == EOpcodes.H_INVOKEINTERFACE
         );
     }
 
-    private static int toTag(JALParser.JvmInsArgInvokeDynamicMethodTypeMethodHandleContext handle)
+    private static int toTag(JALParser.JvmInsArgInvokeDynamicMethodHandleTypeContext handle)
     {
         if (handle.INSN_GETFIELD() != null)
             return EOpcodes.H_GETFIELD;
@@ -125,6 +125,8 @@ public class InstructionEvaluatorInvokeDynamic
             return EOpcodes.H_INVOKESPECIAL;
         else if (handle.KWD_METHOD_HANDLE_TAG_NEWINVOKE() != null)
             return EOpcodes.H_NEWINVOKESPECIAL;
+        else if (handle.INSN_INVOKEINTERFACE() != null)
+            return EOpcodes.H_INVOKEINTERFACE;
         else
             throw new IllegalArgumentException("Unknown method handle type: " + handle.getText());
     }
