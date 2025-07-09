@@ -1,5 +1,8 @@
 package tokyo.peya.javasm.intellij.jvm;
 
+import lombok.Getter;
+
+@Getter
 public class DescriptorReader {
     private final String source;
     private int pos;

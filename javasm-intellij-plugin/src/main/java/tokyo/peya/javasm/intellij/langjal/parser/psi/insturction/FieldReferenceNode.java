@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.jvm.TypeDescriptor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 
 public class FieldReferenceNode extends ANTLRPsiNode
 {
@@ -28,11 +29,11 @@ public class FieldReferenceNode extends ANTLRPsiNode
     @NotNull
     public String getFieldName()
     {
-        String fieldName = this.getText();
-        if (fieldName == null || fieldName.isEmpty())
-            throw new IllegalStateException("Field name is not found in instruction field reference node");
+        FieldReferenceNameNode fieldNameNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNameNode.class);
+        if (fieldNameNode == null)
+            throw new IllegalStateException("Field name not found in instruction field reference node");
 
-        return fieldName;
+        return fieldNameNode.getText();
     }
 
     @NotNull

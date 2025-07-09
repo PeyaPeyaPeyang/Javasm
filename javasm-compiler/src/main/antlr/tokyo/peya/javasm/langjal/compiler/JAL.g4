@@ -261,7 +261,6 @@ ID: [a-zA-Z$_] [a-zA-Z0-9$_]*;
 STRING: '\'' ( ~['\\] | '\\' . )* '\'' | '"' ( ~["\\] | '\\' . )* '"' ;
 LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
 BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
-NEWLINE : [\r\n]+ -> channel(HIDDEN);
 
 METHOD_DESCRIPTOR_ARG: LP LBK* (TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
                                 | TYPE_DESC_LONG | TYPE_DESC_SHORT | TYPE_DESC_VOID
@@ -305,7 +304,7 @@ methodDefinition : accModMethod methodName methodDescriptor methodBody;
 
 methodName : ID | KWD_MNAME_INIT | KWD_MNAME_CLINIT;
 methodBody : LBR instructionSet* RBR;
-instructionSet : label? instruction+;
+instructionSet : label? (instruction SEMI?)+;
 
 typeDescriptor : LBK* (typeDescriptorPrimitive | TYPE_DESC_OBJECT);
 typeDescriptorPrimitive : TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
@@ -346,7 +345,7 @@ jvmInsArgMethodRefOwnerType : FULL_QUALIFIED_CLASS_NAME;
 
 jvmInsArgLocalRef : NUMBER | ID;
 
-jvmInsArgTableSwitch : NUMBER LBR labelName* RBR KWD_SWITCH_DEFAULT labelName;
+jvmInsArgTableSwitch : NUMBER LBR labelName (COMMA labelName)* RBR KWD_SWITCH_DEFAULT labelName;
 
 jvmInsArgLookupSwitch : LBR jvmInsArgLookupSwitchCase (SEMI jvmInsArgLookupSwitchCase)* RBR;
 jvmInsArgLookupSwitchCase : jvmInsArgLookupSwitchCaseName COLON labelName;

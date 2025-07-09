@@ -42,5 +42,12 @@
         <lang.ast.factory language="JAL" implementationClass="tokyo.peya.javasm.intellij.langjal.parser.JALASTFactory"/>
         <lang.psiStructureViewFactory language="JAL"
                                       implementationClass="tokyo.peya.javasm.intellij.langjal.structureview.JALStructureViewFactory"/>
+        <lang.syntaxHighlighterFactory
+                language="JAL"
+                implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JALSyntaxHighlighterFactory"/>
+        <colorSettingsPage
+                implementation="tokyo.peya.javasm.intellij.langjal.highlighting.JALGeneralColorSettingsPage"/>
+        <annotator language="JAL"
+                   implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JSLSyntaxHighlightAnnotator"/>
     </extensions>
 </idea-plugin>

@@ -33,6 +33,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassMetaNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchArgumentNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchCaseNode;
@@ -182,6 +183,8 @@ public final class JALParserDefinition implements ParserDefinition
 
             case JALParser.RULE_jvmInsArgLocalRef -> new LocalReferenceNode(node);
             case JALParser.RULE_jvmInsArgFieldRef -> new FieldReferenceNode(node);
+            case JALParser.RULE_jvmInsArgFieldRefName-> new FieldReferenceNameNode(node);
+
 
             case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
             case JALParser.RULE_jvmInsArgMethodSpecialRef -> new SpecialMethodReferenceNode(node);
