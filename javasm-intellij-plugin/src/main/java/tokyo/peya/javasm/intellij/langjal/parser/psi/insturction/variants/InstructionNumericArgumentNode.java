@@ -6,9 +6,9 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class NumericArgumentInstructionNode extends InstructionNode
+public class InstructionNumericArgumentNode extends InstructionNode
 {
-    public NumericArgumentInstructionNode(@NotNull ASTNode node)
+    public InstructionNumericArgumentNode(@NotNull ASTNode node)
     {
         super(node);
     }
@@ -25,6 +25,6 @@ public class NumericArgumentInstructionNode extends InstructionNode
     @Override
     public String toString()
     {
-        return "InstructionNode(" + this.getInstructionName() + ", argNUM=" + this.getNumberArgument() + ")";
+        return "InstructionNode(" + this.getInstructionName() + " num=" + this.getNumberArgument() + ")";
     }
 }

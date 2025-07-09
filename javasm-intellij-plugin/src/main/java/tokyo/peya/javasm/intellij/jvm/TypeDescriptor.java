@@ -67,4 +67,10 @@ public class TypeDescriptor
     {
         return this.arrayDimensions > 0;
     }
+
+    @Override
+    public String toString()
+    {
+        return "[".repeat(Math.max(0, this.arrayDimensions)) + this.baseType.getDescriptor();
+    }
 }

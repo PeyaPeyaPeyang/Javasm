@@ -41,4 +41,10 @@ public class ClassReferenceType implements Type
             return new ClassReferenceType(packageName, className);
         }
     }
+
+    @Override
+    public String getDescriptor()
+    {
+        return "L" + this.packageName + "/" + this.className + ";";
+    }
 }

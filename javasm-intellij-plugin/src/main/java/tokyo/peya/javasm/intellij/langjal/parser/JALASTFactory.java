@@ -6,6 +6,7 @@ import com.intellij.psi.impl.source.tree.LeafElement;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.StringNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassPropertyNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethodClInitNode;
@@ -32,6 +33,10 @@ public class JALASTFactory extends DefaultASTFactoryImpl
             {
                 case JALLexer.ID:
                     return new IdentifierNode(type, text);
+                case JALLexer.NUMBER:
+                    return new NumberNode(type, text);
+                case JALLexer.STRING:
+                    return new StringNode(type, text);
                 case JALLexer.FULL_QUALIFIED_CLASS_NAME:
                     return new FullQualifiedNameNode(type, text);
                 case JALLexer.KWD_CLASS_PROP_MAJOR,
@@ -39,8 +44,6 @@ public class JALASTFactory extends DefaultASTFactoryImpl
                      JALLexer.KWD_CLASS_PROP_SUPER_CLASS,
                      JALLexer.KWD_CLASS_PROP_INTERFACES:
                     return new ClassPropertyNameNode(type, text);
-                case JALLexer.NUMBER:
-                    return new NumberNode(type, text);
                 case JALLexer.KWD_MNAME_INIT:
                     return new IdentifierMethodInitNode(type);
                 case JALLexer.KWD_MNAME_CLINIT:

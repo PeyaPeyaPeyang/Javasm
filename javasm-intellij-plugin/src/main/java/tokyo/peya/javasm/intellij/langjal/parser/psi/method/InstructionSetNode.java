@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.SymtabUtils;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
@@ -23,7 +24,7 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
     @Nullable
     public LabelNode getLabel()
     {
-        return this.findChildByClass(LabelNode.class);
+        return PsiTreeUtil.findChildOfType(this, LabelNode.class);
     }
 
     @Override

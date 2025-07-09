@@ -44,4 +44,15 @@ public class MethodDescriptor
 
         return new MethodDescriptor(returnType, parameters.toArray(new TypeDescriptor[0]), descriptor);
     }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append('(');
+        for (TypeDescriptor type : this.parameterTypes)
+            sb.append(type);
+        sb.append(')').append(this.returnType.toString());
+        return sb.toString();
+    }
 }

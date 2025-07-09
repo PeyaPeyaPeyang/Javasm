@@ -1,13 +1,13 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.JALPSITreeUtils;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionLocalReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 
-public class LocalReferenceArgumentInstructionNode extends WidenableInstructionNode
+public class InstructionLocalAccessNode extends InstructionWidenableNode
 {
-    public LocalReferenceArgumentInstructionNode(@NotNull ASTNode node)
+    public InstructionLocalAccessNode(@NotNull ASTNode node)
     {
         super(node);
     }
@@ -15,7 +15,7 @@ public class LocalReferenceArgumentInstructionNode extends WidenableInstructionN
     @NotNull
     public String getReferenceName()
     {
-        InstructionLocalReferenceNode reference = this.findChildByClass(InstructionLocalReferenceNode.class);
+        LocalReferenceNode reference = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
         if (reference == null)
             throw new IllegalStateException("Local's reference not found in " + this.getText());
 

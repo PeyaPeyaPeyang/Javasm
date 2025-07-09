@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiNamedElement;
@@ -13,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
 
-public class InstructionLocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
+public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
 {
-    public InstructionLocalReferenceNode(@NotNull ASTNode node)
+    public LocalReferenceNode(@NotNull ASTNode node)
     {
         super(node);
     }

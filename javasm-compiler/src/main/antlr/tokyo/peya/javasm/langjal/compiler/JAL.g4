@@ -340,17 +340,18 @@ jvmInsArgInvokeDynamicMethodHandleType: INSN_GETFIELD | INSN_GETSTATIC | INSN_PU
                                         | INSN_PUTSTATIC | INSN_INVOKEVIRTUAL | INSN_INVOKESPECIAL | INSN_INVOKESTATIC
                                         | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE;
 
-jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
 jvmInsArgMethodSpecialRef : (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor;
+jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
 jvmInsArgMethodRefOwnerType : FULL_QUALIFIED_CLASS_NAME;
 
 jvmInsArgLocalRef : NUMBER | ID;
+
+jvmInsArgTableSwitch : NUMBER LBR labelName* RBR KWD_SWITCH_DEFAULT labelName;
 
 jvmInsArgLookupSwitch : LBR jvmInsArgLookupSwitchCase (SEMI jvmInsArgLookupSwitchCase)* RBR;
 jvmInsArgLookupSwitchCase : jvmInsArgLookupSwitchCaseName COLON labelName;
 jvmInsArgLookupSwitchCaseName : NUMBER | KWD_SWITCH_DEFAULT;
 
-jvmInsArgTableSwitch : NUMBER LBR labelName* RBR KWD_SWITCH_DEFAULT labelName;
 
 // ------------------------------------------------------------  //
 

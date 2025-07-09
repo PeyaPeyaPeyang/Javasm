@@ -33,8 +33,19 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassMetaNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionLocalReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchCaseNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleTypeNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodTypeNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.JVMScalarNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionParseContributor;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.SpecialMethodReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
@@ -62,6 +73,7 @@ public final class JALParserDefinition implements ParserDefinition
         initStatic();
     }
 
+    @SuppressWarnings("deprecation")
     private static void initStatic()
     {
         if (ID != null)
@@ -168,7 +180,21 @@ public final class JALParserDefinition implements ParserDefinition
             case JALParser.RULE_typeDescriptor -> new TypeDescriptorNode(node);
             case JALParser.RULE_methodDescriptor -> new MethodDescriptorNode(node);
 
-            case JALParser.RULE_jvmInsArgLocalRef -> new InstructionLocalReferenceNode(node);
+            case JALParser.RULE_jvmInsArgLocalRef -> new LocalReferenceNode(node);
+            case JALParser.RULE_jvmInsArgFieldRef -> new FieldReferenceNode(node);
+
+            case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
+            case JALParser.RULE_jvmInsArgMethodSpecialRef -> new SpecialMethodReferenceNode(node);
+            case JALParser.RULE_jvmInsArgScalarType -> new JVMScalarNode(node);
+
+            case JALParser.RULE_jvmInsArgInvokeDynamicMethodHandleType -> new InvokeDynamicMethodHandleTypeNode(node);
+            case JALParser.RULE_jvmInsArgInvokeDynamicMethodTypeMethodHandle -> new InvokeDynamicMethodHandleNode(node);
+            case JALParser.RULE_jvmInsArgInvokeDynamicMethodType -> new InvokeDynamicMethodTypeNode(node);
+            case JALParser.RULE_jvmInsArgInvokeDynamicRef -> new InvokeDynamicArgumentNode(node);
+
+            case JALParser.RULE_jvmInsArgTableSwitch -> new InstructionTableSwitchArgumentNode(node);
+            case JALParser.RULE_jvmInsArgLookupSwitch -> new InstructionLookupSwitchArgumentNode(node);
+            case JALParser.RULE_jvmInsArgLookupSwitchCase -> new InstructionLookupSwitchCaseNode(node);
             default -> new ANTLRPsiNode(node);
         };
     }

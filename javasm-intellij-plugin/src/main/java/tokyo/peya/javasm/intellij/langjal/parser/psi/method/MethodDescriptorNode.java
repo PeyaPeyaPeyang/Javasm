@@ -29,4 +29,10 @@ public class MethodDescriptorNode extends ANTLRPsiNode
     {
         return this.getMethodDescriptor().getParameterTypes();
     }
+
+    @NotNull
+    public String getMethodName()
+    {
+        return this.getText();
+    }
 }

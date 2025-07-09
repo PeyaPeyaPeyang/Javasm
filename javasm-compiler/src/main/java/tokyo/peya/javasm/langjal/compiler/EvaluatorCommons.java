@@ -53,18 +53,18 @@ public class EvaluatorCommons
         if (number == null || number.isEmpty())
             return null;
 
-        Function<String, ? extends Number> parseFunction = getImplictParseNumberFunction(number);
-        if (parseFunction != null)
-            number = number.substring(0, number.length() - 1); // 接尾辞を削除
-        else
+        String type = getNumberType(number);
+        Function<String, ? extends Number> parseFunction = getNumberParsingFunction(type);
+        if (parseFunction == null)
+            throw new IllegalArgumentException("Unsupported number type: " + type);
+
+        if (!type.startsWith("may-"))
         {
-            if (number.startsWith("0x") || number.startsWith("-0x"))
-                parseFunction = Long::parseLong;
-            else if (number.contains("."))
-                parseFunction = Double::parseDouble;
-            else
-                parseFunction = Integer::parseInt;
+            // "may-" で始まらない場合は，接尾辞がついているので，取り除く
+            number = number.replaceAll("[fFdDlL]$", "");
         }
+        if (type.endsWith("-hex"))
+            number = number.substring(2);
 
         try
         {
@@ -89,15 +89,18 @@ public class EvaluatorCommons
         }
     }
 
-    private static Function<String, ? extends Number> getImplictParseNumberFunction(@NotNull String number)
+    private static Function<String, ? extends Number> getNumberParsingFunction(@NotNull String type)
     {
-        String type = getNumberType(number);
         return switch (type)
         {
             case "float" -> Float::parseFloat;
-            case "double" -> Double::parseDouble;
-            case "long", "hex-long" -> Long::parseLong;
+            case "double", "may-double" -> Double::parseDouble;
+            case "long" -> Long::parseLong;
+            case "long-hex" -> s -> Long.parseLong(s, 16);
+            case "int", "may-int" -> Integer::parseInt;
+            case "may-int-hex" -> s -> Integer.parseInt(s, 16);
             default -> null; // null を返すことで fallback させる
+
         };
     }
 
@@ -111,7 +114,7 @@ public class EvaluatorCommons
             if (number.endsWith("l") || number.endsWith("L"))
                 return "hex-long";
             else
-                return "hex-int";
+                return "may-int-hex";
         }
 
         if (number.endsWith("f") || number.endsWith("F"))
@@ -121,9 +124,9 @@ public class EvaluatorCommons
         else if (number.endsWith("l") || number.endsWith("L"))
             return "long";
         else if (number.contains("."))
-            return "double";
+            return "may-double";
         else
-            return "int";
+            return "may-int";
     }
 
     public static String unwrapClassTypeDescriptor(@NotNull String typeName)

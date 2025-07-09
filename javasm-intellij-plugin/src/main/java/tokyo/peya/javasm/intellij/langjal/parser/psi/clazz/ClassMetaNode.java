@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.clazz;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,24 +20,24 @@ public class ClassMetaNode extends ANTLRPsiNode
     @Nullable
     public ClassPropertyMajorVersionNode getMajorVersion()
     {
-        return this.findChildByClass(ClassPropertyMajorVersionNode.class);
+        return PsiTreeUtil.findChildOfType(this, ClassPropertyMajorVersionNode.class);
     }
 
     @Nullable
     public ClassPropertyMinorVersionNode getMinorVersion()
     {
-        return this.findChildByClass(ClassPropertyMinorVersionNode.class);
+        return PsiTreeUtil.findChildOfType(this, ClassPropertyMinorVersionNode.class);
     }
 
     @Nullable
     public ClassPropertyInterfacesNode getInterfaces()
     {
-        return this.findChildByClass(ClassPropertyInterfacesNode.class);
+        return PsiTreeUtil.findChildOfType(this, ClassPropertyInterfacesNode.class);
     }
 
     @Nullable
     public ClassPropertySuperClassNode getSuperClass()
     {
-        return this.findChildByClass(ClassPropertySuperClassNode.class);
+        return PsiTreeUtil.findChildOfType(this, ClassPropertySuperClassNode.class);
     }
 }

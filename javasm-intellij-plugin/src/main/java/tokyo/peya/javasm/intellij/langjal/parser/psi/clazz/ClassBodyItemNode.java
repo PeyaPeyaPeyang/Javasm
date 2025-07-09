@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.clazz;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -15,12 +16,12 @@ public class ClassBodyItemNode extends ANTLRPsiNode
 
     public boolean isMethod()
     {
-        return this.findChildByClass(MethodDefinitionNode.class) != null;
+        return PsiTreeUtil.findChildOfType(this, MethodDefinitionNode.class) != null;
     }
 
     @Nullable
     public MethodDefinitionNode getMethod()
     {
-        return this.findChildByClass(MethodDefinitionNode.class);
+        return PsiTreeUtil.findChildOfType(this, MethodDefinitionNode.class);
     }
 }

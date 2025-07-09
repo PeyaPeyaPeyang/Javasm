@@ -4,7 +4,7 @@ import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.JALElementReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.LocalReferenceArgumentInstructionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionLocalAccessNode;
 
 public class LocalReference extends JALElementReference
 {
@@ -16,6 +16,6 @@ public class LocalReference extends JALElementReference
     @Override
     public boolean isSubtree(PsiElement psiElement)
     {
-        return psiElement instanceof LocalReferenceArgumentInstructionNode;
+        return psiElement instanceof InstructionLocalAccessNode;
     }
 }

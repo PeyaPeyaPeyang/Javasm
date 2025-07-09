@@ -7,10 +7,19 @@ import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.RuleIElementType;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionFieldAccessNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionIntIncrementNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InstructionInvokeDynamicNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionMultiANewArrayNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionScalarNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWideNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.LocalReferenceArgumentInstructionNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.NoArgumentInstructionNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.NumericArgumentInstructionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionJumpNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionLocalAccessNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNoArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNumericArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionTypeArgumentNode;
 import tokyo.peya.javasm.langjal.compiler.JALLexer;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 
@@ -125,9 +134,9 @@ public class InstructionParseContributor
                  JALParser.RULE_jvmInsReturn,
                  JALParser.RULE_jvmInsSaload,
                  JALParser.RULE_jvmInsSastore,
-                 JALParser.RULE_jvmInsSwap -> new NoArgumentInstructionNode(node);
+                 JALParser.RULE_jvmInsSwap -> new InstructionNoArgumentNode(node);
             case JALParser.RULE_jvmInsBipush,
-                 JALParser.RULE_jvmInsSipush -> new NumericArgumentInstructionNode(node);
+                 JALParser.RULE_jvmInsSipush -> new InstructionNumericArgumentNode(node);
             case JALParser.RULE_jvmInsAload,
                  JALParser.RULE_jvmInsAstore,
                  JALParser.RULE_jvmInsDload,
@@ -138,8 +147,33 @@ public class InstructionParseContributor
                  JALParser.RULE_jvmInsIstore,
                  JALParser.RULE_jvmInsLload,
                  JALParser.RULE_jvmInsLstore,
-                 JALParser.RULE_jvmInsRet -> new LocalReferenceArgumentInstructionNode(node);
-
+                 JALParser.RULE_jvmInsRet -> new InstructionLocalAccessNode(node);
+            case JALParser.RULE_jvmInsAnewArray,
+                 JALParser.RULE_jvmInsCheckcast,
+                 JALParser.RULE_jvmInsInstanceof,
+                 JALParser.RULE_jvmInsNew,
+                 JALParser.RULE_jvmInsNewarray -> new InstructionTypeArgumentNode(node);
+            case JALParser.RULE_jvmInsGoto,
+                 JALParser.RULE_jvmInsGotoW,
+                 JALParser.RULE_jvmInsIfAcmpOP,
+                 JALParser.RULE_jvmInsIfIcmpOP,
+                 JALParser.RULE_jvmInsIfOP,
+                 JALParser.RULE_jvmInsIfNonnull,
+                 JALParser.RULE_jvmInsIfNull,
+                 JALParser.RULE_jvmInsJsr,
+                 JALParser.RULE_jvmInsJsrW -> new InstructionJumpNode(node);
+            case JALParser.RULE_jvmInsGetfield,
+                    JALParser.RULE_jvmInsGetstatic,
+                    JALParser.RULE_jvmInsPutfield,
+                    JALParser.RULE_jvmInsPutstatic -> new InstructionFieldAccessNode(node);
+            case JALParser.RULE_jvmInsIinc -> new InstructionIntIncrementNode(node);
+            case JALParser.RULE_jvmInsLdc,
+                 JALParser.RULE_jvmInsLdcW,
+                 JALParser.RULE_jvmInsLdc2W -> new InstructionScalarNode(node);
+            case JALParser.RULE_jvmInsMultianewarray -> new InstructionMultiANewArrayNode(node);
+            case JALParser.RULE_jvmInsInvokedynamic -> new InstructionInvokeDynamicNode(node);
+            case JALParser.RULE_jvmInsTableswitch -> new InstructionTableSwitchNode(node);
+            case JALParser.RULE_jvmInsLookupswitch -> new InstructionLookupSwitchNode(node);
             default -> new InstructionNode(node);
         };
     }

@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.intellij.jvm;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import tokyo.peya.javasm.langjal.compiler.EOpcodes;
@@ -19,6 +20,7 @@ public enum PrimitiveTypes implements Type
     VOID("void", 'V', -1);
 
     private final String name;
+    @Getter(AccessLevel.NONE)
     private final char descriptor;
     private final int asmType;
 
@@ -28,11 +30,17 @@ public enum PrimitiveTypes implements Type
         return true;
     }
 
+    @Override
+    public String getDescriptor()
+    {
+        return String.valueOf(this.descriptor);
+    }
+
     public static PrimitiveTypes fromDescriptor(char descriptorChar)
     {
         for (PrimitiveTypes type : PrimitiveTypes.values())
-            if (type.getDescriptor() == descriptorChar)
-                return type;
+            if (type.descriptor == descriptorChar)
+                return type; // 該当するプリミティブ型を返す
 
         return null; // 該当するプリミティブ型がない場合はnullを返す
     }

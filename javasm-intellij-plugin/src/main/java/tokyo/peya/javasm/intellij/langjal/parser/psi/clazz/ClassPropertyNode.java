@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.clazz;
 
 import com.intellij.lang.ASTNode;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.jvm.ClassProperty;
@@ -14,7 +15,7 @@ public class ClassPropertyNode extends ANTLRPsiNode
 
     public ClassProperty getPropertyType()
     {
-        ClassPropertyNameNode name = this.findChildByClass(ClassPropertyNameNode.class);
+        ClassPropertyNameNode name = PsiTreeUtil.findChildOfType(this, ClassPropertyNameNode.class);
         if (name == null)
             return ClassProperty.UNKNOWN;
 
