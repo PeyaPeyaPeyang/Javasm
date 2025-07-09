@@ -149,7 +149,7 @@ public class JALMethodEvaluator
     private void evaluateLabels(@NotNull JALParser.MethodBodyContext body)
     {
         int instructionCount = 0;
-        for (JALParser.MethodBodyItemContext bodyItem : body.methodBodyItem())
+        for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
             if (bodyItem.label() != null)
             {
@@ -176,16 +176,17 @@ public class JALMethodEvaluator
     {
         // 各命令を順に評価していく
         LabelInfo lastLabel = null;
-        for (JALParser.MethodBodyItemContext bodyItem : body.methodBodyItem())
+        for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
             if (bodyItem.label() != null)
                 lastLabel = this.resolveLabel(bodyItem.label().labelName().getText());
-            else if (bodyItem.instruction() != null)
+
+            for (JALParser.InstructionContext instruction: bodyItem.instruction())
             {
                 // 命令を評価して，必要に応じてラベルを設定
                 InstructionInfo info = JALInstructionEvaluator.evaluateInstruction(
                         this,
-                        bodyItem.instruction(),
+                        instruction,
                         lastLabel
                 );
                 if (info == null)

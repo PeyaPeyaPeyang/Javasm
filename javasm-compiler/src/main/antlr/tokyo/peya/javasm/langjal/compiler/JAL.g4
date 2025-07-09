@@ -254,14 +254,14 @@ TYPE_DESC_VOID: 'V';
 TYPE_DESC_BOOLEAN: 'Z';
 TYPE_DESC_OBJECT: 'L' [a-zA-Z0-9_/$]+ ';';
 
-SPACE: [ \t\r\n]+ -> skip;
+SPACE: [ \t\r\n]+ -> channel(HIDDEN);
 NUMBER:   '-'? ( '0x' [0-9a-fA-F]+ [lL]? | [0-9]+ ('.' [0-9]+)? [fFdDlL]?);
 BOOLEAN: 'true' | 'false';
 ID: [a-zA-Z$_] [a-zA-Z0-9$_]*;
 STRING: '\'' ( ~['\\] | '\\' . )* '\'' | '"' ( ~["\\] | '\\' . )* '"' ;
-LINE_COMMENT: '//' ~[\r\n]* -> skip;
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
-NEWLINE : [\r\n]+ ;
+LINE_COMMENT: '//' ~[\r\n]* -> channel(HIDDEN);
+BLOCK_COMMENT: '/*' .*? '*/' -> channel(HIDDEN);
+NEWLINE : [\r\n]+ -> channel(HIDDEN);
 
 METHOD_DESCRIPTOR_ARG: LP LBK* (TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
                                 | TYPE_DESC_LONG | TYPE_DESC_SHORT | TYPE_DESC_VOID
@@ -305,7 +305,7 @@ methodDefinition : accModMethod methodName methodDescriptor methodBody;
 
 methodName : ID | KWD_MNAME_INIT | KWD_MNAME_CLINIT;
 methodBody : LBR methodBodyItem* RBR;
-methodBodyItem : instruction | label;
+methodBodyItem : label? instruction+;
 
 typeDescriptor : LBK* (typeDescriptorPrimitive | TYPE_DESC_OBJECT);
 typeDescriptorPrimitive : TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
@@ -539,3 +539,5 @@ jvmInsSastore: INSN_SASTORE;
 jvmInsSipush: INSN_SIPUSH NUMBER;
 jvmInsSwap: INSN_SWAP;
 jvmInsTableswitch: INSN_TABLESWITCH jvmInsArgTableSwitch;
+
+ERRCHAR: . -> channel(HIDDEN);
