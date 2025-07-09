@@ -12,42 +12,56 @@ import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
+
 @UtilityClass
 public class PSIExecutorUtil
-{/*
-    public static JALClassDefinition findClassForFile(@NotNull JALFile file)
+{
+    public static boolean hasMainMethod(@NotNull JALFile jalFile)
     {
-        return PsiTreeUtil.findChildOfType(file, JALClassDefinition.class);
+        ClassDefinitionNode classDefinition = PsiTreeUtil.findChildOfType(jalFile, ClassDefinitionNode.class);
+        if (classDefinition == null)
+            return false; // クラス定義が見つからない場合はメインメソッドがない
+
+        return hasMainMethod(classDefinition);
     }
 
-    public static boolean hasMainMethod(@NotNull JALClassDefinition clazz)
+    public static boolean hasMainMethod(@NotNull ClassDefinitionNode classDefinition)
     {
-        JALClassBody classBody = clazz.getClassBody();
-        if (classBody == null)
-            return false; // クラスボディが存在しない場合はメインメソッドはない
-
-        for (JALMethodDefinition method : classBody.getMethodDefinitionList())
+        for (MethodDefinitionNode method : classDefinition.getMethods())
+        {
             if (isMainMethod(method))
-                return true;
-        return false;
+                return true; // メインメソッドが見つかった
+        }
+
+        return false; // メインメソッドが見つからなかった
     }
 
-    public static boolean isMainMethod(@NotNull JALMethodDefinition method)
+    public static boolean isAccessibleClass(@NotNull ClassDefinitionNode clazz)
     {
-        AccessLevel accessLevel = JALMethodAccessor.getAccessLevel(method);
-        AccessAttributeSet attributes = JALMethodAccessor.getAttributes(method);
-        String name = JALMethodAccessor.getMethodName(method);
-        if (name == null || !name.equals("main"))
+        AccessLevel accessLevel = clazz.getAccessLevel();
+        AccessAttributeSet attributes = clazz.getAccessAttributes();
+
+        return accessLevel == AccessLevel.PUBLIC && attributes.isNormalClass();
+    }
+
+    public static boolean isMainMethod(@NotNull MethodDefinitionNode method)
+    {
+        AccessLevel accessLevel = method.getAccessLevel();
+        AccessAttributeSet attributes = method.getAccessAttributes();
+        String name = method.getMethodName();
+        if (!name.equals("main"))
             return false; // メインメソッドの名前は"main"でなければならない
 
         // メインメソッドの条件をチェック -> public static main(Ljava/lang/String;)V
-
         if (accessLevel != AccessLevel.PUBLIC)
             return false; // メインメソッドはpublicでなければならない
         else if (!attributes.has(AccessAttribute.STATIC))
             return false; // メインメソッドはstaticでなければならない
 
-        return method.getMethodDescriptor().textMatches("([Ljava/lang/String;)V");
+        return method.getMethodDescriptor().equals("([Ljava/lang/String;)V");
     }
 
     public static boolean isInSourceRoot(@NotNull PsiElement element)
@@ -66,5 +80,5 @@ public class PSIExecutorUtil
                 return true; // ファイルがソースルートのパスで始まる場合はソースルート内にある
 
         return false;
-    }*/
+    }
 }

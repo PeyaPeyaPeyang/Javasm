@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.structureview.JALStructureViewItemPresentationBase;
 
@@ -20,7 +19,7 @@ public class ClassStructurePresentation extends JALStructureViewItemPresentation
     @Override
     public @Nullable String getPresentableText()
     {
-        return ((ClassDefinitionNode) this.psiElement).getClassName();
+        return ((ClassDefinitionNode) this.psiElement).getFullQualifiedClassName();
     }
 
     @Override

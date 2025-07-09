@@ -17,6 +17,9 @@ import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.jvm.MethodDescriptor;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
 public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeNode
 {
@@ -34,6 +37,19 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
                 element,
                 "/classDefinition/classBody/classBodyItem/methodDefinition/methodName"
         );
+    }
+
+    @Nullable
+    public ClassDefinitionNode getContainingClass()
+    {
+        if (!(this.getParent() instanceof ClassBodyItemNode classBodyItem))
+            return null;
+        if (!(classBodyItem.getParent() instanceof ClassBodyNode classBody))
+            return null;
+        if (!(classBody.getParent() instanceof ClassDefinitionNode classDefinition))
+            return null;
+
+        return classDefinition;
     }
 
     @NotNull

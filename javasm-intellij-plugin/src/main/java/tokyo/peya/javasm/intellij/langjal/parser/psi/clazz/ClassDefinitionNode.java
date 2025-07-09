@@ -33,13 +33,35 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public String getClassName()
+    public String getFullQualifiedClassName()
     {
         ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
         if (classNameNode == null)
             return "<unknown>";
         else
             return classNameNode.getText();
+    }
+
+    @NotNull
+    public String getClassName()
+    {
+        String fullQualifiedClassName = getFullQualifiedClassName();
+        int lastSlashIndex = fullQualifiedClassName.lastIndexOf('/');
+        if (lastSlashIndex == -1)
+            return fullQualifiedClassName; // パッケージ名がない場合はそのまま返す
+        else
+            return fullQualifiedClassName.substring(lastSlashIndex + 1); // 最後のスラッシュ以降の部分を返す
+    }
+
+    @NotNull
+    public String getPackageName()
+    {
+        String fullQualifiedClassName = getFullQualifiedClassName();
+        int lastSlashIndex = fullQualifiedClassName.lastIndexOf('/');
+        if (lastSlashIndex == -1)
+            return ""; // パッケージ名がない場合は空文字列を返す
+        else
+            return fullQualifiedClassName.substring(0, lastSlashIndex); // 最後のスラッシュまでの部分を返す
     }
 
     @NotNull

@@ -10,6 +10,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
 public class JALRunConfigurationProducer extends RunConfigurationProducer<ApplicationConfiguration>
 {
@@ -65,16 +66,12 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
     {
         if (!file.isValid())
             return null;
-        return null;
-/*
-        JALClassDefinition mainClassCandidate = PSIExecutorUtil.findClassForFile(file);
+
+        ClassDefinitionNode mainClassCandidate = file.getClassDefinition();
         if (mainClassCandidate == null || !PSIExecutorUtil.hasMainMethod(mainClassCandidate))
             return null;
 
-        if (mainClassCandidate.getClassName() == null)
-            return null; // クラス名がない場合はメインクラスとして扱わない
-
-        return mainClassCandidate.getClassName().getText();*/
+        return mainClassCandidate.getFullQualifiedClassName();
     }
 
     @Override

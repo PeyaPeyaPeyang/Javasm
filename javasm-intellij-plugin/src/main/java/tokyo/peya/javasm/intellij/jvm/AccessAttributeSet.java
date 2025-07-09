@@ -47,4 +47,15 @@ public class AccessAttributeSet
         }
         return sb.toString();
     }
+
+    public boolean isNormalClass()
+    {
+        for (AccessAttribute attribute : this.attributes)
+        {
+            if (attribute == AccessAttribute.ABSTRACT || attribute == AccessAttribute.INTERFACE
+                || attribute == AccessAttribute.ENUM || attribute == AccessAttribute.ANNOTATION)
+                return false;
+        }
+        return true;
+    }
 }
