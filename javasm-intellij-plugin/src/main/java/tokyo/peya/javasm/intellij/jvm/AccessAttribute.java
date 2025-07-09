@@ -8,17 +8,38 @@ import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 @AllArgsConstructor
 public enum AccessAttribute
 {
-    ABSTRACT("abstract", EOpcodes.ACC_ABSTRACT),
     FINAL("final", EOpcodes.ACC_FINAL),
-    NATIVE("native", EOpcodes.ACC_NATIVE),
     STATIC("static", EOpcodes.ACC_STATIC),
     SYNCHRONIZED("synchronized", EOpcodes.ACC_SYNCHRONIZED),
-    TRANSIENT("transient", EOpcodes.ACC_TRANSIENT),
-    VOLATILE("volatile", EOpcodes.ACC_VOLATILE),
-    BRIDGE("strictfp", EOpcodes.ACC_STRICT),
+    BRIDGE("bridge", EOpcodes.ACC_BRIDGE),
+    NATIVE("native", EOpcodes.ACC_NATIVE),
+    ABSTRACT("abstract", EOpcodes.ACC_ABSTRACT),
+    STRICTFP("strictfp", EOpcodes.ACC_STRICT),
     SYNTHETIC("synthetic", EOpcodes.ACC_SYNTHETIC),
-    STRICT("bridge", EOpcodes.ACC_BRIDGE);
+    MANDATED("mandated", EOpcodes.ACC_MANDATED),
+    DEPRECATED("deprecated", EOpcodes.ACC_DEPRECATED),
+    TRANSIENT("transient", EOpcodes.ACC_TRANSIENT),
+    VOLATILE("volatile", EOpcodes.ACC_VOLATILE);
 
     private final String name;
     private final int asmFlag;
+
+    public static AccessAttribute fromString(String name)
+    {
+        return switch (name.trim().toLowerCase()) {
+            case "final" -> FINAL;
+            case "static" -> STATIC;
+            case "synchronized" -> SYNCHRONIZED;
+            case "bridge" -> BRIDGE;
+            case "native" -> NATIVE;
+            case "abstract" -> ABSTRACT;
+            case "strictfp", "strict" -> STRICTFP;
+            case "synthetic" -> SYNTHETIC;
+            case "mandated" -> MANDATED;
+            case "deprecated" -> DEPRECATED;
+            case "transient" -> TRANSIENT;
+            case "volatile" -> VOLATILE;
+            default -> throw new IllegalArgumentException("Unknown access attribute: " + name);
+        };
+    }
 }

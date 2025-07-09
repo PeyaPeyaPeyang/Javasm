@@ -13,6 +13,36 @@
           <option name="language" value="Java" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/javasm-intellij-plugin/src/main/antlr/tokyo/peya/javasm/langjal/compiler/JAL_Simplified.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="Z:\projects\PeyaPeyaPeyang\Javasm\javasm-intellij-plugin\src\main\gen\tokyo\peya\javasm\intellij\langjal\parser" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="utf-8" />
+          <option name="pkg" value="" />
+          <option name="language" value="Java" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/javasm-intellij-plugin/src/main/antlr/tokyo/peya/javasm/langjal/compiler/JALParse.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="Z:\projects\PeyaPeyaPeyang\Javasm\javasm-intellij-plugin\src\main\gen\tokyo\peya\javasm\intellij\langjal\parser" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/javasm-intellij-plugin/src/main/antlr/tokyo/peya/javasm/langjal/parser/JALParse.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="Z:\projects\PeyaPeyaPeyang\Javasm\javasm-intellij-plugin\src\main\gen\tokyo\peya\javasm\intellij\langjal\parser" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
       </list>
     </option>
   </component>

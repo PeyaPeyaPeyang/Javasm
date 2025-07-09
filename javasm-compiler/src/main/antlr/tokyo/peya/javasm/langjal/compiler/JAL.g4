@@ -304,8 +304,8 @@ fieldName : ID;
 methodDefinition : accModMethod methodName methodDescriptor methodBody;
 
 methodName : ID | KWD_MNAME_INIT | KWD_MNAME_CLINIT;
-methodBody : LBR methodBodyItem* RBR;
-methodBodyItem : label? instruction+;
+methodBody : LBR instructionSet* RBR;
+instructionSet : label? instruction+;
 
 typeDescriptor : LBK* (typeDescriptorPrimitive | TYPE_DESC_OBJECT);
 typeDescriptorPrimitive : TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
@@ -362,7 +362,7 @@ instruction: jvmInsAaload | jvmInsAastore  | jvmInsAconstNull | jvmInsAload | jv
                 | jvmInsDdiv | jvmInsDload | jvmInsDloadN | jvmInsDmul | jvmInsDneg | jvmInsDrem  | jvmInsDreturn
                 | jvmInsDstore | jvmInsDstoreN | jvmInsDsub | jvmInsDup | jvmInsDupX1 | jvmInsDupX2 | jvmInsDup2
                 | jvmInsDup2X1 | jvmInsDup2X2 | jvmInsF2D | jvmInsF2I | jvmInsF2L | jvmInsFadd | jvmInsFaload
-                | jvmInsFastore | jvmInsFcmpgOP | jvmInsFconstN | jvmInsFdiv | jvmInsFload | jvmInsFloadN | jvmInsFmul
+                | jvmInsFastore | jvmInsFcmpOP | jvmInsFconstN | jvmInsFdiv | jvmInsFload | jvmInsFloadN | jvmInsFmul
                 | jvmInsFneg | jvmInsFrem | jvmInsFreturn | jvmInsFstore | jvmInsFstoreN | jvmInsFsub | jvmInsGetfield
                 | jvmInsGetstatic | jvmInsGoto | jvmInsGotoW | jvmInsI2B | jvmInsI2C | jvmInsI2D | jvmInsI2F
                 | jvmInsI2L | jvmInsI2S | jvmInsIadd | jvmInsIaload | jvmInsIand | jvmInsIastore | jvmInsIconstN
@@ -425,8 +425,8 @@ jvmInsF2I: INSN_F2I;
 jvmInsF2L: INSN_F2L;
 jvmInsFadd: INSN_FADD;
 jvmInsFaload: INSN_FALOAD;
-jvmInsFastore: INSN_WIDE? INSN_FASTORE;
-jvmInsFcmpgOP: INSN_FCMPG | INSN_FCMPL;
+jvmInsFastore: INSN_FASTORE;
+jvmInsFcmpOP: INSN_FCMPG | INSN_FCMPL;
 jvmInsFconstN: INSN_FCONST_0 | INSN_FCONST_1 | INSN_FCONST_2;
 jvmInsFdiv: INSN_FDIV;
 jvmInsFload: INSN_WIDE? INSN_FLOAD jvmInsArgLocalRef;
@@ -539,5 +539,6 @@ jvmInsSastore: INSN_SASTORE;
 jvmInsSipush: INSN_SIPUSH NUMBER;
 jvmInsSwap: INSN_SWAP;
 jvmInsTableswitch: INSN_TABLESWITCH jvmInsArgTableSwitch;
+
 
 ERRCHAR: . -> channel(HIDDEN);

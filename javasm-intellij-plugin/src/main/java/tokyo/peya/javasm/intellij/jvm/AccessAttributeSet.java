@@ -1,15 +1,20 @@
 package tokyo.peya.javasm.intellij.jvm;
 
 import lombok.Getter;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessAttributeNode;
+
+import java.util.Collection;
 
 @Getter
 public class AccessAttributeSet
 {
+    public static final AccessAttributeSet EMPTY = new AccessAttributeSet(new String[0]);
+
     private final AccessAttribute[] attributes;
 
-    public AccessAttributeSet(AccessAttribute... attributes)
+    public AccessAttributeSet(Collection<AccessAttribute> attributes)
     {
-        this.attributes = attributes;
+        this.attributes = attributes.toArray(new AccessAttribute[0]);
     }
 
     public AccessAttributeSet(String... attributeNames)

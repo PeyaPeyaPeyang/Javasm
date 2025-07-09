@@ -87,10 +87,10 @@ public class Main (
     fstore_2
     fstore_3
     fsub
-    getfield Ljava/lang/String;->awdw$1_35:Ljava/lang/String;
-    getstatic Ljava/lang/System;->out:Ljava/io/PrintStream;
+    getfield java/lang/Strin->awdw$1_35:Ljava/lang/String;
+    getstatic java/lang/System->out:Ljava/io/PrintStream;
     goto test
-    goto_w 24
+    goto_w test
     i2b
     i2c
     i2d
@@ -107,9 +107,6 @@ public class Main (
     iconst_3
     iconst_4
     iconst_5
-    iconst_6
-    iconst_7
-    iconst_8
     if_acmpeq test
     if_acmpne test
     if_icmpeq test
@@ -135,11 +132,11 @@ public class Main (
     imul
     ineg
     instanceof Ljava/lang/String;
-    invokedynamic myMethod (Ljava/lang/String;)Ljava/lang/String; MethodHandle|getstatic|Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; MethodType|(Ljava/lang/String;)V
-    invokeinterface Ljava/lang/String;->awdw$1_35(Ljava/lang/String;)Ljava/lang/String;
-    invokespecial Ljava/lang/String;-><init>()V
-    invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;)V
-    invokespecial Ljava/lang/String;-><init>(Ljava/lang/String;Ljava/lang/String;)V
+    invokedynamic myMethod (Ljava/lang/String;)Ljava/lang/String; MethodHandle|getstatic|java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; MethodType|(Ljava/lang/String;)V
+    invokeinterface java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String;
+    invokespecial java/lang/String-><init>()V
+    invokespecial java/lang/String-><init>(Ljava/lang/String;)V
+    invokespecial java/lang/String-><init>(Ljava/lang/String;Ljava/lang/String;)V
     ior
     irem
     ireturn
@@ -153,8 +150,8 @@ public class Main (
     isub
     iushr
     ixor
-    jsr 2525
-    jsr_w 24412424124
+    jsr test
+    jsr_w test
     l2d
     l2f
     l2i
@@ -176,8 +173,8 @@ public class Main (
     lmul
     lneg
     lookupswitch {
-      0x00: 424;
-      default: awd
+      0x00: test;
+      default: test
     }
     lor
     lrem
@@ -200,8 +197,8 @@ public class Main (
     nop
     pop
     pop2
-    putfield Ljava/lang/String;->awdw$1_35:Ljava/lang/String;
-    putstatic Ljava/lang/String;->myString:Ljava/lang/String;
+    putfield java/lang/String->awdw$1_35:Ljava/lang/String;
+    putstatic java/lang/String->myString:Ljava/lang/String;
     ret 0x00
     return
     saload
@@ -209,7 +206,7 @@ public class Main (
     sipush 42
     swap
     tableswitch 1 {
-       424
+       test
     } default awd
     wide aload 24
   }

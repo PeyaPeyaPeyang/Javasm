@@ -32,15 +32,13 @@
                   language="JAL"/>
         <lang.parserDefinition language="JAL"
                                implementationClass="tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition"/>
-        <lang.syntaxHighlighterFactory
-                implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JALSyntaxHighlighterFactory"
-                language="JAL"/>
         <runLineMarkerContributor language="JAL"
                                   implementationClass="tokyo.peya.javasm.intellij.execution.JALRunLineMarkerProvider"/>
         <runConfigurationProducer implementation="tokyo.peya.javasm.intellij.execution.JALRunConfigurationProducer"/>
         <compiler.buildTargetScopeProvider
                 implementation="tokyo.peya.javasm.intellij.execution.JALBuildTargetScopeProvider"/>
         <compileServer.plugin
-                classpath="javasm-jps-plugin-0.0.1.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.8.jar;asm-commons-9.8.jar;asm-util-9.8.jar;asm-tree-9.8.jar;asm-analysis-9.8.jar;"/>
+                classpath="javasm-jps-plugin-0.0.1.jar;javasm-compiler-0.0.1.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.8.jar;asm-commons-9.8.jar;asm-util-9.8.jar;asm-tree-9.8.jar;asm-analysis-9.8.jar;"/>
+        <lang.ast.factory language="JAL" implementationClass="tokyo.peya.javasm.intellij.langjal.parser.JALASTFactory"/>
     </extensions>
 </idea-plugin>

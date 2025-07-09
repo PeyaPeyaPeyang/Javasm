@@ -76,6 +76,19 @@ public class EvaluatorCommons
         }
     }
 
+    public static boolean isNumber(@Nullable String number)
+    {
+        try
+        {
+            toNumber(number);
+            return true;
+        }
+        catch (IllegalArgumentException e)
+        {
+            return false;
+        }
+    }
+
     private static Function<String, ? extends Number> getImplictParseNumberFunction(@NotNull String number)
     {
         String type = getNumberType(number);

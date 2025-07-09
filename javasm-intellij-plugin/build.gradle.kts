@@ -36,6 +36,7 @@ dependencies {
 
     implementation(project(":javasm-jps-plugin"))
     implementation(project(":javasm-compiler"))
+    implementation("org.antlr:antlr4-intellij-adaptor:0.1")
 }
 
 intellijPlatform {

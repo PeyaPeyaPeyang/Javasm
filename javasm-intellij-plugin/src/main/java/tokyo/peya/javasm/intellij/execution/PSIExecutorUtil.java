@@ -12,14 +12,9 @@ import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
-import tokyo.peya.javasm.intellij.langjal.psi.JALClassBody;
-import tokyo.peya.javasm.intellij.langjal.psi.JALClassDefinition;
-import tokyo.peya.javasm.intellij.langjal.psi.JALMethodAccessor;
-import tokyo.peya.javasm.intellij.langjal.psi.JALMethodDefinition;
-
 @UtilityClass
 public class PSIExecutorUtil
-{
+{/*
     public static JALClassDefinition findClassForFile(@NotNull JALFile file)
     {
         return PsiTreeUtil.findChildOfType(file, JALClassDefinition.class);
@@ -71,5 +66,5 @@ public class PSIExecutorUtil
                 return true; // ファイルがソースルートのパスで始まる場合はソースルート内にある
 
         return false;
-    }
+    }*/
 }

@@ -7,9 +7,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.langjal.psi.JALClassDefinition;
-import tokyo.peya.javasm.intellij.langjal.psi.JALMethodDefinition;
-import tokyo.peya.javasm.intellij.langjal.psi.JALTypes;
+import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 
 public class JALRunLineMarkerProvider extends RunLineMarkerContributor
 {
@@ -22,9 +20,9 @@ public class JALRunLineMarkerProvider extends RunLineMarkerContributor
     @Override
     public @Nullable Info getInfo(@NotNull PsiElement psiElement)
     {
-        if (!psiElement.getNode().getElementType().equals(JALTypes.ID))
+        if (!psiElement.getNode().getElementType().equals(JALParserDefinition.ID))
             return null;
-
+/*
         PsiElement element = psiElement.getParent();
         if (!PSIExecutorUtil.isInSourceRoot(element.getContainingFile()))
             return null;
@@ -39,10 +37,12 @@ public class JALRunLineMarkerProvider extends RunLineMarkerContributor
             if (!PSIExecutorUtil.isMainMethod(methodDefinition))
                 return null;
         }
-        else
+        else*/
             return null;
-
+/*
         AnAction[] actions = ExecutorAction.getActions(Integer.MAX_VALUE);
         return new Info(AllIcons.RunConfigurations.TestState.Run, actions);
+
+ */
     }
 }

@@ -7,11 +7,11 @@ import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 
-public class InstructionEvaluatorFCmpOp extends AbstractInstructionEvaluator<JALParser.JvmInsFcmpgOPContext>
+public class InstructionEvaluatorFCmpOp extends AbstractInstructionEvaluator<JALParser.JvmInsFcmpOPContext>
 {
     @Override
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
-                                                     JALParser.@NotNull JvmInsFcmpgOPContext ctxt)
+                                                     JALParser.@NotNull JvmInsFcmpOPContext ctxt)
     {
         if (has(ctxt.INSN_FCMPG()))
             return visitSingle(EOpcodes.FCMPG);
@@ -22,8 +22,8 @@ public class InstructionEvaluatorFCmpOp extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected JALParser.JvmInsFcmpgOPContext map(JALParser.@NotNull InstructionContext instruction)
+    protected JALParser.JvmInsFcmpOPContext map(JALParser.@NotNull InstructionContext instruction)
     {
-        return instruction.jvmInsFcmpgOP();
+        return instruction.jvmInsFcmpOP();
     }
 }
