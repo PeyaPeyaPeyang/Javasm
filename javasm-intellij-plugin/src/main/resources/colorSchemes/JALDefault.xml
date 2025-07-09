@@ -102,7 +102,8 @@
     </option>
     <option name="JAL_LABEL">
         <value>
-            <option name="FOREGROUND" value="c973dc" />
+            <option name="EC6767" value="c973dc" />
+            <option name="ITALIC" value="true" />
         </value>
     </option>
 </list>
