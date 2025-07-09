@@ -10,7 +10,10 @@ import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
 import org.antlr.intellij.adaptor.psi.ScopeNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
+import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 
 import java.util.List;
@@ -29,16 +32,49 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
         return SymtabUtils.resolve(this, JALLanguage.INSTANCE, element, "/root/classDefinition/className");
     }
 
+    @NotNull
+    public String getClassName()
+    {
+        ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
+        if (classNameNode == null)
+            return "<unknown>";
+        else
+            return classNameNode.getText();
+    }
+
+    @NotNull
+    public AccessLevel getAccessLevel()
+    {
+        AccessModifierNode accessLevelNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
+        if (accessLevelNode == null)
+            return AccessLevel.PACKAGE_PRIVATE;
+
+        return accessLevelNode.getAccessLevel();
+    }
+
+    @NotNull
+    public AccessAttributeSet getAccessAttributes()
+    {
+        AccessModifierNode accessModifierNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
+        if (accessModifierNode == null)
+            return AccessAttributeSet.EMPTY;
+
+        return accessModifierNode.getAccessAttributes();
+    }
+
 
     @NotNull
     public MethodDefinitionNode[] getMethods()
     {
-        List<ClassBodyItemNode> bodyItems = PsiTreeUtil.getChildrenOfTypeAsList(this, ClassBodyItemNode.class);
+        ClassBodyNode classBodyNode = PsiTreeUtil.findChildOfType(this, ClassBodyNode.class);
+        if (classBodyNode == null)
+            return new MethodDefinitionNode[0];
+
+        List<ClassBodyItemNode> bodyItems = PsiTreeUtil.getChildrenOfTypeAsList(classBodyNode, ClassBodyItemNode.class);
         return bodyItems.stream()
                 .filter(ClassBodyItemNode::isMethod)
                 .map(ClassBodyItemNode::getMethod)
                 .filter(Objects::nonNull)
                 .toArray(MethodDefinitionNode[]::new);
     }
-
 }
