@@ -86,8 +86,7 @@ public class JALCompiler
 
     private void writeClass(@NotNull ClassNode classNode)
     {
-        ClassWriter classWriter = new ClassWriter(
-                ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS
         );
         classNode.accept(classWriter);
 

@@ -26,9 +26,6 @@ public class InstructionEvaluateHelperInvocation
     public static EvaluatedInstruction evaluate(String ownerType, String methodName, String methodDescriptor,
                                                 int opcode)
     {
-        // Ljava/lang/String; -> java/lang/String に変換
-        String ownerTypeUnwrapped = EvaluatorCommons.unwrapClassTypeDescriptor(ownerType);
-
         if (opcode == EOpcodes.INVOKESPECIAL)
         {
             if (!(methodName.equals("<init>") || methodName.equals("<clinit>")))
@@ -38,7 +35,7 @@ public class InstructionEvaluateHelperInvocation
 
         MethodInsnNode insn = new MethodInsnNode(
                 opcode,
-                ownerTypeUnwrapped,
+                ownerType,
                 methodName,
                 methodDescriptor
         );

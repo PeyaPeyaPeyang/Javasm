@@ -1,0 +1,22 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <mask id="cutout">
+            <!-- 白が見える部分、黒が透明になる部分 -->
+            <rect width="128" height="128" rx="16" fill="white"/>
+            <rect x="8" y="8" width="112" height="112" rx="12" fill="black"/>
+        </mask>
+    </defs>
+
+    <!-- 外枠（黒っぽい部分）にマスクかけて、中を透明に -->
+    <rect width="128" height="128" rx="16" fill="#2b2b2b" mask="url(#cutout)"/>
+
+    <!-- 中身のパスはそのまま -->
+    <path d="M32 24h64v16H32z" fill="#4C70E5"/>
+    <path d="M32 46h64v16H32z" fill="#0FA873"/>
+    <path d="M32 68h64v16H32z" fill="#5FB332"/>
+
+    <!-- テキスト -->
+    <text x="62" y="110" font-size="25" text-anchor="middle" fill="#cc9900" font-family="monospace" font-weight="bold">
+        .jasm
+    </text>
+</svg>

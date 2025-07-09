@@ -9,7 +9,6 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -73,7 +72,7 @@ public class JALMethodEvaluator
                 if (label.instructionIndex() == i)
                 {
                     LabelNode labelNode = label.node();
-                    this.method.instructions.insert(labelNode);
+                    this.method.instructions.add(labelNode);
                 }
 
             InstructionInfo instruction = this.instructions.get(i);
@@ -118,7 +117,10 @@ public class JALMethodEvaluator
         {
             LabelInfo startLabel = new LabelInfo("MBEGIN", this.globalStartLocalLabel, this.bytecodeOffset);
             this.labels.add(startLabel);
-            this.method.instructions.insertBefore(startLabel.node(), this.method.instructions.getFirst());
+            if (this.method.instructions.size() > 0)
+                this.method.instructions.insertBefore(this.method.instructions.get(0), startLabel.node());
+            else
+                this.method.instructions.add(startLabel.node());
             // ↑ START なので，いっちゃんさいしょ
         }
     }
@@ -157,8 +159,8 @@ public class JALMethodEvaluator
                 String labelName = bodyItem.label().labelName().getText();
                 this.registerLabel(labelName, instructionCount);
             }
-            else if (bodyItem.instruction() != null)
-                instructionCount++;
+
+            instructionCount += bodyItem.instruction().size();
         }
     }
 

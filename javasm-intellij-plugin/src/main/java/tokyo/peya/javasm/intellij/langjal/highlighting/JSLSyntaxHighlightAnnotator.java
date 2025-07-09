@@ -16,6 +16,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethod
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 
@@ -92,10 +94,8 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
                 }
             }
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
-            // Ignore invalid method descriptor
-            return;
         }
     }
 

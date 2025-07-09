@@ -27,7 +27,6 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
             new AttributesDescriptor("Symbols//Parenthesis", JALSyntaxHighlighter.PARENTHESIS),
             new AttributesDescriptor("Symbols//Brackets", JALSyntaxHighlighter.BRACKETS),
 
-            new AttributesDescriptor("Label", JALSyntaxHighlighter.LABEL),
             new AttributesDescriptor("Members//Method name", JALSyntaxHighlighter.METHOD_NAME),
             new AttributesDescriptor("Members//Method call", JALSyntaxHighlighter.METHOD_CALL),
             new AttributesDescriptor("Members//Class name", JALSyntaxHighlighter.CLASS_NAME),
@@ -43,6 +42,26 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
             new AttributesDescriptor("Types//Boolean(Z)", JALSyntaxHighlighter.DESC_BOOLEAN),
             new AttributesDescriptor("Types//Void(V)", JALSyntaxHighlighter.DESC_VOID),
 
+            new AttributesDescriptor("Instructions//NOP", JALSyntaxHighlighter.INSN_NOP),
+            new AttributesDescriptor("Instructions//Variable access", JALSyntaxHighlighter.INSN_VARIABLE_ACCESS),
+            new AttributesDescriptor("Instructions//Instance creation", JALSyntaxHighlighter.INSN_INSTANCE_CREATION),
+            new AttributesDescriptor("Instructions//Flow controls", JALSyntaxHighlighter.INSN_FLOW_CONTROLS),
+            new AttributesDescriptor("Instructions//Flow jumps", JALSyntaxHighlighter.INSN_FLOW_JUMPS),
+            new AttributesDescriptor("Instructions//Value generations", JALSyntaxHighlighter.INSN_VALUE_GENERATIONS),
+            new AttributesDescriptor("Instructions//Value castings", JALSyntaxHighlighter.INSN_VALUE_CASTINGS),
+            new AttributesDescriptor("Instructions//Value calculations", JALSyntaxHighlighter.INSN_VALUE_CALCULATIONS),
+            new AttributesDescriptor("Instructions//Value logical calculations", JALSyntaxHighlighter.INSN_VALUE_LOGICAL_CALCULATIONS),
+            new AttributesDescriptor("Instructions//Value comparisons", JALSyntaxHighlighter.INSN_VALUE_COMPARISONS),
+            new AttributesDescriptor("Instructions//Stack controls", JALSyntaxHighlighter.INSN_STACK_CONTROLS),
+            new AttributesDescriptor("Instructions//Field access", JALSyntaxHighlighter.INSN_FIELD_ACCESS),
+            new AttributesDescriptor("Instructions//Method invocations", JALSyntaxHighlighter.INSN_METHOD_INVOCATIONS),
+            new AttributesDescriptor("Instructions//Switch", JALSyntaxHighlighter.INSN_SWITCH),
+            new AttributesDescriptor("Instructions//Array access", JALSyntaxHighlighter.INSN_ARRAY_ACCESS),
+            new AttributesDescriptor("Instructions//Array creations", JALSyntaxHighlighter.INSN_ARRAY_CREATIONS),
+            new AttributesDescriptor("Instructions//Monitoring", JALSyntaxHighlighter.INSN_MONITORING),
+            new AttributesDescriptor("Instructions//Wide", JALSyntaxHighlighter.INSN_WIDE),
+
+            new AttributesDescriptor("Label", JALSyntaxHighlighter.LABEL),
             new AttributesDescriptor("Identifier", JALSyntaxHighlighter.ID),
             new AttributesDescriptor("Keywords", JALSyntaxHighlighter.KEYWORD),
 
@@ -78,23 +97,18 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
                   }
                 
                   <init>()V {
-                 \s
                    label:
                    test:
                 
                     // Nop
                     nop
                 
-                    // Variable controls
-                    aaload
+                    // Variable access
                     aload_0
                     aload 255
                 
-                    // New instances
+                    // Instance creation
                     new Ljava/lang/String;
-                    newarray Ljava/lang/String;
-                    anewarray Ljava/lang/String;
-                    multianewarray Ljava/lang/String; 3
                 
                     // Value generation
                     sipush 42
@@ -122,20 +136,19 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
                     d2f
                     f2l
                 
-                    // Value calculation\s
+                    // Value calculations
                     dadd
                     idiv
                 
                     // Value comparison
                     dcmpg
                     dcmpl
-                    ddiv
-                    drem
+                    lcmp
+                
                 
                     // Stack controlling
                     dup
                     dup2_x2
-                    nop
                     pop
                     swap
                 
@@ -151,7 +164,17 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
                     invokeinterface java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String;
                     invokespecial java/lang/String-><init>(Ljava/lang/String;Ljava/lang/String;)V
                     invokeinterface java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String;
-                 \s
+                
+                    // Array access
+                    aaload
+                    iastore
+                
+                    // Array creations
+                    newarray Ljava/lang/String;
+                    anewarray Ljava/lang/String;
+                    multianewarray Ljava/lang/String; 3
+                
+                
                     // Switch
                     lookupswitch {
                       0x00: test;

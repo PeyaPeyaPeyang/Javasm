@@ -3,7 +3,6 @@ package tokyo.peya.javasm.langjal.compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 import java.util.Collections;
 import java.util.List;

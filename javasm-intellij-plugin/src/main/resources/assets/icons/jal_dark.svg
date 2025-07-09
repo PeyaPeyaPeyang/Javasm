@@ -8,7 +8,7 @@
     <path d="M32 68h64v16H32z" fill="#5FB332"/>
 
     <!-- テキスト -->
-    <text x="64" y="110" font-size="20" text-anchor="middle" fill="#ffc66d" font-family="monospace" font-weight="bold">
+    <text x="62" y="110" font-size="25" text-anchor="middle" fill="#ffc66d" font-family="monospace" font-weight="bold">
         .jasm
     </text>
 </svg>

@@ -15,11 +15,9 @@ public class InstructionEvaluateHelperField
         JALParser.JvmInsArgFieldRefNameContext fieldName = ref.jvmInsArgFieldRefName();
         JALParser.TypeDescriptorContext fieldType = ref.typeDescriptor();
 
-        // Ljava/lang/String; -> java/lang/String に変換
-        String ownerType = EvaluatorCommons.unwrapClassTypeDescriptor(fieldOwner.getText());
         FieldInsnNode fieldInsn = new FieldInsnNode(
                 opcode,
-                ownerType,
+                fieldOwner.getText(),
                 fieldName.getText(),
                 fieldType.getText()
         );

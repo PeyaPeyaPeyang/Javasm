@@ -47,7 +47,17 @@
                 implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JALSyntaxHighlighterFactory"/>
         <colorSettingsPage
                 implementation="tokyo.peya.javasm.intellij.langjal.highlighting.JALGeneralColorSettingsPage"/>
+        <additionalTextAttributes scheme="Default" file="colorSchemes/JALDefault.xml" />
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/JALDarcula.xml" />
         <annotator language="JAL"
                    implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JSLSyntaxHighlightAnnotator"/>
+        <internalFileTemplate name="JAL Class" />
     </extensions>
+    <actions>
+        <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
+                class="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction" text="Create JAL Class"
+                description="Creating new JAL class file.">
+            <add-to-group group-id="NewGroup" anchor="first"/>
+        </action>
+    </actions>
 </idea-plugin>
