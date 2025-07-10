@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
@@ -14,9 +15,9 @@ public class InstructionJumpNode extends InstructionNode
     }
 
     @NotNull
-    public LabelNode getJumpLabel()
+    public LabelNameNode getJumpLabel()
     {
-        LabelNode labelNode = PsiTreeUtil.findChildOfType(this, LabelNode.class);
+        LabelNameNode labelNode = PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
         if (labelNode == null)
             throw new IllegalStateException("LabelNode is not found in JumpArgumentInstructionNode");
         return labelNode;

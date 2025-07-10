@@ -12,7 +12,6 @@ import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 
