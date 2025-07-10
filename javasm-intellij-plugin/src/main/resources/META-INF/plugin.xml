@@ -61,13 +61,15 @@
                 implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider
                 implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALLanguageCodeStyleSettingsProvider"/>
-        <localInspection implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.JALClassfileNameInspection"
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALClassfileNameInspection"
                          language="JAL"
                          displayName="Class name inspection"
                          enabledByDefault="true"
                          level="GENERIC_ERROR"
                          groupName="JAL Inspections"/>
-        <localInspection implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.JALPushIntegerInspection"
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALPushIntegerInspection"
                          language="JAL"
                          displayName="Push integer inspection"
                          enabledByDefault="true"

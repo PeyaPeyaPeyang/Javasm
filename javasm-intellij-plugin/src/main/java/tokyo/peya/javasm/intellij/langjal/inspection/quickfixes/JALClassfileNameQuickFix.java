@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.langjal.inspection;
+package tokyo.peya.javasm.intellij.langjal.inspection.quickfixes;
 
 import com.intellij.codeInspection.LocalQuickFix;
 import com.intellij.codeInspection.ProblemDescriptor;

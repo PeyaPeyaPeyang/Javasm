@@ -1,9 +1,12 @@
-package tokyo.peya.javasm.intellij.langjal.inspection;
+package tokyo.peya.javasm.intellij.langjal.inspection.inspections;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.execution.PSIExecutorUtil;
+import tokyo.peya.javasm.intellij.langjal.inspection.AbstractJALInspection;
+import tokyo.peya.javasm.intellij.langjal.inspection.JALPsiElementVisitor;
+import tokyo.peya.javasm.intellij.langjal.inspection.quickfixes.JALClassfileNameQuickFix;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
 public class JALClassfileNameInspection extends AbstractJALInspection
