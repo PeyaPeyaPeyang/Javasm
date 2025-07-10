@@ -33,6 +33,15 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
+    public ClassNameNode getClassNameNode()
+    {
+        ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
+        if (classNameNode == null)
+            throw new IllegalStateException("Class name node not found in " + this.getText());
+        return classNameNode;
+    }
+
+    @NotNull
     public String getFullQualifiedClassName()
     {
         ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
