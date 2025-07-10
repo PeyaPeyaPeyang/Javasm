@@ -25,7 +25,7 @@ public class InstructionLocalAccessNode extends InstructionWidenableNode
     @Override
     public String toString()
     {
-        String wide = this.isWidened() ? " wide " : "";
+        String wide = this.isWidened() ? " wide ": "";
         return "InstructionNode(" + wide + this.getInstructionName() + ", argREF=" + this.getReferenceName() + ")";
     }
 }

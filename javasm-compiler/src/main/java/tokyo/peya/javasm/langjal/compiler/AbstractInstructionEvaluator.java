@@ -4,7 +4,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
 {

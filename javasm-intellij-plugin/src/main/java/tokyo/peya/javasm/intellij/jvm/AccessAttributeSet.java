@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.intellij.jvm;
 
 import lombok.Getter;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessAttributeNode;
 
 import java.util.Collection;
 
@@ -53,7 +52,7 @@ public class AccessAttributeSet
         for (AccessAttribute attribute : this.attributes)
         {
             if (attribute == AccessAttribute.ABSTRACT || attribute == AccessAttribute.INTERFACE
-                || attribute == AccessAttribute.ENUM || attribute == AccessAttribute.ANNOTATION)
+                    || attribute == AccessAttribute.ENUM || attribute == AccessAttribute.ANNOTATION)
                 return false;
         }
         return true;

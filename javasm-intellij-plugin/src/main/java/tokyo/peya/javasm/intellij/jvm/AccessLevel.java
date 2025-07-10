@@ -14,20 +14,21 @@ public enum AccessLevel
 
     private final String name;
 
+    @Override
+    public String toString()
+    {
+        return this.name;
+    }
+
     public static AccessLevel fromString(String name)
     {
-        return switch (name.trim().toLowerCase()) {
+        return switch (name.trim().toLowerCase())
+        {
             case "public" -> PUBLIC;
             case "protected" -> PROTECTED;
             case "private" -> PRIVATE;
             case "package-private", "package", "" -> PACKAGE_PRIVATE;
             default -> throw new IllegalArgumentException("Unknown access level: " + name);
         };
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.name;
     }
 }

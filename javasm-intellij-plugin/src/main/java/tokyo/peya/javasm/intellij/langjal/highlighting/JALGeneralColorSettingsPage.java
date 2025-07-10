@@ -50,7 +50,10 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
             new AttributesDescriptor("Instructions//Value generations", JALSyntaxHighlighter.INSN_VALUE_GENERATIONS),
             new AttributesDescriptor("Instructions//Value castings", JALSyntaxHighlighter.INSN_VALUE_CASTINGS),
             new AttributesDescriptor("Instructions//Value calculations", JALSyntaxHighlighter.INSN_VALUE_CALCULATIONS),
-            new AttributesDescriptor("Instructions//Value logical calculations", JALSyntaxHighlighter.INSN_VALUE_LOGICAL_CALCULATIONS),
+            new AttributesDescriptor(
+                    "Instructions//Value logical calculations",
+                    JALSyntaxHighlighter.INSN_VALUE_LOGICAL_CALCULATIONS
+            ),
             new AttributesDescriptor("Instructions//Value comparisons", JALSyntaxHighlighter.INSN_VALUE_COMPARISONS),
             new AttributesDescriptor("Instructions//Stack controls", JALSyntaxHighlighter.INSN_STACK_CONTROLS),
             new AttributesDescriptor("Instructions//Field access", JALSyntaxHighlighter.INSN_FIELD_ACCESS),
@@ -66,7 +69,6 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
             new AttributesDescriptor("Keywords", JALSyntaxHighlighter.KEYWORD),
 
     };
-
 
     @Override
     public @Nullable Icon getIcon()

@@ -11,9 +11,9 @@
 #set($fullPath = "${path}/${NAME}")
 #set($init = "<init>")
 public class $fullPath (
-  major_version=65,
-  minor_version=0) {
+major_version=65,
+minor_version=0) {
 
-  public $init()V {
-  }
+public $init()V {
+}
 }

@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.method;
 
 import com.intellij.lang.ASTNode;
-import com.intellij.openapi.util.NlsSafe;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.util.IncorrectOperationException;
@@ -24,7 +23,6 @@ public class MethodNameNode extends ANTLRPsiNode implements PsiNameIdentifierOwn
         return this.getText();
     }
 
-
     @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException
     {
@@ -37,7 +35,7 @@ public class MethodNameNode extends ANTLRPsiNode implements PsiNameIdentifierOwn
         );
 
         PsiElement oldID = this.findChildByType(JALParserDefinition.ID);
-        assert oldID != null : "LabelNameNode must have an ID child node";
+        assert oldID != null: "LabelNameNode must have an ID child node";
 
         if (newID != null)
         {

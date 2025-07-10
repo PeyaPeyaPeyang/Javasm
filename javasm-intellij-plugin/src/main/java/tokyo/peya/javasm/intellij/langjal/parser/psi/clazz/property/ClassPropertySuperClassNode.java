@@ -20,7 +20,7 @@ public class ClassPropertySuperClassNode extends ClassPropertyNode
     {
         IdentifierNode[] fqNameNode = this.findChildrenByClass(IdentifierNode.class);
         return Arrays.stream(fqNameNode)
-                .map(IdentifierNode::getText)
-                .toArray(String[]::new);
+                     .map(IdentifierNode::getText)
+                     .toArray(String[]::new);
     }
 }

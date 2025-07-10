@@ -16,12 +16,14 @@ public class InstructionLookupSwitchNode extends InstructionNode
     @NotNull
     public InstructionLookupSwitchArgumentNode getTableSwitchArgument()
     {
-        InstructionLookupSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(this, InstructionLookupSwitchArgumentNode.class);
+        InstructionLookupSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(
+                this,
+                InstructionLookupSwitchArgumentNode.class
+        );
         if (argumentNode == null)
             throw new IllegalStateException("Lookup switch instruction must have an argument node.");
         return argumentNode;
     }
-
 
     public LabelNameNode getDefaultBranchLabelName()
     {

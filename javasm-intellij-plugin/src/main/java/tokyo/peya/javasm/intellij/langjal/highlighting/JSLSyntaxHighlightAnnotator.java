@@ -15,9 +15,6 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethod
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethodInitNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 
@@ -41,7 +38,7 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
 
         // フィールドの参照名
         if (element instanceof IdentifierNode
-            && element.getParent() instanceof FieldReferenceNameNode)
+                && element.getParent() instanceof FieldReferenceNameNode)
             highlight(element, holder, JALSyntaxHighlighter.FIELD_NAME);
 
         // 型記述子/オブジェクト
@@ -78,7 +75,8 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
                 else if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z')
                 {
                     // プリミティブ型の引数
-                    TextAttributesKey highlight = switch(c) {
+                    TextAttributesKey highlight = switch (c)
+                    {
                         case 'B' -> JALSyntaxHighlighter.DESC_BYTE;
                         case 'C' -> JALSyntaxHighlighter.DESC_CHAR;
                         case 'D' -> JALSyntaxHighlighter.DESC_DOUBLE;
@@ -99,18 +97,21 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
         }
     }
 
-    private static void highlight(@NotNull PsiElement element, @NotNull AnnotationHolder holder, @NotNull TextAttributesKey textAttributesKey)
+    private static void highlight(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
+                                  @NotNull TextAttributesKey textAttributesKey)
     {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(element)
-                .textAttributes(textAttributesKey)
-                .create();
+              .range(element)
+              .textAttributes(textAttributesKey)
+              .create();
     }
-    private static void highlight(@NotNull PsiElement element, TextRange range, @NotNull AnnotationHolder holder, @NotNull TextAttributesKey textAttributesKey)
+
+    private static void highlight(@NotNull PsiElement element, TextRange range, @NotNull AnnotationHolder holder,
+                                  @NotNull TextAttributesKey textAttributesKey)
     {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-                .range(element.getTextRange().cutOut(range))
-                .textAttributes(textAttributesKey)
-                .create();
+              .range(element.getTextRange().cutOut(range))
+              .textAttributes(textAttributesKey)
+              .create();
     }
 }

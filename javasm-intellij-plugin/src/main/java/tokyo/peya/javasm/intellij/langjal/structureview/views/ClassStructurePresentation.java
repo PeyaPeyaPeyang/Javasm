@@ -27,7 +27,7 @@ public class ClassStructurePresentation extends JALStructureViewItemPresentation
     {
         ClassDefinitionNode classNode = (ClassDefinitionNode) this.psiElement;
         AccessAttributeSet attributes = classNode.getAccessAttributes();
-        
+
         if (attributes.has(AccessAttribute.ENUM))
             return PlatformIcons.ENUM_ICON;
         else if (attributes.has(AccessAttribute.INTERFACE))

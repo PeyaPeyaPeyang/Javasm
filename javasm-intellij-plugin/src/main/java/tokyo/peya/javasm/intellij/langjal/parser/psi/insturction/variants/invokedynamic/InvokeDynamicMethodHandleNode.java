@@ -17,13 +17,16 @@ public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode
     @NotNull
     public InvocationType getHandleType()
     {
-        InvokeDynamicMethodHandleTypeNode handleTypeNode = PsiTreeUtil.findChildOfType(this, InvokeDynamicMethodHandleTypeNode.class);
+        InvokeDynamicMethodHandleTypeNode handleTypeNode = PsiTreeUtil.findChildOfType(
+                this,
+                InvokeDynamicMethodHandleTypeNode.class
+        );
         if (handleTypeNode == null)
             throw new IllegalStateException("InvokeDynamicMethodHandleTypeNode not found in " + this.getText());
 
         return handleTypeNode.getMethodHandleType();
     }
-    
+
     @NotNull
     public MethodReferenceNode getMethodReference()
     {

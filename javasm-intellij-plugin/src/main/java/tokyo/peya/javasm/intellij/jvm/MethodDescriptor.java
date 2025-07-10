@@ -22,22 +22,6 @@ public class MethodDescriptor
         this.descriptorString = descriptorString;
     }
 
-    public static MethodDescriptor parse(String descriptor) {
-        DescriptorReader reader = DescriptorReader.fromString(descriptor);
-
-        reader.expect('(');
-        List<TypeDescriptor> parameters = new ArrayList<>();
-
-        while (reader.peek() != ')')
-            parameters.add(TypeDescriptor.parse(reader));
-
-        reader.expect(')');
-
-        TypeDescriptor returnType = TypeDescriptor.parse(reader);
-
-        return new MethodDescriptor(returnType, parameters.toArray(new TypeDescriptor[0]), descriptor);
-    }
-
     @Override
     public String toString()
     {
@@ -58,8 +42,8 @@ public class MethodDescriptor
             return false;
 
         return Objects.equals(this.getReturnType(), that.getReturnType()) &&
-               Arrays.equals(this.getParameterTypes(), that.getParameterTypes()) &&
-               Objects.equals(this.getDescriptorString(), that.getDescriptorString());
+                Arrays.equals(this.getParameterTypes(), that.getParameterTypes()) &&
+                Objects.equals(this.getDescriptorString(), that.getDescriptorString());
     }
 
     public boolean equals(String s)
@@ -69,10 +53,13 @@ public class MethodDescriptor
         if (this.getDescriptorString().equals(s))
             return true;
 
-        try {
+        try
+        {
             MethodDescriptor other = MethodDescriptor.parse(s);
             return this.equals(other);
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             return false;
         }
     }
@@ -81,5 +68,22 @@ public class MethodDescriptor
     public int hashCode()
     {
         return Objects.hash(getReturnType(), Arrays.hashCode(getParameterTypes()), getDescriptorString());
+    }
+
+    public static MethodDescriptor parse(String descriptor)
+    {
+        DescriptorReader reader = DescriptorReader.fromString(descriptor);
+
+        reader.expect('(');
+        List<TypeDescriptor> parameters = new ArrayList<>();
+
+        while (reader.peek() != ')')
+            parameters.add(TypeDescriptor.parse(reader));
+
+        reader.expect(')');
+
+        TypeDescriptor returnType = TypeDescriptor.parse(reader);
+
+        return new MethodDescriptor(returnType, parameters.toArray(new TypeDescriptor[0]), descriptor);
     }
 }

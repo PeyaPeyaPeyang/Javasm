@@ -3,12 +3,11 @@ package tokyo.peya.javasm.langjal.compiler.instructions.xload;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
 
 public class InstructionEvaluateHelperXLoad
 {

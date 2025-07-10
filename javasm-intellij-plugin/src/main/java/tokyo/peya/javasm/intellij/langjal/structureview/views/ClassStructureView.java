@@ -1,6 +1,5 @@
 package tokyo.peya.javasm.intellij.langjal.structureview.views;
 
-import com.intellij.icons.AllIcons;
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +26,7 @@ public class ClassStructureView extends JALStructureViewElementBase
     {
         ClassDefinitionNode classNode = (ClassDefinitionNode) this.element;
         return Arrays.stream(classNode.getMethods())
-                .map(MethodStructureView::new)
-                .toArray(TreeElement[]::new);
+                     .map(MethodStructureView::new)
+                     .toArray(TreeElement[]::new);
     }
 }

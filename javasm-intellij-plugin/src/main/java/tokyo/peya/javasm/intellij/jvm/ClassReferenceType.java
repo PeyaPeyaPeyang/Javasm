@@ -21,6 +21,12 @@ public class ClassReferenceType implements Type
         return false;
     }
 
+    @Override
+    public String getDescriptor()
+    {
+        return "L" + this.packageName + "/" + this.className + ";";
+    }
+
     public static ClassReferenceType fromString(@NotNull String typeName)
     {
         if (typeName.startsWith("L"))
@@ -40,11 +46,5 @@ public class ClassReferenceType implements Type
             String className = parts[parts.length - 1];
             return new ClassReferenceType(packageName, className);
         }
-    }
-
-    @Override
-    public String getDescriptor()
-    {
-        return "L" + this.packageName + "/" + this.className + ";";
     }
 }

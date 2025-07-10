@@ -28,7 +28,6 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
         return this.getText();
     }
 
-
     @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException
     {

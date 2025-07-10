@@ -18,7 +18,7 @@ public class JALStructureViewModel extends StructureViewModelBase implements Str
     @Override
     public Sorter @NotNull [] getSorters()
     {
-        return new Sorter[] {
+        return new Sorter[]{
                 Sorter.ALPHA_SORTER
         };
     }

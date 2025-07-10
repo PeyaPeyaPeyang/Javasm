@@ -15,6 +15,6 @@ public class InstructionMultiANewArrayNode extends InstructionTypeArgumentNode
     public int getDimensions()
     {
         NumberNode numberNode = PsiTreeUtil.findChildOfType(this, NumberNode.class);
-        return numberNode != null ? numberNode.toNumber().intValue() : 0;
+        return numberNode != null ? numberNode.toNumber().intValue(): 0;
     }
 }

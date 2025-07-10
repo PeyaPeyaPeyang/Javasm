@@ -22,7 +22,8 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
     private static final Map<String, String> INSTRUCTIONS;
     private static final Map<String, Object> INSTRUCTIONS_WITH_ARGUMENTS;
 
-    static {
+    static
+    {
         HashMap<String, String> instructions = new HashMap<>();
         // <editor-fold desc="Instruction Definitions">
         instructions.putAll(Map.ofEntries(
@@ -269,7 +270,8 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
         INSTRUCTIONS = instructions;
     }
 
-    static {
+    static
+    {
         Object v = new Object(); // Placeholder for instructions with arguments
         INSTRUCTIONS_WITH_ARGUMENTS = new HashMap<>();
 
@@ -334,13 +336,15 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
                                   @NotNull CompletionResultSet result)
     {
-        for (Map.Entry<String, String> entry : INSTRUCTIONS.entrySet()) {
+        for (Map.Entry<String, String> entry : INSTRUCTIONS.entrySet())
+        {
             String instructionName = entry.getKey();
             String description = entry.getValue();
             LookupElementBuilder lookupElement = LookupElementBuilder.create(instructionName)
-                    .withTypeText(description)
-                    .withInsertHandler(createInsertHandler(instructionName))
-                    .withCaseSensitivity(true);
+                                                                     .withTypeText(description)
+                                                                     .withInsertHandler(createInsertHandler(
+                                                                             instructionName))
+                                                                     .withCaseSensitivity(true);
             result.addElement(lookupElement);
 
         }

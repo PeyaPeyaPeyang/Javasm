@@ -6,8 +6,8 @@ import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
 
 public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALParser.JvmInsRetContext>
 {

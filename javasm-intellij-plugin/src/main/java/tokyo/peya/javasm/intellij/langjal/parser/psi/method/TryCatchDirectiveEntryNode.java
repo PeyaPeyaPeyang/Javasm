@@ -12,6 +12,7 @@ public class TryCatchDirectiveEntryNode extends ANTLRPsiNode
     {
         super(node);
     }
+
     @NotNull
     public LabelNode getTryEndLabel()
     {

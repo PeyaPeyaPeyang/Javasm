@@ -13,8 +13,7 @@ public enum ClassProperty
     SUPER_CLASS("super_class"),
     INTERFACES("interfaces"),
 
-    UNKNOWN("unknown")
-    ;
+    UNKNOWN("unknown");
 
     private final String name;
 

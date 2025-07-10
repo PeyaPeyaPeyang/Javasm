@@ -47,11 +47,11 @@
                 implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JALSyntaxHighlighterFactory"/>
         <colorSettingsPage
                 implementation="tokyo.peya.javasm.intellij.langjal.highlighting.JALGeneralColorSettingsPage"/>
-        <additionalTextAttributes scheme="Default" file="colorSchemes/JALDefault.xml" />
-        <additionalTextAttributes scheme="Darcula" file="colorSchemes/JALDarcula.xml" />
+        <additionalTextAttributes scheme="Default" file="colorSchemes/JALDefault.xml"/>
+        <additionalTextAttributes scheme="Darcula" file="colorSchemes/JALDarcula.xml"/>
         <annotator language="JAL"
                    implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JSLSyntaxHighlightAnnotator"/>
-        <internalFileTemplate name="JAL Class" />
+        <internalFileTemplate name="JAL Class"/>
         <completion.contributor
                 language="JAL"
                 implementationClass="tokyo.peya.javasm.intellij.langjal.completion.JALCompletionContributor"/>

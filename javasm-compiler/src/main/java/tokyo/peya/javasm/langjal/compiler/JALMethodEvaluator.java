@@ -127,8 +127,8 @@ public class JALMethodEvaluator
             LabelNode tryBlock = directive.tryBlockStartLabel().node();
             LabelNode tryEndBlock = directive.tryBlockEndLabel().node();
             String exceptionType = directive.exceptionType();
-            LabelNode catchBlock = directive.catchBlockLabel() == null ? null : directive.catchBlockLabel().node();
-            LabelNode finallyBlock = directive.finallyBlockLabel() == null ? null : directive.finallyBlockLabel().node();
+            LabelNode catchBlock = directive.catchBlockLabel() == null ? null: directive.catchBlockLabel().node();
+            LabelNode finallyBlock = directive.finallyBlockLabel() == null ? null: directive.finallyBlockLabel().node();
 
             // トライキャッチブロックをメソッドに追加
             this.method.tryCatchBlocks.add(new TryCatchBlockNode(
@@ -224,7 +224,7 @@ public class JALMethodEvaluator
             if (bodyItem.label() != null)
                 lastLabel = this.resolveLabel(bodyItem.label().labelName().getText());
 
-            for (JALParser.InstructionContext instruction: bodyItem.instruction())
+            for (JALParser.InstructionContext instruction : bodyItem.instruction())
             {
                 // 命令を評価して，必要に応じてラベルを設定
                 InstructionInfo info = JALInstructionEvaluator.evaluateInstruction(
@@ -267,7 +267,7 @@ public class JALMethodEvaluator
             LabelInfo tryEndLabel = this.resolveLabel(endLabel.getText());
 
             JALParser.TryCatchDirectiveContext directiveContext = bodyItem.tryCatchDirective();
-            for (JALParser.TryCatchDirectiveEntryContext entry: directiveContext.tryCatchDirectiveEntry())
+            for (JALParser.TryCatchDirectiveEntryContext entry : directiveContext.tryCatchDirectiveEntry())
                 this.evaluateTryCatchDirective(
                         tryStartLabel,
                         tryEndLabel,
@@ -299,8 +299,8 @@ public class JALMethodEvaluator
         }
 
         // 各ラベルを解決
-        JALParser.LabelNameContext catchLabel = catchDirective == null ? null : catchDirective.labelName();
-        JALParser.LabelNameContext finallyLabel = finallyDirective == null ? null : finallyDirective.labelName();
+        JALParser.LabelNameContext catchLabel = catchDirective == null ? null: catchDirective.labelName();
+        JALParser.LabelNameContext finallyLabel = finallyDirective == null ? null: finallyDirective.labelName();
         LabelInfo catchBlockLabel = null;
         LabelInfo finallyBlockLabel = null;
         if (catchLabel != null)

@@ -2,7 +2,6 @@ package tokyo.peya.javasm.intellij.langjal.structureview.views;
 
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 import tokyo.peya.javasm.intellij.langjal.structureview.JALStructureViewElementBase;

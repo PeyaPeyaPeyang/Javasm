@@ -78,25 +78,6 @@ public final class JALParserDefinition implements ParserDefinition
         initStatic();
     }
 
-    @SuppressWarnings("deprecation")
-    private static void initStatic()
-    {
-        if (ID != null)
-            return;
-
-        PSIElementTypeFactory.defineLanguageIElementTypes(
-                JALLanguage.INSTANCE,
-                JALParser.tokenNames,
-                JALParser.ruleNames
-        );
-        List<TokenIElementType> tokenIElementTypes =
-                PSIElementTypeFactory.getTokenIElementTypes(JALLanguage.INSTANCE);
-        ID = tokenIElementTypes.get(JALLexer.ID);
-        NUMBER = tokenIElementTypes.get(JALLexer.NUMBER);
-        FULL_QUALIFIED_CLASS_NAME = tokenIElementTypes.get(JALLexer.FULL_QUALIFIED_CLASS_NAME);
-
-    }
-
     @Override
     public @NotNull Lexer createLexer(Project project)
     {
@@ -107,7 +88,8 @@ public final class JALParserDefinition implements ParserDefinition
     public @NotNull PsiParser createParser(Project project)
     {
         JALParser parser = new JALParser(null);
-        return new ANTLRParserAdaptor(JALLanguage.INSTANCE, parser) {
+        return new ANTLRParserAdaptor(JALLanguage.INSTANCE, parser)
+        {
             @Override
             protected ParseTree parse(Parser parser, IElementType root)
             {
@@ -158,13 +140,16 @@ public final class JALParserDefinition implements ParserDefinition
         if (InstructionParseContributor.isInstructionRule(type.getRuleIndex()))
             return InstructionParseContributor.createInstructionElement(node, type);
 
-        return switch (type.getRuleIndex()) {
+        return switch (type.getRuleIndex())
+        {
             case JALParser.RULE_classDefinition -> new ClassDefinitionNode(node, FULL_QUALIFIED_CLASS_NAME);
             case JALParser.RULE_className -> new ClassNameNode(node);
 
-            case JALParser.RULE_accModClass, JALParser.RULE_accModField, JALParser.RULE_accModMethod -> new AccessModifierNode(node);
+            case JALParser.RULE_accModClass, JALParser.RULE_accModField, JALParser.RULE_accModMethod ->
+                    new AccessModifierNode(node);
             case JALParser.RULE_accessLevel -> new AccessLevelNode(node);
-            case JALParser.RULE_accAttrClass, JALParser.RULE_accAttrField, JALParser.RULE_accAttrMethod -> new AccessAttributeNode(node);
+            case JALParser.RULE_accAttrClass, JALParser.RULE_accAttrField, JALParser.RULE_accAttrMethod ->
+                    new AccessAttributeNode(node);
 
             case JALParser.RULE_classMeta -> new ClassMetaNode(node);
             case JALParser.RULE_classPropMajor -> new ClassPropertyMajorVersionNode(node);
@@ -187,12 +172,12 @@ public final class JALParserDefinition implements ParserDefinition
 
             case JALParser.RULE_tryCatchDirective -> new TryCatchDirectiveNode(node);
             case JALParser.RULE_tryCatchDirectiveEntry -> new TryCatchDirectiveEntryNode(node);
-            case JALParser.RULE_catchDirective ->  new CatchDirectiveNode(node);
+            case JALParser.RULE_catchDirective -> new CatchDirectiveNode(node);
             case JALParser.RULE_finallyDirective -> new FinallyDirectiveNode(node);
 
             case JALParser.RULE_jvmInsArgLocalRef -> new LocalReferenceNode(node);
             case JALParser.RULE_jvmInsArgFieldRef -> new FieldReferenceNode(node);
-            case JALParser.RULE_jvmInsArgFieldRefName-> new FieldReferenceNameNode(node);
+            case JALParser.RULE_jvmInsArgFieldRefName -> new FieldReferenceNameNode(node);
 
 
             case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
@@ -221,5 +206,24 @@ public final class JALParserDefinition implements ParserDefinition
     public @NotNull PsiFile createFile(@NotNull FileViewProvider fileViewProvider)
     {
         return new JALFile(fileViewProvider);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void initStatic()
+    {
+        if (ID != null)
+            return;
+
+        PSIElementTypeFactory.defineLanguageIElementTypes(
+                JALLanguage.INSTANCE,
+                JALParser.tokenNames,
+                JALParser.ruleNames
+        );
+        List<TokenIElementType> tokenIElementTypes =
+                PSIElementTypeFactory.getTokenIElementTypes(JALLanguage.INSTANCE);
+        ID = tokenIElementTypes.get(JALLexer.ID);
+        NUMBER = tokenIElementTypes.get(JALLexer.NUMBER);
+        FULL_QUALIFIED_CLASS_NAME = tokenIElementTypes.get(JALLexer.FULL_QUALIFIED_CLASS_NAME);
+
     }
 }

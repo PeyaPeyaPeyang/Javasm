@@ -18,8 +18,6 @@ import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAtt
 
 public class JALSyntaxHighlighter extends SyntaxHighlighterBase
 {
-    private static final TextAttributesKey[] EMPTY = new TextAttributesKey[0];
-
     public static final TextAttributesKey ID =
             createTextAttributesKey("JAL_ID", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey NUMBER =
@@ -42,7 +40,6 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             createTextAttributesKey("JAL_PARENTHESIS", DefaultLanguageHighlighterColors.PARENTHESES);
     public static final TextAttributesKey BRACKETS =
             createTextAttributesKey("JAL_BRACKETS", DefaultLanguageHighlighterColors.BRACKETS);
-
     public static final TextAttributesKey LABEL =
             createTextAttributesKey("JAL_LABEL", DefaultLanguageHighlighterColors.LABEL);
     public static final TextAttributesKey METHOD_NAME =
@@ -55,7 +52,6 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             createTextAttributesKey("JAL_CLASS_NAME", DefaultLanguageHighlighterColors.CLASS_NAME);
     public static final TextAttributesKey FIELD_NAME =
             createTextAttributesKey("JAL_FIELD_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
-
     public static final TextAttributesKey DESC_BOOLEAN =
             createTextAttributesKey("JAL_DESC_BOOLEAN", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey DESC_BYTE =
@@ -74,7 +70,6 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             createTextAttributesKey("JAL_DESC_DOUBLE", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey DESC_VOID =
             createTextAttributesKey("JAL_DESC_VOID", DefaultLanguageHighlighterColors.KEYWORD);
-
     public static final TextAttributesKey INSN_NOP =
             createTextAttributesKey("JAL_INSN_NOP", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey INSN_VARIABLE_ACCESS =
@@ -111,18 +106,11 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             createTextAttributesKey("JAL_INSN_MONITORING", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey INSN_WIDE =
             createTextAttributesKey("JAL_INSN_WIDE", DefaultLanguageHighlighterColors.KEYWORD);
+    private static final TextAttributesKey[] EMPTY = new TextAttributesKey[0];
 
     static
     {
         initialise();
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void initialise()
-    {
-        PSIElementTypeFactory.defineLanguageIElementTypes(JALLanguage.INSTANCE,
-                                                          JALParser.tokenNames,
-                                                          JALParser.ruleNames);
     }
 
     @Override
@@ -134,7 +122,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
     @Nullable
     private TextAttributesKey highlightsToken(TokenIElementType token)
     {
-        return  switch (token.getANTLRTokenType())
+        return switch (token.getANTLRTokenType())
         {
             case JALLexer.ID -> ID;
             case JALLexer.NUMBER -> NUMBER;
@@ -391,6 +379,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             default -> null;
         };
     }
+
     @Override
     public TextAttributesKey @NotNull [] getTokenHighlights(IElementType elementType)
     {
@@ -402,5 +391,15 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             return EMPTY;
         else
             return new TextAttributesKey[]{key};
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void initialise()
+    {
+        PSIElementTypeFactory.defineLanguageIElementTypes(
+                JALLanguage.INSTANCE,
+                JALParser.tokenNames,
+                JALParser.ruleNames
+        );
     }
 }

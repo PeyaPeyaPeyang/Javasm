@@ -18,8 +18,10 @@ public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
     }
 
     @Override
-    public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
-        switch (settingsType) {
+    public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType)
+    {
+        switch (settingsType)
+        {
             case SPACING_SETTINGS:
                 break;
             case BLANK_LINES_SETTINGS:
@@ -37,6 +39,7 @@ public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
                 break;
         }
     }
+
     @Override
     public @Nullable String getCodeSample(@NotNull SettingsType settingsType)
     {

@@ -9,17 +9,17 @@ import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionFieldAccessNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionIntIncrementNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InstructionInvokeDynamicNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionMultiANewArrayNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionScalarNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWideNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionJumpNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionLocalAccessNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionMultiANewArrayNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNoArgumentNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNumericArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionScalarNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionTypeArgumentNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWideNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InstructionInvokeDynamicNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchNode;
 import tokyo.peya.javasm.langjal.compiler.JALLexer;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 
@@ -163,9 +163,9 @@ public class InstructionParseContributor
                  JALParser.RULE_jvmInsJsr,
                  JALParser.RULE_jvmInsJsrW -> new InstructionJumpNode(node);
             case JALParser.RULE_jvmInsGetfield,
-                    JALParser.RULE_jvmInsGetstatic,
-                    JALParser.RULE_jvmInsPutfield,
-                    JALParser.RULE_jvmInsPutstatic -> new InstructionFieldAccessNode(node);
+                 JALParser.RULE_jvmInsGetstatic,
+                 JALParser.RULE_jvmInsPutfield,
+                 JALParser.RULE_jvmInsPutstatic -> new InstructionFieldAccessNode(node);
             case JALParser.RULE_jvmInsIinc -> new InstructionIntIncrementNode(node);
             case JALParser.RULE_jvmInsLdc,
                  JALParser.RULE_jvmInsLdcW,
@@ -190,12 +190,12 @@ public class InstructionParseContributor
         if (!(type instanceof TokenIElementType token))
             throw new IllegalArgumentException("Not a token type: " + type);
 
-        return switch(token.getANTLRTokenType()) {
+        return switch (token.getANTLRTokenType())
+        {
             case JALLexer.INSN_WIDE -> new InstructionWideNode(type);
             default -> new InstructionNameNode(type, text);
         };
     }
-
 
     public static boolean isInstructionNameToken(int tokenType)
     {

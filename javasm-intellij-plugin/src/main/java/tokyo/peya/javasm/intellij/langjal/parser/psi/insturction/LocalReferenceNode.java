@@ -41,7 +41,7 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
                 this.getLanguage(),
                 this.getContext(),
                 s,
-                isNumber ? JALParserDefinition.NUMBER : JALParserDefinition.ID
+                isNumber ? JALParserDefinition.NUMBER: JALParserDefinition.ID
         );
 
         PsiElement oldID = this.getNameIdentifier();

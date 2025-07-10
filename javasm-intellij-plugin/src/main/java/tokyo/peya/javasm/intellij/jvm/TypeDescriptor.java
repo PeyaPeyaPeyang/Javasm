@@ -17,6 +17,21 @@ public class TypeDescriptor
             throw new IllegalArgumentException("Array dimensions cannot be negative: " + arrayDimensions);
     }
 
+    public TypeDescriptor(Type baseType)
+    {
+        this(baseType, 0);
+    }
+
+    public boolean isArray()
+    {
+        return this.arrayDimensions > 0;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "[".repeat(Math.max(0, this.arrayDimensions)) + this.baseType.getDescriptor();
+    }
 
     public static TypeDescriptor parse(String descriptor)
     {
@@ -28,7 +43,8 @@ public class TypeDescriptor
         int dim = 0;
 
         // 配列の次元をカウントする
-        while (reader.peek() == '[') {
+        while (reader.peek() == '[')
+        {
             dim++;
             reader.read(); // skip '['
         }
@@ -36,7 +52,8 @@ public class TypeDescriptor
         char c = reader.read(); // プリミティブ or L(オブジェクト型の識別子)
 
         Type type;
-        if (c == 'L') {
+        if (c == 'L')
+        {
             StringBuilder className = new StringBuilder();
             while (reader.peek() != ';')
             {
@@ -56,21 +73,5 @@ public class TypeDescriptor
         }
 
         return new TypeDescriptor(type, dim);
-    }
-
-    public TypeDescriptor(Type baseType)
-    {
-        this(baseType, 0);
-    }
-
-    public boolean isArray()
-    {
-        return this.arrayDimensions > 0;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "[".repeat(Math.max(0, this.arrayDimensions)) + this.baseType.getDescriptor();
     }
 }

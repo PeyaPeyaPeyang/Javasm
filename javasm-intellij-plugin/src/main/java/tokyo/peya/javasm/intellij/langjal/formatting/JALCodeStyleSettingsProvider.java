@@ -20,8 +20,6 @@ public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider
         return new JALCodeStyleSettings(settings);
     }
 
-
-
     @Override
     public @NotNull CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings,
                                                              @NotNull CodeStyleSettings modelSettings)
@@ -44,7 +42,8 @@ public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider
 
     private static class JALCodeStyleMainPanel extends TabbedLanguageCodeStylePanel
     {
-        public JALCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings) {
+        public JALCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings)
+        {
             super(JALLanguage.INSTANCE, currentSettings, settings);
         }
 

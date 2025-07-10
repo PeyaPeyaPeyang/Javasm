@@ -1,6 +1,5 @@
 package tokyo.peya.javasm.intellij.langjal.parser;
 
-import com.intellij.psi.PsiElement;
 import com.intellij.psi.tree.TokenSet;
 import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;

@@ -2,65 +2,65 @@
 <list>
     <option name="JAL_CLASS_NAME">
         <value>
-            <option name="FOREGROUND" value="36ca91" />
-            <option name="EFFECT_TYPE" value="1" />
+            <option name="FOREGROUND" value="36ca91"/>
+            <option name="EFFECT_TYPE" value="1"/>
         </value>
     </option>
     <option name="JAL_INSN_ARRAY_ACCESS">
         <value>
-            <option name="FOREGROUND" value="4aafde" />
+            <option name="FOREGROUND" value="4aafde"/>
         </value>
     </option>
     <option name="JAL_INSN_ARRAY_CREATIONS">
         <value>
-            <option name="FOREGROUND" value="18a5d1" />
+            <option name="FOREGROUND" value="18a5d1"/>
         </value>
     </option>
     <option name="JAL_INSN_FIELD_ACCESS">
         <value>
-            <option name="FOREGROUND" value="a678de" />
-            <option name="EFFECT_COLOR" value="535353" />
-            <option name="EFFECT_TYPE" value="1" />
+            <option name="FOREGROUND" value="a678de"/>
+            <option name="EFFECT_COLOR" value="535353"/>
+            <option name="EFFECT_TYPE" value="1"/>
         </value>
     </option>
     <option name="JAL_INSN_FLOW_CONTROLS">
         <value>
-            <option name="FOREGROUND" value="608eea" />
+            <option name="FOREGROUND" value="608eea"/>
         </value>
     </option>
     <option name="JAL_INSN_FLOW_JUMP">
         <value>
-            <option name="FOREGROUND" value="dc6c6c" />
+            <option name="FOREGROUND" value="dc6c6c"/>
         </value>
     </option>
     <option name="JAL_INSN_INSTANCE_CREATION">
         <value>
-            <option name="FOREGROUND" value="cd6ddc" />
+            <option name="FOREGROUND" value="cd6ddc"/>
         </value>
     </option>
     <option name="JAL_INSN_VALUE_CALCULATIONS">
         <value>
-            <option name="FOREGROUND" value="55d0b2" />
+            <option name="FOREGROUND" value="55d0b2"/>
         </value>
     </option>
     <option name="JAL_INSN_VALUE_CASTINGS">
         <value>
-            <option name="FOREGROUND" value="55d0b2" />
+            <option name="FOREGROUND" value="55d0b2"/>
         </value>
     </option>
     <option name="JAL_INSN_VALUE_COMPARISONS">
         <value>
-            <option name="FOREGROUND" value="55d0b2" />
+            <option name="FOREGROUND" value="55d0b2"/>
         </value>
     </option>
     <option name="JAL_INSN_VALUE_GENERATIONS">
         <value>
-            <option name="FOREGROUND" value="69cc5d" />
+            <option name="FOREGROUND" value="69cc5d"/>
         </value>
     </option>
     <option name="JAL_LABEL">
         <value>
-            <option name="FOREGROUND" value="b5c76f" />
+            <option name="FOREGROUND" value="b5c76f"/>
         </value>
     </option>
 </list>

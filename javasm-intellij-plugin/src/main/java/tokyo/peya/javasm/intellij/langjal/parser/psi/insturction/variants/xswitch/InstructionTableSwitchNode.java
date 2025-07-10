@@ -16,7 +16,10 @@ public class InstructionTableSwitchNode extends InstructionNode
     @NotNull
     public InstructionTableSwitchArgumentNode getTableSwitchArgument()
     {
-        InstructionTableSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(this, InstructionTableSwitchArgumentNode.class);
+        InstructionTableSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(
+                this,
+                InstructionTableSwitchArgumentNode.class
+        );
         if (argumentNode == null)
             throw new IllegalStateException("Table switch instruction must have an argument node.");
         return argumentNode;

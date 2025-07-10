@@ -3,7 +3,6 @@ package tokyo.peya.javasm.langjal.compiler;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 import java.util.function.Function;
 

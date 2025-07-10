@@ -1,6 +1,5 @@
 package tokyo.peya.javasm.intellij.langjal.structureview.views;
 
-import com.intellij.psi.PsiElement;
 import com.intellij.util.PlatformIcons;
 import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;

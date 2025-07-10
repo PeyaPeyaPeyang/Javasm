@@ -15,12 +15,14 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.JALTokens;
 
-public class JALFormattingModelBuilder implements FormattingModelBuilder {
+public class JALFormattingModelBuilder implements FormattingModelBuilder
+{
 
     @Override
     public @NotNull FormattingModel createModel(
             FormattingContext formattingContext
-    ) {
+    )
+    {
         PsiElement element = formattingContext.getPsiElement();
         CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
 
@@ -37,7 +39,8 @@ public class JALFormattingModelBuilder implements FormattingModelBuilder {
         );
     }
 
-    private SpacingBuilder createSpacingBuilder(CodeStyleSettings settings) {
+    private SpacingBuilder createSpacingBuilder(CodeStyleSettings settings)
+    {
         CommonCodeStyleSettings jalSettings = settings.getCommonSettings("JAL"); // 言語ID
 
         return new SpacingBuilder(settings, JALLanguage.INSTANCE)

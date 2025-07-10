@@ -3,7 +3,6 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswit
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.webSymbols.customElements.json.Return;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
@@ -49,6 +48,7 @@ public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
         if (this.isDefaultCase())
             return "InstructionLookupSwitchCaseNode(default -> " + this.getBranchLabel().getText() + ")";
         else
-            return "InstructionLookupSwitchCaseNode(" + this.getCaseNumber() + " -> " + this.getBranchLabel().getText() + ")";
+            return "InstructionLookupSwitchCaseNode(" + this.getCaseNumber() + " -> " + this.getBranchLabel()
+                                                                                            .getText() + ")";
     }
 }

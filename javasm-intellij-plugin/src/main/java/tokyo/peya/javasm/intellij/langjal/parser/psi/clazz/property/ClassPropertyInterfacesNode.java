@@ -20,7 +20,7 @@ public class ClassPropertyInterfacesNode extends ClassPropertyNode
     {
         IdentifierNode[] identifierNodes = this.findChildrenByClass(IdentifierNode.class);
         return Arrays.stream(identifierNodes)
-                .map(IdentifierNode::getName)
-                .toArray(String[]::new);
+                     .map(IdentifierNode::getName)
+                     .toArray(String[]::new);
     }
 }

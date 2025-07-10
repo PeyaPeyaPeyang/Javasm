@@ -45,7 +45,7 @@ public class MethodReferenceNode extends InstructionNode
     @Override
     public String toString()
     {
-        String owner = this.getMethodOwner() == null ? "" : this.getMethodOwner().getText() + "->";
+        String owner = this.getMethodOwner() == null ? "": this.getMethodOwner().getText() + "->";
         return "MethodReference(" + owner + "this." + this.getMethodName() + this.getMethodDescriptor() + ")";
     }
 

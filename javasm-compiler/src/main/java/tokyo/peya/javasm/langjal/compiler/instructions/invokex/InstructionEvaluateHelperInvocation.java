@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.MethodInsnNode;
 import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 public class InstructionEvaluateHelperInvocation

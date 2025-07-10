@@ -31,7 +31,8 @@ public enum AccessAttribute
 
     public static AccessAttribute fromString(String name)
     {
-        return switch (name.trim().toLowerCase()) {
+        return switch (name.trim().toLowerCase())
+        {
             case "static" -> STATIC;
             case "final" -> FINAL;
             case "super" -> SUPER;

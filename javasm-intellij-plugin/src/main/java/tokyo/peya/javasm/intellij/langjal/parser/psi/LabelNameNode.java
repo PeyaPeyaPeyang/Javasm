@@ -30,7 +30,7 @@ public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiN
         );
 
         PsiElement oldID = this.findChildByType(JALParserDefinition.ID);
-        assert oldID != null : "LabelNameNode must have an ID child node";
+        assert oldID != null: "LabelNameNode must have an ID child node";
 
         if (newID != null)
         {

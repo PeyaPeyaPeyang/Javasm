@@ -15,7 +15,8 @@ public class JALStructureViewFactory implements PsiStructureViewFactory
     @Override
     public @Nullable StructureViewBuilder getStructureViewBuilder(@NotNull PsiFile psiFile)
     {
-        return new TreeBasedStructureViewBuilder() {
+        return new TreeBasedStructureViewBuilder()
+        {
             @Override
             public @NotNull StructureViewModel createStructureViewModel(@Nullable Editor editor)
             {

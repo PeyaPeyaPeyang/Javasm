@@ -2,7 +2,6 @@ package tokyo.peya.javasm.intellij.langjal.structureview.views;
 
 import com.intellij.ide.util.treeView.smartTree.TreeElement;
 import com.intellij.navigation.ItemPresentation;
-import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
@@ -32,7 +31,7 @@ public class MethodStructureView extends JALStructureViewElementBase
             return TreeElement.EMPTY_ARRAY;
 
         return Arrays.stream(instructionSet)
-                .map(InstructionSetStructureView::new)
-                .toArray(TreeElement[]::new);
+                     .map(InstructionSetStructureView::new)
+                     .toArray(TreeElement[]::new);
     }
 }

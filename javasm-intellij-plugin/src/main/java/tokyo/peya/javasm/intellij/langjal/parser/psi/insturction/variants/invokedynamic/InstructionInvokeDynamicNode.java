@@ -38,7 +38,10 @@ public class InstructionInvokeDynamicNode extends InstructionNode
     @NotNull
     public InvokeDynamicMethodHandleNode getBootstrapMethodHandle()
     {
-        InvokeDynamicMethodHandleNode bootstrapMethodHandleNode = PsiTreeUtil.findChildOfType(this, InvokeDynamicMethodHandleNode.class);
+        InvokeDynamicMethodHandleNode bootstrapMethodHandleNode = PsiTreeUtil.findChildOfType(
+                this,
+                InvokeDynamicMethodHandleNode.class
+        );
         if (bootstrapMethodHandleNode == null)
             throw new IllegalStateException("InstructionInvokeDynamic must have a InvokeDynamicMethodHandleNode child");
 
@@ -50,7 +53,8 @@ public class InstructionInvokeDynamicNode extends InstructionNode
     {
         InvokeDynamicArgumentNode[] arguments = this.findChildrenByClass(InvokeDynamicArgumentNode.class);
         if (arguments.length == 0)
-            throw new IllegalStateException("InstructionInvokeDynamic must have at least one InvokeDynamicArgumentNode child");
+            throw new IllegalStateException(
+                    "InstructionInvokeDynamic must have at least one InvokeDynamicArgumentNode child");
 
         return arguments;
     }

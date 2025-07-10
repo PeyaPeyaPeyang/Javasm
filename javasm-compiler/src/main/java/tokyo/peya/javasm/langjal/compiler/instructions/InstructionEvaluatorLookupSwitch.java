@@ -7,8 +7,8 @@ import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
 import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
-import tokyo.peya.javasm.langjal.compiler.LabelInfo;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.LabelInfo;
 
 import java.util.LinkedList;
 import java.util.List;

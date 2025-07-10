@@ -3,7 +3,6 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
-import com.intellij.psi.util.PsiUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;

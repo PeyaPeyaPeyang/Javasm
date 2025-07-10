@@ -3,18 +3,14 @@ package tokyo.peya.javasm.intellij.jvm;
 import lombok.Getter;
 
 @Getter
-public class DescriptorReader {
+public class DescriptorReader
+{
     private final String source;
     private int pos;
 
     private DescriptorReader(String source)
     {
         this.source = source;
-    }
-
-    public static DescriptorReader fromString(String source)
-    {
-        return new DescriptorReader(source);
     }
 
     public boolean hasMore()
@@ -37,5 +33,10 @@ public class DescriptorReader {
         char c = read();
         if (c != expected)
             throw new IllegalArgumentException("Expected '" + expected + "' but got '" + c + "'");
+    }
+
+    public static DescriptorReader fromString(String source)
+    {
+        return new DescriptorReader(source);
     }
 }

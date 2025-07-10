@@ -7,7 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.jvm.TypeDescriptor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 
 public class FieldReferenceNode extends ANTLRPsiNode
 {

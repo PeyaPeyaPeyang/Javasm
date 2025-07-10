@@ -34,13 +34,15 @@ public class JALBlock extends AbstractBlock
             @Nullable Wrap wrap,
             @Nullable Alignment alignment,
             SpacingBuilder spacingBuilder
-    ) {
+    )
+    {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
     }
 
     @Override
-    protected List<Block> buildChildren() {
+    protected List<Block> buildChildren()
+    {
         List<Block> blocks = new ArrayList<>();
         ASTNode child = this.myNode.getFirstChildNode();
         while (child != null)
@@ -58,7 +60,8 @@ public class JALBlock extends AbstractBlock
     }
 
     @Override
-    public Indent getIndent() {
+    public Indent getIndent()
+    {
         IElementType type = this.myNode.getElementType();
         if (!(type instanceof RuleIElementType rule))
             return Indent.getNoneIndent();
@@ -66,14 +69,13 @@ public class JALBlock extends AbstractBlock
         int ruleIndex = rule.getRuleIndex();
 
         if (ruleIndex == JALParser.RULE_classMetaItem
-            || ruleIndex == JALParser.RULE_fieldDefinition
-            || ruleIndex == JALParser.RULE_methodDefinition
-            || ruleIndex == JALParser.RULE_instruction)
+                || ruleIndex == JALParser.RULE_fieldDefinition
+                || ruleIndex == JALParser.RULE_methodDefinition
+                || ruleIndex == JALParser.RULE_instruction)
             return Indent.getNormalIndent();
 
         return Indent.getNoneIndent();
     }
-
 
     @Override
     public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2)
@@ -96,6 +98,7 @@ public class JALBlock extends AbstractBlock
 
         return new ChildAttributes(Indent.getNoneIndent(), null);
     }
+
     private int calcColumn(Block block)
     {
         ASTNode node = ((JALBlock) block).getNode();

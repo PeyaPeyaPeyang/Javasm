@@ -84,7 +84,6 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
         return accessModifierNode.getAccessAttributes();
     }
 
-
     @NotNull
     public MethodDefinitionNode[] getMethods()
     {
@@ -94,9 +93,9 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
 
         List<ClassBodyItemNode> bodyItems = PsiTreeUtil.getChildrenOfTypeAsList(classBodyNode, ClassBodyItemNode.class);
         return bodyItems.stream()
-                .filter(ClassBodyItemNode::isMethod)
-                .map(ClassBodyItemNode::getMethod)
-                .filter(Objects::nonNull)
-                .toArray(MethodDefinitionNode[]::new);
+                        .filter(ClassBodyItemNode::isMethod)
+                        .map(ClassBodyItemNode::getMethod)
+                        .filter(Objects::nonNull)
+                        .toArray(MethodDefinitionNode[]::new);
     }
 }
