@@ -280,6 +280,7 @@ RBR: '}';
 LBK: '[';
 RBK: ']';
 REF: '->';
+TIL: '~';
 
 root : classDefinition? EOF ;
 
@@ -304,7 +305,7 @@ methodDefinition : accModMethod methodName methodDescriptor methodBody;
 
 methodName : ID | KWD_MNAME_INIT | KWD_MNAME_CLINIT;
 methodBody : LBR instructionSet* RBR;
-instructionSet : label? (instruction SEMI?)+;
+instructionSet : (label tryCatchDirective?)? (instruction SEMI?)+;
 
 typeDescriptor : LBK* (typeDescriptorPrimitive | TYPE_DESC_OBJECT);
 typeDescriptorPrimitive : TYPE_DESC_BYTE | TYPE_DESC_CHAR | TYPE_DESC_DOUBLE | TYPE_DESC_FLOAT | TYPE_DESC_INT
@@ -325,6 +326,12 @@ accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE 
 
 label : labelName COLON;
 labelName : ID;
+
+tryCatchDirective : LBR TIL labelName COMMA tryCatchDirectiveEntry (COMMA tryCatchDirectiveEntry)* RBR;
+tryCatchDirectiveEntry : catchDirective | finallyDirective;
+catchDirective : FULL_QUALIFIED_CLASS_NAME COLON labelName finallyDirective?;
+finallyDirective : REF labelName;
+
 
 jvmInsArgScalarType : STRING | NUMBER | BOOLEAN;
 

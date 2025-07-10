@@ -9,6 +9,7 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.TryCatchBlockNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,6 +29,8 @@ public class JALMethodEvaluator
     private final List<LabelInfo> labels;
     @Getter(AccessLevel.NONE)
     private final List<InstructionInfo> instructions;
+    @Getter(AccessLevel.NONE)
+    private final List<TryCatchDirective> tryCatchDirectives;
 
     private final Label globalStartLocalLabel;
     private final Label globalEndLocalLabel;
@@ -43,6 +46,7 @@ public class JALMethodEvaluator
         this.locals = new LinkedList<>();
         this.labels = new ArrayList<>();
         this.instructions = new ArrayList<>();
+        this.tryCatchDirectives = new ArrayList<>();
 
         this.globalStartLocalLabel = new Label();
         this.globalEndLocalLabel = new Label();
@@ -61,6 +65,7 @@ public class JALMethodEvaluator
     {
         this.evaluateLocals();
         this.finaliseInstructionAndLabels();
+        this.finaliseTryCatchDirectives();
     }
 
     private void finaliseInstructionAndLabels()
@@ -109,6 +114,41 @@ public class JALMethodEvaluator
         }
 
         this.finaliseLocalEvaluation();
+    }
+
+    private void finaliseTryCatchDirectives()
+    {
+        if (this.tryCatchDirectives.isEmpty())
+            return;  // トライキャッチディレクティブがない場合は何もしない
+
+        this.context.postInfo("Finalising try-catch directives for method " + this.method.name + this.method.desc);
+        for (TryCatchDirective directive : this.tryCatchDirectives)
+        {
+            LabelNode tryBlock = directive.tryBlockStartLabel().node();
+            LabelNode tryEndBlock = directive.tryBlockEndLabel().node();
+            String exceptionType = directive.exceptionType();
+            LabelNode catchBlock = directive.catchBlockLabel() == null ? null : directive.catchBlockLabel().node();
+            LabelNode finallyBlock = directive.finallyBlockLabel() == null ? null : directive.finallyBlockLabel().node();
+
+            // トライキャッチブロックをメソッドに追加
+            this.method.tryCatchBlocks.add(new TryCatchBlockNode(
+                    tryBlock,
+                    tryEndBlock,
+                    catchBlock,
+                    exceptionType
+            ));
+            // finally ブロックがある場合は、トライキャッチブロックに追加
+            if (finallyBlock != null)
+            {
+                // finally ブロックは try-catch ブロックの後に追加される
+                this.method.tryCatchBlocks.add(new TryCatchBlockNode(
+                        tryBlock,
+                        tryEndBlock,
+                        finallyBlock,
+                        null  // finally ブロックは例外型を持たない
+                ));
+            }
+        }
     }
 
     private void prepareLocalEvaluation()
@@ -170,6 +210,7 @@ public class JALMethodEvaluator
 
         this.method.visitCode();
         this.evaluateLabels(body);
+        this.evaluateTryCatchDirectives(body);
         this.evaluateInstructions(body);
         this.method.visitEnd();
     }
@@ -209,6 +250,73 @@ public class JALMethodEvaluator
                     1
             ));
         }
+    }
+
+    private void evaluateTryCatchDirectives(JALParser.MethodBodyContext body)
+    {
+        for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
+        {
+            if (bodyItem.tryCatchDirective() == null)
+                continue;  // トライキャッチディレクティブがない場合はスキップ
+
+            JALParser.LabelNameContext endLabel = bodyItem.tryCatchDirective().labelName();
+            if (endLabel == null)
+                throw new IllegalArgumentException("Try-catch directive must have an end label.");
+
+            LabelInfo tryStartLabel = this.resolveLabel(bodyItem.label().labelName().getText());
+            LabelInfo tryEndLabel = this.resolveLabel(endLabel.getText());
+
+            JALParser.TryCatchDirectiveContext directiveContext = bodyItem.tryCatchDirective();
+            for (JALParser.TryCatchDirectiveEntryContext entry: directiveContext.tryCatchDirectiveEntry())
+                this.evaluateTryCatchDirective(
+                        tryStartLabel,
+                        tryEndLabel,
+                        entry
+                );
+        }
+    }
+
+    private void evaluateTryCatchDirective(@NotNull LabelInfo tryBlockStartLabel,
+                                           @NotNull LabelInfo tryBlockEndLabel,
+                                           @NotNull JALParser.TryCatchDirectiveEntryContext entry)
+    {
+        JALParser.CatchDirectiveContext catchDirective = entry.catchDirective();
+        JALParser.FinallyDirectiveContext finallyDirective = entry.finallyDirective();
+
+        if (catchDirective == null && finallyDirective == null)
+            throw new IllegalArgumentException("Try-catch directive must have at least one catch or finally block.");
+        // finally は, catcHDirective 内に指定される場合がある
+        if (finallyDirective == null)
+            finallyDirective = catchDirective.finallyDirective();
+
+        String exceptionType = null;
+        if (catchDirective != null)
+        {
+            TerminalNode exceptionTypeNode = catchDirective.FULL_QUALIFIED_CLASS_NAME();
+            if (exceptionTypeNode == null)
+                throw new IllegalArgumentException("Catch directive must have an exception type.");
+            exceptionType = exceptionTypeNode.getText();
+        }
+
+        // 各ラベルを解決
+        JALParser.LabelNameContext catchLabel = catchDirective == null ? null : catchDirective.labelName();
+        JALParser.LabelNameContext finallyLabel = finallyDirective == null ? null : finallyDirective.labelName();
+        LabelInfo catchBlockLabel = null;
+        LabelInfo finallyBlockLabel = null;
+        if (catchLabel != null)
+            catchBlockLabel = this.resolveLabel(catchLabel.getText());
+        if (finallyLabel != null)
+            finallyBlockLabel = this.resolveLabel(finallyLabel.getText());
+
+        // トライキャッチディレクティブを登録
+        TryCatchDirective directive = new TryCatchDirective(
+                tryBlockStartLabel,
+                tryBlockEndLabel,
+                catchBlockLabel,
+                exceptionType,
+                finallyBlockLabel
+        );
+        this.tryCatchDirectives.add(directive);
     }
 
     private InstructionInfo addInstruction(@NotNull InstructionInfo instruction)
