@@ -1,0 +1,34 @@
+<html>
+<body>
+<p>
+    This inspection audits instructions that push integer values onto the stack.
+</p>
+<div>
+    The targeted instructions are:
+    <ul>
+        <li><code>bipush X</code>: If the value X fits within the range of <code>iconst_X</code>, it is recommended to
+            use the corresponding <code>iconst</code> instruction instead.
+        </li>
+        <li><code>sipush X</code>: It should be replaced by <code>bipush</code> or <code>iconst</code> instructions when
+            applicable.
+        </li>
+    </ul>
+</div>
+<div>
+    The <code>iconst</code> instructions include:
+    <ul>
+        <li><code>iconst_m1</code> for -1</li>
+        <li><code>iconst_0</code> for 0</li>
+        <li><code>iconst_1</code> for 1</li>
+        <li><code>iconst_2</code> for 2</li>
+        <li><code>iconst_3</code> for 3</li>
+        <li><code>iconst_4</code> for 4</li>
+        <li><code>iconst_5</code> for 5</li>
+    </ul>
+</div>
+<p>
+    When a less efficient instruction is detected, a weak warning is reported.
+    A Quick Fix is provided to replace it with the appropriate <code>iconst</code> or <code>bipush</code> instruction.
+</p>
+</body>
+</html>

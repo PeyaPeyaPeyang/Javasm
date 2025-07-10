@@ -65,7 +65,13 @@
                          language="JAL"
                          displayName="Class name inspection"
                          enabledByDefault="true"
-                         level="ERROR"
+                         level="GENERIC_ERROR"
+                         groupName="JAL Inspections"/>
+        <localInspection implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.JALPushIntegerInspection"
+                         language="JAL"
+                         displayName="Push integer inspection"
+                         enabledByDefault="true"
+                         level="WARNING"
                          groupName="JAL Inspections"/>
     </extensions>
     <actions>
