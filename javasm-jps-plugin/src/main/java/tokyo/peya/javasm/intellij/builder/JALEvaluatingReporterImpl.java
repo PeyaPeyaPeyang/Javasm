@@ -20,57 +20,57 @@ public class JALEvaluatingReporterImpl implements EvaluatingReporter
     public static final String COMPILER_NAME = "JavaSM JAL Compiler";
 
     private final CompileContext compileContext;
-    private final Path processingFile;
 
     @Override
-    public void postError(@NotNull String message)
+    public void postError(@NotNull String message, @NotNull Path sourcePath)
     {
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
                         BuildMessage.Kind.ERROR,
                         message,
-                        this.processingFile.toString()
+                        sourcePath.toString()
                 )
         );
     }
 
     @Override
-    public void postWarning(@NotNull String message)
+    public void postWarning(@NotNull String message, @NotNull Path sourcePath)
     {
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
                         BuildMessage.Kind.WARNING,
                         message,
-                        this.processingFile.toString()
+                        sourcePath.toString()
                 )
         );
     }
 
     @Override
-    public void postInfo(@NotNull String message)
+    public void postInfo(@NotNull String message, @NotNull Path sourcePath)
     {
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
                         BuildMessage.Kind.INFO,
                         message,
-                        this.processingFile.toString()
+                        sourcePath.toString()
                 )
         );
     }
 
     @Override
-    public void postError(@NotNull String message, @NotNull Throwable cause)
+    public void postError(@NotNull String message, @NotNull Throwable cause, @NotNull Path sourcePath)
     {
-        this.postError(message, cause, -1, -1, -1);
+        this.postError(message, cause, sourcePath, -1, -1, -1);
     }
 
     @Override
-    public void postError(@NotNull String message, @NotNull Throwable e, long line, long column, long length)
+    public void postError(@NotNull String message, @NotNull Throwable e, @NotNull Path sourcePath, long line,
+                          long column, long length)
     {
-        this.postOnLine(message, BuildMessage.Kind.ERROR, line, column, length);
+        this.postOnLine(message, sourcePath, BuildMessage.Kind.ERROR, line, column, length);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         e.printStackTrace(new PrintStream(outputStream));
         this.compileContext.processMessage(
@@ -78,28 +78,29 @@ public class JALEvaluatingReporterImpl implements EvaluatingReporter
                         COMPILER_NAME,
                         BuildMessage.Kind.ERROR,
                         outputStream.toString(),
-                        this.processingFile.toString()
+                        sourcePath.toString()
                 )
         );
     }
 
     @Override
-    public void postWarning(@NotNull String message, long line, long column, long length)
+    public void postWarning(@NotNull String message, @NotNull Path sourcePath, long line, long column, long length)
     {
-        this.postOnLine(message, BuildMessage.Kind.WARNING, line, column, length);
+        this.postOnLine(message, sourcePath, BuildMessage.Kind.WARNING, line, column, length);
     }
 
     @Override
-    public void postWarning(@NotNull String message, @NotNull ParserRuleContext ctxt)
+    public void postWarning(@NotNull String message, @NotNull Path sourcePath, @NotNull ParserRuleContext ctxt)
     {
         long line = ctxt.getStart().getLine();
         long column = ctxt.getStart().getCharPositionInLine() + 1; // ANTLRは0始まりなので+1
         long length = ctxt.getStop().getStopIndex() - ctxt.getStart().getStartIndex() + 1;
-        this.postOnLine(message, BuildMessage.Kind.WARNING, line, column, length);
+        this.postOnLine(message, sourcePath, BuildMessage.Kind.WARNING, line, column, length);
     }
 
     private void postOnLine(
             @NotNull String message,
+            @NotNull Path sourcePath,
             @NotNull BuildMessage.Kind kind,
             long line,
             long column,
@@ -113,7 +114,7 @@ public class JALEvaluatingReporterImpl implements EvaluatingReporter
         long locationColumn = -1;
         try
         {
-            String content = Files.readString(this.processingFile);
+            String content = Files.readString(sourcePath);
             long offset = getOffset(content, line, column);
             problemBeginOffset = offset;
             problemEndOffset = offset + length;
@@ -129,7 +130,7 @@ public class JALEvaluatingReporterImpl implements EvaluatingReporter
                         COMPILER_NAME,
                         kind,
                         message,
-                        this.processingFile.toString(),
+                        sourcePath.toString(),
                         problemBeginOffset,
                         problemEndOffset,
                         problemLocationOffset,

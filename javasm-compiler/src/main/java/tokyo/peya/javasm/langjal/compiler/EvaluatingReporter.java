@@ -3,19 +3,22 @@ package tokyo.peya.javasm.langjal.compiler;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.file.Path;
+
 public interface EvaluatingReporter
 {
-    void postError(@NotNull String message);
+    void postWarning(@NotNull String message, @NotNull Path sourcePath);
 
-    void postWarning(@NotNull String message);
+    void postInfo(@NotNull String message, @NotNull Path sourcePath);
 
-    void postInfo(@NotNull String message);
+    void postError(@NotNull String message, @NotNull Path sourcePath);
 
-    void postError(@NotNull String message, @NotNull Throwable cause);
+    void postError(@NotNull String message, @NotNull Throwable cause, @NotNull Path sourcePath);
 
-    void postError(@NotNull String message, @NotNull Throwable cause, long line, long column, long length);
+    void postError(@NotNull String message, @NotNull Throwable cause, @NotNull Path sourcePath, long line, long column,
+                   long length);
 
-    void postWarning(@NotNull String message, long line, long column, long length);
+    void postWarning(@NotNull String message, @NotNull Path sourcePath, long line, long column, long length);
 
-    void postWarning(@NotNull String message, @NotNull ParserRuleContext ctxt);
+    void postWarning(@NotNull String message, @NotNull Path sourcePath, @NotNull ParserRuleContext ctxt);
 }

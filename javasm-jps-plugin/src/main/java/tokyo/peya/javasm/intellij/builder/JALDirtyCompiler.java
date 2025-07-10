@@ -13,6 +13,7 @@ import org.jetbrains.jps.incremental.ModuleLevelBuilder.ExitCode;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import org.objectweb.asm.tree.ClassNode;
+import tokyo.peya.javasm.langjal.compiler.JALCompiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,19 +114,17 @@ public class JALDirtyCompiler
     ) throws ProjectBuildException, IOException
     {
         ExitCode exitCode = ExitCode.OK;
+        JALCompiler compiler = new JALCompiler(
+                new JALEvaluatingReporterImpl(this.compileContext),
+                outputDir
+        );
+
         for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries())
         {
             ModuleBuildTarget target = entry.getKey();
             Path jalFile = entry.getValue();
 
-            JALCompiler compiler = new JALCompiler(
-                    target,
-                    this.compileContext,
-                    this.outputConsumer,
-                    jalFile,
-                    outputDir
-            );
-            ClassNode compiledClass = compiler.compile();
+            ClassNode compiledClass = compiler.compile(jalFile);
             if (compiledClass == null)
             {
                 this.compileContext.processMessage(new CompilerMessage(

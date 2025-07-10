@@ -19,7 +19,7 @@ import java.util.Objects;
 @Getter
 public class JALMethodEvaluator
 {
-    private final EvaluatingReporter context;
+    private final FileEvaluatingReporter context;
     private final ClassNode clazz;
     private final MethodNode method;
 
@@ -37,7 +37,7 @@ public class JALMethodEvaluator
 
     private int bytecodeOffset;
 
-    public JALMethodEvaluator(@NotNull EvaluatingReporter reporter, @NotNull ClassNode cn)
+    public JALMethodEvaluator(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
     {
         this.context = reporter;
         this.clazz = cn;

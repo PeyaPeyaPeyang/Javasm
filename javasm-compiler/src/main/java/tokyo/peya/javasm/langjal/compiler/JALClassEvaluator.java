@@ -9,7 +9,7 @@ import java.util.List;
 
 public class JALClassEvaluator
 {
-    public static ClassNode evaluateClassAST(@NotNull EvaluatingReporter reporter,
+    public static ClassNode evaluateClassAST(@NotNull FileEvaluatingReporter reporter,
                                              @NotNull JALParser.ClassDefinitionContext clazz)
     {
         ClassNode classNode = new ClassNode();
@@ -19,7 +19,7 @@ public class JALClassEvaluator
         return classNode;
     }
 
-    private static void visitClassBody(@NotNull EvaluatingReporter reporter, @NotNull ClassNode classNode,
+    private static void visitClassBody(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode classNode,
                                        @Nullable JALParser.ClassBodyContext body)
     {
         if (body == null)
