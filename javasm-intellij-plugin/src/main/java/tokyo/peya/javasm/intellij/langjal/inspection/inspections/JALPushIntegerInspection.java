@@ -41,7 +41,15 @@ public class JALPushIntegerInspection extends AbstractJALInspection
         if (argument == null)
             return;
 
-        Number number = argument.toNumber();
+        Number number;
+        try
+        {
+            number = argument.toNumber();
+        }
+        catch (Exception ignored)
+        {
+            return;
+        }
         long value = number.longValue();
 
         // 値が -1 なら, iconst_m1 を使うように促す
@@ -50,6 +58,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
             holder.registerProblem(
                     node,
                     "Pushing -1 is discouraged, use 'iconst_m1' instead",
+                    ProblemHighlightType.WEAK_WARNING,
                     new JALReplaceInstructionQuickFix("iconst_m1")
             );
         }
@@ -60,6 +69,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
             holder.registerProblem(
                     node,
                     "Pushing " + value + " is discouraged, use '" + replacementInstruction + "' instead",
+                    ProblemHighlightType.WEAK_WARNING,
                     new JALReplaceInstructionQuickFix(replacementInstruction)
             );
         }
@@ -69,7 +79,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
             holder.registerProblem(
                     node,
                     "Using 'sipush' with a value in the range of -128 to 127 is discouraged, use 'bipush' instead",
-                    ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                    ProblemHighlightType.WEAK_WARNING,
                     new JALReplaceInstructionQuickFix("bipush " + value)
             );
         }

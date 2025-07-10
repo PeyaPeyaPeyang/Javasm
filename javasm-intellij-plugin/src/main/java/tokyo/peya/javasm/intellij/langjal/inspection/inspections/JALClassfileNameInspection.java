@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.inspection.inspections;
 
 import com.intellij.codeInspection.LocalInspectionToolSession;
+import com.intellij.codeInspection.ProblemHighlightType;
 import com.intellij.codeInspection.ProblemsHolder;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.execution.PSIExecutorUtil;
@@ -33,6 +34,7 @@ public class JALClassfileNameInspection extends AbstractJALInspection
                 holder.registerProblem(
                         node.getClassNameNode(),
                         "Class file name does not match the class name: " + validationResult.relativePathFromSourceRoot(),
+                        ProblemHighlightType.GENERIC_ERROR,
                         new JALClassfileNameQuickFix(validationResult.expectedPath())
                 );
             }

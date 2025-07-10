@@ -41,7 +41,21 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
         if (argument == null)
             return;
 
-        Number number = argument.toNumber();
+        Number number;
+        try
+        {
+            number = argument.toNumber();
+        }
+        catch (Exception e)
+        {
+            holder.registerProblem(
+                    argument,
+                    "Invalid number format: " + argument.getText(),
+                    ProblemHighlightType.ERROR
+            );
+            return;
+        }
+
         double value = number.doubleValue();
         if (instructionName.equals("bipush") && (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE))
         {
