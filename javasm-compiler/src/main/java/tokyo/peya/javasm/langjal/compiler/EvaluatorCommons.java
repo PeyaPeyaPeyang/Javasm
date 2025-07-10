@@ -6,8 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
+
 public class EvaluatorCommons
 {
+
     public static int asAccessLevel(@Nullable JALParser.AccessLevelContext accessLevel)
     {
         if (accessLevel == null)
@@ -47,6 +49,7 @@ public class EvaluatorCommons
         return number.intValue();
     }
 
+    @Nullable
     public static Number toNumber(@Nullable String number)
     {
         if (number == null || number.isEmpty())
@@ -71,7 +74,7 @@ public class EvaluatorCommons
         }
         catch (NumberFormatException e)
         {
-            throw new IllegalArgumentException("Invalid number format: " + number, e);
+            return null;
         }
     }
 

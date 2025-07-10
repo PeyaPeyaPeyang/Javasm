@@ -1,0 +1,23 @@
+<html>
+<body>
+<p>
+    This inspection targets <code>bipush</code> and <code>sipush</code> instructions that push scalar values onto the
+    stack.
+</p>
+<p>
+    When the pushed value exceeds the valid range for <code>sipush</code> (i.e., beyond -32,768 to 32,767), the
+    instruction should be replaced with <code>ldc</code>.
+</p>
+<p>
+    The <code>ldc</code> instruction allows loading constants from the constant pool using the syntax:
+</p>
+<pre><code>
+ldc 1000000
+ldc "ExampleString"
+    </code></pre>
+<p>
+    This inspection reports such cases and recommends replacing <code>bipush</code> or <code>sipush</code> with <code>ldc</code>
+    when the value cannot be represented directly.
+</p>
+</body>
+</html>

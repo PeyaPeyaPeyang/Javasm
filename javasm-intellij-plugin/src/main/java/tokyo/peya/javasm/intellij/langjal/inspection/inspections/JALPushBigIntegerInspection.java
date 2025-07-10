@@ -10,11 +10,11 @@ import tokyo.peya.javasm.intellij.langjal.inspection.quickfixes.JALReplaceInstru
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class JALPushIntegerInspection extends AbstractJALInspection
+public class JALPushBigIntegerInspection extends AbstractJALInspection
 {
-    public JALPushIntegerInspection()
+    public JALPushBigIntegerInspection()
     {
-        super("JALPushInteger");
+        super("JALPushBigInteger");
     }
 
     @Override
@@ -42,35 +42,30 @@ public class JALPushIntegerInspection extends AbstractJALInspection
             return;
 
         Number number = argument.toNumber();
-        long value = number.longValue();
-
-        // 値が -1 なら, iconst_m1 を使うように促す
-        if (value == -1)
+        double value = number.doubleValue();
+        if (instructionName.equals("bipush") && (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE))
         {
-            holder.registerProblem(
-                    node,
-                    "Pushing -1 is discouraged, use 'iconst_m1' instead",
-                    new JALReplaceInstructionQuickFix("iconst_m1")
-            );
+            // 値が -128 から 127 の範囲外なら，かつそれが -32,768 から 32,767 の範囲内ならば，sipush を使うように促す
+            if (Short.MIN_VALUE <= value && value <= Short.MAX_VALUE)
+            {
+                holder.registerProblem(
+                        node,
+                        "bipush can only push values in the range of -128 to 127. " +
+                                "Use 'sipush " + argument.getText() + "' instead.",
+                        ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
+                        new JALReplaceInstructionQuickFix("sipush " + argument.getText())
+                );
+            }
         }
-        // 値が 0~5 なら, iconst_X を使える。
-        else if (0 < value && value < 5)
-        {
-            String replacementInstruction = "iconst_" + value;
-            holder.registerProblem(
-                    node,
-                    "Pushing " + value + " is discouraged, use '" + replacementInstruction + "' instead",
-                    new JALReplaceInstructionQuickFix(replacementInstruction)
-            );
-        }
-        // sipush なのに， 範囲が -128 ~ 127 なら, bipush を使うように促す
-        else if ("sipush".equals(instructionName) && (Byte.MIN_VALUE <= value && value <= Byte.MAX_VALUE))
+        // 値が -32,768 から 32,767 の範囲外ならば, ldc X を使うように促す
+        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE)
         {
             holder.registerProblem(
                     node,
-                    "Using 'sipush' with a value in the range of -128 to 127 is discouraged, use 'bipush' instead",
+                    "bipush/sipush can only push values in the range of -32,768 to 32,767. " +
+                            "Use 'ldc " + argument.getText() + "' instead.",
                     ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                    new JALReplaceInstructionQuickFix("bipush " + value)
+                    new JALReplaceInstructionQuickFix("ldc " + argument.getText())
             );
         }
     }

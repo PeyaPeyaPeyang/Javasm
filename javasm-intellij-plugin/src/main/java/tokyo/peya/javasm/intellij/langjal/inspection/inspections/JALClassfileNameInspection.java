@@ -13,7 +13,7 @@ public class JALClassfileNameInspection extends AbstractJALInspection
 {
     public JALClassfileNameInspection()
     {
-        super("JALClassfileNameInspection");
+        super("JALClassfileName");
     }
 
     @Override

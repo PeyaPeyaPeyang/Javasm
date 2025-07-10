@@ -63,18 +63,25 @@
                 implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALLanguageCodeStyleSettingsProvider"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALClassfileNameInspection"
-                         language="JAL"
-                         displayName="Class name inspection"
-                         enabledByDefault="true"
-                         level="GENERIC_ERROR"
-                         groupName="JAL Inspections"/>
+                language="JAL"
+                displayName="Class name inspection"
+                enabledByDefault="true"
+                level="GENERIC_ERROR"
+                groupName="JAL Inspections"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALPushIntegerInspection"
-                         language="JAL"
-                         displayName="Push integer inspection"
-                         enabledByDefault="true"
-                         level="WARNING"
-                         groupName="JAL Inspections"/>
+                language="JAL"
+                displayName="Push integer inspection"
+                enabledByDefault="true"
+                level="WEAK_WARNING"
+                groupName="JAL Inspections"/>
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALPushBigIntegerInspection"
+                language="JAL"
+                displayName="Push big integer inspection"
+                enabledByDefault="true"
+                level="ERROR"
+                groupName="JAL Inspections"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
