@@ -7,8 +7,6 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.tree.MethodNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;

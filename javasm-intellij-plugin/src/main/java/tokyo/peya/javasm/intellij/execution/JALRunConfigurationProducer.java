@@ -26,7 +26,8 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
                                                     @NotNull Ref<PsiElement> sourceElement)
     {
         PsiElement location = context.getPsiLocation();
-        if (location == null || isNonJAL(location.getContainingFile())) return false;
+        if (location == null || isNonJAL(location.getContainingFile()))
+            return false;
 
         JALFile jalFile = (JALFile) location.getContainingFile();
         String mainClassName = findMainClassForJal(jalFile);

@@ -7,6 +7,7 @@ import org.jetbrains.jps.builders.BuildTargetType;
 import org.jetbrains.jps.model.JpsModel;
 import org.jetbrains.jps.model.module.JpsModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
@@ -21,9 +22,14 @@ public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
     }
 
     @Override
-    public @NotNull List<JALBuildTarget> computeAllTargets(@NotNull JpsModel jpsModel)
+    public @NotNull List<JALBuildTarget> computeAllTargets(@NotNull JpsModel model)
     {
-        return List.of();
+        List<JALBuildTarget> result = new ArrayList<>();
+
+        for (JpsModule module : model.getProject().getModules())
+            result.add(new JALBuildTarget(module));
+
+        return result;
     }
 
     @Override

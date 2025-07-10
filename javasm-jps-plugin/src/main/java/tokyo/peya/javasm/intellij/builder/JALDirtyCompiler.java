@@ -16,8 +16,10 @@ import org.objectweb.asm.tree.ClassNode;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -83,6 +85,7 @@ public class JALDirtyCompiler
             files.put(modTarget, filePath);
             return true;
         });
+        this.deleteRemovedFiles(this.dirtyFilesHolder.getRemoved(target));
 
         if (files.isEmpty())
         {
@@ -95,6 +98,13 @@ public class JALDirtyCompiler
         }
 
         return this.compileJALFiles(files, outputDir);
+    }
+
+    private void deleteRemovedFiles(Collection<? extends Path> removedFiles) throws IOException
+    {
+        for (Path file : removedFiles)
+            if (Files.exists(file))
+                Files.delete(file);
     }
 
     private ExitCode compileJALFiles(

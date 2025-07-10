@@ -35,10 +35,4 @@ public class JALBuildRootDescriptor extends BuildRootDescriptor
     {
         return this.target;
     }
-
-    @Override
-    public boolean isGenerated()
-    {
-        return false;
-    }
 }
