@@ -299,7 +299,7 @@ classPropSuperClass: KWD_CLASS_PROP_SUPER_CLASS EQ className;
 classPropInterfaces: KWD_CLASS_PROP_INTERFACES EQ className (COMMA className)*;
 
 classBodyItem : fieldDefinition | methodDefinition;
-fieldDefinition : accModField fieldName COLON typeDescriptor;
+fieldDefinition : accModField fieldName COLON typeDescriptor (EQ jvmInsArgScalarType)?;
 fieldName : ID;
 methodDefinition : accModMethod methodName methodDescriptor methodBody;
 

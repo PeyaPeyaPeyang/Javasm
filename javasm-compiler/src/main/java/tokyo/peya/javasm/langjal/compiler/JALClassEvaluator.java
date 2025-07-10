@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FieldNode;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,11 +34,50 @@ public class JALClassEvaluator
                 JALMethodEvaluator evaluator = new JALMethodEvaluator(reporter, classNode);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
+            if (item.fieldDefinition() != null)
+                visitField(classNode, item.fieldDefinition());
         }
     }
 
-    private static void visitClassInformation(ClassNode classNode,
-                                              JALParser.ClassDefinitionContext definitionContext)
+    private static void visitField(@NotNull ClassNode classNode,
+                                   @NotNull JALParser.FieldDefinitionContext fieldDefinition)
+    {
+        JALParser.AccModFieldContext accessModifier = fieldDefinition.accModField();
+        String fieldName = fieldDefinition.fieldName().getText();
+        String fieldType = fieldDefinition.typeDescriptor().getText();
+        Object scalarValue = null;
+
+        if (fieldDefinition.jvmInsArgScalarType() != null)
+            scalarValue = evaluateScalar(fieldDefinition.jvmInsArgScalarType());
+
+        int modifier = visitFieldAccessModifier(accessModifier);
+        FieldNode fieldNode = new FieldNode(
+                modifier,
+                fieldName,
+                fieldType,
+                null, // signature
+                scalarValue // value
+        );
+        classNode.fields.add(fieldNode);
+    }
+
+    private static Object evaluateScalar(JALParser.JvmInsArgScalarTypeContext scalar)
+    {
+        if (scalar.NUMBER() != null)
+            return EvaluatorCommons.toNumber(scalar.NUMBER().getText());
+        else if (scalar.STRING() != null)
+        {
+            String value = scalar.STRING().getText();
+            return value.substring(1, value.length() - 1); // Remove quotes
+        }
+        else if (scalar.BOOLEAN() != null)
+            return EvaluatorCommons.toBoolean(scalar.BOOLEAN().getText());
+        else
+            throw new IllegalArgumentException("Unsupported scalar type: " + scalar.getText());
+    }
+
+    private static void visitClassInformation(@NotNull ClassNode classNode,
+                                              @NotNull JALParser.ClassDefinitionContext definitionContext)
     {
         int major = -1;
         int minor = -1;
@@ -109,4 +149,28 @@ public class JALClassEvaluator
         return modifier;
     }
 
+    private static int visitFieldAccessModifier(@NotNull JALParser.AccModFieldContext accessModifier)
+    {
+        JALParser.AccessLevelContext accessLevel = accessModifier.accessLevel();
+        List<JALParser.AccAttrFieldContext> attributes = accessModifier.accAttrField();
+
+        int modifier = EvaluatorCommons.asAccessLevel(accessLevel);
+        for (JALParser.AccAttrFieldContext attr : attributes)
+        {
+            if (attr.KWD_ACC_ATTR_FINAL() != null)
+                modifier |= EOpcodes.ACC_FINAL;
+            else if (attr.KWD_ACC_ATTR_STATIC() != null)
+                modifier |= EOpcodes.ACC_STATIC;
+            else if (attr.KWD_ACC_ATTR_VOLATILE() != null)
+                modifier |= EOpcodes.ACC_VOLATILE;
+            else if (attr.KWD_ACC_ATTR_TRANSIENT() != null)
+                modifier |= EOpcodes.ACC_TRANSIENT;
+            else if (attr.KWD_ACC_ATTR_SYNTHETIC() != null)
+                modifier |= EOpcodes.ACC_SYNTHETIC;
+            else if (attr.KWD_ACC_ATTR_ENUM() != null)
+                modifier |= EOpcodes.ACC_ENUM;
+        }
+
+        return modifier;
+    }
 }
