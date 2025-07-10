@@ -7,8 +7,10 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.execution.PSIExecutorUtil;
 import tokyo.peya.javasm.intellij.jvm.DescriptorReader;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethodClInitNode;
@@ -29,8 +31,8 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
     private static void highlightIdentifiers(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
     {
         // クラス名, メソッド名
-        if (element instanceof ClassNameNode)
-            highlight(element, holder, JALSyntaxHighlighter.CLASS_NAME);
+        if (element instanceof ClassNameNode className)
+            highlightClassName(className, holder);
         else if (element instanceof MethodNameNode
                 || element instanceof IdentifierMethodClInitNode
                 || element instanceof IdentifierMethodInitNode)
@@ -51,6 +53,29 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
 
         if (element instanceof MethodDescriptorNode method)
             highlightMethodDescriptor(method, holder);
+    }
+
+    private static void highlightClassName(@NotNull ClassNameNode node, @NotNull AnnotationHolder holder)
+    {
+        // クラス名のハイライト
+        highlight(node, holder, JALSyntaxHighlighter.CLASS_NAME);
+
+        // クラスが ClassDefinition の子である場合，正しい名前か（ファイル名と合っているか検証する）
+        PsiElement parent = node.getParent();
+        if (!(parent instanceof ClassDefinitionNode classDef))
+            return;
+
+        PSIExecutorUtil.ClassNameValidationResult validationResult =
+                PSIExecutorUtil.validateClassName(classDef);
+        if (validationResult == null || validationResult.isValid())
+            return;
+
+        // クラス名がファイル名と一致しない場合はエラーを表示
+        holder.newAnnotation(
+                HighlightSeverity.ERROR,
+                "Class name does not match file name/path. " +
+                        "Expected: " + validationResult.relativePathFromSourceRoot()
+        ).range(node.getTextRange()).create();
     }
 
     private static void highlightMethodDescriptor(@NotNull MethodDescriptorNode node, @NotNull AnnotationHolder holder)

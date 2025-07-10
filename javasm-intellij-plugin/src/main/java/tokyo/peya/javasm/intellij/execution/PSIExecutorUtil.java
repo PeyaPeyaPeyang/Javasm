@@ -2,18 +2,23 @@ package tokyo.peya.javasm.intellij.execution;
 
 import com.intellij.openapi.module.Module;
 import com.intellij.openapi.module.ModuleUtilCore;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.roots.ModuleRootManager;
+import com.intellij.openapi.roots.ProjectFileIndex;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
 import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
+
+import java.nio.file.Path;
 
 @UtilityClass
 public class PSIExecutorUtil
@@ -80,4 +85,41 @@ public class PSIExecutorUtil
 
         return false;
     }
+
+    @Nullable
+    public static ClassNameValidationResult validateClassName(@NotNull ClassDefinitionNode clazz)
+    {
+        JALFile file = (JALFile) clazz.getContainingFile();
+        Project project = file.getProject();
+        ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
+
+        VirtualFile sourceRoot = fileIndex.getSourceRootForFile(file.getVirtualFile());
+        if (sourceRoot == null)
+            return null;
+
+        String className = clazz.getClassName();
+        String packageName = clazz.getPackageName();
+
+        // ここで，実際のソースルート内のパスと，パッケージが一致するかを見る。
+        // 一致しなかったらエラーを出す。
+        Path sourceRootPath = sourceRoot.toNioPath();
+        Path expectedPath = sourceRootPath.resolve(packageName)
+                                          .resolve(className + ".jal");
+
+        Path relativePath = sourceRootPath.relativize(file.getVirtualFile().toNioPath());
+        VirtualFile expectedFile = sourceRoot.getFileSystem().findFileByPath(expectedPath.toString());
+        return new ClassNameValidationResult(
+                expectedFile != null && expectedFile.isValid(),
+                expectedPath,
+                relativePath
+        );
+    }
+
+    public record ClassNameValidationResult(
+            boolean isValid,
+            @NotNull
+            Path expectedPath,
+            @NotNull
+            Path relativePathFromSourceRoot
+    ) {}
 }
