@@ -10,7 +10,6 @@ import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.project.Project;
 import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
@@ -18,6 +17,7 @@ import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.RuleIElementType;
+import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
@@ -73,6 +73,8 @@ public class JALBlock extends AbstractBlock
                 || ruleIndex == JALParser.RULE_methodDefinition
                 || ruleIndex == JALParser.RULE_instruction)
             return Indent.getNormalIndent();
+        else if (ruleIndex == JALParser.RULE_label)
+            return Indent.getLabelIndent();
 
         return Indent.getNoneIndent();
     }
@@ -99,20 +101,47 @@ public class JALBlock extends AbstractBlock
         return new ChildAttributes(Indent.getNoneIndent(), null);
     }
 
-    private int calcColumn(Block block)
+    private int calcColumn(Block prevBlock)
     {
-        ASTNode node = ((JALBlock) block).getNode();
-        PsiElement psi = node.getPsi();
+        ASTNode prevNode = ((JALBlock) prevBlock).getNode();
+        IElementType prevType = prevNode.getElementType();
+
+        // { のあとの調整
+        IElementType thisType = this.myNode.getElementType();
+        if (thisType instanceof RuleIElementType rule)
+        {
+            int ruleIndex = rule.getRuleIndex();
+            if (ruleIndex == JALParser.RULE_classBody)
+                return 1; // 固定カラム
+        }
+
+        // 命令ノードなら固定カラムにする（例えば 4 カラム）
+        if (prevType instanceof RuleIElementType rule)
+        {
+            int ruleIndex = rule.getRuleIndex();
+            if (ruleIndex == JALParser.RULE_instruction)
+                return 2; // 固定カラム
+        }
+        if (prevType instanceof TokenIElementType token)
+        {
+            int tokenIndex = token.getANTLRTokenType();
+            if (tokenIndex == JALParser.LINE_COMMENT
+                    || tokenIndex == JALParser.BLOCK_COMMENT
+                    || tokenIndex == JALParser.LBR)
+                return 2; // 固定カラム
+        }
+
+        // 普通の方法
+        PsiElement psi = prevNode.getPsi();
         if (psi == null)
-            return 0;
+            return 4;
 
         PsiFile file = psi.getContainingFile();
-        Project project = psi.getProject();
-        Document doc = PsiDocumentManager.getInstance(project).getDocument(file);
+        Document doc = PsiDocumentManager.getInstance(psi.getProject()).getDocument(file);
         if (doc == null)
-            return 0;
+            return 4;
 
-        int offset = node.getTextRange().getStartOffset();
+        int offset = prevNode.getTextRange().getStartOffset();
         int lineStart = doc.getLineStartOffset(doc.getLineNumber(offset));
         return offset - lineStart;
     }
