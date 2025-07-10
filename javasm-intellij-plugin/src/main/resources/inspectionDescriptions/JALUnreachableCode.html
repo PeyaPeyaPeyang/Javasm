@@ -1,0 +1,30 @@
+<html>
+<body>
+<p>
+    This inspection analyzes all instructions in the code and reports instructions that are unreachable at runtime.
+</p>
+<p>
+    An instruction is considered unreachable if the control flow cannot reach it due to preceding unconditional control
+    transfer, such as jumps or method exits.
+</p>
+<p>
+    The following instructions are considered to cause unconditional control flow termination:
+</p>
+<ul>
+    <li><code>goto</code></li>
+    <li><code>return</code></li>
+    <li><code>ireturn</code>, <code>lreturn</code>, <code>freturn</code>, <code>dreturn</code>, <code>areturn</code>
+    </li>
+    <li><code>athrow</code></li>
+    <li><code>tableswitch</code> and <code>lookupswitch</code> (when all branches jump away)</li>
+</ul>
+<p>
+    Note: <code>jsr</code> (jump to subroutine) is <strong>not</strong> considered to terminate control flow, as
+    execution resumes after the subroutine completes.
+</p>
+<p>
+    Instructions that follow such terminating instructions and are not the target of any jump or exception handler are
+    flagged with a warning.
+</p>
+</body>
+</html>

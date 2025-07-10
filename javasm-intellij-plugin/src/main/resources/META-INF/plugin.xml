@@ -82,6 +82,13 @@
                 enabledByDefault="true"
                 level="ERROR"
                 groupName="JAL Inspections"/>
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALUnreachableCodeInspection"
+                language="JAL"
+                displayName="Unreachable code inspection"
+                enabledByDefault="true"
+                level="WARNING"
+                groupName="JAL Inspections"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
