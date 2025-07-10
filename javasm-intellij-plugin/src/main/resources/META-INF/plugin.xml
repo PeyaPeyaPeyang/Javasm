@@ -57,6 +57,10 @@
                 implementationClass="tokyo.peya.javasm.intellij.langjal.completion.JALCompletionContributor"/>
         <lang.formatter language="JAL"
                         implementationClass="tokyo.peya.javasm.intellij.langjal.formatting.JALFormattingModelBuilder"/>
+        <codeStyleSettingsProvider
+                implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALCodeStyleSettingsProvider"/>
+        <langCodeStyleSettingsProvider
+                implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALLanguageCodeStyleSettingsProvider"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

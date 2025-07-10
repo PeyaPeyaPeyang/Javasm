@@ -24,9 +24,6 @@ public class JALFormattingModelBuilder implements FormattingModelBuilder {
         PsiElement element = formattingContext.getPsiElement();
         CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
 
-        // SpacingBuilder を定義
-        SpacingBuilder spacingBuilder = createSpacingBuilder(settings);
-
         // Block を作成（自作クラス）
         JALBlock rootBlock = new JALBlock(
                 element.getNode(),

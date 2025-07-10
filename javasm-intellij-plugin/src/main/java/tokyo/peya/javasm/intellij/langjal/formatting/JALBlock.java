@@ -9,6 +9,11 @@ import com.intellij.formatting.SpacingBuilder;
 import com.intellij.formatting.Wrap;
 import com.intellij.formatting.WrapType;
 import com.intellij.lang.ASTNode;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.project.Project;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import com.intellij.psi.TokenType;
 import com.intellij.psi.formatter.common.AbstractBlock;
 import com.intellij.psi.tree.IElementType;
@@ -63,7 +68,6 @@ public class JALBlock extends AbstractBlock
         if (ruleIndex == JALParser.RULE_classMetaItem
             || ruleIndex == JALParser.RULE_fieldDefinition
             || ruleIndex == JALParser.RULE_methodDefinition
-            //|| ruleIndex == JALParser.RULE_instructionSet
             || ruleIndex == JALParser.RULE_instruction)
             return Indent.getNormalIndent();
 
@@ -80,7 +84,34 @@ public class JALBlock extends AbstractBlock
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex)
     {
+        List<Block> subBlocks = getSubBlocks();
+
+        if (newChildIndex > 0 && newChildIndex <= subBlocks.size())
+        {
+            Block prevBlock = subBlocks.get(newChildIndex - 1);
+            int column = calcColumn(prevBlock);
+
+            return new ChildAttributes(Indent.getSpaceIndent(column), null);
+        }
+
         return new ChildAttributes(Indent.getNoneIndent(), null);
+    }
+    private int calcColumn(Block block)
+    {
+        ASTNode node = ((JALBlock) block).getNode();
+        PsiElement psi = node.getPsi();
+        if (psi == null)
+            return 0;
+
+        PsiFile file = psi.getContainingFile();
+        Project project = psi.getProject();
+        Document doc = PsiDocumentManager.getInstance(project).getDocument(file);
+        if (doc == null)
+            return 0;
+
+        int offset = node.getTextRange().getStartOffset();
+        int lineStart = doc.getLineStartOffset(doc.getLineNumber(offset));
+        return offset - lineStart;
     }
 
     @Override

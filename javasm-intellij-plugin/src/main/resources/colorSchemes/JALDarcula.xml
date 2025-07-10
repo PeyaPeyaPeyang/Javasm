@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <list>
+    <option name="JAL_CLASS_NAME">
+        <value>
+            <option name="FOREGROUND" value="36ca91" />
+            <option name="EFFECT_TYPE" value="1" />
+        </value>
+    </option>
+    <option name="JAL_INSN_ARRAY_ACCESS">
+        <value>
+            <option name="FOREGROUND" value="4aafde" />
+        </value>
+    </option>
+    <option name="JAL_INSN_ARRAY_CREATIONS">
+        <value>
+            <option name="FOREGROUND" value="18a5d1" />
+        </value>
+    </option>
+    <option name="JAL_INSN_FIELD_ACCESS">
+        <value>
+            <option name="FOREGROUND" value="a678de" />
+            <option name="EFFECT_COLOR" value="535353" />
+            <option name="EFFECT_TYPE" value="1" />
+        </value>
+    </option>
     <option name="JAL_INSN_FLOW_CONTROLS">
         <value>
             <option name="FOREGROUND" value="608eea" />
