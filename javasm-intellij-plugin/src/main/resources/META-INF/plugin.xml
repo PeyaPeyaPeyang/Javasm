@@ -52,6 +52,11 @@
         <annotator language="JAL"
                    implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JSLSyntaxHighlightAnnotator"/>
         <internalFileTemplate name="JAL Class" />
+        <completion.contributor
+                language="JAL"
+                implementationClass="tokyo.peya.javasm.intellij.langjal.completion.JALCompletionContributor"/>
+        <lang.formatter language="JAL"
+                        implementationClass="tokyo.peya.javasm.intellij.langjal.formatting.JALFormattingModelBuilder"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
