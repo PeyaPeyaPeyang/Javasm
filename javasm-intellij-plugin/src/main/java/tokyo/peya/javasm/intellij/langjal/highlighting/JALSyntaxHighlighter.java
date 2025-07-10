@@ -236,6 +236,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
                  JALLexer.INSN_FCONST_0,
                  JALLexer.INSN_FCONST_1,
                  JALLexer.INSN_FCONST_2,
+                 JALLexer.INSN_ICONST_M1,
                  JALLexer.INSN_ICONST_0,
                  JALLexer.INSN_ICONST_1,
                  JALLexer.INSN_ICONST_2,
