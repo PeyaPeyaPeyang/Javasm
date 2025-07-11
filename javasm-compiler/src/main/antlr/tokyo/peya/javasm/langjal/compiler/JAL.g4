@@ -327,7 +327,7 @@ accAttrField : KWD_ACC_ATTR_STATIC | KWD_ACC_ATTR_FINAL | KWD_ACC_ATTR_VOLATILE 
 label : labelName COLON;
 labelName : ID;
 
-tryCatchDirective : LBR TIL labelName COMMA tryCatchDirectiveEntry (COMMA tryCatchDirectiveEntry)* RBR;
+tryCatchDirective : LBK TIL labelName COMMA tryCatchDirectiveEntry (COMMA tryCatchDirectiveEntry)* RBK;
 tryCatchDirectiveEntry : catchDirective | finallyDirective;
 catchDirective : FULL_QUALIFIED_CLASS_NAME COLON labelName finallyDirective?;
 finallyDirective : REF labelName;

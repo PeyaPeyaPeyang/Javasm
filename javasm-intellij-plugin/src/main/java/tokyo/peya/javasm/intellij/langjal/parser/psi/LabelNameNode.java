@@ -44,11 +44,11 @@ public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiN
     {
         PsiElement id = this.findChildByType(JALParserDefinition.ID);
         if (id == null)
-            throw new IncorrectOperationException("LabelNameNode must have an ID child node");
+            return "<unknown>"; // ID child node must exist
 
         String name = id.getText();
         if (name == null)
-            throw new IncorrectOperationException("LabelNameNode ID child node must have a text");
+            return "<unknown>"; // ID text must not be null
         return name;
     }
 
