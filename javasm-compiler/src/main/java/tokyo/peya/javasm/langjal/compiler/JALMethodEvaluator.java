@@ -52,7 +52,6 @@ public class JALMethodEvaluator
         this.evaluateMethodMetadata(method);
         this.evaluateMethodParameters(method);
         this.evaluateMethodBody(method.methodBody());
-        this.finaliseMethod();
     }
 
     private void evaluateMethodParameters(@NotNull JALParser.MethodDefinitionContext method)
@@ -167,6 +166,7 @@ public class JALMethodEvaluator
         this.evaluateLabels(body);
         this.evaluateTryCatchDirectives(body);
         this.evaluateInstructions(body);
+        this.finaliseMethod();
         this.method.visitEnd();
     }
 
@@ -174,10 +174,13 @@ public class JALMethodEvaluator
     {
         // 各命令を順に評価していく
         // 命令に割り当てるラベル。１命令のみが割り当てられる。
+        LabelInfo labelAssignation = null;
         for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
             if (bodyItem.label() != null)
-                this.labels.setCurrentLabel(this.labels.resolve(bodyItem.label().labelName().getText()));
+                this.labels.setCurrentLabel(labelAssignation = this.labels.resolve(bodyItem.label()
+                                                                                           .labelName()
+                                                                                           .getText()));
 
             for (JALParser.InstructionContext instruction : bodyItem.instruction())
             {
@@ -189,7 +192,8 @@ public class JALMethodEvaluator
                 if (evaluated == null)
                     continue;
 
-                this.instructions.addInstruction(evaluated);
+                this.instructions.addInstruction(evaluated, labelAssignation);
+                labelAssignation = null;  // 次の命令セットのためにラベルをクリア
             }
         }
 

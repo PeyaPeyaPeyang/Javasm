@@ -42,12 +42,13 @@ public class InstructionsHolder
         return instruction;
     }
 
-    public InstructionInfo addInstruction(@NotNull EvaluatedInstruction evaluatedInstruction)
+    public InstructionInfo addInstruction(@NotNull EvaluatedInstruction evaluatedInstruction,
+                                          @Nullable LabelInfo labelAssignation)
     {
         InstructionInfo instruction = new InstructionInfo(
                 evaluatedInstruction.insn(),
                 this.bytecodeOffset,
-                this.labels.getCurrentLabel(),
+                labelAssignation,
                 evaluatedInstruction.getInstructionSize()
         );
         this.instructions.add(instruction);
