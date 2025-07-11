@@ -13,8 +13,18 @@ public class LabelNode extends IdentifierDefSubtree
         super(node, idElementType);
     }
 
+    @NotNull
     public LabelNameNode getLabelNameNode()
     {
-        return PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
+        LabelNameNode labelNameNode = PsiTreeUtil.getChildOfType(this, LabelNameNode.class);
+        if (labelNameNode == null)
+            throw new IllegalStateException("LabelNameNode is not found in " + this);
+        return labelNameNode;
+    }
+
+    @NotNull
+    public String getLabelName()
+    {
+        return this.getLabelNameNode().getText();
     }
 }
