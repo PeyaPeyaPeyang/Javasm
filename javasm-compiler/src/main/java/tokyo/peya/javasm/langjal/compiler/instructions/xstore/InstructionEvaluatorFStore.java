@@ -17,6 +17,7 @@ public class InstructionEvaluatorFStore extends AbstractInstructionEvaluator<JAL
                 EOpcodes.FSTORE,
                 evaluator,
                 ctxt.jvmInsArgLocalRef(),
+                ctxt.localInstigation(),
                 "F",
                 "fstore",
                 ctxt.INSN_WIDE()

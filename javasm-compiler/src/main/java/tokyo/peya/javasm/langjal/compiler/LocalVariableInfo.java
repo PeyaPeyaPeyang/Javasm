@@ -2,12 +2,13 @@ package tokyo.peya.javasm.langjal.compiler;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public record LocalVariableInfo(
         @NotNull
         String name,
         @NotNull
-        String type,
+        TypeDescriptor type,
         @Nullable
         LabelInfo start,
         @Nullable
@@ -16,13 +17,9 @@ public record LocalVariableInfo(
         boolean isParameter
 )
 {
-    public LocalVariableInfo(String name, String type, int index)
+    public LocalVariableInfo(@NotNull String name, @NotNull TypeDescriptor type,
+                             @Nullable LabelInfo start, @Nullable LabelInfo end, int index)
     {
-        this(name, type, null, null, index, false);
-    }
-
-    public LocalVariableInfo(int index, @NotNull String type)
-    {
-        this(String.format("var%05d", index), type, index);
+        this(name, type, start, end, index, false);
     }
 }

@@ -13,14 +13,15 @@ public class InstructionEvaluatorIStoreN extends AbstractInstructionEvaluator<JA
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
                                                      JALParser.@NotNull JvmInsIstoreNContext ctxt)
     {
+        JALParser.LocalInstigationContext ins = ctxt.localInstigation();
         if (has(ctxt.INSN_ISTORE_0()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 0, evaluator, "I");
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 0, evaluator, "I", ins);
         else if (has(ctxt.INSN_ISTORE_1()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 1, evaluator, "I");
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 1, evaluator, "I", ins);
         else if (has(ctxt.INSN_ISTORE_2()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 2, evaluator, "I");
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 2, evaluator, "I", ins);
         else if (has(ctxt.INSN_ISTORE_3()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 3, evaluator, "I");
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 3, evaluator, "I", ins);
 
         throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
     }

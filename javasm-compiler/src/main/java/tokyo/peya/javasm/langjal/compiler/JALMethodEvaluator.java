@@ -14,9 +14,9 @@ import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
 public class JALMethodEvaluator
@@ -34,9 +34,10 @@ public class JALMethodEvaluator
     @Getter(AccessLevel.NONE)
     private final List<TryCatchDirective> tryCatchDirectives;
 
-    private final Label globalStartLocalLabel;
-    private final Label globalEndLocalLabel;
+    private final LabelInfo globalStartLocalLabel;
+    private final LabelInfo globalEndLocalLabel;
 
+    private LabelInfo currentLabel; // 現在解析中の最後のラベル
     private int bytecodeOffset;
 
     public JALMethodEvaluator(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
@@ -50,8 +51,8 @@ public class JALMethodEvaluator
         this.instructions = new ArrayList<>();
         this.tryCatchDirectives = new ArrayList<>();
 
-        this.globalStartLocalLabel = new Label();
-        this.globalEndLocalLabel = new Label();
+        this.globalStartLocalLabel = new LabelInfo("MBEGIN", new Label(), this.bytecodeOffset);
+        this.globalEndLocalLabel = new LabelInfo("MEND", new Label(), -1);
     }
 
     public void evaluateMethod(@NotNull JALParser.MethodDefinitionContext method)
@@ -79,7 +80,7 @@ public class JALMethodEvaluator
             String thisParamName = "this";
             TypeDescriptor thisParamType = descriptor.getReturnType(); // インスタンスメソッドの戻り値が this の型
             // パラメータをローカル変数として登録
-            this.registerParameter(thisParamName, thisParamType.toString(), currentIndex++);
+            this.registerParameter(thisParamName, thisParamType, currentIndex++);
         }
 
         for (int i = 0; i < parameters.length; i++)
@@ -89,16 +90,16 @@ public class JALMethodEvaluator
             // パラメータをローカル変数として登録
             if (paramType.getBaseType().getCategory() == 2)
             {
-                this.registerParameter(paramName, paramType.toString(), currentIndex++);
+                this.registerParameter(paramName, paramType, currentIndex++);
                 currentIndex++; // カテゴリ２は ２スロット使うため，インデックスを進める
             }
             else
-                this.registerParameter(paramName, paramType.toString(), currentIndex++);
+                this.registerParameter(paramName, paramType, currentIndex++);
         }
     }
 
     private void registerParameter(@NotNull String paramName,
-                                   @NotNull String type,
+                                   @NotNull TypeDescriptor type,
                                    int index)
     {
         // パラメータをローカル変数として登録
@@ -122,17 +123,11 @@ public class JALMethodEvaluator
 
     private void finaliseInstructionAndLabels()
     {
-        for (int i = 0; i < this.instructions.size(); i++)
+        for (InstructionInfo instruction : this.instructions)
         {
-            // ラベルを登録
-            for (LabelInfo label : this.labels)
-                if (label.instructionIndex() == i)
-                {
-                    LabelNode labelNode = label.node();
-                    this.method.instructions.add(labelNode);
-                }
+            if (instruction.assignedLabel() != null)  // 命令にラベルが割り当てられている場合
+                this.method.instructions.add(instruction.assignedLabel().node());
 
-            InstructionInfo instruction = this.instructions.get(i);
             this.method.instructions.add(instruction.insn());
         }
     }
@@ -150,17 +145,18 @@ public class JALMethodEvaluator
             if (local.isParameter())
                 continue;  // パラメータはローカル変数として登録しない
 
-            Label start = this.globalStartLocalLabel;
-            Label end = this.globalEndLocalLabel;
+            Label start = this.globalStartLocalLabel.label();
+            Label end = this.globalEndLocalLabel.label();
             if (local.start() != null)
                 start = local.start().label();
             if (local.end() != null)
                 end = local.end().label();
 
+            String typeDescriptor = local.type().toString();
             // ローカル変数をメソッドに登録
             this.method.visitLocalVariable(
                     local.name(),
-                    local.type(),
+                    typeDescriptor,
                     null, // signature は未使用
                     start,
                     end,
@@ -208,28 +204,19 @@ public class JALMethodEvaluator
 
     private void prepareLocalEvaluation()
     {
-        if (checkAllLocalsHaveStart(this.locals))
-        {
-            LabelInfo startLabel = new LabelInfo("MBEGIN", this.globalStartLocalLabel, this.bytecodeOffset);
-            this.labels.add(startLabel);
-            if (this.method.instructions.size() > 0)
-                this.method.instructions.insertBefore(this.method.instructions.get(0), startLabel.node());
-            else
-                this.method.instructions.add(startLabel.node());
-            // ↑ START なので，いっちゃんさいしょ
-        }
+        LabelNode globalStartNode = this.globalStartLocalLabel.node();
+        if (this.method.instructions.size() > 0)
+            this.method.instructions.insertBefore(this.method.instructions.get(0), globalStartNode);
+        else
+            this.method.instructions.add(globalStartNode);
     }
 
     private void finaliseLocalEvaluation()
     {
         // 終了ラベルを持っていないローカル変数がある場合は、グローバルな終了ラベルを設定する。
-        if (checkAllLocalsHaveEnd(this.locals))
-        {
-            LabelInfo endLabel = new LabelInfo("MEND", this.globalEndLocalLabel, this.bytecodeOffset);
-            this.labels.add(endLabel);
-            this.method.instructions.add(endLabel.node());
-            // ↑ END なので，いっちゃんさいご
-        }
+        LabelNode globalEndNode = this.globalEndLocalLabel.node();
+        this.method.instructions.add(globalEndNode);
+        // ↑ END なので，いっちゃんさいご
     }
 
     private void evaluateMethodMetadata(@NotNull JALParser.MethodDefinitionContext method)
@@ -273,11 +260,11 @@ public class JALMethodEvaluator
     private void evaluateInstructions(@NotNull JALParser.MethodBodyContext body)
     {
         // 各命令を順に評価していく
-        LabelInfo lastLabel = null;
+        LabelInfo assignLabel = null;  // 命令に割り当てるラベル。１命令のみが割り当てられる。
         for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
             if (bodyItem.label() != null)
-                lastLabel = this.resolveLabel(bodyItem.label().labelName().getText());
+                assignLabel = this.currentLabel = this.resolveLabel(bodyItem.label().labelName().getText());
 
             for (JALParser.InstructionContext instruction : bodyItem.instruction())
             {
@@ -285,13 +272,13 @@ public class JALMethodEvaluator
                 InstructionInfo info = JALInstructionEvaluator.evaluateInstruction(
                         this,
                         instruction,
-                        lastLabel
+                        assignLabel
                 );
                 if (info == null)
                     continue;
 
                 this.addInstruction(info);
-                lastLabel = null;
+                assignLabel = null;
             }
         }
 
@@ -301,7 +288,7 @@ public class JALMethodEvaluator
             this.addInstruction(new InstructionInfo(
                     EOpcodes.RETURN,
                     this.bytecodeOffset,
-                    lastLabel,
+                    assignLabel,
                     1
             ));
         }
@@ -457,43 +444,111 @@ public class JALMethodEvaluator
         return null;  // 無効な参照
     }
 
+    private int getNextLocalIndex()
+    {
+        if (this.locals.isEmpty())
+            return 0;  // 最初のローカル変数はインデックス 0 から始まる
+
+        LocalVariableInfo maxLocalNum = this.locals.stream()
+                                                   .max(Comparator.comparingInt(LocalVariableInfo::index))
+                                                   .orElseThrow(() -> new IllegalStateException(
+                                                           "No local variables registered."));
+
+        TypeDescriptor lastType = maxLocalNum.type();
+        if (lastType.getBaseType().getCategory() == 2)
+        {
+            // カテゴリ２の型は２スロット使用するので、次のインデックスは +2
+            return maxLocalNum.index() + 2;
+        }
+        else
+        {
+            // カテゴリ１の型は１スロット使用するので、次のインデックスは +1
+            return maxLocalNum.index() + 1;
+        }
+    }
+
+    @Nullable
+    private LocalVariableInfo checkAlreadyRegistered(
+            @NotNull JALParser.JvmInsArgLocalRefContext localRef,
+            @Nullable TerminalNode localID
+    )
+    {
+        LocalVariableInfo registeredLocal = this.resolveSafe(localRef);
+        if (registeredLocal == null)
+            return null;  // まだ登録されていない場合は null を返す
+
+        if (localID == null)
+            return registeredLocal;
+        else  // 同じ ID で登録されている場合は例外を投げる
+            throw new IllegalArgumentException(
+                    "Local variable with name '" + localID.getText() + "' is already defined as " + registeredLocal.name()
+            );
+    }
+
     @NotNull
     public LocalVariableInfo registerLocal(
             @NotNull JALParser.JvmInsArgLocalRefContext localRef,
-            @NotNull String type
+            @NotNull TypeDescriptor type,
+            @Nullable String name,
+            @Nullable LabelInfo endLabel
+    )
+    {
+        return this.registerLocal(localRef, type, name, this.currentLabel, endLabel);
+    }
+
+    @NotNull
+    public LocalVariableInfo registerLocal(int idx,
+                                           @NotNull TypeDescriptor type,
+                                           @Nullable String name,
+                                           @Nullable LabelInfo endLabel)
+    {
+        return this.registerLocal(idx, type, name, this.currentLabel, endLabel);
+    }
+
+    @NotNull
+    public LocalVariableInfo registerLocal(
+            @NotNull JALParser.JvmInsArgLocalRefContext localRef,
+            @NotNull TypeDescriptor type,
+            @Nullable String name,
+            @Nullable LabelInfo startLabel,
+            @Nullable LabelInfo endLabel
     )
     {
         // this.local.size() は index と無関係。
         TerminalNode localID = localRef.ID();
         TerminalNode localNumber = localRef.NUMBER();
 
-        LocalVariableInfo registeredLocal = this.resolveSafe(localRef);
+        LocalVariableInfo registeredLocal = checkAlreadyRegistered(localRef, localID);
         if (registeredLocal != null)
-        {
-            if (localID == null)
-                return registeredLocal;  // すでに登録されているので，そのまま返す。
-            else // ID 指定なのにすでに登録されている場合は問題。
-                throw new IllegalArgumentException(
-                        "Local variable with name '" + localID.getText() + "' is already defined as " + registeredLocal.name()
-                );
-        }
+            return registeredLocal;  // すでに登録されている場合はそれを返す
 
+        String newLocalName;
+        int newLocalIndex;
         if (localID != null)
         {
-            String localName = localID.getText();
-            registeredLocal = new LocalVariableInfo(localName, type, this.locals.size());
+            newLocalName = localID.getText();
+            newLocalIndex = this.getNextLocalIndex();
         }
         else if (localNumber != null)
         {
-            int localIndex = EvaluatorCommons.asInteger(localNumber);
-            if (localIndex < 0)
-                throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
+            newLocalIndex = EvaluatorCommons.asInteger(localNumber);
+            if (newLocalIndex < 0)
+                throw new IllegalArgumentException("Local variable index cannot be negative: " + newLocalIndex);
 
-            registeredLocal = new LocalVariableInfo(localIndex, type);
+            newLocalName = name == null ? String.format("local%05d", newLocalIndex): name;
+
         }
         else
             throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
 
+        // 新しいローカル変数を登録
+        registeredLocal = new LocalVariableInfo(
+                newLocalName,
+                type,
+                startLabel,
+                endLabel,
+                newLocalIndex
+        );
         this.locals.add(registeredLocal);
         // メソッドへの登録は後ほど。
 
@@ -501,7 +556,11 @@ public class JALMethodEvaluator
     }
 
     @NotNull
-    public LocalVariableInfo registerLocal(int idx, @NotNull String type)
+    public LocalVariableInfo registerLocal(int idx,
+                                           @NotNull TypeDescriptor type,
+                                           @Nullable String name,
+                                           @Nullable LabelInfo startLabel,
+                                           @Nullable LabelInfo endLabel)
     {
         if (idx < 0)
             throw new IllegalArgumentException("Local variable index cannot be negative: " + idx);
@@ -513,8 +572,15 @@ public class JALMethodEvaluator
                     "Local variable at index " + idx + " is already defined as " + existingLocal.name()
             );
 
+        String nameToUse = name == null ? String.format("local%05d", idx): name;
         // 新しいローカル変数を登録
-        LocalVariableInfo newLocal = new LocalVariableInfo(idx, type);
+        LocalVariableInfo newLocal = new LocalVariableInfo(
+                nameToUse,
+                type,
+                startLabel,
+                endLabel,
+                idx
+        );
         this.locals.add(newLocal);
 
         // メソッドへの登録は後ほど。
@@ -578,19 +644,6 @@ public class JALMethodEvaluator
         ));
     }
 
-    private static boolean checkAllLocalsHaveStart(@NotNull List<LocalVariableInfo> locals)
-    {
-        return locals.stream()
-                     .map(LocalVariableInfo::start)
-                     .noneMatch(Objects::isNull);
-    }
-
-    private static boolean checkAllLocalsHaveEnd(@NotNull List<LocalVariableInfo> locals)
-    {
-        return locals.stream()
-                     .map(LocalVariableInfo::end)
-                     .noneMatch(Objects::isNull);
-    }
 
     private static boolean shouldAppendReturnOnLast(InstructionInfo instruction)
     {

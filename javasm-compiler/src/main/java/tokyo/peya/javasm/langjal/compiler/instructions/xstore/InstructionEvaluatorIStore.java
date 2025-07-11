@@ -17,6 +17,7 @@ public class InstructionEvaluatorIStore extends AbstractInstructionEvaluator<JAL
                 EOpcodes.ISTORE,
                 evaluator,
                 ctxt.jvmInsArgLocalRef(),
+                ctxt.localInstigation(),
                 "I",
                 "istore",
                 ctxt.INSN_WIDE()
