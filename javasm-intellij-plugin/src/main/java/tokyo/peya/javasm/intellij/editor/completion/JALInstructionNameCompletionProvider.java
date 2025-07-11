@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.langjal.completion;
+package tokyo.peya.javasm.intellij.editor.completion;
 
 import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;

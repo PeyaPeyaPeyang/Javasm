@@ -54,7 +54,7 @@
         <internalFileTemplate name="JAL Class"/>
         <completion.contributor
                 language="JAL"
-                implementationClass="tokyo.peya.javasm.intellij.langjal.completion.JALCompletionContributor"/>
+                implementationClass="tokyo.peya.javasm.intellij.editor.completion.JALCompletionContributor"/>
         <lang.formatter language="JAL"
                         implementationClass="tokyo.peya.javasm.intellij.formatting.JALFormattingModelBuilder"/>
         <codeStyleSettingsProvider
