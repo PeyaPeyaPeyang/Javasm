@@ -96,6 +96,9 @@
         <lang.documentationProvider
                 language="JAL"
                 implementationClass="tokyo.peya.javasm.intellij.editor.document.JALInstructionDocumentProvider"/>
+        <lang.commenter
+                language="JAL"
+                implementationClass="tokyo.peya.javasm.intellij.editor.JALCommenter"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
