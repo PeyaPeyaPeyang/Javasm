@@ -1,0 +1,42 @@
+<!-- Instructions: ishr, lshr -->
+<div class="definition">
+    <h2>Shift Right Instructions</h2>
+    <p>
+        <b>{link:ishr}</b> - <code>0x7a</code> (122)<br>
+        <b>{link:lshr}</b> - <code>0x7b</code> (123)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Shifts a value to the right logically by a specified number of bits.<br>
+        The shift amount is masked: only the lowest 5 bits are used for <code>ishr</code>, and the lowest 6 bits for
+        <code>lshr</code>.
+    </p>
+    <ul>
+        <li><b>ishr</b>: logically right-shifts an <code>int</code> by an <code>int</code> amount</li>
+        <li><b>lshr</b>: logically right-shifts a <code>long</code> by an <code>int</code> amount</li>
+    </ul>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ishr</code></li>
+        <li><code>lshr</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ishr</b><br>
+            Before: <code>..., value (int), shift (int)</code><br>
+            After: <code>..., result (int)</code>
+        </li>
+        <li><b>lshr</b><br>
+            Before: <code>..., value (long), shift (int)</code><br>
+            After: <code>..., result (long)</code>
+        </li>
+    </ul>
+</div>
+

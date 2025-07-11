@@ -1,0 +1,41 @@
+<!-- Instructions: ixor, lxor -->
+<div class="definition">
+    <h2>Bitwise XOR Instructions</h2>
+    <p>
+        <b>{link:ixor}</b> - <code>0x82</code> (130)<br>
+        <b>{link:lxor}</b> - <code>0x83</code> (131)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Performs a bitwise XOR operation on two values.<br>
+        The result is pushed onto the operand stack.
+    </p>
+    <ul>
+        <li><b>{link:ixor}</b>: performs a bitwise XOR on two <code>int</code> values</li>
+        <li><b>{link:lxor}</b>: performs a bitwise XOR on two <code>long</code> values</li>
+    </ul>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ixor</code></li>
+        <li><code>lxor</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ixor</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code><br>
+            After: <code>..., result (int)</code>
+        </li>
+        <li><b>lxor</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code><br>
+            After: <code>..., result (long)</code>
+        </li>
+    </ul>
+</div>
+

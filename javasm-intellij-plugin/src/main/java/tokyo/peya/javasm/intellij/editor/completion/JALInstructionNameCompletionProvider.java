@@ -61,7 +61,7 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
                 Map.entry("dcmpg", "Double: Compare greater"),
                 Map.entry("dcmpl", "Double: Compare less"),
                 Map.entry("dconst_0", "Double: Constant 0.0"),
-                Map.entry("dconst_1", "Double: Constant 1.1"),
+                Map.entry("dconst_1", "Double: Constant 1.0"),
                 Map.entry("ddiv", "Double: Divide"),
                 Map.entry("dload", "Double: Load local variable"),
                 Map.entry("dload_0", "Double: Load local 0"),

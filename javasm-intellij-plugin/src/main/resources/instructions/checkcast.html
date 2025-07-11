@@ -1,0 +1,60 @@
+<!-- Instructions: checkcast -->
+<div class="definition">
+    <h2>Check Cast Instruction</h2>
+    <p><b>{link:checkcast}</b> - <code>0xc0</code> (192)</p>
+
+    <h4>Purpose</h4>
+    <p>
+        Ensures that the object on top of the operand stack is compatible with the specified reference type.
+        If the check passes, the object remains on the stack unchanged.
+        If it fails, a <code>ClassCastException</code> is thrown at runtime.
+    </p>
+    <p>
+        This instruction implements runtime type checking as seen in expressions like <code>(String) obj</code> in Java
+        source code.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: constant pool index pointing to a class, interface, or array type descriptor
+            (e.g., <code>Ljava/lang/String;</code>, <code>[Ljava/lang/Object;</code>)
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <code>checkcast &lt;TypeDescriptor&gt;</code>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>..., objectref</code></li>
+    </ul>
+
+    <h5><b>Semantics:</b></h5>
+    <ul>
+        <li>If <code>objectref == null</code>, the cast succeeds silently (null is assignable to any reference type).
+        </li>
+        <li>If <code>objectref</code> is not null and is not assignable to the target type, a
+            <code>ClassCastException</code> is thrown.
+        </li>
+        <li>The object reference is not modified — only checked.</li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>checkcast Ljava/lang/String;</code> → checks that the object is a <code>String</code> or subclass</li>
+        <li><code>checkcast Ljava/util/List;</code> → checks for <code>List</code> compatibility</li>
+        <li><code>checkcast [Ljava/lang/String;</code> → checks that the object is a <code>String[]</code></li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>This instruction is purely for type checking. It does not convert or clone the object.</li>
+        <li>Commonly inserted by the Java compiler for casts between reference types.</li>
+        <li>Used together with <code>instanceof</code> when implementing polymorphic logic.</li>
+        <li>If you already know the object is the right type (e.g. after <code>instanceof</code>),
+            <code>checkcast</code> is safe to use.
+        </li>
+        <li>Attempting to cast primitives will result in a <code>VerifyError</code> at class loading.</li>
+    </ul>
+</div>

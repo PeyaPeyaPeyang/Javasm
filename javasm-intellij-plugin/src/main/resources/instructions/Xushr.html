@@ -1,0 +1,43 @@
+<!-- Instructions: iushr, lushr -->
+<div class="definition">
+    <h2>Unsigned Shift Right Instructions</h2>
+    <p>
+        <b>{link:iushr}</b> - <code>0x7c</code> (124)<br>
+        <b>{link:lushr}</b> - <code>0x7d</code> (125)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Shifts a value to the right logically (unsigned) by a specified number of bits.<br>
+        The shift amount is masked: only the lowest 5 bits are used for <code>{link:iushr}</code>, and the lowest 6 bits
+        for
+        <code>{link:lushr}</code>.
+    </p>
+    <ul>
+        <li><b>{link:iushr}</b>: logically unsigned right-shifts an <code>int</code> by an <code>int</code> amount</li>
+        <li><b>{link:lushr}</b>: logically unsigned right-shifts a <code>long</code> by an <code>int</code> amount</li>
+    </ul>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iushr</code></li>
+        <li><code>lushr</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>iushr</b><br>
+            Before: <code>..., value (int), shift (int)</code><br>
+            After: <code>..., result (int)</code>
+        </li>
+        <li><b>lushr</b><br>
+            Before: <code>..., value (long), shift (int)</code><br>
+            After: <code>..., result (long)</code>
+        </li>
+    </ul>
+</div>
+

@@ -1,0 +1,58 @@
+<!-- Instructions: iastore, lastore, fastore, dastore, aastore, bastore, castore, sastore -->
+<div class="definition">
+    <h2>Array Store Instructions</h2>
+    <p>
+        <b>{link:iastore}</b> - <code>0x4f</code> (79)<br>
+        <b>{link:lastore}</b> - <code>0x50</code> (80)<br>
+        <b>{link:fastore}</b> - <code>0x51</code> (81)<br>
+        <b>{link:dastore}</b> - <code>0x52</code> (82)<br>
+        <b>{link:aastore}</b> - <code>0x53</code> (83)<br>
+        <b>{link:bastore}</b> - <code>0x54</code> (84)<br>
+        <b>{link:castore}</b> - <code>0x55</code> (85)<br>
+        <b>{link:sastore}</b> - <code>0x56</code> (86)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Stores a value into an array. The array reference, index, and the value to store are popped from the operand
+        stack.</p>
+    <ul>
+        <li><b>{link:iastore}</b>: stores <code>int</code> into <code>int[]</code></li>
+        <li><b>{link:lastore}</b>: stores <code>long</code> into <code>long[]</code></li>
+        <li><b>{link:fastore}</b>: stores <code>float</code> into <code>float[]</code></li>
+        <li><b>{link:dastore}</b>: stores <code>double</code> into <code>double[]</code></li>
+        <li><b>{link:aastore}</b>: stores reference into <code>Object[]</code></li>
+        <li><b>{link:bastore}</b>: stores <code>byte</code> or <code>boolean</code> into <code>byte[]</code>/<code>boolean[]</code>
+        </li>
+        <li><b>{link:castore}</b>: stores <code>char</code> into <code>char[]</code></li>
+        <li><b>{link:sastore}</b>: stores <code>short</code> into <code>short[]</code></li>
+    </ul>
+
+    <p>If the array reference is <code>null</code> or the index is out of bounds, an exception is thrown.</p>
+
+    <h5><b>Operands:</b> (none)</h5>
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iastore</code></li>
+        <li><code>lastore</code></li>
+        <li><code>fastore</code></li>
+        <li><code>dastore</code></li>
+        <li><code>aastore</code></li>
+        <li><code>bastore</code></li>
+        <li><code>castore</code></li>
+        <li><code>sastore</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>iastore, fastore, aastore, bastore, castore, sastore</b><br>
+            Before: <code>..., arrayref, index, value</code><br>
+            After: <code>...</code>
+        </li>
+        <li><b>lastore, dastore</b><br>
+            Before: <code>..., arrayref, index, value2, value1</code><br>
+            After: <code>...</code><br>
+            (Note: long and double values occupy two stack words)
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,66 @@
+<!-- Instructions: newarray -->
+<div class="definition">
+    <h2>Create New Array Instruction</h2>
+    <p><b>{link:newarray}</b> - <code>0xbc</code> (188)</p>
+
+    <h4>Purpose</h4>
+    <p>
+        Creates a new array of a specified type. The length of the array is popped from the operand stack, and a
+        reference to the newly created array is pushed onto the stack.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: Specifies the type of the array elements. The format is:
+            <ul>
+                <li><code>I</code>: <code>int</code></li>
+                <li><code>J</code>: <code>long</code></li>
+                <li><code>F</code>: <code>float</code></li>
+                <li><code>D</code>: <code>double</code></li>
+                <li><code>Z</code>: <code>boolean</code></li>
+                <li><code>B</code>: <code>byte</code></li>
+                <li><code>C</code>: <code>char</code></li>
+                <li><code>S</code>: <code>short</code></li>
+                <li><code>L&lt;classname&gt;;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <p><code>newarray &lt;TypeDescriptor&gt;</code></p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>newarray I</code> (creates an array of <code>int</code>)</li>
+        <li><code>newarray Ljava/lang/String;</code> (creates an array of <code>String</code>)</li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        The <code>TypeDescriptor</code> specifies the type and structure of the array. It must represent a valid Java
+        type:
+    </p>
+    <ul>
+        <li><code>[</code>: Indicates an array type. Each <code>[</code> adds a dimension to the array.</li>
+        <li><code>I</code>: <code>int</code></li>
+        <li><code>J</code>: <code>long</code></li>
+        <li><code>F</code>: <code>float</code></li>
+        <li><code>D</code>: <code>double</code></li>
+        <li><code>Z</code>: <code>boolean</code></li>
+        <li><code>B</code>: <code>byte</code></li>
+        <li><code>C</code>: <code>char</code></li>
+        <li><code>S</code>: <code>short</code></li>
+        <li><code>L&lt;classname&gt;;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        The operand stack must contain the size of the array to create. The size must be a non-negative integer.
+    </p>
+    <ul>
+        <li>Before: <code>..., count</code></li>
+        <li>After: <code>..., arrayref</code> (a reference to the newly created array)</li>
+    </ul>
+
+    <p>If <code>count</code> is negative, a <code>NegativeArraySizeException</code> is thrown.</p>
+</div>

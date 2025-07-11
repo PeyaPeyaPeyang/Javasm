@@ -1,0 +1,45 @@
+<!-- Instructions: iload, lload, fload, dload, aload -->
+<div class="definition">
+    <h2>Load Instructions</h2>
+    <p>
+        <b>{link:iload}</b> - <code>0x15</code> (21)<br>
+        <b>{link:lload}</b> - <code>0x16</code> (22)<br>
+        <b>{link:fload}</b> - <code>0x17</code> (23)<br>
+        <b>{link:dload}</b> - <code>0x18</code> (24)<br>
+        <b>{link:aload}</b> - <code>0x19</code> (25)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Loads a value from a local variable at index <code>N</code> onto the operand stack.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>N</code>: Local variable index (decimal or hexadecimal, e.g. <code>3</code> or <code>0x03</code>)</li>
+    </ul>
+
+    <h5><b>Format:</b> <code>{instruction} N</code></h5>
+
+    <h5><b>Notes on <code>wide</code> prefix:</b></h5>
+    <p>With the <code>wide</code> prefix, the operand <code>N</code> is extended from 1 byte to 2 bytes, allowing local
+        variable indices larger than 255.</p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iload 2</code></li>
+        <li><code>aload 0x0A</code></li>
+        <li><code>wide dload 0x0100</code> (index 256)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>iload, fload, aload</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code> (of corresponding type)
+        </li>
+        <li><b>lload, dload</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value2, value1</code><br>
+            (Note: long and double occupy two stack words)
+        </li>
+    </ul>
+</div>

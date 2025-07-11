@@ -1,0 +1,55 @@
+<!-- Instructions: ldc, ldc_w, ldc2_w -->
+<div class="definition">
+    <h2>Load Constant Instructions</h2>
+    <p>
+        <b>{link:ldc}</b> - <code>0x12</code> (18)<br>
+        <b>{link:ldc_w}</b> - <code>0x13</code> (19)<br>
+        <b>{link:ldc2_w}</b> - <code>0x14</code> (20)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Loads a constant from the constant pool onto the operand stack. The constant can be a primitive value, a string,
+        or a class reference.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>ConstantIndex</code>: An index into the constant pool table. The type of the constant determines which
+            instruction to use:
+            <ul>
+                <li><b>ldc</b>: For <code>int</code>, <code>float</code>, or <code>String</code> constants.</li>
+                <li><b>ldc_w</b>: Same as <b>ldc</b>, but supports a wider (16-bit) index.</li>
+                <li><b>ldc2_w</b>: For <code>long</code> or <code>double</code> constants.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>ldc &lt;ConstantIndex&gt;</code></li>
+        <li><code>ldc_w &lt;ConstantIndex&gt;</code></li>
+        <li><code>ldc2_w &lt;ConstantIndex&gt;</code></li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ldc 10</code> (loads constant at index 10, e.g., a string or integer)</li>
+        <li><code>ldc_w 300</code> (loads constant at index 300, supports larger indices)</li>
+        <li><code>ldc2_w 5</code> (loads a <code>long</code> or <code>double</code> constant at index 5)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ldc, ldc_w</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code> (the constant value is pushed onto the stack)
+        </li>
+        <li><b>ldc2_w</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value2, value1</code> (for <code>long</code> or <code>double</code>, which occupy two
+            stack words)
+        </li>
+    </ul>
+</div>
+

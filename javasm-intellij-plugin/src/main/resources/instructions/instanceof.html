@@ -1,0 +1,30 @@
+<!-- Instructions: instanceof -->
+<div class="definition">
+    <h2>Check Instance Type Instruction</h2>
+    <p><b>{link:instanceof}</b> - <code>0xc1</code> (193)</p>
+
+    <h4>Purpose</h4>
+    <p>Tests whether the object reference on top of the operand stack is an instance of the specified reference type.
+        Pushes <code>1</code> if true, <code>0</code> if false.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: constant pool index referencing a class or interface type descriptor (e.g.,
+            <code>Ljava/lang/String;</code>). Primitive types are not allowed.
+        </li>
+    </ul>
+
+    <h5><b>Format:</b> <code>instanceof &lt;TypeDescriptor&gt;</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>instanceof Ljava/lang/String;</code></li>
+        <li><code>instanceof Ljava/util/List;</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>..., result</code> (<code>int</code> 0 or 1)</li>
+    </ul>
+</div>

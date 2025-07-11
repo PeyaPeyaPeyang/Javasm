@@ -1,0 +1,57 @@
+<!-- Instructions: iaload, laload, faload, daload, aaload, baload, caload, saload -->
+<div class="definition">
+    <h2>Array Load Instructions</h2>
+    <p>
+        <b>{link:iaload}</b> - <code>0x2e</code> (46)<br>
+        <b>{link:laload}</b> - <code>0x2f</code> (47)<br>
+        <b>{link:faload}</b> - <code>0x30</code> (48)<br>
+        <b>{link:daload}</b> - <code>0x31</code> (49)<br>
+        <b>{link:aaload}</b> - <code>0x32</code> (50)<br>
+        <b>{link:baload}</b> - <code>0x33</code> (51)<br>
+        <b>{link:caload}</b> - <code>0x34</code> (52)<br>
+        <b>{link:saload}</b> - <code>0x35</code> (53)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Loads a value from an array onto the operand stack. The array reference and index are popped from the stack, and
+        the value at the given index is pushed.</p>
+    <ul>
+        <li><b>{link:iaload}</b>: loads <code>int</code> from <code>int[]</code></li>
+        <li><b>{link:laload}</b>: loads <code>long</code> from <code>long[]</code></li>
+        <li><b>{link:faload}</b>: loads <code>float</code> from <code>float[]</code></li>
+        <li><b>{link:daload}</b>: loads <code>double</code> from <code>double[]</code></li>
+        <li><b>{link:aaload}</b>: loads reference from <code>Object[]</code></li>
+        <li><b>{link:baload}</b>: loads <code>byte</code> or <code>boolean</code> from <code>byte[]</code>/<code>boolean[]</code>
+        </li>
+        <li><b>{link:caload}</b>: loads <code>char</code> from <code>char[]</code></li>
+        <li><b>{link:saload}</b>: loads <code>short</code> from <code>short[]</code></li>
+    </ul>
+
+    <p>If the array reference is <code>null</code> or the index is out of bounds, an exception is thrown.</p>
+
+    <h5><b>Operands:</b> (none)</h5>
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iaload</code></li>
+        <li><code>laload</code></li>
+        <li><code>faload</code></li>
+        <li><code>daload</code></li>
+        <li><code>aaload</code></li>
+        <li><code>baload</code></li>
+        <li><code>caload</code></li>
+        <li><code>saload</code></li>
+    </ul>
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>iaload, faload, aaload, baload, caload, saload</b><br>
+            Before: <code>..., arrayref, index</code><br>
+            After: <code>..., value</code>
+        </li>
+        <li><b>laload, daload</b><br>
+            Before: <code>..., arrayref, index</code><br>
+            After: <code>..., value2, value1</code><br>
+            (Note: long and double occupy two stack words)
+        </li>
+    </ul>
+</div>

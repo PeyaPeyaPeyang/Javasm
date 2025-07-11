@@ -1,0 +1,41 @@
+<!-- Instructions: iconst_m1, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, lconst_0, lconst_1, fconst_0, fconst_1, fconst_2, dconst_0, dconst_1 -->
+<div class="definition">
+    <h2>Constant Push Instructions</h2>
+    <p>
+        <b>{link:iconst_m1}</b> - <code>0x02</code> (2)<br>
+        <b>{link:iconst_0}</b> - <code>0x03</code> (3)<br>
+        <b>{link:iconst_1}</b> - <code>0x04</code> (4)<br>
+        <b>{link:iconst_2}</b> - <code>0x05</code> (5)<br>
+        <b>{link:iconst_3}</b> - <code>0x06</code> (6)<br>
+        <b>{link:iconst_4}</b> - <code>0x07</code> (7)<br>
+        <b>{link:iconst_5}</b> - <code>0x08</code> (8)<br>
+        <b>{link:lconst_0}</b> - <code>0x09</code> (9)<br>
+        <b>{link:lconst_1}</b> - <code>0x0a</code> (10)<br>
+        <b>{link:fconst_0}</b> - <code>0x0b</code> (11)<br>
+        <b>{link:fconst_1}</b> - <code>0x0c</code> (12)<br>
+        <b>{link:fconst_2}</b> - <code>0x0d</code> (13)<br>
+        <b>{link:dconst_0}</b> - <code>0x0e</code> (14)<br>
+        <b>{link:dconst_1}</b> - <code>0x0f</code> (15)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Pushes a specific constant value of a given primitive type onto the operand stack.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iconst_3</code> (pushes int 3)</li>
+        <li><code>iconst_3</code> (pushes int 3)</li>
+        <li><code>dconst_1</code> (pushes double 1.0)</li>
+        <li><code>fconst_0</code> (pushes float 0.0)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code> (of the corresponding primitive type)</li>
+    </ul>
+</div>

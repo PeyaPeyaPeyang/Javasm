@@ -1,0 +1,29 @@
+<!-- Instructions: ineg, lneg, fneg, dneg -->
+<div class="definition">
+    <h2>Negate Instructions</h2>
+    <p>
+        <b>{link:ineg}</b> - <code>0x74</code> (116)<br>
+        <b>{link:lneg}</b> - <code>0x75</code> (117)<br>
+        <b>{link:fneg}</b> - <code>0x76</code> (118)<br>
+        <b>{link:dneg}</b> - <code>0x77</code> (119)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Negates the top value on the operand stack (i.e., multiplies by -1) and pushes the result back on the stack.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ineg</code></li>
+        <li><code>dneg</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value</code></li>
+        <li>After: <code>..., -value</code></li>
+    </ul>
+</div>

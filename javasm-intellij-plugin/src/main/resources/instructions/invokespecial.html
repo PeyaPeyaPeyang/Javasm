@@ -1,0 +1,61 @@
+<!-- Instructions: invokespecial -->
+<div class="definition">
+    <h2>Invoke Special Method</h2>
+    <p>
+        <b>{link:invokespecial}</b> - <code>0xb7</code> (183)
+    </p>
+
+    <h4>Purpose</h4>
+    <div>
+        Invokes instance initialization methods with special handling:<br>
+        <ul>
+            <li>Instance constructors (&lt;init&gt; methods)</li>
+            <li>Class initialization methods (&lt;clinit&gt; methods)</li>
+        </ul>
+        This instruction bypasses virtual dispatch.
+    </div>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>methodref</code> (2 bytes): Index into the constant pool, pointing to a <code>Methodref</code></li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <code>invokespecial &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>The method reference format specifies the target method as follows:</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: Fully qualified class name in JVM internal form (slash-separated), e.g., <code>java/lang/Object</code>
+        </li>
+        <li><b>&lt;methodname&gt;</b>: Must be either:</li>
+        <ul>
+            <li><code>&lt;init&gt;</code> (instance constructor)</li>
+            <li><code>&lt;clinit&gt;</code> (class initializer, static constructor)</li>
+        </ul>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM method argument descriptor</li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM return type descriptor</li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>invokespecial java/lang/Object-&gt;&lt;init&gt;()V</code></li>
+        <li><code>invokespecial my/pkg/MyClass-&gt;&lt;clinit&gt;()V</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        Before: <code>..., objectref, arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>
+    </p>
+    <p>
+        - Pops object reference and arguments.<br>
+        - Pushes return value if non-void.<br>
+        - Throws <code>NullPointerException</code> if <code>objectref</code> is null when calling
+        <code>&lt;init&gt;</code>.<br>
+        - Bypasses virtual method dispatch.
+    </p>
+</div>

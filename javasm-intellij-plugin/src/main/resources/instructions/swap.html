@@ -1,0 +1,40 @@
+<!-- Instructions: swap -->
+<div class="definition">
+    <h2>Stack Swap Instruction</h2>
+    <p>
+        <b>{link:swap}</b> - <code>0x5f</code> (95)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Swap the top two values on the operand stack. Both values must be category 1 values (i.e., occupy one stack
+        word).
+        Category 2 values such as <code>long</code> and <code>double</code> are not allowed and will cause a <code>VerifyError</code>
+        at runtime.
+    </p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>swap</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>swap</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        Before: <code>..., value2, value1</code><br>
+        After: <code>..., value1, value2</code>
+    </p>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Both <code>value1</code> and <code>value2</code> must be category 1: <code>int</code>, <code>float</code>,
+            reference, or <code>returnAddress</code>.
+        </li>
+        <li>Using <code>swap</code> with category 2 values (e.g. <code>long</code>, <code>double</code>) results in a
+            <code>VerifyError</code>.
+        </li>
+    </ul>
+</div>

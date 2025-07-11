@@ -1,0 +1,30 @@
+<!-- Instructions: monitorexit -->
+<div class="definition">
+    <h2>Release Monitor Lock Instruction</h2>
+    <p><b>{link:monitorexit}</b> - <code>0xc3</code> (195)</p>
+
+    <h4>Purpose</h4>
+    <p>Releases the monitor lock for the object referenced on top of the operand stack. Used to exit a synchronized
+        block or method.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>monitorexit</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>monitorexit</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>...</code></li> <!-- monitor released, objectref popped -->
+    </ul>
+
+    <p>If the object reference is <code>null</code>, a <code>NullPointerException</code> is thrown.</p>
+
+    <h4>Usage Note</h4>
+    <p><code>monitorexit</code> must always be paired with <code>monitorenter</code> to properly release the monitor
+        lock acquired earlier. Failure to do so may cause deadlocks or inconsistent synchronization.</p>
+</div>

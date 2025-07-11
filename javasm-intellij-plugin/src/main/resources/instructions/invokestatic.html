@@ -1,0 +1,56 @@
+<!-- Instructions: invokestatic -->
+<div class="definition">
+    <h2>Invoke Static Method</h2>
+    <p>
+        <b>{link:invokestatic}</b> - <code>0xb8</code> (184)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Invokes a static method of a class.<br>
+        Since the method is static, no object reference is needed.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>methodref</code> (2 bytes): Index into the constant pool, pointing to a <code>Methodref</code></li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <code>invokestatic &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>The method reference format specifies the target method as follows:</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: Fully qualified class name in JVM internal form (slash-separated), e.g., <code>java/lang/Math</code>
+        </li>
+        <li><b>&lt;methodname&gt;</b>: Method name, e.g., <code>max</code>, <code>abs</code></li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM method argument descriptor, e.g., <code>I</code> (int), <code>Ljava/lang/String;</code>
+            (String object)
+        </li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM return type descriptor, e.g., <code>V</code> (void), <code>I</code>
+            (int), <code>Ljava/lang/Object;</code> (Object)
+        </li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>invokestatic java/lang/Math->max(II)I</code></li>
+        <li><code>invokestatic my/pkg/Utils->doStaticThing()V</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        Before: <code>..., arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>
+    </p>
+    <p>
+        - Pops all arguments from the stack.<br>
+        - Pushes return value if the method is non-void.<br>
+        - Throws <code>NoSuchMethodError</code> if method not found.<br>
+        - Throws <code>IncompatibleClassChangeError</code> if method is not static.
+    </p>
+</div>

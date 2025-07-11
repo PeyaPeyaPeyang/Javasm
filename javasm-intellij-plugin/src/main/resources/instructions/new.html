@@ -1,0 +1,52 @@
+<!-- Instructions: new -->
+<div class="definition">
+    <h2>Create New Object Instruction</h2>
+    <p><b>{link:new}</b> - <code>0xbb</code> (187)</p>
+
+    <h4>Purpose</h4>
+    <p>
+        Allocates memory for a new object of the specified class. The object is not initialized; the constructor must be
+        invoked explicitly using the <code>invokespecial</code> instruction.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: Specifies the class of the object to be created. The format is <code>L
+            &lt;classname>&gt;;
+        </code>, where <code>
+            &lt;classname&gt;
+        </code> is the fully qualified name of the class (e.g., <code>Ljava/lang/String;</code>).
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <p><code>new &lt;TypeDescriptor&gt;</code></p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>new Ljava/lang/String;</code> (creates a new <code>String</code> object)</li>
+        <li><code>new Ljava/util/ArrayList;</code> (creates a new <code>ArrayList</code> object)</li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        The <code>TypeDescriptor</code> specifies the class of the object to be created. It must represent a valid
+        reference type:
+    </p>
+    <ul>
+        <li><code>L&lt;classname>&gt;;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        The operand stack is updated with a reference to the newly allocated object.
+    </p>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., objectref</code> (a reference to the newly created object)</li>
+    </ul>
+
+    <p>If the class cannot be found or instantiated, a <code>ClassNotFoundException</code> or <code>InstantiationException</code>
+        is thrown.</p>
+</div>
+

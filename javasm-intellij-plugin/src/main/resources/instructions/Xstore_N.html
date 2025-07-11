@@ -1,0 +1,47 @@
+<!-- Instructions: istore_0, istore_1, istore_2, istore_3, lstore_0, lstore_1, lstore_2, lstore_3, fstore_0, fstore_1, fstore_2, fstore_3, dstore_0, dstore_1, dstore_2, dstore_3, astore_0, astore_1, astore_2, astore_3 -->
+<div class="definition">
+    <h2>Store into Local Variable Instructions (Short Form)</h2>
+    <p>
+        <b>{link:istore_0}</b> - <code>0x3b</code> (59)<br>
+        <b>{link:istore_1}</b> - <code>0x3c</code> (60)<br>
+        <b>{link:istore_2}</b> - <code>0x3d</code> (61)<br>
+        <b>{link:istore_3}</b> - <code>0x3e</code> (62)<br>
+        <b>{link:lstore_0}</b> - <code>0x3f</code> (63)<br>
+        <b>{link:lstore_1}</b> - <code>0x40</code> (64)<br>
+        <b>{link:lstore_2}</b> - <code>0x41</code> (65)<br>
+        <b>{link:lstore_3}</b> - <code>0x42</code> (66)<br>
+        <b>{link:fstore_0}</b> - <code>0x43</code> (67)<br>
+        <b>{link:fstore_1}</b> - <code>0x44</code> (68)<br>
+        <b>{link:fstore_2}</b> - <code>0x45</code> (69)<br>
+        <b>{link:fstore_3}</b> - <code>0x46</code> (70)<br>
+        <b>{link:dstore_0}</b> - <code>0x47</code> (71)<br>
+        <b>{link:dstore_1}</b> - <code>0x48</code> (72)<br>
+        <b>{link:dstore_2}</b> - <code>0x49</code> (73)<br>
+        <b>{link:dstore_3}</b> - <code>0x4a</code> (74)<br>
+        <b>{link:astore_0}</b> - <code>0x4b</code> (75)<br>
+        <b>{link:astore_1}</b> - <code>0x4c</code> (76)<br>
+        <b>{link:astore_2}</b> - <code>0x4d</code> (77)<br>
+        <b>{link:astore_3}</b> - <code>0x4e</code> (78)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Stores the top value from the operand stack into a local variable at index 0 to 3. The type of the value is
+        indicated by the instruction prefix.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>istore_1</code></li>
+        <li><code>astore_0</code></li>
+        <li><code>dstore_3</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value</code></li>
+        <li>After: <code>...</code> (value stored into local variable, value removed from stack)</li>
+    </ul>
+</div>

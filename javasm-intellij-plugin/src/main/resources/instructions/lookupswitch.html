@@ -1,0 +1,45 @@
+<!-- Instructions: lookupswitch -->
+<div class="definition">
+    <h2>Table-Based Switch Instruction</h2>
+    <p><b>{link:lookupswitch}</b> - <code>0xab</code> (171)</p>
+
+    <h4>Purpose</h4>
+    <p>Performs a switch-style jump based on the top <code>int</code> value on the operand stack. It matches the key
+        against a set of match-offset pairs and jumps to the corresponding label. If no match is found, jumps to the
+        <code>default</code> label.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li>A list of <code>int</code> key and label pairs, plus a mandatory <code>default</code> label.</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <pre>
+lookupswitch {
+  key_1: label_1;
+  key_2: label_2;
+  ...
+  default: label_default;
+}
+    </pre>
+    <p>Keys can be specified in decimal or hexadecimal (e.g., <code>0x00</code>), and labels are symbolic jump targets.
+    </p>
+
+    <h5><b>Examples:</b></h5>
+    <pre>
+lookupswitch {
+  0: case_zero;
+  1: case_one;
+  default: default_case;
+}
+    </pre>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., key</code> (an <code>int</code> value)</li>
+        <li>After: (no values; control flow jumps to the matched label)</li>
+    </ul>
+
+    <p>If the key does not match any listed case, the control jumps to the <code>default</code> label, which is
+        mandatory.</p>
+</div>

@@ -1,0 +1,67 @@
+<!-- Instructions: iinc -->
+<div class="definition">
+    <h2>Integer Increment Instruction</h2>
+    <p>
+        <b>{link:iinc}</b> - <code>0x84</code> (132)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Performs an in-place addition (or subtraction) on a local variable of type <code>int</code>. This instruction is
+        commonly used for incrementing loop counters or updating local counters without using the operand stack.
+    </p>
+    <p>
+        Both the local variable index and the constant value to increment by are supplied as operands. The increment
+        constant is a signed value, so both positive and negative deltas are supported.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>index</code>: unsigned byte (0–255) — index into the local variable array</li>
+        <li><code>const</code>: signed byte (-128 to 127) — increment value</li>
+    </ul>
+    <p>
+        If either operand exceeds the 1-byte limit, the instruction must be prefixed with <code>wide</code>, which
+        promotes operands to 2 bytes.
+    </p>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>iinc &lt;index&gt;, &lt;const&gt;</code></li>
+        <li><code>wide iinc &lt;index&gt;, &lt;const&gt;</code> (when using extended operands)</li>
+    </ul>
+
+    <h5><b>Semantics:</b></h5>
+    <p>
+        Translates to the following pseudo-code:
+    </p>
+    <pre>
+local_variables[index] = local_variables[index] + const;
+    </pre>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iinc 2, 1</code> → increments local variable at index 2 by 1</li>
+        <li><code>iinc 5, -3</code> → decrements local variable at index 5 by 3</li>
+        <li><code>wide iinc 258, 1000</code> → increments local variable 258 by 1000 (requires <code>wide</code> prefix)
+        </li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        None — this instruction does not read from or write to the operand stack.
+    </p>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Only applicable to local variables of type <code>int</code>; using it with <code>long</code> or other types
+            is invalid.
+        </li>
+        <li>Unlike other arithmetic instructions, <code>iinc</code> operates directly on the local variable slot without
+            pushing or popping anything from the stack, making it more efficient for simple counters.
+        </li>
+        <li>Commonly emitted by compilers for constructs like <code>i++</code> and <code>i += constant</code>.</li>
+        <li>May not work with bytecode instrumentation tools that assume all arithmetic happens via the operand stack.
+        </li>
+    </ul>
+</div>

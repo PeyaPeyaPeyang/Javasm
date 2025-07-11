@@ -1,0 +1,52 @@
+<!-- Instructions: pustatic -->
+<div class="definition">
+    <h2>Store Static Field Instruction</h2>
+    <p><b>{link:pustatic}</b> - <code>0xb3</code> (179)</p>
+
+    <h4>Purpose</h4>
+    <p>
+        Stores a value into a static field of a class. The value is popped from the operand stack and assigned to the
+        specified static field.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>FieldDescriptor</code>: Specifies the class, field name, and type descriptor of the static field to
+            store the value into. The format is <code>Owner->FieldName:TypeDescriptor</code>. The <code>Owner</code>
+            does not include the <code>L</code> and <code>;</code> typically used in type descriptors.
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <p><code>pustatic &lt;FieldDescriptor&gt;</code></p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>pustatic java/lang/System->out:Ljava/io/PrintStream;</code></li>
+        <li><code>pustatic java/lang/Math->PI:D</code></li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        A <code>TypeDescriptor</code> specifies the type of the field. It must represent a valid Java type:
+    </p>
+    <ul>
+        <li><code>I</code>: <code>int</code></li>
+        <li><code>J</code>: <code>long</code></li>
+        <li><code>F</code>: <code>float</code></li>
+        <li><code>D</code>: <code>double</code></li>
+        <li><code>Z</code>: <code>boolean</code></li>
+        <li><code>B</code>: <code>byte</code></li>
+        <li><code>C</code>: <code>char</code></li>
+        <li><code>S</code>: <code>short</code></li>
+        <li><code>L&lt;classname>&gt;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+        <li><code>[</code>: An array type (e.g., <code>[I</code> for <code>int[]</code>)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value</code></li>
+        <li>After: <code>...</code> (the value is consumed)</li>
+    </ul>
+</div>
+

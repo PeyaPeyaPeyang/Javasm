@@ -1,0 +1,33 @@
+<!-- Instructions: anewarray -->
+<div class="definition">
+    <h2>Create new reference array</h2>
+    <p><b>{link:anewarray}</b> - <code>0xbd</code> (189)</p>
+
+    <h4>Purpose</h4>
+    <p>Creates a new array of references with component type specified by a <code>TypeDescriptor</code>. The length of
+        the array is popped from the stack.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: a constant pool index referencing the class or interface type descriptor. Must
+            represent a reference type (e.g., <code>Ljava/lang/String;</code>), <strong>primitive types are not
+                allowed</strong>.
+        </li>
+    </ul>
+
+    <h5><b>Format:</b> <code>anewarray &lt;TypeDescriptor&gt;</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>anewarray Ljava/lang/String;</code></li>
+        <li><code>anewarray Ljava/util/List;</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., count</code></li>
+        <li>After: <code>..., arrayref</code> (a new reference array)</li>
+    </ul>
+
+    <p>If <code>count</code> is negative, a <code>NegativeArraySizeException</code> is thrown.</p>
+</div>

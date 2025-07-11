@@ -1,0 +1,39 @@
+<!-- Instructions: jsr, jsr_w -->
+<div class="definition">
+    <h2>Jump to Subroutine Instructions</h2>
+    <p>
+        <b>{link:jsr}</b> - <code>0xa8</code> (168)<br>
+        <b>{link:jsr_w}</b> - <code>0xc9</code> (201)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Transfers control to a subroutine at the specified label and pushes the return address onto the operand
+        stack.<br>
+        <b>jsr</b> uses a 16-bit signed offset, while <b>jsr_w</b> uses a 32-bit signed offset.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>label</code>: The target label to jump to.</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>jsr &lt;label&gt;</code></li>
+        <li><code>jsr_w &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>jsr subroutine_start</code></li>
+        <li><code>jsr_w long_subroutine_start</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., returnAddress (reference)</code></li>
+    </ul>
+</div>
+

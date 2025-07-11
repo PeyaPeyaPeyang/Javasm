@@ -1,0 +1,32 @@
+<!-- Instructions: bipush -->
+<div class="definition">
+    <h2>Push Byte Value</h2>
+    <p><b>{link:bipush}</b> - <code>0x10</code> (16)</p>
+
+    <h4>Purpose</h4>
+    <p>Pushes a signed byte value (−128 to 127) onto the operand stack as an <code>int</code>. This instruction is used
+        for values outside the range handled by <code>iconst_m1</code> to <code>iconst_5</code>.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>byte</code>: 8-bit signed immediate value to push onto the stack.</li>
+    </ul>
+
+    <h5><b>Format:</b> <code>bipush &lt;byte&gt;</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>bipush 100</code></li>
+        <li><code>bipush -128</code></li>
+    </ul>
+
+    <h5><b>Note:</b></h5>
+    <p>For values between −1 and 5 inclusive, use the corresponding <code>iconst_m1</code> to <code>iconst_5</code>
+        instructions instead of <code>bipush</code>.</p>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code> (int)</li>
+    </ul>
+</div>

@@ -1,0 +1,45 @@
+<!-- Instructions: tableswitch -->
+<div class="definition">
+    <h2>Range-Based Switch Instruction</h2>
+    <p><b>{link:tableswitch}</b> - <code>0xaa</code> (170)</p>
+
+    <h4>Purpose</h4>
+    <p>Performs a switch-style jump based on the <code>int</code> key on the operand stack. The key is matched against a
+        continuous range starting from the specified low index. Execution jumps to the corresponding label based on the
+        key's offset from the low index. If the key is out of range, control jumps to the <code>default</code> label.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>low_index</code>: the first (lowest) int key value</li>
+        <li>Labels for each consecutive key, in order</li>
+        <li>A mandatory <code>default</code> label</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <pre>
+tableswitch &lt;low_index&gt; {
+  label_0;
+  label_1;
+  ...
+} default &lt;default_label&gt;
+    </pre>
+
+    <h5><b>Examples:</b></h5>
+    <pre>
+tableswitch 1 {
+  case_one;
+  case_two;
+  case_three;
+} default default_case;
+    </pre>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., key</code> (an <code>int</code> value)</li>
+        <li>After: (no values; control flow jumps to matched label)</li>
+    </ul>
+
+    <p>If the <code>key</code> is outside the continuous range starting from <code>low_index</code> to <code>low_index +
+        number_of_labels - 1</code>, the control jumps to the <code>default</code> label, which is mandatory.</p>
+</div>

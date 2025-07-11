@@ -1,0 +1,42 @@
+<!-- Instructions: d2f, d2i, d2l, f2d, f2i, f2l, i2b, i2c, i2d, i2f, i2l, i2s, l2d, l2f, l2i -->
+<div class="definition">
+    <h2>Primitive Conversion Instructions</h2>
+    <p>
+        <b>{link:i2l}</b> - <code>0x85</code> (133)<br>
+        <b>{link:i2f}</b> - <code>0x86</code> (134)<br>
+        <b>{link:i2d}</b> - <code>0x87</code> (135)<br>
+        <b>{link:l2i}</b> - <code>0x88</code> (136)<br>
+        <b>{link:l2f}</b> - <code>0x89</code> (137)<br>
+        <b>{link:l2d}</b> - <code>0x8a</code> (138)<br>
+        <b>{link:f2i}</b> - <code>0x8b</code> (139)<br>
+        <b>{link:f2l}</b> - <code>0x8c</code> (140)<br>
+        <b>{link:f2d}</b> - <code>0x8d</code> (141)<br>
+        <b>{link:d2i}</b> - <code>0x8e</code> (142)<br>
+        <b>{link:d2l}</b> - <code>0x8f</code> (143)<br>
+        <b>{link:d2f}</b> - <code>0x90</code> (144)<br>
+        <b>{link:i2b}</b> - <code>0x91</code> (145)<br>
+        <b>{link:i2c}</b> - <code>0x92</code> (146)<br>
+        <b>{link:i2s}</b> - <code>0x93</code> (147)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Converts the value on top of the operand stack from one primitive type to another. The value is popped,
+        converted, and the result is pushed back onto the stack.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>d2i</code></li>
+        <li><code>i2l</code></li>
+        <li><code>f2d</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value (type1)</code></li>
+        <li>After: <code>..., value (type2)</code></li>
+    </ul>
+</div>

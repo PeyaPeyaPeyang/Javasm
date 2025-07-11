@@ -1,0 +1,68 @@
+<!-- Instructions: dup, dup_x1, dup_x2, dup2, dup2_x1, dup2_x2 -->
+<div class="definition">
+    <h2>Stack Duplication Instructions</h2>
+    <p>
+        <b>{link:dup}</b> - <code>0x59</code> (89)<br>
+        <b>{link:dup_x1}</b> - <code>0x5a</code> (90)<br>
+        <b>{link:dup_x2}</b> - <code>0x5b</code> (91)<br>
+        <b>{link:dup2}</b> - <code>0x5c</code> (92)<br>
+        <b>{link:dup2_x1}</b> - <code>0x5d</code> (93)<br>
+        <b>{link:dup2_x2}</b> - <code>0x5e</code> (94)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Duplicates one or two values on the operand stack and optionally inserts them deeper into the stack.</p>
+
+    <h5><b>Operands:</b> None</h5>
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>{link:dup}</b><br>
+            Before: <code>..., value</code><br>
+            After: <code>..., value, value</code>
+        </li>
+        <li><b>{link:dup_x1}</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: <code>..., value1, value2, value1</code>
+        </li>
+        <li><b>{link:dup_x2}</b><br>
+            Before: <code>..., value3, value2, value1</code><br>
+            After: <code>..., value1, value3, value2, value1</code>
+        </li>
+        <li><b>{link:dup2}</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: <code>..., value2, value1, value2, value1</code><br>
+            (Note: used for either two category-1 values or one category-2 value like long/double)
+        </li>
+        <li><b>{link:dup2_x1}</b><br>
+            Before: <code>..., value3, value2, value1</code><br>
+            After: <code>..., value2, value1, value3, value2, value1</code>
+        </li>
+        <li><b>{link:dup2_x2}</b><br>
+            Complex. Two patterns:<br>
+            - If all values are category-1 (e.g., int/float):<br>
+            Before: <code>..., value4, value3, value2, value1</code><br>
+            After: <code>..., value2, value1, value4, value3, value2, value1</code><br><br>
+            - If top is a category-2 value (long/double):<br>
+            Before: <code>..., value3, value2</code> (where value2 is category-2)<br>
+            After: <code>..., value2, value3, value2</code>
+        </li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>dup</code></li>
+        <li><code>dup_x1</code></li>
+        <li><code>dup2</code> (with <code>long</code> or two <code>int</code>s)</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <p>
+        These instructions are sensitive to the <b>category</b> of the operand types:<br>
+        - Category 1: 1-word (int, float, reference)<br>
+        - Category 2: 2-words (long, double)<br>
+        Using the wrong <code>dup</code> variant on the wrong operand type configuration causes a
+        <code>VerifyError</code> at runtime.
+    </p>
+</div>

@@ -1,0 +1,27 @@
+<!-- Instructions: athrow -->
+<div class="definition">
+    <h2>Throw Exception</h2>
+    <p><b>{link:athrow}</b> - <code>0xbf</code> (191)</p>
+
+    <h4>Purpose</h4>
+    <p>Throws the exception object currently on top of the operand stack. The object must be a reference to a throwable
+        object (subclass of <code>java.lang.Throwable</code>).</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>athrow</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>athrow</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., throwable-instance</code></li>
+        <li>After: <code>(no values)</code> (method execution is terminated by throwing the exception)</li>
+    </ul>
+
+    <p>Throws the exception referenced by the object on the stack. If the object is <code>null</code>, a <code>NullPointerException</code>
+        is thrown instead.</p>
+</div>

@@ -1,0 +1,40 @@
+<!-- Instructions: ior, lor -->
+<div class="definition">
+    <h2>Bitwise OR Instructions</h2>
+    <p>
+        <b>{link:ior}</b> - <code>0x80</code> (128)<br>
+        <b>{link:lor}</b> - <code>0x81</code> (129)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Performs a bitwise OR operation on the top two values from the operand stack.<br>
+        The result is pushed back onto the stack.
+    </p>
+    <ul>
+        <li><b>ior</b>: operates on two <code>int</code> values</li>
+        <li><b>lor</b>: operates on two <code>long</code> values</li>
+    </ul>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ior</code></li>
+        <li><code>lor</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ior</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code><br>
+            After: <code>..., result (int)</code>
+        </li>
+        <li><b>lor</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code><br>
+            After: <code>..., result (long)</code>
+        </li>
+    </ul>
+</div>

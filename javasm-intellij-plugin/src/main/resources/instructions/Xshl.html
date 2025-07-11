@@ -1,0 +1,41 @@
+<!-- Instructions: ishl, lshl -->
+<div class="definition">
+    <h2>Shift Left Instructions</h2>
+    <p>
+        <b>{link:ishl}</b> - <code>0x78</code> (120)<br>
+        <b>{link:lshl}</b> - <code>0x79</code> (121)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Shifts a value to the left logically by a specified number of bits.<br>
+        The shift amount is masked: only the lowest 5 bits are used for <code>ishl</code>, and the lowest 6 bits for
+        <code>lshl</code>.
+    </p>
+    <ul>
+        <li><b>ishl</b>: logically left-shifts an <code>int</code> by an <code>int</code> amount</li>
+        <li><b>lshl</b>: logically left-shifts a <code>long</code> by an <code>int</code> amount</li>
+    </ul>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ishl</code></li>
+        <li><code>lshl</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ishl</b><br>
+            Before: <code>..., value (int), shift (int)</code><br>
+            After: <code>..., result (int)</code>
+        </li>
+        <li><b>lshl</b><br>
+            Before: <code>..., value (long), shift (int)</code><br>
+            After: <code>..., result (long)</code>
+        </li>
+    </ul>
+</div>

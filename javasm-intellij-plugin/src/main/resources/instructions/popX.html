@@ -1,0 +1,45 @@
+<!-- Instructions: pop, pop2 -->
+<div class="definition">
+    <h2>Stack Popping Instructions</h2>
+    <p>
+        <b>{link:pop}</b> - <code>0x57</code> (87)<br>
+        <b>{link:pop2}</b> - <code>0x58</code> (88)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Removes one or two values from the top of the operand stack.</p>
+
+    <h5><b>Operands:</b> None</h5>
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>pop</b><br>
+            Before: <code>..., value</code><br>
+            After: <code>...</code><br>
+            (Removes one category-1 value: <code>int</code>, <code>float</code>, reference, etc.)
+        </li>
+        <li><b>pop2</b><br>
+            Two valid use cases:<br>
+            - <b>Case 1 (two category-1 values)</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: <code>...</code><br><br>
+            - <b>Case 2 (one category-2 value)</b><br>
+            Before: <code>..., value</code> (long or double)<br>
+            After: <code>...</code>
+        </li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>pop</code> (e.g. discard an unused int)</li>
+        <li><code>pop2</code> (e.g. discard a double or two ints)</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <p>
+        Using <code>pop</code> on a category-2 value (like long or double) results in a <code>VerifyError</code> at
+        runtime.
+        Likewise, using <code>pop2</code> when the stack does not match one of the expected patterns is invalid.
+    </p>
+</div>

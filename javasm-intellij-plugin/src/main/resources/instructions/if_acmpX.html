@@ -1,0 +1,41 @@
+<!-- Instructions: if_acmpeq, if_acmpne -->
+<div class="definition">
+    <h2>Reference Comparison Instructions</h2>
+    <p>
+        <b>{link:if_acmpeq}</b> - <code>0xa5</code> (165)<br>
+        <b>{link:if_acmpne}</b> - <code>0xa6</code> (166)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Compares two object references from the operand stack and branches to the specified label based on the result.
+    </p>
+    <ul>
+        <li><b>if_acmpeq</b>: Branches if the two references are equal.</li>
+        <li><b>if_acmpne</b>: Branches if the two references are not equal.</li>
+    </ul>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>label</code>: The target label to branch to if the condition is met.</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>if_acmpeq &lt;label&gt;</code></li>
+        <li><code>if_acmpne &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>if_acmpeq equal_label</code></li>
+        <li><code>if_acmpne not_equal_label</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (reference), value2 (reference)</code></li>
+        <li>After: <code>...</code> (both values are consumed)</li>
+    </ul>
+</div>
+

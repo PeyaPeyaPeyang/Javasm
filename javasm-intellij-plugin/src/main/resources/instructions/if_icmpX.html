@@ -1,0 +1,57 @@
+<!-- Instructions: if_icmpeq, if_icmpne, if_icmplt, if_icmpge, if_icmpgt, if_icmple -->
+<div class="definition">
+    <h2>Integer Comparison Instructions</h2>
+    <p>
+        <b>{link:if_icmpeq}</b> - <code>0x9f</code> (159)<br>
+        <b>{link:if_icmpne}</b> - <code>0xa0</code> (160)<br>
+        <b>{link:if_icmplt}</b> - <code>0xa1</code> (161)<br>
+        <b>{link:if_icmpge}</b> - <code>0xa2</code> (162)<br>
+        <b>{link:if_icmpgt}</b> - <code>0xa3</code> (163)<br>
+        <b>{link:if_icmple}</b> - <code>0xa4</code> (164)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Compare two integer values from the operand stack and branches to the specified label based on the result.
+    </p>
+    <ul>
+        <li><b>{link:if_icmpeq}</b>: Branches if the two integers are equal.</li>
+        <li><b>{link:if_icmpne}</b>: Branches if the two integers are not equal.</li>
+        <li><b>{link:if_icmplt}</b>: Branches if the first integer is less than the second.</li>
+        <li><b>{link:if_icmpge}</b>: Branches if the first integer is greater than or equal to the second.</li>
+        <li><b>{link:if_icmpgt}</b>: Branches if the first integer is greater than the second.</li>
+        <li><b>{link:if_icmple}</b>: Branches if the first integer is less than or equal to the second.</li>
+    </ul>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>label</code>: The target label to branch to if the condition is met.</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>if_icmpeq &lt;label&gt;</code></li>
+        <li><code>if_icmpne &lt;label&gt;</code></li>
+        <li><code>if_icmplt &lt;label&gt;</code></li>
+        <li><code>if_icmpge &lt;label&gt;</code></li>
+        <li><code>if_icmpgt &lt;label&gt;</code></li>
+        <li><code>if_icmple &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>if_icmpeq equal_label</code></li>
+        <li><code>if_icmpne not_equal_label</code></li>
+        <li><code>if_icmplt less_than_label</code></li>
+        <li><code>if_icmpge greater_or_equal_label</code></li>
+        <li><code>if_icmpgt greater_than_label</code></li>
+        <li><code>if_icmple less_or_equal_label</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (int), value2 (int)</code></li>
+        <li>After: <code>...</code> (both values are consumed)</li>
+    </ul>
+</div>
+

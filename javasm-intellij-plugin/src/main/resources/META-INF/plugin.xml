@@ -93,6 +93,9 @@
                 implementation="tokyo.peya.javasm.intellij.editor.linenumber.InstructionPsiChangeListener"/>
         <codeInsight.lineMarkerProvider language="JAL"
                                         implementationClass="tokyo.peya.javasm.intellij.editor.linenumber.JALCumulativeOffsetLineMarkerProvider"/>
+        <lang.documentationProvider
+                language="JAL"
+                implementationClass="tokyo.peya.javasm.intellij.editor.document.JALInstructionDocumentProvider"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

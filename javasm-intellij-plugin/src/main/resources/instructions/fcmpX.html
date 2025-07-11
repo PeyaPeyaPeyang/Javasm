@@ -1,0 +1,36 @@
+<!-- Instructions: fcmpg, fcmpl -->
+<div class="definition">
+    <h2>Float Compare Instructions</h2>
+    <p>
+        <b>{link:fcmpg}</b> - <code>0x96</code> (150)<br>
+        <b>{link:fcmpl}</b> - <code>0x95</code> (149)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Compares two <code>float</code> values. Pops two values from the operand stack and pushes an <code>int</code>
+        result:<br>
+        <code>-1</code> if value1 &lt; value2, <code>0</code> if equal, <code>1</code> if value1 &gt; value2.
+    </p>
+    <p>
+        If either value is <code>NaN</code>:<br>
+        - <b>{link:fcmpg}</b> pushes <code>1</code><br>
+        - <b>{link:fcmpl}</b> pushes <code>-1</code>
+    </p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>fcmpg</code></li>
+        <li><code>fcmpl</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (float), value2 (float)</code></li>
+        <li>After: <code>..., result (int)</code> (<code>-1</code>, <code>0</code>, or <code>1</code>)</li>
+    </ul>
+</div>

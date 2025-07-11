@@ -1,0 +1,30 @@
+<!-- Instructions: imul, lmul, fmul, dmul -->
+<div class="definition">
+    <h2>Multiplication Instructions</h2>
+    <p>
+        <b>{link:imul}</b> - <code>0x68</code> (104)<br>
+        <b>{link:lmul}</b> - <code>0x69</code> (105)<br>
+        <b>{link:fmul}</b> - <code>0x6a</code> (106)<br>
+        <b>{link:dmul}</b> - <code>0x6b</code> (107)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Multiplies the top two operands on the operand stack and pushes the result. The operation respects the type of
+        the instruction.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>imul</code></li>
+        <li><code>dmul</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1, value2</code></li>
+        <li>After: <code>..., result</code></li>
+    </ul>
+</div>

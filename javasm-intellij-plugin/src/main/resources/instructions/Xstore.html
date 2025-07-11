@@ -1,0 +1,46 @@
+<!-- Instructions: istore, lstore, fstore, dstore, astore -->
+<div class="definition">
+    <h2>Store Instructions</h2>
+    <p>
+        <b>{link:istore}</b> - <code>0x36</code> (54)<br>
+        <b>{link:lstore}</b> - <code>0x37</code> (55)<br>
+        <b>{link:fstore}</b> - <code>0x38</code> (56)<br>
+        <b>{link:dstore}</b> - <code>0x39</code> (57)<br>
+        <b>{link:astore}</b> - <code>0x3a</code> (58)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Stores a value from the operand stack into a local variable at the specified index <code>N</code>.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>N</code>: Local variable index (decimal or hexadecimal, e.g., <code>5</code> or <code>0x05</code>)
+        </li>
+    </ul>
+
+    <h5><b>Format:</b> <code>{instruction} N</code></h5>
+
+    <h5><b>Notes on <code>wide</code> prefix:</b></h5>
+    <p>If the <code>wide</code> prefix is used, the index operand <code>N</code> is extended from 1 byte to 2 bytes,
+        allowing for larger local variable indices.</p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>istore 3</code></li>
+        <li><code>lstore 0x0A</code></li>
+        <li><code>wide fstore 0x0100</code> (index 256)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>istore, fstore, astore</b><br>
+            Before: <code>..., value</code><br>
+            After: <code>...</code> (value stored in local variable <code>N</code>)
+        </li>
+        <li><b>lstore, dstore</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: <code>...</code> (value stored in local variable <code>N</code>)<br>
+            (Note: long and double use two stack words)
+        </li>
+    </ul>
+</div>

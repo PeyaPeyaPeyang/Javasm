@@ -1,0 +1,39 @@
+<!-- Instructions: goto, goto_w -->
+<div class="definition">
+    <h2>Unconditional Branch Instructions</h2>
+    <p>
+        <b>{link:goto}</b> - <code>0xa7</code> (167)<br>
+        <b>{link:goto_w}</b> - <code>0xc8</code> (200)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Transfers control unconditionally to the instruction at the specified label.<br>
+        <b>goto</b> supports labels within a 16-bit signed offset,
+        while <b>goto_w</b> supports labels within a 32-bit signed offset.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>label</code>: The target label to branch to.</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <ul>
+        <li><code>goto &lt;label&gt;</code></li>
+        <li><code>goto_w &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>goto loop_start</code></li>
+        <li><code>goto_w end_of_method</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>...</code></li>
+    </ul>
+</div>
+

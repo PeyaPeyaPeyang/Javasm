@@ -1,0 +1,80 @@
+<!-- Instructions: invokevirtual -->
+<div class="definition">
+    <h2>Invoke Instance Method</h2>
+    <p>
+        <b>{link:invokevirtual}</b> - <code>0xb6</code> (182)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Executes an instance (virtual) method on a given object reference. The actual method to be invoked is determined
+        at runtime based on the dynamic type of the object, enabling polymorphism via <i>dynamic dispatch</i>. This
+        instruction is commonly used to invoke overridden methods in a class hierarchy.
+    </p>
+    <p>
+        Unlike <code>invokespecial</code> (which bypasses dynamic dispatch), <code>invokevirtual</code> consults the
+        method table (vtable) of the runtime class of the object. This allows the most specific implementation to be
+        called, even if the declared type is a superclass or interface.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>methodref</code> (2 bytes): A constant pool index pointing to a <code>CONSTANT_Methodref_info</code>
+            structure, which includes the class and the method's name and descriptor.
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <code>invokevirtual &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>The symbolic reference is resolved at runtime to identify the target method:</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: Fully qualified internal JVM class name (e.g., <code>java/lang/String</code>)</li>
+        <li><b>&lt;methodname&gt;</b>: Name of the method (e.g., <code>equals</code>, <code>length</code>)</li>
+        <li><b>&lt;argument_descriptor&gt;</b>: Describes argument types using JVM descriptors (e.g., <code>I</code>,
+            <code>Ljava/lang/Object;</code>)
+        </li>
+        <li><b>&lt;return_descriptor&gt;</b>: Describes the return type (e.g., <code>V</code> for void, <code>Ljava/lang/String;</code>
+            for String)
+        </li>
+    </ul>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>invokevirtual java/lang/String->length()I</code></li>
+        <li><code>invokevirtual java/util/List->get(I)Ljava/lang/Object;</code></li>
+        <li><code>invokevirtual java/lang/Object->toString()Ljava/lang/String;</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        The operand stack must contain the object reference and method arguments, in left-to-right order.
+    </p>
+    <p>
+        Before: <code>..., objectref, arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>
+    </p>
+    <p>
+        The object reference is consumed, along with all arguments. If the method returns a value, it is pushed back
+        onto the stack. If the return type is <code>void</code>, nothing is pushed.
+    </p>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>The method must not be static or private—use <code>invokestatic</code> or <code>invokespecial</code> for
+            those cases.
+        </li>
+        <li>If <code>objectref</code> is <code>null</code>, a <code>NullPointerException</code> is thrown before
+            resolution.
+        </li>
+        <li>If the resolved method is static or not accessible, <code>IncompatibleClassChangeError</code> is thrown.
+        </li>
+        <li>Can be used to invoke methods from superclasses, but not constructors or private methods (which require
+            <code>invokespecial</code>).
+        </li>
+    </ul>
+</div>

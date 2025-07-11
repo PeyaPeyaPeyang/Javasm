@@ -1,0 +1,34 @@
+<!-- Instructions: sipush -->
+<div class="definition">
+    <h2>Push Signed Short Instruction</h2>
+    <p><b>{link:sipush}</b> - <code>0x11</code> (17)</p>
+
+    <h4>Purpose</h4>
+    <p>Pushes a signed 16-bit short value (−32,768 to 32,767) onto the operand stack as an <code>int</code>. This
+        instruction is used for values outside the range handled by <code>{link:bipush}</code> and <code>{link:iconst_m1}</code>
+        to
+        <code>{link:iconst_5}</code>.</p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>short</code>: 16-bit signed immediate value to push onto the stack.</li>
+    </ul>
+
+    <h5><b>Format:</b> <code>sipush &lt;short&gt;</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>sipush 1000</code></li>
+        <li><code>sipush -32000</code></li>
+    </ul>
+
+    <h5><b>Note:</b></h5>
+    <p>For values between −128 and 127 inclusive, use <code>bipush</code>. For values between −1 and 5 inclusive, use
+        <code>iconst_m1</code> to <code>iconst_5</code>.</p>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code> (int)</li>
+    </ul>
+</div>

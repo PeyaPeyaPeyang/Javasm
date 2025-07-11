@@ -1,0 +1,69 @@
+<!-- Instructions: ireturn, lreturn, freturn, dreturn, areturn, return -->
+<div class="definition">
+    <h2>Return from Method Instructions</h2>
+    <p>
+        <b>{link:ireturn}</b> - <code>0xac</code> (172)<br>
+        <b>{link:lreturn}</b> - <code>0xad</code> (173)<br>
+        <b>{link:freturn}</b> - <code>0xae</code> (174)<br>
+        <b>{link:dreturn}</b> - <code>0xaf</code> (175)<br>
+        <b>{link:areturn}</b> - <code>0xb0</code> (176)<br>
+        <b>{link:return}</b> - <code>0xb1</code> (177)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Terminates execution of the current method and optionally returns a value to the calling method, depending on
+        the return type. Each variant corresponds to a specific return type:
+    </p>
+    <ul>
+        <li><b>{link:ireturn}</b>: returns an <code>int</code> value</li>
+        <li><b>{link:lreturn}</b>: returns a <code>long</code> value</li>
+        <li><b>{link:freturn}</b>: returns a <code>float</code> value</li>
+        <li><b>{link:dreturn}</b>: returns a <code>double</code> value</li>
+        <li><b>{link:areturn}</b>: returns a reference (e.g., an object or array)</li>
+        <li><b>{link:return}</b>: used when the method has <code>void</code> return type (i.e., no value is returned)
+        </li>
+    </ul>
+
+    <h5><b>Operands:</b></h5>
+    <p>None — the value to return must already be on the operand stack.</p>
+
+    <h5><b>Format:</b></h5>
+    <code>{instruction}</code>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>ireturn</code> - returns the <code>int</code> value at the top of the operand stack</li>
+        <li><code>areturn</code> - returns an object or array reference</li>
+        <li><code>return</code> - exits a <code>void</code> method</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>ireturn, freturn, areturn</b><br>
+            Before: <code>..., value</code><br>
+            After: (method exits, value passed to caller)
+        </li>
+        <li><b>lreturn, dreturn</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: (method exits, 64-bit value passed to caller)<br>
+            <small>Note: <code>long</code> and <code>double</code> values consume two stack slots.</small>
+        </li>
+        <li><b>return</b><br>
+            Before: <code>...</code><br>
+            After: (method exits without returning a value)
+        </li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>The type of the return instruction must match the method's declared return type; otherwise, a <code>VerifierError</code>
+            is thrown at runtime or class loading.
+        </li>
+        <li>Returning from a synchronized method involves unlocking the monitor before exiting.</li>
+        <li>If a return instruction is executed while an exception is being propagated, it is skipped entirely.</li>
+        <li><code>areturn</code> is used not only for user-defined objects but also arrays (e.g., <code>String[]</code>,
+            <code>int[]</code>)
+        </li>
+    </ul>
+</div>

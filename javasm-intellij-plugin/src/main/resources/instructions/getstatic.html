@@ -1,0 +1,51 @@
+<!-- Instructions: getstatic -->
+<div class="definition">
+    <h2>Get Static Field Value Instruction</h2>
+    <p><b>{link:getstatic}</b> - <code>0xb2</code> (178)</p>
+
+    <h4>Purpose</h4>
+    <p>
+        Fetches the value of a static field from a class and pushes it onto the operand stack.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>FieldDescriptor</code>: Specifies the class, field name, and type descriptor of the static field to
+            fetch. The format is <code>Owner->FieldName:TypeDescriptor</code>. The <code>Owner</code> does not include
+            the <code>L</code> and <code>;</code> typically used in type descriptors.
+        </li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <p><code>getstatic &lt;FieldDescriptor&gt;</code></p>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>getstatic java/lang/System->out:Ljava/io/PrintStream;</code></li>
+        <li><code>getstatic java/lang/Math->PI:D</code></li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        A <code>TypeDescriptor</code> specifies the type of the field. It must represent a valid Java type:
+    </p>
+    <ul>
+        <li><code>I</code>: <code>int</code></li>
+        <li><code>J</code>: <code>long</code></li>
+        <li><code>F</code>: <code>float</code></li>
+        <li><code>D</code>: <code>double</code></li>
+        <li><code>Z</code>: <code>boolean</code></li>
+        <li><code>B</code>: <code>byte</code></li>
+        <li><code>C</code>: <code>char</code></li>
+        <li><code>S</code>: <code>short</code></li>
+        <li><code>L&lt;classname>&gt;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+        <li><code>[</code>: An array type (e.g., <code>[I</code> for <code>int[]</code>)</li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code> (the value of the static field)</li>
+    </ul>
+</div>
+

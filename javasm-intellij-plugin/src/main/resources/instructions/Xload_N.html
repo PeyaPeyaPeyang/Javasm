@@ -1,0 +1,54 @@
+<!-- Instructions: aload_0, aload_1, aload_2, aload_3, iload_0, iload_1, iload_2, iload_3, dload_0, dload_1, dload_2, dload_3, lload_0, lload_1, lload_2, lload_3, fload_0, fload_1, fload_2, fload_3 -->
+<div class="definition">
+    <h2>Load from Local Variable (Shortcut) Instructions</h2>
+    <p>
+        <b>{link:aload_0}</b> - <code>0x2a</code> (42)<br>
+        <b>{link:aload_1}</b> - <code>0x2b</code> (43)<br>
+        <b>{link:aload_2}</b> - <code>0x2c</code> (44)<br>
+        <b>{link:aload_3}</b> - <code>0x2d</code> (45)<br>
+        <b>{link:iload_0}</b> - <code>0x1a</code> (26)<br>
+        <b>{link:iload_1}</b> - <code>0x1b</code> (27)<br>
+        <b>{link:iload_2}</b> - <code>0x1c</code> (28)<br>
+        <b>{link:iload_3}</b> - <code>0x1d</code> (29)<br>
+        <b>{link:dload_0}</b> - <code>0x26</code> (38)<br>
+        <b>{link:dload_1}</b> - <code>0x27</code> (39)<br>
+        <b>{link:dload_2}</b> - <code>0x28</code> (40)<br>
+        <b>{link:dload_3}</b> - <code>0x29</code> (41)<br>
+        <b>{link:lload_0}</b> - <code>0x1e</code> (30)<br>
+        <b>{link:lload_1}</b> - <code>0x1f</code> (31)<br>
+        <b>{link:lload_2}</b> - <code>0x20</code> (32)<br>
+        <b>{link:lload_3}</b> - <code>0x21</code> (33)<br>
+        <b>{link:fload_0}</b> - <code>0x22</code> (34)<br>
+        <b>{link:fload_1}</b> - <code>0x23</code> (35)<br>
+        <b>{link:fload_2}</b> - <code>0x24</code> (36)<br>
+        <b>{link:fload_3}</b> - <code>0x25</code> (37)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Loads a value from a local variable index <code>N</code> (0 to 3) onto the operand stack.
+        These instructions are shortcuts for <code>{instruction} N</code> without requiring an explicit operand.</p>
+
+    <h5><b>Operands:</b></h5>
+    <p>None. The index is implied by the instruction name.</p>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>iload_0</code></li>
+        <li><code>aload_3</code></li>
+        <li><code>dload_2</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li><b>aload, iload, fload</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code> (1 word value)
+        </li>
+        <li><b>lload, dload</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value2, value1</code> (2 word value)
+        </li>
+    </ul>
+</div>

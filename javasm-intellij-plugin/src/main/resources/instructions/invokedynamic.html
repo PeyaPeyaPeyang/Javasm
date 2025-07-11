@@ -1,0 +1,57 @@
+<!-- Instructions: invokedynamic -->
+<div class="definition">
+    <h2>Invoke Dynamic</h2>
+    <p>
+        <b>{link:invokedynamic}</b> - <code>0xba</code> (186)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>
+        Performs a dynamic method invocation using a bootstrap method and call site descriptor.<br>
+        Designed to support dynamically typed languages and lambda expressions by deferring method binding until
+        runtime.
+    </p>
+
+    <h5><b>Operands:</b></h5>
+    <ul>
+        <li><code>methodName</code>: Name of the method to invoke dynamically</li>
+        <li><code>methodDescriptor</code>: JVM method descriptor specifying argument and return types</li>
+        <li><code>MethodHandle</code>: A fixed prefix <code>MethodHandle|</code> followed by an operation and a method
+            reference, e.g. <code>MethodHandle|getfield|java/lang/String->length()I</code></li>
+        <li><code>MethodType</code>: Method type descriptor instance representing the method signature, e.g. <code>MethodType|(Ljava/lang/String;)V</code>
+        </li>
+        <li>Optional additional <code>MethodHandle</code> or scalar arguments depending on the bootstrap method</li>
+    </ul>
+
+    <h5><b>Format:</b></h5>
+    <pre>
+invokedynamic &lt;methodName&gt; &lt;methodDescriptor&gt; MethodHandle|&lt;operation&gt;|&lt;methodRef&gt; MethodType|&lt;methodTypeDescriptor&gt; [additional MethodHandle or scalar arguments...]
+    </pre>
+
+    <h5><b>Details:</b></h5>
+    <ul>
+        <li><b>MethodHandle</b> specifies a method handle with the fixed prefix <code>MethodHandle|</code>, an operation
+            like <code>getfield</code>, <code>invokeinterface</code>, or <code>putstatic</code>, and a method reference.
+        </li>
+        <li><b>MethodType</b> provides the method descriptor as a MethodType instance, indicating the arguments and
+            return type.
+        </li>
+    </ul>
+
+    <h5><b>Example:</b></h5>
+    <pre>
+invokedynamic myMethod (Ljava/lang/String;)Ljava/lang/String; MethodHandle|getstatic|java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; MethodType|(Ljava/lang/String;)V
+    </pre>
+
+    <h5><b>Stack Effect:</b></h5>
+    <p>
+        Before: <code>..., arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue</code><br>
+        Arguments are passed according to <code>methodDescriptor</code>, and return value is pushed if non-void.
+    </p>
+
+    <p>
+        <b>Note:</b> Actual linkage is performed at runtime via a bootstrap method associated with the call site.<br>
+        This mechanism enables flexible method invocation patterns like lambdas and dynamic language features.
+    </p>
+</div>

@@ -1,0 +1,31 @@
+<!-- Instructions: idiv, ldiv, fdiv, ddiv -->
+<div class="definition">
+    <h2>Division Instructions</h2>
+    <p>
+        <b>{link:idiv}</b> - <code>0x6c</code> (108)<br>
+        <b>{link:ldiv}</b> - <code>0x6d</code> (109)<br>
+        <b>{link:fdiv}</b> - <code>0x6e</code> (110)<br>
+        <b>{link:ddiv}</b> - <code>0x6f</code> (111)
+    </p>
+
+    <h4>Purpose</h4>
+    <p>Divides the second-top operand on the stack by the top operand and pushes the result. For integer types, division
+        by zero throws <code>ArithmeticException</code>. For floating types, division by zero results in
+        <code>Infinity</code> or <code>NaN</code> per IEEE 754.</p>
+
+    <h5><b>Operands:</b> None</h5>
+
+    <h5><b>Format:</b> <code>{instruction}</code></h5>
+
+    <h5><b>Examples:</b></h5>
+    <ul>
+        <li><code>idiv</code></li>
+        <li><code>ddiv</code></li>
+    </ul>
+
+    <h5><b>Stack Effect:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1, value2</code> (value1 is dividend, value2 is divisor)</li>
+        <li>After: <code>..., result</code></li>
+    </ul>
+</div>
