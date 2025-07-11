@@ -5,14 +5,14 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiNamedElement;
 import com.intellij.psi.tree.IElementType;
 import com.intellij.psi.util.PsiTreeUtil;
-import org.antlr.intellij.adaptor.SymtabUtils;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
 import org.antlr.intellij.adaptor.psi.ScopeNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.langjal.JALLanguage;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
 import java.util.ArrayList;
@@ -63,11 +63,30 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
     @Override
     public @Nullable PsiElement resolve(PsiNamedElement element)
     {
-        return SymtabUtils.resolve(
-                this,
-                JALLanguage.INSTANCE,
-                element,
-                "/classDefinition/classBody/classBodyItem/methodDefinition/methodBody/instructionSet/label/labelName"
-        );
+        LabelNameNode labelName = null;
+        if (element instanceof IdentifierNode identifier)
+            labelName = PsiTreeUtil.getParentOfType(identifier, LabelNameNode.class);
+        else if (element instanceof LabelNameNode label)
+            labelName = label;
+        else if (element instanceof LabelNode labelNode)
+            labelName = labelNode.getLabelNameNode();
+
+        if (labelName == null)
+            return null;
+
+        MethodBodyNode methodBody = PsiTreeUtil.getParentOfType(labelName, MethodBodyNode.class);
+        if (methodBody == null)
+            return null;
+
+        for (InstructionSetNode instructionSet : methodBody.getInstructionSets())
+        {
+            if (instructionSet.getLabel() == null)
+                continue; // ラベルがない場合はスキップ
+            LabelNode labelNode = instructionSet.getLabel();
+            if (labelNode.getLabelNameNode().getText().equals(labelName.getText()))
+                return instructionSet;
+        }
+
+        return null; // 見つからなかった場合は null を返す
     }
 }

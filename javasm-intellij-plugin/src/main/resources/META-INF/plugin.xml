@@ -100,8 +100,6 @@
                 language="JAL"
                 implementationClass="tokyo.peya.javasm.intellij.editor.JALCommenter"/>
         <navbar implementation="tokyo.peya.javasm.intellij.editor.JALStructureAwareNavbar"/>
-        <gotoDeclarationHandler
-                implementation="tokyo.peya.javasm.intellij.editor.gotoDeclaration.JALLabelGotoDeclarationHandler"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
