@@ -36,12 +36,15 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
                 defaultLabel,
                 labels
         );
-        return EvaluatedInstruction.of(tableSwitchInsn, calcSize(ctxt, evaluator.getBytecodeOffset()));
+        return EvaluatedInstruction.of(
+                tableSwitchInsn,
+                calcSize(ctxt, evaluator.getInstructions().getBytecodeOffset())
+        );
     }
 
     private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
     {
-        LabelInfo labelInfo = evaluator.resolveLabel(labelName.getText());
+        LabelInfo labelInfo = evaluator.getLabels().resolve(labelName.getText());
         return labelInfo.node();
     }
 

@@ -48,12 +48,15 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
                 keys.stream().mapToInt(Integer::intValue).toArray(),
                 labels.toArray(new LabelNode[0])
         );
-        return EvaluatedInstruction.of(lookupSwitchInsnNode, calcSize(ctxt, evaluator.getBytecodeOffset()));
+        return EvaluatedInstruction.of(
+                lookupSwitchInsnNode,
+                calcSize(ctxt, evaluator.getInstructions().getBytecodeOffset())
+        );
     }
 
     private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
     {
-        LabelInfo labelInfo = evaluator.resolveLabel(labelName.getText());
+        LabelInfo labelInfo = evaluator.getLabels().resolve(labelName.getText());
         return labelInfo.node();
     }
 

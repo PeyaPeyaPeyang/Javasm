@@ -17,7 +17,7 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
     {
         int opcode = getOpcode(ctxt);
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = evaluator.resolveLabel(labelNameContext.getText());
+        LabelInfo label = evaluator.getLabels().resolve(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(opcode, label.node());
         return EvaluatedInstruction.of(insn);

@@ -17,7 +17,7 @@ public class InstructionEvaluateHelperXLoad
                                                          @NotNull String callerInsn,
                                                          @Nullable TerminalNode wide)
     {
-        LocalVariableInfo local = evaluator.resolveLocal(ref, callerInsn);
+        LocalVariableInfo local = evaluator.getLocals().resolve(ref, callerInsn);
 
         int idx = local.index();
         boolean isWide = wide != null;
@@ -34,7 +34,7 @@ public class InstructionEvaluateHelperXLoad
 
     public static @NotNull EvaluatedInstruction evaluateN(@NotNull JALMethodEvaluator evaluator, int opcode, int idx)
     {
-        LocalVariableInfo local = evaluator.resolveLocalSafe(idx);
+        LocalVariableInfo local = evaluator.getLocals().resolveSafe(idx);
         if (local == null)
             throw new IllegalArgumentException("Local variable with index " + idx + " is not defined in the current method context.");
 

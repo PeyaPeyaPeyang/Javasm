@@ -25,7 +25,7 @@ public class InstructionEvaluateHelperXStore
                                                          @NotNull String callerInsn,
                                                          @Nullable TerminalNode wide)
     {
-        LocalVariableInfo registeredLocal = evaluator.resolveSafe(localRef);
+        LocalVariableInfo registeredLocal = evaluator.getLocals().resolveSafe(localRef);
         if (registeredLocal == null)
             registeredLocal = registerNewLocal(evaluator, localRef, type, instigation);
 
@@ -47,7 +47,7 @@ public class InstructionEvaluateHelperXStore
                                                           @NotNull String type,
                                                           @Nullable JALParser.LocalInstigationContext instigation)
     {
-        LocalVariableInfo registeredLocal = evaluator.resolveLocalSafe(idx);
+        LocalVariableInfo registeredLocal = evaluator.getLocals().resolveSafe(idx);
         if (registeredLocal == null)
             registeredLocal = registerNewLocal(evaluator, idx, type, instigation);
 
@@ -65,7 +65,7 @@ public class InstructionEvaluateHelperXStore
         LabelInfo endLabel = resolveEndLabel(evaluator, instigation);
         TypeDescriptor localType = TypeDescriptor.parse(typeName);
 
-        return evaluator.registerLocal(idx, localType, localName, endLabel);
+        return evaluator.getLocals().register(idx, localType, localName, endLabel);
     }
 
     private static LocalVariableInfo registerNewLocal(@NotNull JALMethodEvaluator evaluator,
@@ -77,7 +77,7 @@ public class InstructionEvaluateHelperXStore
         LabelInfo endLabel = resolveEndLabel(evaluator, instigation);
         TypeDescriptor localType = TypeDescriptor.parse(type);
 
-        return evaluator.registerLocal(localRef, localType, localName, endLabel);
+        return evaluator.getLocals().register(localRef, localType, localName, endLabel);
     }
 
     private static LabelInfo resolveEndLabel(@NotNull JALMethodEvaluator evaluator,
@@ -90,7 +90,7 @@ public class InstructionEvaluateHelperXStore
         if (labelNameContext == null || labelNameContext.ID() == null)
             return null;
 
-        return evaluator.resolveLabel(labelNameContext.ID().getText());
+        return evaluator.getLabels().resolve(labelNameContext.ID().getText());
     }
 
     private static String pickLocalName(

@@ -362,23 +362,15 @@ public class JALInstructionEvaluator
     );
 
     @Nullable
-    static InstructionInfo evaluateInstruction(@NotNull JALMethodEvaluator methodEvaluator,
-                                               @NotNull JALParser.InstructionContext instruction,
-                                               @Nullable LabelInfo lastLabel)
+    static EvaluatedInstruction evaluateInstruction(@NotNull JALMethodEvaluator methodEvaluator,
+                                                    @NotNull JALParser.InstructionContext instruction)
     {
         try
         {
             for (AbstractInstructionEvaluator<?> evaluator : EVALUATORS)
                 if (evaluator.isApplicable(instruction))
-                {
-                    EvaluatedInstruction evaluated = evaluator.evaluate(methodEvaluator, instruction);
-                    return new InstructionInfo(
-                            evaluated.insn(),
-                            methodEvaluator.getBytecodeOffset(),
-                            lastLabel,
-                            evaluated.getInstructionSize()
-                    );
-                }
+                    return evaluator.evaluate(methodEvaluator, instruction);
+
 
             throw new UnsupportedOperationException("Unsupported instruction: " + instruction.getText());
         }

@@ -16,7 +16,7 @@ public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALPa
                                                      JALParser.@NotNull JvmInsIincContext ctxt)
     {
         JALParser.JvmInsArgLocalRefContext ref = ctxt.jvmInsArgLocalRef();
-        LocalVariableInfo local = evaluator.resolveLocal(ref, "iinc");
+        LocalVariableInfo local = evaluator.getLocals().resolve(ref, "iinc");
 
         int idx = local.index();
         boolean isWide = ctxt.INSN_WIDE() != null;

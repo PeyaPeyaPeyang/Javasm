@@ -15,7 +15,7 @@ public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALPar
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
                                                      JALParser.@NotNull JvmInsRetContext ctxt)
     {
-        LocalVariableInfo local = evaluator.resolveLocal(ctxt.jvmInsArgLocalRef(), "ret");
+        LocalVariableInfo local = evaluator.getLocals().resolve(ctxt.jvmInsArgLocalRef(), "ret");
 
         int idx = local.index();
         boolean isWide = ctxt.INSN_WIDE() != null;
