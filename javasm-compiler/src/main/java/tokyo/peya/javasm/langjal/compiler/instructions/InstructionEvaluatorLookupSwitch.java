@@ -48,7 +48,7 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
                 keys.stream().mapToInt(Integer::intValue).toArray(),
                 labels.toArray(new LabelNode[0])
         );
-        return EvaluatedInstruction.of(lookupSwitchInsnNode, calcSize(ctxt));
+        return EvaluatedInstruction.of(lookupSwitchInsnNode, calcSize(ctxt, evaluator.getBytecodeOffset()));
     }
 
     private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
@@ -63,14 +63,22 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
         return instruction.jvmInsLookupswitch();
     }
 
-    private static int calcSize(@NotNull JALParser.JvmInsLookupswitchContext ctxt)
+    private static int calcSize(@NotNull JALParser.JvmInsLookupswitchContext ctxt, long startOffset)
     {
         JALParser.JvmInsArgLookupSwitchContext args = ctxt.jvmInsArgLookupSwitch();
         List<JALParser.JvmInsArgLookupSwitchCaseContext> cases = args.jvmInsArgLookupSwitchCase();
-        int size = 1 + 4 + 4 * cases.size(); // opcode + default offset + number of pairs
+
+        int nPairs = 0;
         for (JALParser.JvmInsArgLookupSwitchCaseContext c : cases)
             if (c.jvmInsArgLookupSwitchCaseName().KWD_SWITCH_DEFAULT() == null)
-                size += 2; // key + label
-        return size;
+                nPairs++;
+
+        int padding = (int) ((4 - (startOffset + 1) % 4) % 4);
+
+        return 1              // opcode
+                + padding        // align to 4-byte boundary
+                + 4              // default offset
+                + 4              // nPairs
+                + 8 * nPairs;    // key + offset per pair
     }
 }

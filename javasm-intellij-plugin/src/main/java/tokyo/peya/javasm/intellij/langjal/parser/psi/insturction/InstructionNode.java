@@ -6,6 +6,8 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.intellij.editor.linenumber.InstructionOffsetCalculator;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodBodyNode;
 
 public class InstructionNode extends ANTLRPsiNode
 {
@@ -37,5 +39,38 @@ public class InstructionNode extends ANTLRPsiNode
         if (elements == null || index < 0 || index >= elements.length)
             return null;
         return clazz.cast(elements[index]);
+    }
+
+    public int getInstructionSize()
+    {
+        InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
+        if (instructionNameNode == null)
+            return 0;
+
+        return instructionNameNode.getInstructionSize();
+    }
+
+    public final int getStartInstructionOffset()
+    {
+        MethodBodyNode methodBody = PsiTreeUtil.getParentOfType(this, MethodBodyNode.class);
+        if (methodBody == null)
+            return 0;
+
+        InstructionOffsetCalculator calculator = InstructionOffsetCalculator.get(methodBody);
+        Integer offset = calculator.getCumulativeOffset(this);
+        if (offset == null)
+            return 0;
+
+        return offset;
+    }
+
+    public final int getCumulativeOffset()
+    {
+        int startOffset = this.getStartInstructionOffset();
+        int instructionSize = this.getInstructionSize();
+        if (instructionSize <= 0)
+            return startOffset;
+
+        return startOffset + instructionSize; // inclusive end offset
     }
 }

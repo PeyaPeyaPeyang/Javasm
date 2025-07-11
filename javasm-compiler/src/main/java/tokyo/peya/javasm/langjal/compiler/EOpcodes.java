@@ -107,7 +107,7 @@ public interface EOpcodes extends Opcodes
                  LNEG, FNEG, DNEG, ISHL, LSHL,
                  ISHR, LSHR, IUSHR, LUSHR, IAND,
                  LAND, IOR, LOR, IXOR, LXOR,
-                 IINC, I2L, I2F, I2D, L2I,
+                 I2L, I2F, I2D, L2I,
                  L2F, L2D, F2I, F2L, F2D,
                  D2I, D2L, D2F, I2B, I2C,
                  I2S, LCMP, FCMPL, FCMPG, DCMPL,
@@ -124,7 +124,7 @@ public interface EOpcodes extends Opcodes
                  IFLT, IFGE, IFGT, IFLE,
                  IF_ICMPEQ, IF_ICMPNE, IF_ICMPLT, IF_ICMPGE,
                  IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE,
-                 IFNULL, IFNONNULL, GOTO, JSR -> 3;
+                 IFNULL, IFNONNULL, IINC, GOTO, JSR -> 3;
             case MULTIANEWARRAY -> 4;
             case INVOKEINTERFACE, GOTO_W, JSR_W -> 5;
             /* case TABLESWITCH, LOOKUPSWITCH, WIDE: 196 ->*/

@@ -34,4 +34,21 @@ public class InstructionLookupSwitchNode extends InstructionNode
     {
         return this.getTableSwitchArgument().getBranches();
     }
+
+    @Override
+    public int getInstructionSize()
+    {
+        InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        int npairs = argumentNode.getBranches().length;
+
+        int baseOffset = this.getStartInstructionOffset(); // assume you have this
+        int padding = (4 - (baseOffset + 1) % 4) % 4;
+
+        int size = 1;              // opcode
+        size += padding;           // padding
+        size += 4;                 // default offset
+        size += 4;                 // npairs
+        size += 8 * npairs;        // key + offset per pair
+        return size;
+    }
 }

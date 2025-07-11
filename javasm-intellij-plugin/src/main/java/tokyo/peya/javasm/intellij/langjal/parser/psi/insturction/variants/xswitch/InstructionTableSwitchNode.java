@@ -39,4 +39,24 @@ public class InstructionTableSwitchNode extends InstructionNode
     {
         return this.getTableSwitchArgument().getBranchLabels();
     }
+
+    @Override
+    public int getInstructionSize()
+    {
+        InstructionTableSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        int lowIndex = argumentNode.getLowIndex().intValue();
+        int highIndex = lowIndex + argumentNode.getBranchLabels().length - 1;
+        int nPairs = highIndex - lowIndex + 1;
+
+        int baseOffset = this.getStartInstructionOffset(); // assume you have this
+        int padding = (4 - (baseOffset + 1) % 4) % 4;
+
+        int size = 1;              // opcode
+        size += padding;           // padding to 4-byte alignment
+        size += 4;                 // default offset
+        size += 4;                 // low index
+        size += 4;                 // high index
+        size += 4 * nPairs;       // branch labels
+        return size;
+    }
 }

@@ -16,4 +16,12 @@ public class InstructionWidenableNode extends InstructionNode
     {
         return PsiTreeUtil.findChildOfType(this, InstructionWideNode.class) != null;
     }
+
+    @Override
+    public int getInstructionSize()
+    {
+        // wide した場合はサイズが ２倍になる
+        int multiplier = this.isWidened() ? 2: 1;
+        return super.getInstructionSize() * multiplier;
+    }
 }

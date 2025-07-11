@@ -10,4 +10,10 @@ public class MethodBodyNode extends ANTLRPsiNode
     {
         super(node);
     }
+
+    @NotNull
+    public InstructionSetNode[] getInstructionSets()
+    {
+        return this.findChildrenByClass(InstructionSetNode.class);
+    }
 }

@@ -36,7 +36,7 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
                 defaultLabel,
                 labels
         );
-        return EvaluatedInstruction.of(tableSwitchInsn, calcSize(ctxt));
+        return EvaluatedInstruction.of(tableSwitchInsn, calcSize(ctxt, evaluator.getBytecodeOffset()));
     }
 
     private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
@@ -51,10 +51,19 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
         return instruction.jvmInsTableswitch();
     }
 
-    private static int calcSize(@NotNull JALParser.JvmInsTableswitchContext ctxt)
+    private static int calcSize(@NotNull JALParser.JvmInsTableswitchContext ctxt, long startOffset)
     {
         JALParser.JvmInsArgTableSwitchContext args = ctxt.jvmInsArgTableSwitch();
         List<JALParser.LabelNameContext> branches = args.labelName();
-        return 1 + 4 + 4 + 4 * (branches.size() - 1); // opcode + default offset + low + high + number of labels
+
+        int padding = (int) ((4 - (startOffset + 1) % 4) % 4);
+        int numCases = branches.size();
+
+        return 1               // opcode
+                + padding         // padding to 4-byte boundary
+                + 4               // default offset
+                + 4               // low
+                + 4               // high
+                + 4 * numCases;   // jump offsets
     }
 }

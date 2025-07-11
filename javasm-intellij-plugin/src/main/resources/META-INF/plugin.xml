@@ -89,6 +89,10 @@
                 enabledByDefault="true"
                 level="WARNING"
                 groupName="JAL Inspections"/>
+        <psi.treeChangeListener
+                implementation="tokyo.peya.javasm.intellij.editor.linenumber.InstructionPsiChangeListener"/>
+        <codeInsight.lineMarkerProvider language="JAL"
+                                        implementationClass="tokyo.peya.javasm.intellij.editor.linenumber.JALCumulativeOffsetLineMarkerProvider"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
