@@ -116,7 +116,7 @@ public interface EOpcodes extends Opcodes
                  ATHROW, MONITORENTER, MONITOREXIT -> 1;
             case BIPUSH, LDC, ILOAD, LLOAD, FLOAD,
                  DLOAD, ALOAD, ISTORE, LSTORE,
-                 FSTORE, DSTORE, ASTORE, RET -> 2;
+                 FSTORE, DSTORE, ASTORE, RET, NEWARRAY -> 2;
             case SIPUSH, LDC_W, LDC2_W, GETSTATIC,
                  PUTSTATIC, GETFIELD, PUTFIELD, INVOKEVIRTUAL,
                  INVOKESPECIAL, INVOKESTATIC, NEW, ANEWARRAY,
@@ -126,7 +126,7 @@ public interface EOpcodes extends Opcodes
                  IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE,
                  IFNULL, IFNONNULL, IINC, GOTO, JSR -> 3;
             case MULTIANEWARRAY -> 4;
-            case INVOKEINTERFACE, GOTO_W, JSR_W -> 5;
+            case INVOKEINTERFACE, INVOKEDYNAMIC, GOTO_W, JSR_W -> 5;
             /* case TABLESWITCH, LOOKUPSWITCH, WIDE: 196 ->*/
             default -> throw new IllegalArgumentException(
                     "Unable to determine instruction size for opcode(" + opcode + "). " +

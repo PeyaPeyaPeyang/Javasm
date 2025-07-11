@@ -17,10 +17,9 @@ public class InstructionOffsetCalculator
 
     private final Map<InstructionNode, Integer> instructionOffsets;
 
-    private InstructionOffsetCalculator(@NotNull MethodBodyNode methodBody)
+    private InstructionOffsetCalculator()
     {
         this.instructionOffsets = new HashMap<>();
-        this.buildOffsets(methodBody);
     }
 
     private void buildOffsets(@NotNull MethodBodyNode methodBody)
@@ -52,7 +51,8 @@ public class InstructionOffsetCalculator
             return cached;
 
         InstructionOffsetCalculator fresh;
-        methodNode.putUserData(KEY, fresh = new InstructionOffsetCalculator(methodNode));
+        methodNode.putUserData(KEY, fresh = new InstructionOffsetCalculator());
+        fresh.buildOffsets(methodNode);
         return fresh;
     }
 
