@@ -99,6 +99,7 @@
         <lang.commenter
                 language="JAL"
                 implementationClass="tokyo.peya.javasm.intellij.editor.JALCommenter"/>
+        <navbar implementation="tokyo.peya.javasm.intellij.editor.JALStructureAwareNavbar"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
