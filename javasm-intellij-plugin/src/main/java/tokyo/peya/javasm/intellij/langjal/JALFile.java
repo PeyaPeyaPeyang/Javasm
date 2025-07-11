@@ -6,7 +6,6 @@ import com.intellij.psi.FileViewProvider;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.langjal.filetype.JALFileType;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
 public class JALFile extends PsiFileBase

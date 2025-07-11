@@ -25,7 +25,7 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-        <fileType implementationClass="tokyo.peya.javasm.intellij.langjal.filetype.JALFileType"
+        <fileType implementationClass="tokyo.peya.javasm.intellij.langjal.JALFileType"
                   name="Java Assembly Language File"
                   extensions="jal"
                   fieldName="INSTANCE"
@@ -41,49 +41,49 @@
                 classpath="javasm-jps-plugin-0.0.1.jar;javasm-compiler-0.0.1.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.8.jar;asm-commons-9.8.jar;asm-util-9.8.jar;asm-tree-9.8.jar;asm-analysis-9.8.jar;"/>
         <lang.ast.factory language="JAL" implementationClass="tokyo.peya.javasm.intellij.langjal.parser.JALASTFactory"/>
         <lang.psiStructureViewFactory language="JAL"
-                                      implementationClass="tokyo.peya.javasm.intellij.langjal.structureview.JALStructureViewFactory"/>
+                                      implementationClass="tokyo.peya.javasm.intellij.editor.structureview.JALStructureViewFactory"/>
         <lang.syntaxHighlighterFactory
                 language="JAL"
-                implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JALSyntaxHighlighterFactory"/>
+                implementationClass="tokyo.peya.javasm.intellij.editor.highlighting.JALSyntaxHighlighterFactory"/>
         <colorSettingsPage
-                implementation="tokyo.peya.javasm.intellij.langjal.highlighting.JALGeneralColorSettingsPage"/>
+                implementation="tokyo.peya.javasm.intellij.editor.highlighting.JALGeneralColorSettingsPage"/>
         <additionalTextAttributes scheme="Default" file="colorSchemes/JALDefault.xml"/>
         <additionalTextAttributes scheme="Darcula" file="colorSchemes/JALDarcula.xml"/>
         <annotator language="JAL"
-                   implementationClass="tokyo.peya.javasm.intellij.langjal.highlighting.JSLSyntaxHighlightAnnotator"/>
+                   implementationClass="tokyo.peya.javasm.intellij.editor.highlighting.JSLSyntaxHighlightAnnotator"/>
         <internalFileTemplate name="JAL Class"/>
         <completion.contributor
                 language="JAL"
                 implementationClass="tokyo.peya.javasm.intellij.langjal.completion.JALCompletionContributor"/>
         <lang.formatter language="JAL"
-                        implementationClass="tokyo.peya.javasm.intellij.langjal.formatting.JALFormattingModelBuilder"/>
+                        implementationClass="tokyo.peya.javasm.intellij.formatting.JALFormattingModelBuilder"/>
         <codeStyleSettingsProvider
-                implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALCodeStyleSettingsProvider"/>
+                implementation="tokyo.peya.javasm.intellij.formatting.JALCodeStyleSettingsProvider"/>
         <langCodeStyleSettingsProvider
-                implementation="tokyo.peya.javasm.intellij.langjal.formatting.JALLanguageCodeStyleSettingsProvider"/>
+                implementation="tokyo.peya.javasm.intellij.formatting.JALLanguageCodeStyleSettingsProvider"/>
         <localInspection
-                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALClassfileNameInspection"
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALClassfileNameInspection"
                 language="JAL"
                 displayName="Class name inspection"
                 enabledByDefault="true"
                 level="ERROR"
                 groupName="JAL Inspections"/>
         <localInspection
-                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALPushIntegerInspection"
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushIntegerInspection"
                 language="JAL"
                 displayName="Push integer inspection"
                 enabledByDefault="true"
                 level="WARNING"
                 groupName="JAL Inspections"/>
         <localInspection
-                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALPushBigIntegerInspection"
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushBigIntegerInspection"
                 language="JAL"
                 displayName="Push big integer inspection"
                 enabledByDefault="true"
                 level="ERROR"
                 groupName="JAL Inspections"/>
         <localInspection
-                implementationClass="tokyo.peya.javasm.intellij.langjal.inspection.inspections.JALUnreachableCodeInspection"
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALUnreachableCodeInspection"
                 language="JAL"
                 displayName="Unreachable code inspection"
                 enabledByDefault="true"
