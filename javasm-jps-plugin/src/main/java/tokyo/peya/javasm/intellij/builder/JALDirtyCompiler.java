@@ -92,7 +92,7 @@ public class JALDirtyCompiler
         {
             this.compileContext.processMessage(new CompilerMessage(
                     JAL_COMPILER_ID,
-                    CompilerMessage.Kind.WARNING,
+                    CompilerMessage.Kind.INFO,
                     "No JAL files to compile in target: " + target.getModule()
             ));
             return ExitCode.NOTHING_DONE;
