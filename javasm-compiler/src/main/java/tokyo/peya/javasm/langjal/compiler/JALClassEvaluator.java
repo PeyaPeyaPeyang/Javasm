@@ -107,10 +107,18 @@ public class JALClassEvaluator
             }
         }
 
-        int version = (major >= 0 && minor >= 0) ? (minor << 16 | major): EOpcodes.ASM9;
+        // フォールバック
+        if (major <= 0 || minor < 0)
+        {
+            // デフォルトのバージョンを使用
+            major = RuntimeUtils.getClassFileMajorVersion();
+            minor = 0;
+        }
 
         if (superClassName == null || superClassName.isEmpty())
             superClassName = "java/lang/Object"; // デフォルトのスーパークラス
+
+        int version = minor << 16 | major;
 
         classNode.visit(
                 version,
