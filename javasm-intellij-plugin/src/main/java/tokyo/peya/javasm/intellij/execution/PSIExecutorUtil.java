@@ -11,12 +11,12 @@ import com.intellij.psi.util.PsiTreeUtil;
 import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
-import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.intellij.jvm.AccessLevel;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
 
 import java.nio.file.Path;
 

@@ -23,8 +23,12 @@ public class InstructionEvaluatorInvokeSpecial
         else
             throw new IllegalArgumentException("Invalid method name for invokespecial: " + ref.getText());
 
+        String ownerName;
+        JALParser.JvmInsArgMethodRefOwnerTypeContext ownerType = ref.jvmInsArgMethodRefOwnerType();
+        ownerName = ownerType == null ? evaluator.getClazz().name: ownerType.getText();
+
         return InstructionEvaluateHelperInvocation.evaluate(
-                ref.jvmInsArgMethodRefOwnerType().getText(),
+                ownerName,
                 methodName,
                 ref.methodDescriptor().getText(),
                 EOpcodes.INVOKESPECIAL

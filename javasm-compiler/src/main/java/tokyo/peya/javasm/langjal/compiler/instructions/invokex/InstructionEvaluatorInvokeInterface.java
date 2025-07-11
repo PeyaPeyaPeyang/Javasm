@@ -14,7 +14,11 @@ public class InstructionEvaluatorInvokeInterface
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
                                                      JALParser.@NotNull JvmInsInvokeinterfaceContext ctxt)
     {
-        return InstructionEvaluateHelperInvocation.evaluate(ctxt.jvmInsArgMethodRef(), EOpcodes.INVOKEINTERFACE);
+        return InstructionEvaluateHelperInvocation.evaluate(
+                evaluator.getClazz(),
+                ctxt.jvmInsArgMethodRef(),
+                EOpcodes.INVOKEINTERFACE
+        );
     }
 
     @Override

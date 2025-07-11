@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.jvm;
+package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import lombok.Getter;
 
@@ -7,7 +7,7 @@ import java.util.Collection;
 @Getter
 public class AccessAttributeSet
 {
-    public static final AccessAttributeSet EMPTY = new AccessAttributeSet(new String[0]);
+    public static final AccessAttributeSet EMPTY = new AccessAttributeSet();
 
     private final AccessAttribute[] attributes;
 

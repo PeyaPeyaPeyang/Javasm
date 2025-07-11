@@ -14,7 +14,11 @@ public class InstructionEvaluatorInvokeVirtual
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
                                                      JALParser.@NotNull JvmInsInvokevirtualContext ctxt)
     {
-        return InstructionEvaluateHelperInvocation.evaluate(ctxt.jvmInsArgMethodRef(), EOpcodes.INVOKEVIRTUAL);
+        return InstructionEvaluateHelperInvocation.evaluate(
+                evaluator.getClazz(),
+                ctxt.jvmInsArgMethodRef(),
+                EOpcodes.INVOKEVIRTUAL
+        );
     }
 
     @Override

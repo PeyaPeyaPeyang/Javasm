@@ -13,7 +13,11 @@ public class InstructionEvaluatorInvokeStatic extends AbstractInstructionEvaluat
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
                                                      JALParser.@NotNull JvmInsInvokestaticContext ctxt)
     {
-        return InstructionEvaluateHelperInvocation.evaluate(ctxt.jvmInsArgMethodRef(), EOpcodes.INVOKESTATIC);
+        return InstructionEvaluateHelperInvocation.evaluate(
+                evaluator.getClazz(),
+                ctxt.jvmInsArgMethodRef(),
+                EOpcodes.INVOKESTATIC
+        );
     }
 
     @Override

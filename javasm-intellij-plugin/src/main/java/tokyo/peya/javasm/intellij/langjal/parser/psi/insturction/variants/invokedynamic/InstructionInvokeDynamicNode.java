@@ -3,10 +3,10 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invok
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.MethodDescriptor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 
 public class InstructionInvokeDynamicNode extends InstructionNode
 {

@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.jvm;
+package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,6 +36,15 @@ public enum PrimitiveTypes implements Type
         return String.valueOf(this.descriptor);
     }
 
+    @Override
+    public int getCategory()
+    {
+        if (this == LONG || this == DOUBLE)
+            return 2; // 長い型はカテゴリー2
+
+        return 1; // その他のプリミティブ型はカテゴリー1
+    }
+
     public static PrimitiveTypes fromDescriptor(char descriptorChar)
     {
         for (PrimitiveTypes type : PrimitiveTypes.values())
@@ -44,5 +53,7 @@ public enum PrimitiveTypes implements Type
 
         return null; // 該当するプリミティブ型がない場合はnullを返す
     }
+
+
 }
 

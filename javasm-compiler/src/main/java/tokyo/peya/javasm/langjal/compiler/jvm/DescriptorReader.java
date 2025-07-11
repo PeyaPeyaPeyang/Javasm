@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.jvm;
+package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import lombok.Getter;
 

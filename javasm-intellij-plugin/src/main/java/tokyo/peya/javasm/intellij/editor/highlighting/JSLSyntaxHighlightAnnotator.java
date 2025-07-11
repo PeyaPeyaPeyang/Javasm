@@ -7,7 +7,6 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.DescriptorReader;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
@@ -17,6 +16,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.DescriptorReader;
 
 public class JSLSyntaxHighlightAnnotator implements Annotator
 {

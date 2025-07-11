@@ -59,13 +59,12 @@ public class JALCompiler
 
     private void writeClass(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode classNode)
     {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS
-        );
-        classNode.accept(classWriter);
+        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
 
         Path outputFile = this.outputDir.resolve(classNode.name + ".class");
         try
         {
+            classNode.accept(classWriter);
             Files.createDirectories(outputFile.getParent());
 
             Files.write(outputFile, classWriter.toByteArray());

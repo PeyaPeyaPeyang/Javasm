@@ -4,7 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.ClassProperty;
+import tokyo.peya.javasm.langjal.compiler.jvm.ClassProperty;
 
 public class ClassPropertyNode extends ANTLRPsiNode
 {

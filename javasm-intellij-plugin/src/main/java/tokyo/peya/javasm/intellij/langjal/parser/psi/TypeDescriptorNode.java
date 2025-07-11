@@ -3,7 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi;
 import com.intellij.lang.ASTNode;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.TypeDescriptor;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public class TypeDescriptorNode extends ANTLRPsiNode
 {

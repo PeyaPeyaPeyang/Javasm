@@ -10,14 +10,14 @@ import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
 import org.antlr.intellij.adaptor.psi.ScopeNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.intellij.jvm.AccessLevel;
-import tokyo.peya.javasm.intellij.jvm.MethodDescriptor;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
+import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 
 public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeNode
 {

@@ -10,6 +10,8 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -57,8 +59,58 @@ public class JALMethodEvaluator
         this.clazz.methods.add(this.method);
 
         this.evaluateMethodMetadata(method);
+        this.evaluateMethodParameters(method);
         this.evaluateMethodBody(method.methodBody());
         this.finaliseMethod();
+    }
+
+    private void evaluateMethodParameters(@NotNull JALParser.MethodDefinitionContext method)
+    {
+        JALParser.MethodDescriptorContext desc = method.methodDescriptor();
+        MethodDescriptor descriptor = MethodDescriptor.parse(desc.getText());
+        TypeDescriptor[] parameters = descriptor.getParameterTypes();
+        int accessor = asAccess(method.accModMethod());
+
+        int currentIndex = 0;
+        boolean isInstanceMethod = (accessor & EOpcodes.ACC_STATIC) == 0;
+        if (isInstanceMethod)
+        {
+            // インスタンスメソッドの場合、this パラメータを追加
+            String thisParamName = "this";
+            TypeDescriptor thisParamType = descriptor.getReturnType(); // インスタンスメソッドの戻り値が this の型
+            // パラメータをローカル変数として登録
+            this.registerParameter(thisParamName, thisParamType.toString(), currentIndex++);
+        }
+
+        for (int i = 0; i < parameters.length; i++)
+        {
+            TypeDescriptor paramType = parameters[i];
+            String paramName = String.format("arg%05d", i);
+            // パラメータをローカル変数として登録
+            if (paramType.getBaseType().getCategory() == 2)
+            {
+                this.registerParameter(paramName, paramType.toString(), currentIndex++);
+                currentIndex++; // カテゴリ２は ２スロット使うため，インデックスを進める
+            }
+            else
+                this.registerParameter(paramName, paramType.toString(), currentIndex++);
+        }
+    }
+
+    private void registerParameter(@NotNull String paramName,
+                                   @NotNull String type,
+                                   int index)
+    {
+        // パラメータをローカル変数として登録
+        LocalVariableInfo localVar = new LocalVariableInfo(
+                paramName,
+                type,
+                null,
+                null,
+                index,
+                true
+        );
+        this.locals.add(localVar);
     }
 
     private void finaliseMethod()
@@ -95,6 +147,9 @@ public class JALMethodEvaluator
 
         for (LocalVariableInfo local : this.locals)
         {
+            if (local.isParameter())
+                continue;  // パラメータはローカル変数として登録しない
+
             Label start = this.globalStartLocalLabel;
             Label end = this.globalEndLocalLabel;
             if (local.start() != null)

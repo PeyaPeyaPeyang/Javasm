@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.intellij.jvm;
+package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -19,6 +19,12 @@ public class ClassReferenceType implements Type
     public boolean isPrimitive()
     {
         return false;
+    }
+
+    @Override
+    public int getCategory()
+    {
+        return 1; // 定数プールにあるので cat 1
     }
 
     @Override

@@ -5,8 +5,8 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.intellij.jvm.AccessLevel;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

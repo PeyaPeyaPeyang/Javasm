@@ -12,16 +12,17 @@ public record LocalVariableInfo(
         LabelInfo start,
         @Nullable
         LabelInfo end,
-        int index
+        int index,
+        boolean isParameter
 )
 {
     public LocalVariableInfo(String name, String type, int index)
     {
-        this(name, type, null, null, index);
+        this(name, type, null, null, index, false);
     }
 
     public LocalVariableInfo(int index, @NotNull String type)
     {
-        this(String.format("var%5d", index), type, index);
+        this(String.format("var%05d", index), type, index);
     }
 }

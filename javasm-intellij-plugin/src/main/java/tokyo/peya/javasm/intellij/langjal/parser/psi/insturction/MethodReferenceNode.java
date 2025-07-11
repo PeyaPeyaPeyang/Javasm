@@ -4,10 +4,10 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.jvm.MethodDescriptor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 
 public class MethodReferenceNode extends InstructionNode
 {

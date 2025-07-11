@@ -5,9 +5,9 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.editor.structureview.JALStructureViewItemPresentationBase;
-import tokyo.peya.javasm.intellij.jvm.AccessAttribute;
-import tokyo.peya.javasm.intellij.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
+import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
 
 public class ClassStructurePresentation extends JALStructureViewItemPresentationBase
 {

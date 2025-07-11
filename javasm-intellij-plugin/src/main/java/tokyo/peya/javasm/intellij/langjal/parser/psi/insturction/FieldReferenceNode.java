@@ -4,9 +4,9 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.jvm.TypeDescriptor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public class FieldReferenceNode extends ANTLRPsiNode
 {
