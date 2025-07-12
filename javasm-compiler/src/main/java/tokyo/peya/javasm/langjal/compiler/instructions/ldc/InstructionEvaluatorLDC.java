@@ -2,8 +2,10 @@ package tokyo.peya.javasm.langjal.compiler.instructions.ldc;
 
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorLDC extends AbstractInstructionEvaluator<JALParser.JvmInsLdcContext>
@@ -13,8 +15,14 @@ public class InstructionEvaluatorLDC extends AbstractInstructionEvaluator<JALPar
                                                      JALParser.@NotNull JvmInsLdcContext ctxt)
     {
         return InstructionEvaluationHelperLDC.evaluate(
-                compiler, ctxt.jvmInsArgScalarType(), InstructionEvaluationHelperLDC.LDC
+                this, ctxt.jvmInsArgScalarType(), InstructionEvaluationHelperLDC.LDC
         );
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return InstructionEvaluationHelperLDC.getFrameDifferenceInfo(instruction);
     }
 
     @Override

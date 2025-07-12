@@ -1,18 +1,21 @@
 package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 public record EvaluatedInstruction(
+        @NotNull
+        AbstractInstructionEvaluator<?> evaluator,
+        @NotNull
         AbstractInsnNode insn,
         int customSize // wide, lookupswitch, tableswitch, など
 )
 {
-    private EvaluatedInstruction(@Nullable AbstractInsnNode insn)
+    private EvaluatedInstruction(@NotNull AbstractInstructionEvaluator<?> evaluator, @NotNull AbstractInsnNode insn)
     {
-        this(insn, 0);
+        this(evaluator, insn, 0);
     }
 
     public int getInstructionSize()
@@ -23,15 +26,17 @@ public record EvaluatedInstruction(
             return EOpcodes.getOpcodeSize(this.insn.getOpcode());
     }
 
-    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn)
+    public static EvaluatedInstruction of(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                          @NotNull AbstractInsnNode insn)
     {
-        return new EvaluatedInstruction(insn);
+        return new EvaluatedInstruction(evaluator, insn);
     }
 
-    public static EvaluatedInstruction of(@NotNull AbstractInsnNode insn, int size)
+    public static EvaluatedInstruction of(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                          @NotNull AbstractInsnNode insn, int size)
     {
         checkSizeProvided(insn.getOpcode(), size);
-        return new EvaluatedInstruction(insn, size);
+        return new EvaluatedInstruction(evaluator, insn, size);
     }
 
     private static void checkSizeProvided(int opcode, int size)

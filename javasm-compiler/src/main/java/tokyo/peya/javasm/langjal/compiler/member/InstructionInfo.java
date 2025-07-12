@@ -4,8 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnNode;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 
 public record InstructionInfo(
+        @NotNull
+        AbstractInstructionEvaluator<?> evaluator,
         @NotNull
         AbstractInsnNode insn,
         int bytecodeOffset,
@@ -14,9 +17,10 @@ public record InstructionInfo(
         int instructionSize
 )
 {
-    public InstructionInfo(int opcode, int bytecodeOffset, @Nullable LabelInfo assignedLabel, int instructionSize)
+    public InstructionInfo(AbstractInstructionEvaluator<?> evaluator, int opcode, int bytecodeOffset,
+                           @Nullable LabelInfo assignedLabel, int instructionSize)
     {
-        this(new InsnNode(opcode), bytecodeOffset, assignedLabel, instructionSize);
+        this(evaluator, new InsnNode(opcode), bytecodeOffset, assignedLabel, instructionSize);
     }
 
     public int opcode()

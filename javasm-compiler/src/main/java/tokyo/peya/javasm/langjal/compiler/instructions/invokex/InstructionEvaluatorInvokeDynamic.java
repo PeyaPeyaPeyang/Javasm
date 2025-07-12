@@ -5,10 +5,12 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
@@ -35,7 +37,13 @@ public class InstructionEvaluatorInvokeDynamic
                 bootstrapMethod,
                 bootstrapArgs.toArray(new Object[0])
         );
-        return EvaluatedInstruction.of(insn, calcSize(ctxt));
+        return EvaluatedInstruction.of(this, insn, calcSize(ctxt));
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return InstructionEvaluateHelperInvocation.getFrameInvokedynamicFrameDifference(instruction);
     }
 
     @Override

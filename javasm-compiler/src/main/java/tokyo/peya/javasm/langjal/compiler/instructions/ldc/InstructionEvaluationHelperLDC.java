@@ -2,12 +2,18 @@ package tokyo.peya.javasm.langjal.compiler.instructions.ldc;
 
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Handle;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.LdcInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.exceptions.InternalCompileErrorException;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.ClassReferenceType;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 public class InstructionEvaluationHelperLDC
@@ -16,7 +22,7 @@ public class InstructionEvaluationHelperLDC
     public static final int LDC_W = 1;
     public static final int LDC2_W = 2;
 
-    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler evaluator,
+    public static @NotNull EvaluatedInstruction evaluate(@NotNull AbstractInstructionEvaluator<?> evaluator,
                                                          JALParser.@NotNull JvmInsArgScalarTypeContext scalar,
                                                          int ldcType)
 
@@ -38,7 +44,7 @@ public class InstructionEvaluationHelperLDC
             String value = string.getText();
             value = value.substring(1, value.length() - 1); // Remove quotes
             ldcInsnNode = new LdcInsnNode(value);
-            return EvaluatedInstruction.of(ldcInsnNode);
+            return EvaluatedInstruction.of(evaluator, ldcInsnNode);
         }
         else if (number == null)
             throw new IllegalInstructionException(
@@ -66,6 +72,51 @@ public class InstructionEvaluationHelperLDC
 
         int instructionSize = ldcType == LDC ? 1: (ldcType == LDC_W ? 2: 3);
         ldcInsnNode = new LdcInsnNode(numberValue);
-        return EvaluatedInstruction.of(ldcInsnNode, instructionSize);
+        return EvaluatedInstruction.of(evaluator, ldcInsnNode, instructionSize);
+    }
+
+    public static FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        LdcInsnNode ldcInsn = (LdcInsnNode) instruction.insn();
+        Object value = ldcInsn.cst;
+
+        FrameDifferenceInfo.Builder builder = FrameDifferenceInfo.builder(instruction);
+        if (value instanceof String)
+            builder.pushObjectRef(ClassReferenceType.parse("java/lang/String"));
+        else if (value instanceof Integer || value instanceof Character ||
+                value instanceof Byte || value instanceof Short)
+            builder.pushPrimitive(StackElementType.INTEGER);
+        else if (value instanceof Long)
+            builder.pushPrimitive(StackElementType.LONG);
+        else if (value instanceof Float)
+            builder.pushPrimitive(StackElementType.FLOAT);
+        else if (value instanceof Double)
+            builder.pushPrimitive(StackElementType.DOUBLE);
+        else if (value instanceof Type type)
+        {
+            switch (type.getSort())
+            {
+                case Type.OBJECT:
+                case Type.ARRAY:
+                    // → java.lang.Class インスタンスを push
+                    builder.pushObjectRef(ClassReferenceType.parse("java/lang/Class"));
+                    break;
+                case Type.METHOD:
+                    // → java.lang.invoke.MethodType インスタンスを push
+                    builder.pushObjectRef(ClassReferenceType.parse("java/lang/invoke/MethodType"));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Unexpected Type sort in ldc: " + type.getSort());
+            }
+        }
+        else if (value instanceof Handle handle)
+            builder.pushObjectRef(ClassReferenceType.parse("java/lang/invoke/MethodHandle"));
+        else
+            throw new InternalCompileErrorException(
+                    "Unsupported constant type in ldc: " + value.getClass().getName(),
+                    new IllegalArgumentException("Unsupported constant type in ldc: " + value.getClass().getName())
+            );
+
+        return builder.build();
     }
 }

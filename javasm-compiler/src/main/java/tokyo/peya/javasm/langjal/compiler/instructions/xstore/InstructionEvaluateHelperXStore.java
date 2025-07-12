@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -18,17 +19,18 @@ import java.util.Objects;
 @UtilityClass
 public class InstructionEvaluateHelperXStore
 {
-    public static @NotNull EvaluatedInstruction evaluate(int opcode,
-                                                         @NotNull JALMethodCompiler evaluator,
+    public static @NotNull EvaluatedInstruction evaluate(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                                         int opcode,
+                                                         @NotNull JALMethodCompiler compiler,
                                                          @NotNull JALParser.JvmInsArgLocalRefContext localRef,
                                                          @NotNull JALParser.LocalInstigationContext instigation,
                                                          @NotNull String type,
                                                          @NotNull String callerInsn,
                                                          @Nullable TerminalNode wide)
     {
-        LocalVariableInfo registeredLocal = evaluator.getLocals().resolveSafe(localRef);
+        LocalVariableInfo registeredLocal = compiler.getLocals().resolveSafe(localRef);
         if (registeredLocal == null)
-            registeredLocal = registerNewLocal(evaluator, localRef, type, instigation);
+            registeredLocal = registerNewLocal(compiler, localRef, type, instigation);
 
         int idx = registeredLocal.index();
         boolean isWide = wide != null;
@@ -42,21 +44,22 @@ public class InstructionEvaluateHelperXStore
 
         int size = isWide ? 4: 2;
         VarInsnNode insn = new VarInsnNode(opcode, idx);
-        return EvaluatedInstruction.of(insn, size);
+        return EvaluatedInstruction.of(evaluator, insn, size);
     }
 
-    public static @NotNull EvaluatedInstruction evaluateN(int opcode, int idx,
-                                                          @NotNull JALMethodCompiler evaluator,
+    public static @NotNull EvaluatedInstruction evaluateN(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                                          int opcode, int idx,
+                                                          @NotNull JALMethodCompiler compiler,
                                                           @NotNull String type,
                                                           @Nullable JALParser.LocalInstigationContext instigation)
     {
-        LocalVariableInfo registeredLocal = evaluator.getLocals().resolveSafe(idx);
+        LocalVariableInfo registeredLocal = compiler.getLocals().resolveSafe(idx);
         if (registeredLocal == null)
-            registeredLocal = registerNewLocal(evaluator, idx, type, instigation);
+            registeredLocal = registerNewLocal(compiler, idx, type, instigation);
 
         // 0~3 が確定だから， wide は不要
         VarInsnNode insn = new VarInsnNode(opcode, registeredLocal.index());
-        return EvaluatedInstruction.of(insn);
+        return EvaluatedInstruction.of(evaluator, insn);
     }
 
     private static LocalVariableInfo registerNewLocal(@NotNull JALMethodCompiler evaluator,

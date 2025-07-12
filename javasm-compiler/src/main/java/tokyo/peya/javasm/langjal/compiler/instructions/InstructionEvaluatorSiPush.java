@@ -3,9 +3,12 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IntInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
@@ -26,7 +29,15 @@ public class InstructionEvaluatorSiPush extends AbstractInstructionEvaluator<JAL
 
 
         IntInsnNode insn = new IntInsnNode(EOpcodes.SIPUSH, value);
-        return EvaluatedInstruction.of(insn);
+        return EvaluatedInstruction.of(this, insn);
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return FrameDifferenceInfo.builder(instruction)
+                                  .pushPrimitive(StackElementType.INTEGER) // sipush の結果は int 型
+                                  .build();
     }
 
     @Override

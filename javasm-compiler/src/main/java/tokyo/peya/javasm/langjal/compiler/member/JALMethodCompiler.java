@@ -1,24 +1,17 @@
 package tokyo.peya.javasm.langjal.compiler.member;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TryCatchBlockNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalValueException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class JALMethodCompiler
@@ -30,9 +23,7 @@ public class JALMethodCompiler
     private final InstructionsHolder instructions;
     private final LabelsHolder labels;
     private final LocalVariablesHolder locals;
-
-    @Getter(AccessLevel.NONE)
-    private final List<TryCatchDirective> tryCatchDirectives;
+    private final TryCatchDirectivesHolder tryCatchDirectives;
 
     public JALMethodCompiler(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
     {
@@ -43,8 +34,7 @@ public class JALMethodCompiler
         this.labels = new LabelsHolder(this);
         this.instructions = new InstructionsHolder(this.labels);
         this.locals = new LocalVariablesHolder(this.context, this.labels);
-
-        this.tryCatchDirectives = new ArrayList<>();
+        this.tryCatchDirectives = new TryCatchDirectivesHolder(this.context, this.labels);
 
     }
 
@@ -95,44 +85,9 @@ public class JALMethodCompiler
     {
         this.locals.evaluateLocals(this.method);
         this.instructions.finaliseInstructions(this.method);
-        this.finaliseTryCatchDirectives();
+        this.tryCatchDirectives.finaliseTryCatchDirectives(this.method);
     }
 
-
-    private void finaliseTryCatchDirectives()
-    {
-        if (this.tryCatchDirectives.isEmpty())
-            return;  // トライキャッチディレクティブがない場合は何もしない
-
-        this.context.postInfo("Finalising try-catch directives for method " + this.method.name + this.method.desc);
-        for (TryCatchDirective directive : this.tryCatchDirectives)
-        {
-            LabelNode tryBlock = directive.tryBlockStartLabel().node();
-            LabelNode tryEndBlock = directive.tryBlockEndLabel().node();
-            String exceptionType = directive.exceptionType();
-            LabelNode catchBlock = directive.catchBlockLabel() == null ? null: directive.catchBlockLabel().node();
-            LabelNode finallyBlock = directive.finallyBlockLabel() == null ? null: directive.finallyBlockLabel().node();
-
-            // トライキャッチブロックをメソッドに追加
-            this.method.tryCatchBlocks.add(new TryCatchBlockNode(
-                    tryBlock,
-                    tryEndBlock,
-                    catchBlock,
-                    exceptionType
-            ));
-            // finally ブロックがある場合は、トライキャッチブロックに追加
-            if (finallyBlock != null)
-            {
-                // finally ブロックは try-catch ブロックの後に追加される
-                this.method.tryCatchBlocks.add(new TryCatchBlockNode(
-                        tryBlock,
-                        tryEndBlock,
-                        finallyBlock,
-                        null  // finally ブロックは例外型を持たない
-                ));
-            }
-        }
-    }
 
     private void evaluateMethodMetadata(@NotNull JALParser.MethodDefinitionContext method)
     {
@@ -173,41 +128,7 @@ public class JALMethodCompiler
         this.method.visitEnd();
     }
 
-    private void evaluateInstructions(@NotNull JALParser.MethodBodyContext body)
-    {
-        // 各命令を順に評価していく
-        // 命令に割り当てるラベル。１命令のみが割り当てられる。
-        LabelInfo labelAssignation = null;
-        for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
-        {
-            if (bodyItem.label() != null)
-                this.labels.setCurrentLabel(labelAssignation = this.labels.resolve(bodyItem.label()
-                                                                                           .labelName()
-                                                                                           .getText()));
-
-            for (JALParser.InstructionContext instruction : bodyItem.instruction())
-            {
-                // 命令を評価して，必要に応じてラベルを設定
-                EvaluatedInstruction evaluated = JALInstructionEvaluator.evaluateInstruction(
-                        this,
-                        instruction
-                );
-                if (evaluated == null)
-                    continue;
-
-                this.instructions.addInstruction(evaluated, labelAssignation);
-                labelAssignation = null;  // 次の命令セットのためにラベルをクリア
-            }
-        }
-
-        if (this.instructions.isEmpty() || shouldAppendReturnOnLast(this.instructions.getLastInstruction()))
-        {
-            // 最後にRETURNがない場合は、デフォルトでRETURNを追加
-            this.instructions.addInstruction(new InsnNode(Opcodes.RETURN));
-        }
-    }
-
-    private void evaluateTryCatchDirectives(JALParser.MethodBodyContext body)
+    public void evaluateTryCatchDirectives(JALParser.MethodBodyContext body)
     {
         for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
@@ -239,18 +160,21 @@ public class JALMethodCompiler
         JALParser.FinallyDirectiveContext finallyDirective = entry.finallyDirective();
 
         if (catchDirective == null && finallyDirective == null)
-            throw new IllegalArgumentException("Try-catch directive must have at least one catch or finally block.");
+            throw new IllegalValueException(
+                    "Try-catch directive must have at least one catch or finally block.",
+                    entry
+            );
         // finally は, catcHDirective 内に指定される場合がある
         if (finallyDirective == null)
             finallyDirective = catchDirective.finallyDirective();
 
-        String exceptionType = null;
+        TypeDescriptor exceptionType = null;
         if (catchDirective != null)
         {
             TerminalNode exceptionTypeNode = catchDirective.FULL_QUALIFIED_CLASS_NAME();
             if (exceptionTypeNode == null)
-                throw new IllegalArgumentException("Catch directive must have an exception type.");
-            exceptionType = exceptionTypeNode.getText();
+                throw new IllegalValueException("Catch directive must have an exception type.", entry);
+            exceptionType = TypeDescriptor.parse(exceptionTypeNode.getText());
         }
 
         // 各ラベルを解決
@@ -264,16 +188,48 @@ public class JALMethodCompiler
             finallyBlockLabel = this.labels.resolve(finallyLabel.getText());
 
         // トライキャッチディレクティブを登録
-        TryCatchDirective directive = new TryCatchDirective(
+        this.tryCatchDirectives.addTryCatchDirective(
                 tryBlockStartLabel,
                 tryBlockEndLabel,
                 catchBlockLabel,
                 exceptionType,
                 finallyBlockLabel
         );
-        this.tryCatchDirectives.add(directive);
     }
 
+    private void evaluateInstructions(@NotNull JALParser.MethodBodyContext body)
+    {
+        // 各命令を順に評価していく
+        // 命令に割り当てるラベル。１命令のみが割り当てられる。
+        LabelInfo labelAssignation = null;
+        for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
+        {
+            if (bodyItem.label() != null)
+                this.labels.setCurrentLabel(
+                        labelAssignation = this.labels.resolve(bodyItem.label().labelName().getText())
+                );
+
+            for (JALParser.InstructionContext instruction : bodyItem.instruction())
+            {
+                // 命令を評価して，必要に応じてラベルを設定
+                EvaluatedInstruction evaluated = JALInstructionEvaluator.evaluateInstruction(
+                        this,
+                        instruction
+                );
+                if (evaluated == null)
+                    continue;
+
+                this.instructions.addInstruction(evaluated, labelAssignation);
+                labelAssignation = null;  // 次の命令セットのためにラベルをクリア
+            }
+        }
+
+        if (this.instructions.isEmpty() || shouldAppendReturnOnLast(this.instructions.getLastInstruction()))
+        {
+            // 最後にRETURNがない場合は、デフォルトでRETURNを追加
+            this.instructions.addReturn();
+        }
+    }
 
     private static boolean shouldAppendReturnOnLast(InstructionInfo instruction)
     {

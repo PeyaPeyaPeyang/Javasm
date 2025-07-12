@@ -7,19 +7,21 @@ import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
 
 public class InstructionEvaluateHelperXLoad
 {
-    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler evaluator,
+    public static @NotNull EvaluatedInstruction evaluate(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                                         @NotNull JALMethodCompiler compiler,
                                                          @NotNull JALParser.JvmInsArgLocalRefContext ref,
                                                          int opcode,
                                                          @NotNull String callerInsn,
                                                          @Nullable TerminalNode wide)
     {
-        LocalVariableInfo local = evaluator.getLocals().resolve(ref, callerInsn);
+        LocalVariableInfo local = compiler.getLocals().resolve(ref, callerInsn);
 
         int idx = local.index();
         boolean isWide = wide != null;
@@ -33,10 +35,11 @@ public class InstructionEvaluateHelperXLoad
 
         int size = isWide ? 4: 2;
         VarInsnNode insn = new VarInsnNode(opcode, idx);
-        return EvaluatedInstruction.of(insn, size);
+        return EvaluatedInstruction.of(evaluator, insn, size);
     }
 
-    public static @NotNull EvaluatedInstruction evaluateN(@NotNull ParserRuleContext caller,
+    public static @NotNull EvaluatedInstruction evaluateN(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                                                          @NotNull ParserRuleContext caller,
                                                           @NotNull JALMethodCompiler compiler, int opcode, int idx)
     {
         LocalVariableInfo local = compiler.getLocals().resolveSafe(idx);
@@ -47,6 +50,6 @@ public class InstructionEvaluateHelperXLoad
             );
 
         VarInsnNode insn = new VarInsnNode(opcode, idx); // ここには iload_0, iload_1, iload_2, iload_3 などの短い命令が入る
-        return EvaluatedInstruction.of(insn);
+        return EvaluatedInstruction.of(evaluator, insn);
     }
 }

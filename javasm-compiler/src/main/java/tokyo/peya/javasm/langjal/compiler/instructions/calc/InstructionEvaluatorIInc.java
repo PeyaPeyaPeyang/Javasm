@@ -43,7 +43,7 @@ public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALPa
 
         int size = isWide ? 6: 3;
         IincInsnNode insn = new IincInsnNode(idx, increment);
-        return EvaluatedInstruction.of(insn, size);
+        return EvaluatedInstruction.of(this, insn, size);
     }
 
     @Override

@@ -27,6 +27,7 @@ import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorPop2;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorRet;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorReturn;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorSiPush;
+import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorSwap;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorTableSwitch;
 import tokyo.peya.javasm.langjal.compiler.instructions.calc.InstructionEvaluatorIInc;
 import tokyo.peya.javasm.langjal.compiler.instructions.calc.InstructionEvaluatorLCmp;
@@ -206,6 +207,7 @@ public class JALInstructionEvaluator
             new InstructionEvaluatorDup2(),
             new InstructionEvaluatorDup2X1(),
             new InstructionEvaluatorDup2X2(),
+            new InstructionEvaluatorSwap(),
 
             new InstructionEvaluatorIAdd(),
             new InstructionEvaluatorLAdd(),

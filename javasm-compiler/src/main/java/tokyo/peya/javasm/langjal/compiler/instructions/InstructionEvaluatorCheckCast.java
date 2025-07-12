@@ -3,8 +3,11 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.TypeInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
@@ -19,7 +22,17 @@ public class InstructionEvaluatorCheckCast extends AbstractInstructionEvaluator<
         String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor);
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.CHECKCAST, typeName);
-        return EvaluatedInstruction.of(type);
+        return EvaluatedInstruction.of(this, type);
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        TypeInsnNode insn = (TypeInsnNode) instruction.insn();
+        return FrameDifferenceInfo.builder(instruction)
+                                  .popObjectRef()  // なんでも
+                                  .pushObjectRef(TypeDescriptor.parse(insn.desc)) // キャスト後のオブジェクト参照をプッシュ
+                                  .build();
     }
 
     @Override

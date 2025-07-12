@@ -5,14 +5,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.exceptions.InternalCompileErrorException;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
 {
     @NotNull
     protected abstract EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler, @NotNull T ctxt);
+
+    protected abstract FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction);
 
     @Nullable
     protected abstract T map(@NotNull JALParser.InstructionContext instruction);
@@ -41,9 +45,9 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
         return map(instruction) != null;
     }
 
-    public static EvaluatedInstruction visitSingle(ParserRuleContext ctxt, int opCode)
+    public EvaluatedInstruction visitSingle(ParserRuleContext ctxt, int opCode)
     {
-        EvaluatedInstruction inst = EvaluatedInstruction.of(new InsnNode(opCode));
+        EvaluatedInstruction inst = EvaluatedInstruction.of(this, new InsnNode(opCode));
         if (inst.getInstructionSize() != 1)
             throw new InternalCompileErrorException(
                     "Instruction size mismatch: expected 1, but got " + inst.getInstructionSize() + " for opcode " + opCode,

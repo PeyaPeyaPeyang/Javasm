@@ -1,10 +1,14 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.xstore;
 
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementCapsule;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorAStore extends AbstractInstructionEvaluator<JALParser.JvmInsAstoreContext>
@@ -14,6 +18,7 @@ public class InstructionEvaluatorAStore extends AbstractInstructionEvaluator<JAL
                                                      JALParser.@NotNull JvmInsAstoreContext ctxt)
     {
         return InstructionEvaluateHelperXStore.evaluate(
+                this,
                 EOpcodes.ASTORE,
                 compiler,
                 ctxt.jvmInsArgLocalRef(),
@@ -22,6 +27,18 @@ public class InstructionEvaluatorAStore extends AbstractInstructionEvaluator<JAL
                 "astore",
                 ctxt.INSN_WIDE()
         );
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        VarInsnNode varInsnNode = (VarInsnNode) instruction.insn();
+
+        StackElementCapsule elementCapsule = new StackElementCapsule(instruction);
+        return FrameDifferenceInfo.builder(instruction)
+                                  .popToCapsule(elementCapsule)
+                                  .addLocalFromCapsule(varInsnNode.var, elementCapsule)
+                                  .build();
     }
 
     @Override

@@ -3,20 +3,84 @@ package tokyo.peya.javasm.langjal.compiler.jvm;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 
 @Getter
 @AllArgsConstructor
 public enum PrimitiveTypes implements Type
 {
-    BYTE("byte", 'B', EOpcodes.T_BYTE),
-    SHORT("short", 'S', EOpcodes.T_SHORT),
-    INT("int", 'I', EOpcodes.T_INT),
-    LONG("long", 'J', EOpcodes.T_LONG),
-    FLOAT("float", 'F', EOpcodes.T_FLOAT),
-    DOUBLE("double", 'D', EOpcodes.T_DOUBLE),
-    BOOLEAN("boolean", 'Z', EOpcodes.T_BOOLEAN),
-    CHAR("char", 'C', EOpcodes.T_CHAR),
-    VOID("void", 'V', -1);
+    BYTE("byte", 'B', EOpcodes.T_BYTE)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.INTEGER; // バイトは整数型として扱う
+                }
+            },
+    SHORT("short", 'S', EOpcodes.T_SHORT)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.INTEGER; // ショートは整数型として扱う
+                }
+            },
+    INT("int", 'I', EOpcodes.T_INT)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.INTEGER;
+                }
+            },
+    LONG("long", 'J', EOpcodes.T_LONG)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.LONG;
+                }
+            },
+    FLOAT("float", 'F', EOpcodes.T_FLOAT)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.FLOAT;
+                }
+            },
+    DOUBLE("double", 'D', EOpcodes.T_DOUBLE)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.DOUBLE;
+                }
+            },
+    BOOLEAN("boolean", 'Z', EOpcodes.T_BOOLEAN)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.INTEGER; // ブール値は整数型として扱う
+                }
+            },
+    CHAR("char", 'C', EOpcodes.T_CHAR)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.INTEGER; // キャラクターは整数型として扱う
+                }
+            },
+    VOID("void", 'V', -1)
+            {
+                @Override
+                public StackElementType getStackElementType()
+                {
+                    return StackElementType.TOP; // 仮でTOPを返す
+                }
+            };
 
     private final String name;
     @Getter(AccessLevel.NONE)
@@ -52,7 +116,5 @@ public enum PrimitiveTypes implements Type
 
         return null; // 該当するプリミティブ型がない場合はnullを返す
     }
-
-
 }
 

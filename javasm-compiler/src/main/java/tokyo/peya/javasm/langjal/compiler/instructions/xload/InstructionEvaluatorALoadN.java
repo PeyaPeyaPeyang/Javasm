@@ -2,10 +2,12 @@ package tokyo.peya.javasm.langjal.compiler.instructions.xload;
 
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorALoadN extends AbstractInstructionEvaluator<JALParser.JvmInsAloadNContext>
@@ -15,15 +17,23 @@ public class InstructionEvaluatorALoadN extends AbstractInstructionEvaluator<JAL
                                                      JALParser.@NotNull JvmInsAloadNContext ctxt)
     {
         if (has(ctxt.INSN_ALOAD_0()))
-            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.ALOAD, 0);
+            return InstructionEvaluateHelperXLoad.evaluateN(this, ctxt, compiler, EOpcodes.ALOAD, 0);
         else if (has(ctxt.INSN_ALOAD_1()))
-            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.ALOAD, 1);
+            return InstructionEvaluateHelperXLoad.evaluateN(this, ctxt, compiler, EOpcodes.ALOAD, 1);
         else if (has(ctxt.INSN_ALOAD_2()))
-            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.ALOAD, 2);
+            return InstructionEvaluateHelperXLoad.evaluateN(this, ctxt, compiler, EOpcodes.ALOAD, 2);
         else if (has(ctxt.INSN_ALOAD_3()))
-            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.ALOAD, 3);
+            return InstructionEvaluateHelperXLoad.evaluateN(this, ctxt, compiler, EOpcodes.ALOAD, 3);
 
         throw new IllegalInstructionException("Unexpected instruction: " + ctxt.getText(), ctxt);
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return FrameDifferenceInfo.builder(instruction)
+                                  .pushObjectRef()
+                                  .build();
     }
 
     @Override

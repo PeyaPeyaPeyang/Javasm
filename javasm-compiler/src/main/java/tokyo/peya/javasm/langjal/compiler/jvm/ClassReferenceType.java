@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 
 public class ClassReferenceType implements Type
 {
@@ -28,12 +29,18 @@ public class ClassReferenceType implements Type
     }
 
     @Override
+    public StackElementType getStackElementType()
+    {
+        return StackElementType.OBJECT; // オブジェクト型なので OBJECT
+    }
+
+    @Override
     public String getDescriptor()
     {
         return "L" + this.packageName + "/" + this.className + ";";
     }
 
-    public static ClassReferenceType fromString(@NotNull String typeName)
+    public static ClassReferenceType parse(@NotNull String typeName)
     {
         if (typeName.startsWith("L"))
             typeName = typeName.substring(1);

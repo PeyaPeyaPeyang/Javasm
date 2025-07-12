@@ -3,9 +3,12 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IntInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
@@ -21,7 +24,15 @@ public class InstructionEvaluatorBiPush extends AbstractInstructionEvaluator<JAL
                     "Value out of range for bipush: " + value + ", expected " + Byte.MIN_VALUE + " ~ " + Byte.MAX_VALUE,
                     ctxt.NUMBER()
             );
-        return EvaluatedInstruction.of(new IntInsnNode(EOpcodes.BIPUSH, value));
+        return EvaluatedInstruction.of(this, new IntInsnNode(EOpcodes.BIPUSH, value));
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return FrameDifferenceInfo.builder(instruction)
+                                  .pushPrimitive(StackElementType.INTEGER)
+                                  .build();
     }
 
     @Override

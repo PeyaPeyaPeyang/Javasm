@@ -2,6 +2,7 @@ package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public record TryCatchDirective(
         @NotNull
@@ -11,7 +12,7 @@ public record TryCatchDirective(
         @Nullable
         LabelInfo catchBlockLabel,
         @Nullable
-        String exceptionType,
+        TypeDescriptor exceptionType,
         @Nullable
         LabelInfo finallyBlockLabel
 )

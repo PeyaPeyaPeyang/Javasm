@@ -1,6 +1,11 @@
 package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.ObjectElement;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.PrimitiveElement;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElement;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 
 @Getter
 public class TypeDescriptor
@@ -38,6 +43,15 @@ public class TypeDescriptor
         return parse(DescriptorReader.fromString(descriptor));
     }
 
+
+    public StackElement toStackElement(@NotNull InstructionInfo producer)
+    {
+        if (this.arrayDimensions == 0)
+            return new PrimitiveElement(producer, this.baseType.getStackElementType());
+        else
+            return new ObjectElement(producer, TypeDescriptor.parse(this.toString()));
+    }
+
     static TypeDescriptor parse(DescriptorReader reader)
     {
         int dim = 0;
@@ -62,7 +76,7 @@ public class TypeDescriptor
                     throw new IllegalArgumentException("Unterminated object type");
             }
             reader.read(); // skip ';'
-            type = ClassReferenceType.fromString(className.toString());
+            type = ClassReferenceType.parse(className.toString());
         }
         else
         {

@@ -1,0 +1,13 @@
+package tokyo.peya.javasm.langjal.compiler.analyser.stack;
+
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
+
+public sealed interface StackElement
+        permits ObjectElement, PrimitiveElement, UninitializedElement,
+        UninitializedThisElement, NullElement, LocalStackElement, StackElementCapsule, TopElement
+{
+    InstructionInfo producer();  // Push 系命令のときに，だれがこの要素をスタックに積んだのかを示す．
+
+    // Pop 系命令のときは，この値を無視する
+    StackElementType type();
+}

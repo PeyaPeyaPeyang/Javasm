@@ -1,0 +1,29 @@
+package tokyo.peya.javasm.langjal.compiler.analyser.stack;
+
+import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
+
+public record UninitializedElement(
+        @NotNull
+        InstructionInfo instruction // new をしている命令
+) implements StackElement
+{
+    public UninitializedElement
+    {
+        if (instruction.opcode() != EOpcodes.NEW)
+            throw new IllegalArgumentException("UninitializedElement must be created with a NEW instruction, but was: " + instruction.opcode());
+    }
+
+    @Override
+    public InstructionInfo producer()
+    {
+        return this.instruction;
+    }
+
+    @Override
+    public StackElementType type()
+    {
+        return StackElementType.UNINITIALIZED;
+    }
+}

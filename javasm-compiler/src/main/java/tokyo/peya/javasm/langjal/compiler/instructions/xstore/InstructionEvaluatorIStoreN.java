@@ -1,11 +1,15 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.xstore;
 
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorIStoreN extends AbstractInstructionEvaluator<JALParser.JvmInsIstoreNContext>
@@ -16,15 +20,25 @@ public class InstructionEvaluatorIStoreN extends AbstractInstructionEvaluator<JA
     {
         JALParser.LocalInstigationContext ins = ctxt.localInstigation();
         if (has(ctxt.INSN_ISTORE_0()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 0, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ISTORE, 0, compiler, "I", ins);
         else if (has(ctxt.INSN_ISTORE_1()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 1, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ISTORE, 1, compiler, "I", ins);
         else if (has(ctxt.INSN_ISTORE_2()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 2, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ISTORE, 2, compiler, "I", ins);
         else if (has(ctxt.INSN_ISTORE_3()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.ISTORE, 3, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ISTORE, 3, compiler, "I", ins);
 
         throw new IllegalInstructionException("Unexpected instruction: " + ctxt.getText(), ctxt);
+    }
+
+    @Override
+    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        VarInsnNode varInsnNode = (VarInsnNode) instruction.insn();
+        return FrameDifferenceInfo.builder(instruction)
+                                  .popPrimitive(StackElementType.INTEGER)
+                                  .addLocalPrimitive(varInsnNode.var, StackElementType.INTEGER)
+                                  .build();
     }
 
     @Override

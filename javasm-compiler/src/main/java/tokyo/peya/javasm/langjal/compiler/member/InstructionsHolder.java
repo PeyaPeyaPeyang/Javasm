@@ -3,8 +3,8 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorReturn;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 import java.util.ArrayList;
@@ -30,13 +30,15 @@ public class InstructionsHolder
         return this.instructions.size();
     }
 
-    public InstructionInfo addInstruction(@NotNull InsnNode insn)
+    public InstructionInfo addReturn()
     {
+        int returnOpcode = EOpcodes.RETURN;
         InstructionInfo instruction = new InstructionInfo(
-                insn,
+                new InstructionEvaluatorReturn(),
+                returnOpcode,
                 this.bytecodeOffset,
                 this.labels.getCurrentLabel(),
-                EOpcodes.getOpcodeSize(insn.getOpcode())
+                EOpcodes.getOpcodeSize(returnOpcode)
         );
         this.instructions.add(instruction);
         this.bytecodeOffset += instruction.instructionSize();
@@ -47,6 +49,7 @@ public class InstructionsHolder
                                           @Nullable LabelInfo labelAssignation)
     {
         InstructionInfo instruction = new InstructionInfo(
+                evaluatedInstruction.evaluator(),
                 evaluatedInstruction.insn(),
                 this.bytecodeOffset,
                 labelAssignation,
