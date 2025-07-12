@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
+import tokyo.peya.javasm.langjal.compiler.exceptions.ClassFinalisingException;
+import tokyo.peya.javasm.langjal.compiler.exceptions.ClassWritingException;
+import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
+import tokyo.peya.javasm.langjal.compiler.exceptions.FileReadingException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,43 +32,76 @@ public class JALFileCompiler
     }
 
     @Nullable
-    public ClassNode compile(@NotNull Path inputFile) throws IOException
+    public ClassNode compile(@NotNull Path inputFile) throws CompileErrorException
     {
-        CharStream charStream = CharStreams.fromPath(inputFile);
+        CharStream charStream;
+        try
+        {
+            charStream = CharStreams.fromPath(inputFile);
+        }
+        catch (IOException e)
+        {
+            this.reporter.postError(
+                    "Failed to read input file: " + inputFile.toAbsolutePath(),
+                    new FileReadingException(e, inputFile),
+                    inputFile
+            );
+            return null;
+        }
+
+        return this.compile(charStream, inputFile);
+    }
+
+    @NotNull
+    public ClassNode compile(@NotNull String sourceCode) throws CompileErrorException
+    {
+        return this.compile(CharStreams.fromString(sourceCode), null);
+    }
+
+    @NotNull
+    private ClassNode compile(@NotNull CharStream charStream, @Nullable Path sourcePath) throws CompileErrorException
+    {
         JALLexer lexer = new JALLexer(charStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         JALParser parser = new JALParser(tokenStream);
-        JALCompileErrorStrategy errorStrategy = new JALCompileErrorStrategy(this.reporter, inputFile);
+        JALCompileErrorStrategy errorStrategy = new JALCompileErrorStrategy(this.reporter, sourcePath);
         parser.setErrorHandler(errorStrategy);
 
-        FileEvaluatingReporter fileReporter = new FileEvaluatingReporter(this.reporter, inputFile);
-        fileReporter.postInfo("Compiling JAL file: " + inputFile.toAbsolutePath());
+        FileEvaluatingReporter fileReporter = new FileEvaluatingReporter(this.reporter, sourcePath);
+        fileReporter.postInfo("Compiling JAL source code");
 
         JALParser.RootContext tree = parser.root();
         if (errorStrategy.isError())
-            return null;
+            return new ClassNode();
 
         JALParser.ClassDefinitionContext classDefinition = tree.classDefinition();
         if (classDefinition == null)
             return new ClassNode();
 
-        ClassNode evaluatedClass = JALClassCompiler.evaluateClassAST(
-                fileReporter,
-                classDefinition
-        );
+        JALClassCompiler classCompiler = new JALClassCompiler(fileReporter);
+        ClassNode evaluatedClass = classCompiler.compileClassAST(classDefinition);
         this.writeClass(fileReporter, evaluatedClass);
 
         return evaluatedClass;
     }
 
-    private void writeClass(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode classNode)
+    private void writeClass(@NotNull FileEvaluatingReporter reporter,
+                            @NotNull ClassNode classNode) throws CompileErrorException
     {
         ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        try
+        {
+
+            classNode.accept(classWriter);
+        }
+        catch (Throwable e)
+        {
+            throw new ClassFinalisingException(e);
+        }
 
         Path outputFile = this.outputDir.resolve(classNode.name + ".class");
         try
         {
-            classNode.accept(classWriter);
             Files.createDirectories(outputFile.getParent());
 
             Files.write(outputFile, classWriter.toByteArray());
@@ -81,9 +118,9 @@ public class JALFileCompiler
                     )
             );*/
         }
-        catch (Exception e)
+        catch (IOException e)
         {
-            reporter.postError("Failed to write class file: " + e.getMessage(), e);
+            throw new ClassWritingException(e);
         }
     }
 

@@ -2,6 +2,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions.invokex;
 
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
@@ -21,11 +22,15 @@ public class InstructionEvaluatorInvokeSpecial
         else if (ref.KWD_MNAME_INIT() != null)
             methodName = "<init>";
         else
-            throw new IllegalArgumentException("Invalid method name for invokespecial: " + ref.getText());
+            throw new IllegalInstructionException(
+                    "Invalid method name in invokespecial: " + ref.getText(),
+                    ref
+            );
 
-        String ownerName;
+        // Owner が指定されていない場合は，命令を持つメソッドのクラスが所有者となる
         JALParser.JvmInsArgMethodRefOwnerTypeContext ownerType = ref.jvmInsArgMethodRefOwnerType();
-        ownerName = ownerType == null ? compiler.getClazz().name: ownerType.getText();
+        String ownerName = ownerType == null ? compiler.getClazz().name: ownerType.getText();
+
 
         return InstructionEvaluateHelperInvocation.evaluate(
                 ownerName,

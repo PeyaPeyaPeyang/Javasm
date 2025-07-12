@@ -12,8 +12,9 @@ import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.ModuleLevelBuilder.ExitCode;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import org.objectweb.asm.tree.ClassNode;
+import tokyo.peya.javasm.langjal.compiler.CompileReporter;
 import tokyo.peya.javasm.langjal.compiler.JALFileCompiler;
+import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
 
 import java.io.File;
 import java.io.IOException;
@@ -111,29 +112,30 @@ public class JALDirtyCompiler
     private ExitCode compileJALFiles(
             ListMultimap<ModuleBuildTarget, Path> files,
             Path outputDir
-    ) throws ProjectBuildException, IOException
+    ) throws IOException
     {
         ExitCode exitCode = ExitCode.OK;
-        JALFileCompiler compiler = new JALFileCompiler(
-                new JALCompileReporterImpl(this.compileContext),
-                outputDir
-        );
+        CompileReporter reporter = new JALCompileReporterImpl(this.compileContext);
+        JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir);
 
         for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries())
         {
             ModuleBuildTarget target = entry.getKey();
             Path jalFile = entry.getValue();
 
-            ClassNode compiledClass = compiler.compile(jalFile);
-            if (compiledClass == null)
+            try
             {
-                this.compileContext.processMessage(new CompilerMessage(
-                        JAL_COMPILER_ID,
-                        CompilerMessage.Kind.ERROR,
-                        "Failed to compile JAL file: " + jalFile
-                ));
+                compiler.compile(jalFile);
+            }
+            catch (CompileErrorException e)
+            {
+                reporter.postError(
+                        "Failed to compile JAL file: " + jalFile.toAbsolutePath(),
+                        e,
+                        jalFile
+                );
                 exitCode = ExitCode.ABORT;
-                break;
+                continue;
             }
         }
 

@@ -6,6 +6,8 @@ import org.antlr.v4.runtime.DefaultErrorStrategy;
 import org.antlr.v4.runtime.Parser;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
+import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.langjal.compiler.exceptions.SyntaxErrorException;
 
 import java.nio.file.Path;
 
@@ -14,6 +16,7 @@ import java.nio.file.Path;
         /* non-public */ class JALCompileErrorStrategy extends DefaultErrorStrategy
 {
     private final CompileReporter reporter;
+    @Nullable
     private final Path sourcePath;
 
     private boolean error;
@@ -62,22 +65,30 @@ import java.nio.file.Path;
         if (offendingToken == null)
         {
             this.reporter.postError(
-                    "Unexpected error in " + this.sourcePath + ": " + e.getMessage(),
+                    "Unexpected error in source " + this.sourcePath + ": " + e.getMessage(),
                     this.sourcePath
             );
             this.error = true;
             return;
         }
 
-        this.reporter.postError(
-                "Syntax error in " + this.sourcePath + " at line " + offendingToken.getLine() +
-                        ", column " + offendingToken.getCharPositionInLine() + ": " + e.getMessage(),
+        long line = offendingToken.getLine();
+        long column = offendingToken.getCharPositionInLine();
+        long length = offendingToken.getText().length();
+
+        SyntaxErrorException syntaxErrorException = new SyntaxErrorException(
                 e,
                 this.sourcePath,
-                offendingToken.getLine(),
-                offendingToken.getCharPositionInLine(),
-                offendingToken.getText().length()
+                line,
+                column,
+                length
         );
+        this.reporter.postError(
+                syntaxErrorException.getDetailedMessage(),
+                syntaxErrorException,
+                this.sourcePath
+        );
+
 
         this.error = true;
 

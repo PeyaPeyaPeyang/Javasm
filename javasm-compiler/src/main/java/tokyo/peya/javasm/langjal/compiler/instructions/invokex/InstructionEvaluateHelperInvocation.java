@@ -4,7 +4,6 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 
 public class InstructionEvaluateHelperInvocation
@@ -24,16 +23,10 @@ public class InstructionEvaluateHelperInvocation
         );
     }
 
-    public static EvaluatedInstruction evaluate(@NotNull String ownerType, String methodName, String methodDescriptor,
-                                                int opcode)
+    public static EvaluatedInstruction evaluate(@NotNull String ownerType,
+                                                @NotNull String methodName,
+                                                @NotNull String methodDescriptor, int opcode)
     {
-        if (opcode == EOpcodes.INVOKESPECIAL)
-        {
-            if (!(methodName.equals("<init>") || methodName.equals("<clinit>")))
-                throw new IllegalArgumentException(
-                        "Method name must be <init> or <clinit> for invokespecial instruction");
-        }
-
         MethodInsnNode insn = new MethodInsnNode(
                 opcode,
                 ownerType,

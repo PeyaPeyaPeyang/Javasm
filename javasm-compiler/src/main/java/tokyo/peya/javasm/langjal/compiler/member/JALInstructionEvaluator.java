@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.InternalCompileErrorException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorANewArray;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorAThrow;
@@ -367,29 +368,10 @@ public class JALInstructionEvaluator
     static EvaluatedInstruction evaluateInstruction(@NotNull JALMethodCompiler methodEvaluator,
                                                     @NotNull JALParser.InstructionContext instruction)
     {
-        try
-        {
-            for (AbstractInstructionEvaluator<?> evaluator : EVALUATORS)
-                if (evaluator.isApplicable(instruction))
-                    return evaluator.evaluate(methodEvaluator, instruction);
+        for (AbstractInstructionEvaluator<?> evaluator : EVALUATORS)
+            if (evaluator.isApplicable(instruction))
+                return evaluator.evaluate(methodEvaluator, instruction);
 
-
-            throw new UnsupportedOperationException("Unsupported instruction: " + instruction.getText());
-        }
-        catch (Exception e)
-        {
-            long line = instruction.getStart().getLine();
-            long offset = instruction.getStart().getCharPositionInLine();
-            long problemLengthInLine = instruction.getStop().getCharPositionInLine() - offset + 1;
-
-            methodEvaluator.getContext().postError(
-                    "An error occurred while evaluating instruction: " + instruction.getText(),
-                    e,
-                    line,
-                    offset,
-                    problemLengthInLine
-            );
-            return null;
-        }
+        throw new InternalCompileErrorException("Unsupported instruction: " + instruction.getText(), instruction);
     }
 }

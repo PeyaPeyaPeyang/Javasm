@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -32,10 +33,12 @@ public class InstructionEvaluateHelperXStore
         int idx = registeredLocal.index();
         boolean isWide = wide != null;
         if (idx >= 0xFF && !isWide)
-            throw new IllegalArgumentException(String.format(
+            throw new IllegalInstructionException(
+                    String.format(
                     "Local variable index %d is too large for %s instruction. Use wide variant with.",
                     idx, callerInsn
-            ));
+                    ), localRef
+            );
 
         int size = isWide ? 4: 2;
         VarInsnNode insn = new VarInsnNode(opcode, idx);

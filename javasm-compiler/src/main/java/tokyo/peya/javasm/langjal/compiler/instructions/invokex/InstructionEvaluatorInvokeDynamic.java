@@ -5,6 +5,7 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
@@ -63,17 +64,7 @@ public class InstructionEvaluatorInvokeDynamic
         if (arg.jvmInsArgScalarType() != null)
         {
             JALParser.JvmInsArgScalarTypeContext scalarType = arg.jvmInsArgScalarType();
-            if (scalarType.STRING() != null)
-            {
-                String quortedString = scalarType.STRING().getText();
-                return quortedString.substring(1, quortedString.length() - 1); // Remove quotes
-            }
-            else if (scalarType.NUMBER() != null)
-                return EvaluatorCommons.toNumber(scalarType.NUMBER().getText());
-            else if (scalarType.BOOLEAN() != null)
-                return EvaluatorCommons.toBoolean(scalarType.BOOLEAN().getText());
-            else
-                throw new IllegalArgumentException("Unknown scalar type: " + scalarType.getText());
+            return EvaluatorCommons.evaluateScalar(scalarType);
         }
         else if (arg.jvmInsArgInvokeDynamicMethodType() != null)
         {
@@ -87,7 +78,7 @@ public class InstructionEvaluatorInvokeDynamic
             return toHandle(handle);
         }
         else
-            throw new IllegalArgumentException("Unknown invoke dynamic argument type: " + arg.getText());
+            throw new IllegalInstructionException("Invalid bootstrap argument type: " + arg.getText(), arg);
     }
 
     private static Handle toHandle(JALParser.JvmInsArgInvokeDynamicMethodTypeMethodHandleContext handle)
@@ -128,6 +119,6 @@ public class InstructionEvaluatorInvokeDynamic
         else if (handle.INSN_INVOKEINTERFACE() != null)
             return EOpcodes.H_INVOKEINTERFACE;
         else
-            throw new IllegalArgumentException("Unknown method handle type: " + handle.getText());
+            throw new IllegalInstructionException("Unknown method handle type: " + handle.getText(), handle);
     }
 }

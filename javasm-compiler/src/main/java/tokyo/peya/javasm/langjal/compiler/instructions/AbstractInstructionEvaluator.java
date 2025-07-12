@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.InternalCompileErrorException;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
@@ -20,11 +21,17 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
                                          @NotNull JALParser.InstructionContext instruction)
     {
         if (!isApplicable(instruction))
-            throw new IllegalArgumentException("Instruction is not applicable: " + instruction.getText());
+            throw new InternalCompileErrorException(
+                    "Instruction is not applicable: " + instruction.getText(),
+                    instruction
+            );
 
         T mappedContext = map(instruction);
         if (mappedContext == null)
-            throw new IllegalArgumentException("Mapped context is null for instruction: " + instruction.getText());
+            throw new InternalCompileErrorException(
+                    "Mapped context is null for instruction: " + instruction.getText(),
+                    instruction
+            );
 
         return evaluate(compiler, mappedContext);
     }
@@ -34,12 +41,14 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
         return map(instruction) != null;
     }
 
-    public static EvaluatedInstruction visitSingle(int opCode)
+    public static EvaluatedInstruction visitSingle(ParserRuleContext ctxt, int opCode)
     {
         EvaluatedInstruction inst = EvaluatedInstruction.of(new InsnNode(opCode));
         if (inst.getInstructionSize() != 1)
-            throw new IllegalArgumentException("Instruction size mismatch: expected 1, but got " +
-                                                       inst.getInstructionSize() + " for opcode " + opCode);
+            throw new InternalCompileErrorException(
+                    "Instruction size mismatch: expected 1, but got " + inst.getInstructionSize() + " for opcode " + opCode,
+                    ctxt
+            );
         return inst;
     }
 

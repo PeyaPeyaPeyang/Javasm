@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler;
 import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
 
 import java.nio.file.Path;
 
@@ -27,14 +28,14 @@ public class FileEvaluatingReporter
         this.delegate.postError(message, this.sourcePath);
     }
 
-    public void postError(@NotNull String message, @NotNull Throwable cause)
+    public void postError(@NotNull CompileErrorException cause)
     {
-        this.delegate.postError(message, cause, this.sourcePath);
+        this.delegate.postError(cause.getMessage(), cause, this.sourcePath);
     }
 
-    public void postError(@NotNull String message, @NotNull Throwable cause, long line, long column, long length)
+    public void postError(@NotNull String message, @NotNull CompileErrorException cause)
     {
-        this.delegate.postError(message, cause, this.sourcePath, line, column, length);
+        this.delegate.postError(message, cause, this.sourcePath);
     }
 
     public void postWarning(@NotNull String message, long line, long column, long length)

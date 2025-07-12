@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.TypeInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -16,10 +17,13 @@ public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
         if (!typeDescriptor.getText().startsWith("L"))
-            throw new IllegalArgumentException("Reference type expected for anewarray, but got " + typeDescriptor.getText());
+            throw new IllegalInstructionException(
+                    "Reference type expected for anewarray, but got " + typeDescriptor.getText(),
+                    typeDescriptor
+            );
 
         // Ljava/lang/String; -> java.lang.String に変換
-        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
+        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor);
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.ANEWARRAY, typeName);
         return EvaluatedInstruction.of(type);

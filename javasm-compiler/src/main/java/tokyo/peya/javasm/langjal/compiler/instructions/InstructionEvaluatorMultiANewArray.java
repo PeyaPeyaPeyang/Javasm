@@ -16,7 +16,7 @@ public class InstructionEvaluatorMultiANewArray
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
         // Ljava/lang/String; -> java.lang.String に変換
-        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
+        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor);
         int dimensions = EvaluatorCommons.asInteger(ctxt.NUMBER());
 
         MultiANewArrayInsnNode insn = new MultiANewArrayInsnNode(typeName, dimensions);

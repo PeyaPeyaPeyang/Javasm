@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IntInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -16,8 +17,9 @@ public class InstructionEvaluatorBiPush extends AbstractInstructionEvaluator<JAL
     {
         int value = EvaluatorCommons.asInteger(ctxt.NUMBER());
         if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)
-            throw new IllegalArgumentException(
-                    "Value out of range for bipush: " + value + ", expected " + Byte.MIN_VALUE + " ~ " + Byte.MAX_VALUE
+            throw new IllegalInstructionException(
+                    "Value out of range for bipush: " + value + ", expected " + Byte.MIN_VALUE + " ~ " + Byte.MAX_VALUE,
+                    ctxt.NUMBER()
             );
         return EvaluatedInstruction.of(new IntInsnNode(EOpcodes.BIPUSH, value));
     }

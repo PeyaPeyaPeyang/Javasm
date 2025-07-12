@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions.ifx;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.JumpInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
@@ -44,6 +45,6 @@ public class InstructionEvaluatorIfOP extends AbstractInstructionEvaluator<JALPa
         if (ctxt.INSN_IFLE() != null)
             return EOpcodes.IFLE;
 
-        throw new IllegalArgumentException("Unknown IF opcode");
+        throw new IllegalInstructionException("Unknown IF opcode", ctxt);
     }
 }

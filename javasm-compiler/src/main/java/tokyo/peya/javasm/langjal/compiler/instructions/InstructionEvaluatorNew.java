@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.TypeInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -16,7 +17,10 @@ public class InstructionEvaluatorNew extends AbstractInstructionEvaluator<JALPar
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
         String typeName = typeDescriptor.getText();
         if (!(typeName.startsWith("L") && typeName.endsWith(";")))
-            throw new IllegalArgumentException("Invalid type descriptor: " + typeName + ", expected a class type descriptor.");
+            throw new IllegalInstructionException(
+                    "Invalid type descriptor: " + typeName + ", expected a class type descriptor.",
+                    typeDescriptor
+            );
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.NEW, typeName);
         return EvaluatedInstruction.of(type);

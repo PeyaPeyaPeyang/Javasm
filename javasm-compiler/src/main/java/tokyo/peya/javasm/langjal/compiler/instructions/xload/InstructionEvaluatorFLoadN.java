@@ -2,6 +2,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions.xload;
 
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
@@ -14,15 +15,15 @@ public class InstructionEvaluatorFLoadN extends AbstractInstructionEvaluator<JAL
                                                      JALParser.@NotNull JvmInsFloadNContext ctxt)
     {
         if (has(ctxt.INSN_FLOAD_0()))
-            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 0);
+            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.FLOAD, 0);
         else if (has(ctxt.INSN_FLOAD_1()))
-            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 1);
+            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.FLOAD, 1);
         else if (has(ctxt.INSN_FLOAD_2()))
-            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 2);
+            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.FLOAD, 2);
         else if (has(ctxt.INSN_FLOAD_3()))
-            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 3);
+            return InstructionEvaluateHelperXLoad.evaluateN(ctxt, compiler, EOpcodes.FLOAD, 3);
 
-        throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
+        throw new IllegalInstructionException("Unexpected instruction: " + ctxt.getText(), ctxt);
     }
 
     @Override

@@ -2,6 +2,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions.xstore;
 
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
@@ -24,7 +25,7 @@ public class InstructionEvaluatorLStoreN extends AbstractInstructionEvaluator<JA
         else if (has(ctxt.INSN_LSTORE_3()))
             return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.LSTORE, 3, compiler, "L", ins);
 
-        throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
+        throw new IllegalInstructionException("Unexpected instruction: " + ctxt.getText(), ctxt);
     }
 
     @Override

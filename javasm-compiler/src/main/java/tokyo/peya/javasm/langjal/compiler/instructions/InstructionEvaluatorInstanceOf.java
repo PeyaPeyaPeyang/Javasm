@@ -16,7 +16,7 @@ public class InstructionEvaluatorInstanceOf extends AbstractInstructionEvaluator
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
         // Ljava/lang/String; -> java.lang.String に変換
-        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor.getText());
+        String typeName = EvaluatorCommons.unwrapClassTypeDescriptor(typeDescriptor);
 
         TypeInsnNode type = new TypeInsnNode(EOpcodes.INSTANCEOF, typeName);
         return EvaluatedInstruction.of(type);

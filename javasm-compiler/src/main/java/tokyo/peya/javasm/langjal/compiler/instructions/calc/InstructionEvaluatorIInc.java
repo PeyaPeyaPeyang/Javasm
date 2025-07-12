@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.instructions.calc;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IincInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
@@ -25,15 +26,19 @@ public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALPa
         if (!isWide)
         {
             if (idx >= 0xFF)
-                throw new IllegalArgumentException(String.format(
+                throw new IllegalInstructionException(
+                        String.format(
                         "Local variable index %d is too large for iinc instruction. Use wide variant with.",
                         idx
-                ));
+                        ), ref
+                );
             else if (increment < Byte.MIN_VALUE || increment > Byte.MAX_VALUE)
-                throw new IllegalArgumentException(String.format(
+                throw new IllegalInstructionException(
+                        String.format(
                         "Increment value %d is out of range for iinc instruction. Use wide variant with.",
                         increment
-                ));
+                        ), ref
+                );
         }
 
         int size = isWide ? 6: 3;

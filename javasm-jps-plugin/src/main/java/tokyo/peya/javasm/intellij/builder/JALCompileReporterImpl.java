@@ -3,10 +3,12 @@ package tokyo.peya.javasm.intellij.builder;
 import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import tokyo.peya.javasm.langjal.compiler.CompileReporter;
+import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -22,8 +24,10 @@ public class JALCompileReporterImpl implements CompileReporter
     private final CompileContext compileContext;
 
     @Override
-    public void postError(@NotNull String message, @NotNull Path sourcePath)
+    public void postError(@NotNull String message, @Nullable Path sourcePath)
     {
+        assert sourcePath != null: "Source path must not be null for error messages";
+
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
@@ -35,8 +39,10 @@ public class JALCompileReporterImpl implements CompileReporter
     }
 
     @Override
-    public void postWarning(@NotNull String message, @NotNull Path sourcePath)
+    public void postWarning(@NotNull String message, @Nullable Path sourcePath)
     {
+        assert sourcePath != null: "Source path must not be null for error messages";
+
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
@@ -48,8 +54,10 @@ public class JALCompileReporterImpl implements CompileReporter
     }
 
     @Override
-    public void postInfo(@NotNull String message, @NotNull Path sourcePath)
+    public void postInfo(@NotNull String message, @Nullable Path sourcePath)
     {
+        assert sourcePath != null: "Source path must not be null for error messages";
+
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
@@ -60,32 +68,35 @@ public class JALCompileReporterImpl implements CompileReporter
         );
     }
 
-    @Override
-    public void postError(@NotNull String message, @NotNull Throwable cause, @NotNull Path sourcePath)
-    {
-        this.postError(message, cause, sourcePath, -1, -1, -1);
-    }
 
     @Override
-    public void postError(@NotNull String message, @NotNull Throwable e, @NotNull Path sourcePath, long line,
-                          long column, long length)
+    public void postError(@NotNull String message, @NotNull CompileErrorException e, @Nullable Path sourcePath)
     {
-        this.postOnLine(message, sourcePath, BuildMessage.Kind.ERROR, line, column, length);
+        assert sourcePath != null: "Source path must not be null for error messages";
+
+        long line = e.getLine();
+        long column = e.getColumn();
+        long length = e.getLength();
+
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         e.printStackTrace(new PrintStream(outputStream));
-        this.compileContext.processMessage(
-                new CompilerMessage(
-                        COMPILER_NAME,
-                        BuildMessage.Kind.ERROR,
-                        outputStream.toString(),
-                        sourcePath.toString()
-                )
+        this.postOnLine(
+                "Compile error: " + message + "\n" +
+                        "Caused by: " + e.getDetailedMessage() + "\n" +
+                        "Stack trace:\n" + outputStream,
+                sourcePath,
+                BuildMessage.Kind.ERROR,
+                line,
+                column,
+                length
         );
     }
 
     @Override
-    public void postWarning(@NotNull String message, @NotNull Path sourcePath, long line, long column, long length)
+    public void postWarning(@NotNull String message, @Nullable Path sourcePath, long line, long column, long length)
     {
+        assert sourcePath != null: "Source path must not be null for error messages";
+
         this.postOnLine(message, sourcePath, BuildMessage.Kind.WARNING, line, column, length);
     }
 
@@ -110,15 +121,13 @@ public class JALCompileReporterImpl implements CompileReporter
         long problemBeginOffset = -1;
         long problemEndOffset = -1;
         long problemLocationOffset = -1;
-        long locationLine = -1;
-        long locationColumn = -1;
         try
         {
             String content = Files.readString(sourcePath);
             long offset = getOffset(content, line, column);
             problemBeginOffset = offset;
             problemEndOffset = offset + length;
-            problemLocationOffset = offset;
+            problemLocationOffset = offset + 1;
         }
         catch (IOException ignored)
         {
@@ -134,8 +143,8 @@ public class JALCompileReporterImpl implements CompileReporter
                         problemBeginOffset,
                         problemEndOffset,
                         problemLocationOffset,
-                        locationLine,
-                        locationColumn
+                        line,
+                        column
                 )
         );
     }

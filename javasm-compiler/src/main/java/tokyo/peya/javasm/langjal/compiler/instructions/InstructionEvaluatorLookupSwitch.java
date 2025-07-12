@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.LookupSwitchInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
@@ -40,7 +41,7 @@ public class InstructionEvaluatorLookupSwitch extends AbstractInstructionEvaluat
         }
 
         if (defaultLabel == null)
-            throw new IllegalArgumentException("lookupswitch must have a default case");
+            throw new IllegalInstructionException("lookupswitch must have a default case", args);
 
         LookupSwitchInsnNode lookupSwitchInsnNode = new LookupSwitchInsnNode(
                 defaultLabel,

@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
@@ -14,18 +15,23 @@ import java.util.List;
 
 public class JALClassCompiler
 {
-    public static ClassNode evaluateClassAST(@NotNull FileEvaluatingReporter reporter,
-                                             @NotNull JALParser.ClassDefinitionContext clazz)
+    private final FileEvaluatingReporter reporter;
+
+    public JALClassCompiler(@NotNull FileEvaluatingReporter reporter)
+    {
+        this.reporter = reporter;
+    }
+
+    public ClassNode compileClassAST(@NotNull JALParser.ClassDefinitionContext clazz) throws CompileErrorException
     {
         ClassNode classNode = new ClassNode();
         visitClassInformation(classNode, clazz);
-        visitClassBody(reporter, classNode, clazz.classBody());
+        visitClassBody(classNode, clazz.classBody());
 
         return classNode;
     }
 
-    private static void visitClassBody(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode classNode,
-                                       @Nullable JALParser.ClassBodyContext body)
+    private void visitClassBody(@NotNull ClassNode classNode, @Nullable JALParser.ClassBodyContext body)
     {
         if (body == null)
             return;
@@ -35,7 +41,7 @@ public class JALClassCompiler
         {
             if (item.methodDefinition() != null)
             {
-                JALMethodCompiler evaluator = new JALMethodCompiler(reporter, classNode);
+                JALMethodCompiler evaluator = new JALMethodCompiler(this.reporter, classNode);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
             if (item.fieldDefinition() != null)
@@ -52,7 +58,7 @@ public class JALClassCompiler
         Object scalarValue = null;
 
         if (fieldDefinition.jvmInsArgScalarType() != null)
-            scalarValue = evaluateScalar(fieldDefinition.jvmInsArgScalarType());
+            scalarValue = EvaluatorCommons.evaluateScalar(fieldDefinition.jvmInsArgScalarType());
 
         int modifier = visitFieldAccessModifier(accessModifier);
         FieldNode fieldNode = new FieldNode(
@@ -65,23 +71,9 @@ public class JALClassCompiler
         classNode.fields.add(fieldNode);
     }
 
-    private static Object evaluateScalar(JALParser.JvmInsArgScalarTypeContext scalar)
-    {
-        if (scalar.NUMBER() != null)
-            return EvaluatorCommons.toNumber(scalar.NUMBER().getText());
-        else if (scalar.STRING() != null)
-        {
-            String value = scalar.STRING().getText();
-            return value.substring(1, value.length() - 1); // Remove quotes
-        }
-        else if (scalar.BOOLEAN() != null)
-            return EvaluatorCommons.toBoolean(scalar.BOOLEAN().getText());
-        else
-            throw new IllegalArgumentException("Unsupported scalar type: " + scalar.getText());
-    }
-
     private static void visitClassInformation(@NotNull ClassNode classNode,
                                               @NotNull JALParser.ClassDefinitionContext definitionContext)
+            throws CompileErrorException
     {
         int major = -1;
         int minor = -1;
