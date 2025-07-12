@@ -1,8 +1,8 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.cast;
 
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.AbstractSingleInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractSingleInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 public class InstructionEvaluatorL2F extends AbstractSingleInstructionEvaluator<JALParser.JvmInsL2FContext>

@@ -1,9 +1,8 @@
 package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.AbstractSingleInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 public class InstructionEvaluatorSwap extends AbstractSingleInstructionEvaluator<JALParser.JvmInsSwapContext>
 {

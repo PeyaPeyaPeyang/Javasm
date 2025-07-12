@@ -11,9 +11,9 @@ import java.nio.file.Path;
 
 @Getter
 @RequiredArgsConstructor
-public class JALCompileErrorStrategy extends DefaultErrorStrategy
+        /* non-public */ class JALCompileErrorStrategy extends DefaultErrorStrategy
 {
-    private final EvaluatingReporter reporter;
+    private final CompileReporter reporter;
     private final Path sourcePath;
 
     private boolean error;

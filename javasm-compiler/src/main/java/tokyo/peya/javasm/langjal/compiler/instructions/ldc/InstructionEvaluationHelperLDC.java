@@ -3,10 +3,10 @@ package tokyo.peya.javasm.langjal.compiler.instructions.ldc;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.LdcInsnNode;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 public class InstructionEvaluationHelperLDC
 {
@@ -14,7 +14,7 @@ public class InstructionEvaluationHelperLDC
     public static final int LDC_W = 1;
     public static final int LDC2_W = 2;
 
-    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler evaluator,
                                                          JALParser.@NotNull JvmInsArgScalarTypeContext scalar,
                                                          int ldcType)
 

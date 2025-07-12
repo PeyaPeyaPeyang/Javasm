@@ -1,19 +1,22 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
+import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
 {
     @NotNull
-    protected abstract EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, @NotNull T ctxt);
+    protected abstract EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler, @NotNull T ctxt);
 
     @Nullable
     protected abstract T map(@NotNull JALParser.InstructionContext instruction);
 
-    public EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    public EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                          @NotNull JALParser.InstructionContext instruction)
     {
         if (!isApplicable(instruction))
@@ -23,7 +26,7 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
         if (mappedContext == null)
             throw new IllegalArgumentException("Mapped context is null for instruction: " + instruction.getText());
 
-        return evaluate(evaluator, mappedContext);
+        return evaluate(compiler, mappedContext);
     }
 
     public boolean isApplicable(@NotNull JALParser.InstructionContext instruction)

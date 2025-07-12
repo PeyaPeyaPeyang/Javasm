@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Label;

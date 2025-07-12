@@ -2,21 +2,20 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.JumpInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LabelInfo;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
 
 public class InstructionEvaluatorGoto extends AbstractInstructionEvaluator<JALParser.JvmInsGotoContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsGotoContext ctxt)
     {
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = evaluator.getLabels().resolve(labelNameContext.getText());
+        LabelInfo label = compiler.getLabels().resolve(labelNameContext.getText());
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.GOTO, label.node());
         return EvaluatedInstruction.of(insn);

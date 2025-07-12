@@ -3,9 +3,9 @@ package tokyo.peya.javasm.langjal.compiler.instructions.invokex;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodInsnNode;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 
 public class InstructionEvaluateHelperInvocation
 {

@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +11,14 @@ import java.util.List;
 
 public class LabelsHolder
 {
-    private final JALMethodEvaluator methodEvaluator;
+    private final JALMethodCompiler methodEvaluator;
     private final List<LabelInfo> labels;
 
     @Getter
     @Setter
     private LabelInfo currentLabel; // 現在解析中の最後のラベル
 
-    public LabelsHolder(@NotNull JALMethodEvaluator methodEvaluator)
+    public LabelsHolder(@NotNull JALMethodCompiler methodEvaluator)
     {
         this.methodEvaluator = methodEvaluator;
 

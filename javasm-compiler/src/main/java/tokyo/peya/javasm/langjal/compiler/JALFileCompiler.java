@@ -12,12 +12,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class JALCompiler
+public class JALFileCompiler
 {
-    private final EvaluatingReporter reporter;
+    private final CompileReporter reporter;
     private final Path outputDir;
 
-    public JALCompiler(@NotNull EvaluatingReporter reporter, @NotNull Path outputDir) throws IOException
+    public JALFileCompiler(@NotNull CompileReporter reporter, @NotNull Path outputDir) throws IOException
     {
         this.reporter = reporter;
         this.outputDir = outputDir;
@@ -48,7 +48,7 @@ public class JALCompiler
         if (classDefinition == null)
             return new ClassNode();
 
-        ClassNode evaluatedClass = JALClassEvaluator.evaluateClassAST(
+        ClassNode evaluatedClass = JALClassCompiler.evaluateClassAST(
                 fileReporter,
                 classDefinition
         );

@@ -4,11 +4,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
+import tokyo.peya.javasm.langjal.compiler.utils.RuntimeUtils;
 
 import java.util.Collections;
 import java.util.List;
 
-public class JALClassEvaluator
+public class JALClassCompiler
 {
     public static ClassNode evaluateClassAST(@NotNull FileEvaluatingReporter reporter,
                                              @NotNull JALParser.ClassDefinitionContext clazz)
@@ -31,7 +35,7 @@ public class JALClassEvaluator
         {
             if (item.methodDefinition() != null)
             {
-                JALMethodEvaluator evaluator = new JALMethodEvaluator(reporter, classNode);
+                JALMethodCompiler evaluator = new JALMethodCompiler(reporter, classNode);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
             if (item.fieldDefinition() != null)

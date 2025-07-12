@@ -3,7 +3,6 @@ package tokyo.peya.javasm.langjal.compiler.jvm;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 
 @Getter
 @AllArgsConstructor

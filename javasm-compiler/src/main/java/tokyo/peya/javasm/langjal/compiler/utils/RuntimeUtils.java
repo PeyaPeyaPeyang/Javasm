@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.utils;
 
 import lombok.experimental.UtilityClass;
 

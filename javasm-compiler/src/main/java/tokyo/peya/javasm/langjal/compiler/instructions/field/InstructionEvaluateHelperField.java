@@ -2,8 +2,8 @@ package tokyo.peya.javasm.langjal.compiler.instructions.field;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.FieldInsnNode;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 
 public class InstructionEvaluateHelperField
 {

@@ -4,12 +4,12 @@ import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.InvokeDynamicInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class InstructionEvaluatorInvokeDynamic
         extends AbstractInstructionEvaluator<JALParser.JvmInsInvokedynamicContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsInvokedynamicContext ctxt)
     {
         String methodName = ctxt.methodName().getText();

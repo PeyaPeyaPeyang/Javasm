@@ -1,8 +1,9 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 public record EvaluatedInstruction(
         AbstractInsnNode insn,

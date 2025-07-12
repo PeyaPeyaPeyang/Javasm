@@ -1,7 +1,9 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public abstract class AbstractSingleInstructionEvaluator<T extends ParserRuleContext>
         extends AbstractInstructionEvaluator<T>
@@ -14,7 +16,7 @@ public abstract class AbstractSingleInstructionEvaluator<T extends ParserRuleCon
     }
 
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator, @NotNull T ctxt)
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler, @NotNull T ctxt)
     {
         return visitSingle(this.opcode);
     }

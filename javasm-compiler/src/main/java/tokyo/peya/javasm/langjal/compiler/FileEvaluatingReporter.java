@@ -9,7 +9,7 @@ import java.nio.file.Path;
 @AllArgsConstructor
 public class FileEvaluatingReporter
 {
-    private final EvaluatingReporter delegate;
+    private final CompileReporter delegate;
     private final Path sourcePath;
 
     public void postWarning(@NotNull String message)

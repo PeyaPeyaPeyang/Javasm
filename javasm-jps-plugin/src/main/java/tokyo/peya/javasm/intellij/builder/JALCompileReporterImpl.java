@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import tokyo.peya.javasm.langjal.compiler.EvaluatingReporter;
+import tokyo.peya.javasm.langjal.compiler.CompileReporter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @AllArgsConstructor
-public class JALEvaluatingReporterImpl implements EvaluatingReporter
+public class JALCompileReporterImpl implements CompileReporter
 {
     public static final String COMPILER_NAME = "JavaSM JAL Compiler";
 

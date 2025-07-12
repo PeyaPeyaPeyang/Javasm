@@ -1,8 +1,9 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import lombok.experimental.UtilityClass;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.langjal.compiler.JALParser;
 
 @UtilityClass
 public class LocalInstigations

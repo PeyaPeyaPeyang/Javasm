@@ -2,16 +2,15 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.TypeInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorNewArray extends AbstractInstructionEvaluator<JALParser.JvmInsNewarrayContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsNewarrayContext ctxt)
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();

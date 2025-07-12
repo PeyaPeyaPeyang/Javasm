@@ -1,7 +1,9 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorANewArray;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorAThrow;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorArrayLength;
@@ -362,7 +364,7 @@ public class JALInstructionEvaluator
     );
 
     @Nullable
-    static EvaluatedInstruction evaluateInstruction(@NotNull JALMethodEvaluator methodEvaluator,
+    static EvaluatedInstruction evaluateInstruction(@NotNull JALMethodCompiler methodEvaluator,
                                                     @NotNull JALParser.InstructionContext instruction)
     {
         try

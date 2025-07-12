@@ -7,7 +7,7 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
 {

@@ -1,26 +1,26 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.xload;
 
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorFLoadN extends AbstractInstructionEvaluator<JALParser.JvmInsFloadNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsFloadNContext ctxt)
     {
         if (has(ctxt.INSN_FLOAD_0()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 0);
+            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 0);
         else if (has(ctxt.INSN_FLOAD_1()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 1);
+            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 1);
         else if (has(ctxt.INSN_FLOAD_2()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 2);
+            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 2);
         else if (has(ctxt.INSN_FLOAD_3()))
-            return InstructionEvaluateHelperXLoad.evaluateN(evaluator, EOpcodes.FLOAD, 3);
+            return InstructionEvaluateHelperXLoad.evaluateN(compiler, EOpcodes.FLOAD, 3);
 
         throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
     }

@@ -1,27 +1,27 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.xstore;
 
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 
 public class InstructionEvaluatorDStoreN extends AbstractInstructionEvaluator<JALParser.JvmInsDstoreNContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsDstoreNContext ctxt)
     {
         JALParser.LocalInstigationContext ins = ctxt.localInstigation();
         if (has(ctxt.INSN_DSTORE_0()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 0, evaluator, "D", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 0, compiler, "D", ins);
         else if (has(ctxt.INSN_DSTORE_1()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 1, evaluator, "D", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 1, compiler, "D", ins);
         else if (has(ctxt.INSN_DSTORE_2()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 2, evaluator, "D", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 2, compiler, "D", ins);
         else if (has(ctxt.INSN_DSTORE_3()))
-            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 3, evaluator, "D", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(EOpcodes.DSTORE, 3, compiler, "D", ins);
 
         throw new IllegalStateException("Unexpected instruction: " + ctxt.getText());
     }

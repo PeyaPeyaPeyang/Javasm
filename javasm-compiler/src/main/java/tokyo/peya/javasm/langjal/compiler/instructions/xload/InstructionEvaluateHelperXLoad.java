@@ -4,14 +4,14 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.VarInsnNode;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
 
 public class InstructionEvaluateHelperXLoad
 {
-    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    public static @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler evaluator,
                                                          @NotNull JALParser.JvmInsArgLocalRefContext ref,
                                                          int opcode,
                                                          @NotNull String callerInsn,
@@ -32,7 +32,7 @@ public class InstructionEvaluateHelperXLoad
         return EvaluatedInstruction.of(insn, size);
     }
 
-    public static @NotNull EvaluatedInstruction evaluateN(@NotNull JALMethodEvaluator evaluator, int opcode, int idx)
+    public static @NotNull EvaluatedInstruction evaluateN(@NotNull JALMethodCompiler evaluator, int opcode, int idx)
     {
         LocalVariableInfo local = evaluator.getLocals().resolveSafe(idx);
         if (local == null)

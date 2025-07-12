@@ -3,19 +3,18 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LabelInfo;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 import java.util.List;
 
 public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluator<JALParser.JvmInsTableswitchContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsTableswitchContext ctxt)
     {
         JALParser.JvmInsArgTableSwitchContext args = ctxt.jvmInsArgTableSwitch();
@@ -25,9 +24,9 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
         JALParser.LabelNameContext defaultBranch = args.labelName(branches.size() - 1);  // default は最後の要素
         int high = low + branches.size() - 2; // default を除いて，インデックス化する
 
-        LabelNode defaultLabel = toLabel(evaluator, defaultBranch);
+        LabelNode defaultLabel = toLabel(compiler, defaultBranch);
         LabelNode[] labels = branches.stream()
-                                     .map(labelName -> toLabel(evaluator, labelName))
+                                     .map(labelName -> toLabel(compiler, labelName))
                                      .toArray(LabelNode[]::new);
 
         TableSwitchInsnNode tableSwitchInsn = new TableSwitchInsnNode(
@@ -38,11 +37,11 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
         );
         return EvaluatedInstruction.of(
                 tableSwitchInsn,
-                calcSize(ctxt, evaluator.getInstructions().getBytecodeOffset())
+                calcSize(ctxt, compiler.getInstructions().getBytecodeOffset())
         );
     }
 
-    private LabelNode toLabel(@NotNull JALMethodEvaluator evaluator, @NotNull JALParser.LabelNameContext labelName)
+    private LabelNode toLabel(@NotNull JALMethodCompiler evaluator, @NotNull JALParser.LabelNameContext labelName)
     {
         LabelInfo labelInfo = evaluator.getLabels().resolve(labelName.getText());
         return labelInfo.node();

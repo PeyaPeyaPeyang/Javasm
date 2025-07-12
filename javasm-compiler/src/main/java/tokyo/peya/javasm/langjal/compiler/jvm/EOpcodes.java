@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.jvm;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.Opcodes;

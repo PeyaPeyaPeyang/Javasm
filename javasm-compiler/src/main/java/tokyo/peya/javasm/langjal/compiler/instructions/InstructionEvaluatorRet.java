@@ -2,20 +2,19 @@ package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.VarInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
 
 public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALParser.JvmInsRetContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsRetContext ctxt)
     {
-        LocalVariableInfo local = evaluator.getLocals().resolve(ctxt.jvmInsArgLocalRef(), "ret");
+        LocalVariableInfo local = compiler.getLocals().resolve(ctxt.jvmInsArgLocalRef(), "ret");
 
         int idx = local.index();
         boolean isWide = ctxt.INSN_WIDE() != null;

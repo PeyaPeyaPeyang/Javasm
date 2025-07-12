@@ -1,9 +1,9 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.calc.xneg;
 
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.AbstractSingleInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractSingleInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 public class InstructionEvaluatorDNeg extends AbstractSingleInstructionEvaluator<JALParser.JvmInsDnegContext>
 {

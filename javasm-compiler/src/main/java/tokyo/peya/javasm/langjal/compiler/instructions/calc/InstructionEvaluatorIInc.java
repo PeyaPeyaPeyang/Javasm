@@ -2,21 +2,21 @@ package tokyo.peya.javasm.langjal.compiler.instructions.calc;
 
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IincInsnNode;
-import tokyo.peya.javasm.langjal.compiler.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.EvaluatorCommons;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
+import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALParser.JvmInsIincContext>
 {
     @Override
-    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodEvaluator evaluator,
+    protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsIincContext ctxt)
     {
         JALParser.JvmInsArgLocalRefContext ref = ctxt.jvmInsArgLocalRef();
-        LocalVariableInfo local = evaluator.getLocals().resolve(ref, "iinc");
+        LocalVariableInfo local = compiler.getLocals().resolve(ref, "iinc");
 
         int idx = local.index();
         boolean isWide = ctxt.INSN_WIDE() != null;

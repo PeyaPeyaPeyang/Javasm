@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
-public interface EvaluatingReporter
+public interface CompileReporter
 {
     void postWarning(@NotNull String message, @NotNull Path sourcePath);
 

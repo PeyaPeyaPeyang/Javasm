@@ -5,12 +5,12 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.VarInsnNode;
-import tokyo.peya.javasm.langjal.compiler.EvaluatedInstruction;
-import tokyo.peya.javasm.langjal.compiler.JALMethodEvaluator;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
-import tokyo.peya.javasm.langjal.compiler.LabelInfo;
-import tokyo.peya.javasm.langjal.compiler.LocalVariableInfo;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
+import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
+import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
 
 import java.util.Objects;
 
@@ -18,7 +18,7 @@ import java.util.Objects;
 public class InstructionEvaluateHelperXStore
 {
     public static @NotNull EvaluatedInstruction evaluate(int opcode,
-                                                         @NotNull JALMethodEvaluator evaluator,
+                                                         @NotNull JALMethodCompiler evaluator,
                                                          @NotNull JALParser.JvmInsArgLocalRefContext localRef,
                                                          @NotNull JALParser.LocalInstigationContext instigation,
                                                          @NotNull String type,
@@ -43,7 +43,7 @@ public class InstructionEvaluateHelperXStore
     }
 
     public static @NotNull EvaluatedInstruction evaluateN(int opcode, int idx,
-                                                          @NotNull JALMethodEvaluator evaluator,
+                                                          @NotNull JALMethodCompiler evaluator,
                                                           @NotNull String type,
                                                           @Nullable JALParser.LocalInstigationContext instigation)
     {
@@ -56,7 +56,7 @@ public class InstructionEvaluateHelperXStore
         return EvaluatedInstruction.of(insn);
     }
 
-    private static LocalVariableInfo registerNewLocal(@NotNull JALMethodEvaluator evaluator,
+    private static LocalVariableInfo registerNewLocal(@NotNull JALMethodCompiler evaluator,
                                                       int idx,
                                                       @NotNull String typeName,
                                                       @Nullable JALParser.LocalInstigationContext instigation)
@@ -68,7 +68,7 @@ public class InstructionEvaluateHelperXStore
         return evaluator.getLocals().register(idx, localType, localName, endLabel);
     }
 
-    private static LocalVariableInfo registerNewLocal(@NotNull JALMethodEvaluator evaluator,
+    private static LocalVariableInfo registerNewLocal(@NotNull JALMethodCompiler evaluator,
                                                       @NotNull JALParser.JvmInsArgLocalRefContext localRef,
                                                       @NotNull String type,
                                                       @Nullable JALParser.LocalInstigationContext instigation)
@@ -80,7 +80,7 @@ public class InstructionEvaluateHelperXStore
         return evaluator.getLocals().register(localRef, localType, localName, endLabel);
     }
 
-    private static LabelInfo resolveEndLabel(@NotNull JALMethodEvaluator evaluator,
+    private static LabelInfo resolveEndLabel(@NotNull JALMethodCompiler evaluator,
                                              @Nullable JALParser.LocalInstigationContext instigation)
     {
         if (instigation == null)
@@ -94,7 +94,7 @@ public class InstructionEvaluateHelperXStore
     }
 
     private static String pickLocalName(
-            @NotNull JALMethodEvaluator evaluator,
+            @NotNull JALMethodCompiler evaluator,
             @Nullable JALParser.JvmInsArgLocalRefContext localRef,
             int idx,
             @Nullable JALParser.LocalInstigationContext instigation

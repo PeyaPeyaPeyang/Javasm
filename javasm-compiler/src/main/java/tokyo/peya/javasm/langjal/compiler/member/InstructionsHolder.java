@@ -1,10 +1,11 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 import java.util.ArrayList;
 import java.util.List;

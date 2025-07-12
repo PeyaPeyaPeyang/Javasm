@@ -1,4 +1,4 @@
-package tokyo.peya.javasm.langjal.compiler;
+package tokyo.peya.javasm.langjal.compiler.member;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,14 +10,18 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.TryCatchBlockNode;
+import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
+import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class JALMethodEvaluator
+public class JALMethodCompiler
 {
     private final FileEvaluatingReporter context;
     private final ClassNode clazz;
@@ -30,8 +34,7 @@ public class JALMethodEvaluator
     @Getter(AccessLevel.NONE)
     private final List<TryCatchDirective> tryCatchDirectives;
 
-
-    public JALMethodEvaluator(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
+    public JALMethodCompiler(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
     {
         this.context = reporter;
         this.clazz = cn;
