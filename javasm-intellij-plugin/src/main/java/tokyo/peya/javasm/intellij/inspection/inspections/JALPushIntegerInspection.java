@@ -59,7 +59,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
                     node,
                     "Pushing -1 is discouraged, use 'iconst_m1' instead",
                     ProblemHighlightType.WEAK_WARNING,
-                    new JALReplaceInstructionQuickFix("iconst_m1")
+                    new JALReplaceInstructionQuickFix("iconst_m1", node)
             );
         }
         // 値が 0~5 なら, iconst_X を使える。
@@ -70,7 +70,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
                     node,
                     "Pushing " + value + " is discouraged, use '" + replacementInstruction + "' instead",
                     ProblemHighlightType.WEAK_WARNING,
-                    new JALReplaceInstructionQuickFix(replacementInstruction)
+                    new JALReplaceInstructionQuickFix(replacementInstruction, node)
             );
         }
         // sipush なのに， 範囲が -128 ~ 127 なら, bipush を使うように促す
@@ -80,7 +80,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
                     node,
                     "Using 'sipush' with a value in the range of -128 to 127 is discouraged, use 'bipush' instead",
                     ProblemHighlightType.WEAK_WARNING,
-                    new JALReplaceInstructionQuickFix("bipush " + value)
+                    new JALReplaceInstructionQuickFix("bipush " + value, node)
             );
         }
     }

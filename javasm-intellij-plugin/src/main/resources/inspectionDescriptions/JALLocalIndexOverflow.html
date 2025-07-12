@@ -1,0 +1,25 @@
+<html>
+<body>
+<p>
+    This inspection targets local variable operations, including <code>Xload</code>, <code>Xstore</code>, and
+    <code>iinc</code> instructions.
+</p>
+<p>
+    It checks whether the referenced local variable index exceeds the one-byte range (0–255).
+    If it does, the instruction is considered invalid unless it is prefixed with the <code>wide</code> modifier.
+</p>
+<p>
+    The following instruction types are subject to this inspection:
+</p>
+<ul>
+    <li><code>iload</code>, <code>lload</code>, <code>fload</code>, <code>dload</code>, <code>aload</code></li>
+    <li><code>istore</code>, <code>lstore</code>, <code>fstore</code>, <code>dstore</code>, <code>astore</code></li>
+    <li><code>iinc</code></li>
+    <li><code>ret</code></li>
+</ul>
+<p>
+    When a variable index exceeds 255, an error is reported and a Quick Fix is available to automatically add the <code>wide</code>
+    prefix to the instruction.
+</p>
+</body>
+</html>

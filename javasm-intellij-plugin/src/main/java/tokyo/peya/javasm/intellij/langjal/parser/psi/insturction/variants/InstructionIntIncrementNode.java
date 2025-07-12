@@ -4,22 +4,12 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 
 public class InstructionIntIncrementNode extends InstructionWidenableNode
 {
     public InstructionIntIncrementNode(@NotNull ASTNode node)
     {
         super(node);
-    }
-
-    @NotNull
-    public LocalReferenceNode getLocalReference()
-    {
-        LocalReferenceNode localReferenceNode = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
-        if (localReferenceNode == null)
-            throw new IllegalStateException("LocalReferenceNode is not found in IntIncrementInstructionNode");
-        return localReferenceNode;
     }
 
     @NotNull

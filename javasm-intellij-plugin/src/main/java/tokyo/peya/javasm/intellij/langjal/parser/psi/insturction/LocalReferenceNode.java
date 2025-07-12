@@ -29,6 +29,15 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
         return node;
     }
 
+    public boolean isNumberSpecifier()
+    {
+        PsiElement node = this.getNameIdentifier();
+        if (node == null)
+            return false;
+
+        return node.getNode().getElementType() == JALParserDefinition.NUMBER;
+    }
+
     @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException
     {

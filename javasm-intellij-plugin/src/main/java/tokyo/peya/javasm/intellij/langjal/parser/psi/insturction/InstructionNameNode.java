@@ -18,14 +18,15 @@ public class InstructionNameNode extends ANTLRPsiLeafNode
         return this.getText();
     }
 
-    public int getInstructionSize()
+    public int getOpcode()
     {
         String name = this.getInstructionName();
-        int opcode = EOpcodes.findOpcode(name);
-        if (opcode == -1)
-            return 0;
+        return EOpcodes.findOpcode(name);
+    }
 
-        return EOpcodes.getOpcodeSize(opcode);
+    public int getInstructionSize()
+    {
+        return EOpcodes.getOpcodeSize(this.getOpcode());
     }
 
     @NotNull

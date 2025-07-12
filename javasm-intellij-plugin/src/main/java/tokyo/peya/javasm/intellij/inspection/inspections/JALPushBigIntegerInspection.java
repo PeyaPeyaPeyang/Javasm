@@ -67,7 +67,7 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
                         "bipush can only push values in the range of -128 to 127. " +
                                 "Use 'sipush " + argument.getText() + "' instead.",
                         ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                        new JALReplaceInstructionQuickFix("sipush " + argument.getText())
+                        new JALReplaceInstructionQuickFix("sipush " + argument.getText(), node)
                 );
             }
         }
@@ -79,7 +79,7 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
                     "bipush/sipush can only push values in the range of -32,768 to 32,767. " +
                             "Use 'ldc " + argument.getText() + "' instead.",
                     ProblemHighlightType.GENERIC_ERROR_OR_WARNING,
-                    new JALReplaceInstructionQuickFix("ldc " + argument.getText())
+                    new JALReplaceInstructionQuickFix("ldc " + argument.getText(), node)
             );
         }
     }

@@ -6,32 +6,38 @@ import com.intellij.codeInspection.util.IntentionFamilyName;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
+import com.intellij.psi.SmartPointerManager;
+import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
 public class JALReplaceInstructionQuickFix implements LocalQuickFix
 {
     private final String replacementInstruction;
+    @SafeFieldForPreview
+    private final SmartPsiElementPointer<PsiElement> target;
 
-    public JALReplaceInstructionQuickFix(@NotNull String replacementInstruction)
+    public JALReplaceInstructionQuickFix(@NotNull String replacementInstruction, @NotNull PsiElement target)
     {
         this.replacementInstruction = replacementInstruction;
+        this.target = SmartPointerManager.createPointer(target);
     }
 
     @Override
     public @IntentionFamilyName @NotNull String getFamilyName()
     {
-        return "Replace this instruction with '" + this.replacementInstruction + "'";
+        return "Replace with '" + this.replacementInstruction + "'";
     }
 
     @Override
     public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
     {
-        if (!(descriptor.getPsiElement() instanceof InstructionNode instructionNode))
-            throw new IllegalArgumentException("Descriptor does not contain an InstructionNode");
+        PsiElement targetElement = this.target.getElement();
+        if (targetElement == null)
+            return; // なにもしない
 
-        TextRange textRange = instructionNode.getTextRange();
-        Document document = instructionNode.getContainingFile().getViewProvider().getDocument();
+        TextRange textRange = targetElement.getTextRange();
+        Document document = targetElement.getContainingFile().getViewProvider().getDocument();
         if (document == null)
             throw new IllegalStateException("Document is null for the instruction node");
 

@@ -3,7 +3,9 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 
 public class InstructionWidenableNode extends InstructionNode
 {
@@ -12,9 +14,34 @@ public class InstructionWidenableNode extends InstructionNode
         super(node);
     }
 
+    @NotNull
+    public LocalReferenceNode getLocalReference()
+    {
+        LocalReferenceNode localReferenceNode = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
+        if (localReferenceNode == null)
+            throw new IllegalStateException("LocalReferenceNode is not found in WidenableInstructionNode");
+        return localReferenceNode;
+    }
+
+    @NotNull
+    public String getReferenceName()
+    {
+        LocalReferenceNode reference = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
+        if (reference == null)
+            throw new IllegalStateException("Local's reference not found in " + this.getText());
+
+        return reference.getText();
+    }
+
     public boolean isWidened()
     {
         return PsiTreeUtil.findChildOfType(this, InstructionWideNode.class) != null;
+    }
+
+    @Nullable
+    public InstructionWideNode getWideNode()
+    {
+        return PsiTreeUtil.findChildOfType(this, InstructionWideNode.class);
     }
 
     @Override

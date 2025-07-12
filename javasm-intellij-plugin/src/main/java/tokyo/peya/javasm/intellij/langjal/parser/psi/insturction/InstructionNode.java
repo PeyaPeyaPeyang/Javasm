@@ -26,6 +26,16 @@ public class InstructionNode extends ANTLRPsiNode
         return instructionNameNode.getInstructionName();
     }
 
+    public int getOpcode()
+    {
+        InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
+        if (instructionNameNode == null)
+            return -1;
+
+        return instructionNameNode.getOpcode();
+    }
+
+
     @Nullable
     public <T extends PsiElement> T getInstructionArgument(@NotNull Class<T> clazz)
     {
