@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.langjal.compiler.member;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public record LocalVariableInfo(
@@ -9,16 +8,16 @@ public record LocalVariableInfo(
         String name,
         @NotNull
         TypeDescriptor type,
-        @Nullable
+        @NotNull
         LabelInfo start,
-        @Nullable
+        @NotNull
         LabelInfo end,
         int index,
         boolean isParameter
 )
 {
     public LocalVariableInfo(@NotNull String name, @NotNull TypeDescriptor type,
-                             @Nullable LabelInfo start, @Nullable LabelInfo end, int index)
+                             @NotNull LabelInfo start, @NotNull LabelInfo end, int index)
     {
         this(name, type, start, end, index, false);
     }

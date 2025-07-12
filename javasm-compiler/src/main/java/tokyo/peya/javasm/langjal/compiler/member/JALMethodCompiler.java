@@ -36,6 +36,7 @@ public class JALMethodCompiler
         this.locals = new LocalVariablesHolder(this.context, this.labels);
         this.tryCatchDirectives = new TryCatchDirectivesHolder(this.context, this.labels);
 
+        this.labels.initialise(this.method);
     }
 
     public void evaluateMethod(@NotNull JALParser.MethodDefinitionContext method)
@@ -86,6 +87,7 @@ public class JALMethodCompiler
         this.locals.evaluateLocals(this.method);
         this.instructions.finaliseInstructions(this.method);
         this.tryCatchDirectives.finaliseTryCatchDirectives(this.method);
+        this.labels.finalise(this.method);
     }
 
 
@@ -201,7 +203,7 @@ public class JALMethodCompiler
     {
         // 各命令を順に評価していく
         // 命令に割り当てるラベル。１命令のみが割り当てられる。
-        LabelInfo labelAssignation = null;
+        LabelInfo labelAssignation = this.labels.getGlobalStart();
         for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
             if (bodyItem.label() != null)

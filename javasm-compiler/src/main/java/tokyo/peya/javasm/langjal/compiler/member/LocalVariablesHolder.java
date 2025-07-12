@@ -3,7 +3,6 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
@@ -20,9 +19,6 @@ public class LocalVariablesHolder
     private final FileEvaluatingReporter reporter;
     private final LabelsHolder labelsHolder;
 
-    private final LabelInfo globalStartLocalLabel;
-    private final LabelInfo globalEndLocalLabel;
-
     private final List<LocalVariableInfo> locals;
 
     public LocalVariablesHolder(@NotNull FileEvaluatingReporter reporter, @NotNull LabelsHolder labelsHolder)
@@ -31,9 +27,6 @@ public class LocalVariablesHolder
         this.labelsHolder = labelsHolder;
 
         this.locals = new ArrayList<>();
-
-        this.globalStartLocalLabel = new LabelInfo("MBEGIN", new Label(), 0);
-        this.globalEndLocalLabel = new LabelInfo("MEND", new Label(), -1);
     }
 
     /* non-public */ void registerParameter(@NotNull String paramName,
@@ -44,8 +37,8 @@ public class LocalVariablesHolder
         LocalVariableInfo localVar = new LocalVariableInfo(
                 paramName,
                 type,
-                null,
-                null,
+                this.labelsHolder.getGlobalStart(),
+                this.labelsHolder.getGlobalEnd(),
                 index,
                 true
         );
@@ -58,19 +51,13 @@ public class LocalVariablesHolder
             return;  // ローカル変数がない場合は何もしない
 
         this.reporter.postInfo("Finalising locals for method " + method.name + method.desc);
-        this.prepareLocalEvaluation(method);
-
         for (LocalVariableInfo local : this.locals)
         {
             if (local.isParameter())
                 continue;  // パラメータはローカル変数として登録しない
 
-            Label start = this.globalStartLocalLabel.label();
-            Label end = this.globalEndLocalLabel.label();
-            if (local.start() != null)
-                start = local.start().label();
-            if (local.end() != null)
-                end = local.end().label();
+            LabelNode start = local.start().node();
+            LabelNode end = local.end().node();
 
             String typeDescriptor = local.type().toString();
             // ローカル変数をメソッドに登録
@@ -78,30 +65,11 @@ public class LocalVariablesHolder
                     local.name(),
                     typeDescriptor,
                     null, // signature は未使用
-                    start,
-                    end,
+                    start.getLabel(),
+                    end.getLabel(),
                     local.index()
             );
         }
-
-        this.finaliseLocalEvaluation(method);
-    }
-
-    private void prepareLocalEvaluation(@NotNull MethodNode method)
-    {
-        LabelNode globalStartNode = this.globalStartLocalLabel.node();
-        if (method.instructions.size() > 0)
-            method.instructions.insertBefore(method.instructions.get(0), globalStartNode);
-        else
-            method.instructions.add(globalStartNode);
-    }
-
-    private void finaliseLocalEvaluation(@NotNull MethodNode method)
-    {
-        // 終了ラベルを持っていないローカル変数がある場合は、グローバルな終了ラベルを設定する。
-        LabelNode globalEndNode = this.globalEndLocalLabel.node();
-        method.instructions.add(globalEndNode);
-        // ↑ END なので，いっちゃんさいご
     }
 
     @Nullable
@@ -113,11 +81,18 @@ public class LocalVariablesHolder
         return null;
     }
 
+    public boolean isLocalLiving(@NotNull LocalVariableInfo local)
+    {
+        LabelInfo startLabel = local.start();
+        LabelInfo endLabel = local.end();
+        return this.labelsHolder.isInScope(startLabel, endLabel);
+    }
+
     @Nullable
     public LocalVariableInfo resolve(int localIndex)
     {
         for (LocalVariableInfo foundLocal : this.locals)
-            if (foundLocal.index() == localIndex)
+            if (foundLocal.index() == localIndex && this.isLocalLiving(foundLocal))
                 return foundLocal;
 
         throw new IllegalArgumentException("Local variable at index " + localIndex + " is not defined.");
@@ -127,7 +102,7 @@ public class LocalVariablesHolder
     public LocalVariableInfo resolveSafe(@NotNull String localName)
     {
         for (LocalVariableInfo localVar : this.locals)
-            if (localName.equals(localVar.name()))
+            if (localName.equals(localVar.name()) && this.isLocalLiving(localVar))
                 return localVar;
 
         return null;
@@ -239,6 +214,9 @@ public class LocalVariablesHolder
             @Nullable LabelInfo endLabel
     )
     {
+        if (endLabel == null)
+            endLabel = this.labelsHolder.getGlobalStart();  // 終了ラベルが指定されていない場合はメソッドの終了ラベルを使用
+
         return this.register(localRef, type, name, this.labelsHolder.getCurrentLabel(), endLabel);
     }
 
@@ -248,6 +226,9 @@ public class LocalVariablesHolder
                                       @Nullable String name,
                                       @Nullable LabelInfo endLabel)
     {
+        if (endLabel == null)
+            endLabel = this.labelsHolder.getGlobalEnd();  // 終了ラベルが指定されていない場合はメソッドの終了ラベルを使用
+
         return this.register(idx, type, name, this.labelsHolder.getCurrentLabel(), endLabel);
     }
 
@@ -256,8 +237,8 @@ public class LocalVariablesHolder
             @NotNull JALParser.JvmInsArgLocalRefContext localRef,
             @NotNull TypeDescriptor type,
             @Nullable String name,
-            @Nullable LabelInfo startLabel,
-            @Nullable LabelInfo endLabel
+            @NotNull LabelInfo startLabel,
+            @NotNull LabelInfo endLabel
     )
     {
         // this.local.size() は index と無関係。
@@ -305,8 +286,8 @@ public class LocalVariablesHolder
     public LocalVariableInfo register(int idx,
                                       @NotNull TypeDescriptor type,
                                       @Nullable String name,
-                                      @Nullable LabelInfo startLabel,
-                                      @Nullable LabelInfo endLabel)
+                                      @NotNull LabelInfo startLabel,
+                                      @NotNull LabelInfo endLabel)
     {
         if (idx < 0)
             throw new IllegalArgumentException("Local variable index cannot be negative: " + idx);

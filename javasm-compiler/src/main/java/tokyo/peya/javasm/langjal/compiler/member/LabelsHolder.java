@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
+import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,12 @@ public class LabelsHolder
     private final List<LabelInfo> labels;
 
     @Getter
+    private final LabelInfo globalStart;
+    @Getter
+    private final LabelInfo globalEnd;
+
+
+    @Getter
     @Setter
     private LabelInfo currentLabel; // 現在解析中の最後のラベル
 
@@ -23,6 +31,9 @@ public class LabelsHolder
         this.methodEvaluator = methodEvaluator;
 
         this.labels = new ArrayList<>();
+
+        this.globalStart = new LabelInfo("MBEGIN", new Label(), 0);
+        this.globalEnd = new LabelInfo("MEND", new Label(), Integer.MAX_VALUE);
     }
 
     @NotNull
@@ -69,6 +80,33 @@ public class LabelsHolder
     @NotNull
     public LabelInfo register(@NotNull String labelName)
     {
-        return this.register(labelName, this.methodEvaluator.getInstructions().getSize());
+        return this.register(labelName, this.currentInstructionIndex());
+    }
+
+    private int currentInstructionIndex()
+    {
+        return this.methodEvaluator.getInstructions().getSize();
+    }
+
+    public boolean isInScope(@NotNull LabelInfo scopeStart, @NotNull LabelInfo scopeEnd)
+    {
+        int startIndex = scopeStart.instructionIndex();
+        int endIndex = scopeEnd.instructionIndex();
+        int currentIndex = this.currentInstructionIndex();
+
+        return currentIndex >= startIndex && currentIndex <= endIndex;
+    }
+
+    public void finalise(@NotNull MethodNode method)
+    {
+        LabelNode globalEndNode = this.globalEnd.node();
+        method.instructions.add(globalEndNode);
+        // ↑ END なので，いっちゃんさいご
+    }
+
+    public void initialise(@NotNull MethodNode method)
+    {
+        LabelNode globalStartNode = this.globalStart.node();
+        method.instructions.add(globalStartNode);
     }
 }
