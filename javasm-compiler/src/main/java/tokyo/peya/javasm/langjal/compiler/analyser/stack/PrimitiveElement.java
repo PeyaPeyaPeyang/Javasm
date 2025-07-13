@@ -26,4 +26,10 @@ public record PrimitiveElement(
     {
         return new PrimitiveElement(producer, type);
     }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Primitive type of " + this.type + " (by " + this.producer + ")";
+    }
 }

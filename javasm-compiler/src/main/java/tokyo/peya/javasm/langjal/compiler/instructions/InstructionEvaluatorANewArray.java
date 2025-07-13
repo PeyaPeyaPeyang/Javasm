@@ -34,12 +34,12 @@ public class InstructionEvaluatorANewArray extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         TypeInsnNode type = (TypeInsnNode) instruction.insn();
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.INTEGER)
-                                  .pushObjectRef(TypeDescriptor.parse("[" + type.desc))
+                                  .pushObjectRef(TypeDescriptor.className(type.desc))
                                   .build();
     }
 

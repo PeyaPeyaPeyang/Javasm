@@ -41,7 +41,7 @@ public class InstructionEvaluatorInvokeDynamic
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return InstructionEvaluateHelperInvocation.getFrameInvokedynamicFrameDifference(instruction);
     }

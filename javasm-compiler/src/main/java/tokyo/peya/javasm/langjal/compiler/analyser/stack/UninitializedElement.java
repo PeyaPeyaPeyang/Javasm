@@ -16,14 +16,20 @@ public record UninitializedElement(
     }
 
     @Override
-    public InstructionInfo producer()
+    public @NotNull InstructionInfo producer()
     {
         return this.instruction;
     }
 
     @Override
-    public StackElementType type()
+    public @NotNull StackElementType type()
     {
         return StackElementType.UNINITIALIZED;
+    }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Uninitialized type (by " + this.instruction + ")";
     }
 }

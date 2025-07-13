@@ -30,7 +30,7 @@ public class InstructionEvaluatorLStore extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         VarInsnNode varInsnNode = (VarInsnNode) instruction.insn();
         return FrameDifferenceInfo.builder(instruction)

@@ -11,7 +11,7 @@ import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.exceptions.InternalCompileErrorException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.jvm.ClassReferenceType;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
@@ -82,7 +82,7 @@ public class InstructionEvaluationHelperLDC
 
         FrameDifferenceInfo.Builder builder = FrameDifferenceInfo.builder(instruction);
         if (value instanceof String)
-            builder.pushObjectRef(ClassReferenceType.parse("java/lang/String"));
+            builder.pushObjectRef(TypeDescriptor.className("java/lang/String"));
         else if (value instanceof Integer || value instanceof Character ||
                 value instanceof Byte || value instanceof Short)
             builder.pushPrimitive(StackElementType.INTEGER);
@@ -99,18 +99,18 @@ public class InstructionEvaluationHelperLDC
                 case Type.OBJECT:
                 case Type.ARRAY:
                     // → java.lang.Class インスタンスを push
-                    builder.pushObjectRef(ClassReferenceType.parse("java/lang/Class"));
+                    builder.pushObjectRef(TypeDescriptor.className("java/lang/Class"));
                     break;
                 case Type.METHOD:
                     // → java.lang.invoke.MethodType インスタンスを push
-                    builder.pushObjectRef(ClassReferenceType.parse("java/lang/invoke/MethodType"));
+                    builder.pushObjectRef(TypeDescriptor.className("java/lang/invoke/MethodType"));
                     break;
                 default:
                     throw new IllegalArgumentException("Unexpected Type sort in ldc: " + type.getSort());
             }
         }
         else if (value instanceof Handle handle)
-            builder.pushObjectRef(ClassReferenceType.parse("java/lang/invoke/MethodHandle"));
+            builder.pushObjectRef(TypeDescriptor.className("java/lang/invoke/MethodHandle"));
         else
             throw new InternalCompileErrorException(
                     "Unsupported constant type in ldc: " + value.getClass().getName(),

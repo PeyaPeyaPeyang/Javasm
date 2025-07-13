@@ -30,12 +30,12 @@ public class InstructionEvaluatorNewArray extends AbstractInstructionEvaluator<J
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         TypeInsnNode insn = (TypeInsnNode) instruction.insn();
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.INTEGER) // 配列のサイズを指定する int 型をポップ
-                                  .pushObjectRef(TypeDescriptor.parse(insn.desc))
+                                  .pushObjectRef(TypeDescriptor.className(insn.desc))
                                   .build();
     }
 

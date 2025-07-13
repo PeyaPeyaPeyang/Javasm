@@ -16,7 +16,7 @@ public class InstructionEvaluatorF2I extends AbstractSingleInstructionEvaluator<
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.FLOAT)

@@ -16,7 +16,7 @@ public abstract class AbstractInstructionEvaluator<T extends ParserRuleContext>
     @NotNull
     protected abstract EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler, @NotNull T ctxt);
 
-    protected abstract FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction);
+    public abstract FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction);
 
     @Nullable
     protected abstract T map(@NotNull JALParser.InstructionContext instruction);

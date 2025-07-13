@@ -16,4 +16,10 @@ public record LabelInfo(
         this(name, label, new LabelNode(label), instructionIndex);
         label.info = this.node;
     }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return this.name + " (index: " + this.instructionIndex + ")";
+    }
 }

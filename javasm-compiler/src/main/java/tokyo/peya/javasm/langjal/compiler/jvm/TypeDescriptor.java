@@ -7,6 +7,8 @@ import tokyo.peya.javasm.langjal.compiler.analyser.stack.PrimitiveElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElement;
 import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 
+import java.util.Objects;
+
 @Getter
 public class TypeDescriptor
 {
@@ -43,13 +45,23 @@ public class TypeDescriptor
         return parse(DescriptorReader.fromString(descriptor));
     }
 
-
     public StackElement toStackElement(@NotNull InstructionInfo producer)
     {
-        if (this.arrayDimensions == 0)
+        if (this.baseType.isPrimitive())
             return new PrimitiveElement(producer, this.baseType.getStackElementType());
         else
             return new ObjectElement(producer, TypeDescriptor.parse(this.toString()));
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof TypeDescriptor that)) return false;
+        return getArrayDimensions() == that.getArrayDimensions() &&
+                Objects.equals(
+                        getBaseType(),
+                        that.getBaseType()
+                );
     }
 
     static TypeDescriptor parse(DescriptorReader reader)
@@ -87,5 +99,16 @@ public class TypeDescriptor
         }
 
         return new TypeDescriptor(type, dim);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(getBaseType(), getArrayDimensions());
+    }
+
+    public static TypeDescriptor className(String className)
+    {
+        return new TypeDescriptor(ClassReferenceType.parse(className));
     }
 }

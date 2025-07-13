@@ -15,7 +15,7 @@ public class InstructionEvaluatorAThrow extends AbstractSingleInstructionEvaluat
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .popObjectRef(TypeDescriptor.parse("Ljava/lang/Throwable;"))

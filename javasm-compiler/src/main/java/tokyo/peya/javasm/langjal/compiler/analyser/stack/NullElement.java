@@ -9,7 +9,7 @@ public record NullElement(
 ) implements StackElement
 {
     @Override
-    public StackElementType type()
+    public @NotNull StackElementType type()
     {
         return StackElementType.NULL;
     }
@@ -18,5 +18,11 @@ public record NullElement(
     public static NullElement of(@NotNull InstructionInfo producer)
     {
         return new NullElement(producer);
+    }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Null type (by " + this.producer + ")";
     }
 }

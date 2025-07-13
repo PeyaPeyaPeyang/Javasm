@@ -3,12 +3,21 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
+import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+
+import java.util.Objects;
 
 public record InstructionInfo(
         @NotNull
         AbstractInstructionEvaluator<?> evaluator,
+        @NotNull
+        ClassNode ownerClass,
+        @NotNull
+        MethodNode owner,
         @NotNull
         AbstractInsnNode insn,
         int bytecodeOffset,
@@ -17,14 +26,41 @@ public record InstructionInfo(
         int instructionSize
 )
 {
-    public InstructionInfo(AbstractInstructionEvaluator<?> evaluator, int opcode, int bytecodeOffset,
-                           @Nullable LabelInfo assignedLabel, int instructionSize)
+    public InstructionInfo(@NotNull AbstractInstructionEvaluator<?> evaluator,
+                           @NotNull ClassNode ownerClass,
+                           @NotNull MethodNode owner,
+                           int insn,
+                           int bytecodeOffset,
+                           @Nullable LabelInfo assignedLabel,
+                           int instructionSize)
     {
-        this(evaluator, new InsnNode(opcode), bytecodeOffset, assignedLabel, instructionSize);
+        this(evaluator, ownerClass, owner, new InsnNode(insn), bytecodeOffset, assignedLabel, instructionSize);
     }
 
     public int opcode()
     {
         return this.insn.getOpcode();
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof InstructionInfo that))
+            return false;
+
+        return Objects.equals(this.evaluator, that.evaluator) &&
+                Objects.equals(this.insn, that.insn) &&
+                this.bytecodeOffset == that.bytecodeOffset &&
+                Objects.equals(this.assignedLabel, that.assignedLabel) &&
+                this.instructionSize == that.instructionSize;
+    }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Instruction " + EOpcodes.getName(this.opcode()) +
+                " at offset " + this.bytecodeOffset +
+                (this.assignedLabel != null ? " with label " + this.assignedLabel: "") +
+                " of size " + this.instructionSize;
     }
 }

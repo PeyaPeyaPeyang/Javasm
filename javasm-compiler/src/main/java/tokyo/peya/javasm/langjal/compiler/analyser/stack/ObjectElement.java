@@ -19,15 +19,20 @@ public record ObjectElement(
             );
     }
 
-    public ObjectElement(@NotNull
-                         InstructionInfo producer)
+    public ObjectElement(@NotNull InstructionInfo producer)
     {
-        this(producer, TypeDescriptor.parse("java/lang/Object"));
+        this(producer, TypeDescriptor.className("java/lang/Object"));
     }
 
     @Override
-    public StackElementType type()
+    public @NotNull StackElementType type()
     {
         return StackElementType.OBJECT;
+    }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Object type of " + this.content + " (by " + this.producer + ")";
     }
 }

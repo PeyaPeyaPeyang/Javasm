@@ -4,13 +4,18 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 
 public record UninitializedThisElement(
-        @NotNull
-        InstructionInfo producer // this を初期化している命令
+        @NotNull InstructionInfo producer // かならず NOP
 ) implements StackElement
 {
     @Override
-    public StackElementType type()
+    public @NotNull StackElementType type()
     {
         return StackElementType.UNINITIALIZED_THIS;
+    }
+
+    @Override
+    public @NotNull String toString()
+    {
+        return "Uninitialized this";
     }
 }

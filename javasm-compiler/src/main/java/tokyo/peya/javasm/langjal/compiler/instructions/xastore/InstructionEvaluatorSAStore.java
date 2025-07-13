@@ -17,7 +17,7 @@ public class InstructionEvaluatorSAStore extends AbstractSingleInstructionEvalua
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .popObjectRef(TypeDescriptor.parse("[S"))

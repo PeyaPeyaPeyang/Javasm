@@ -121,7 +121,7 @@ public class JALClassCompiler
                 modifier,
                 className,
                 null, // signature
-                superClassName,
+                superClassName,  // Analysis プロセスで， invokespecial のターゲットを特定するために必要
                 interfaceName.toArray(new String[0])
         );
     }

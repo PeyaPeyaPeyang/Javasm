@@ -16,7 +16,7 @@ public class InstructionEvaluatorDupX2 extends AbstractSingleInstructionEvaluato
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         StackElementCapsule topElement1 = new StackElementCapsule(instruction);
         StackElementCapsule topElement2 = new StackElementCapsule(instruction);

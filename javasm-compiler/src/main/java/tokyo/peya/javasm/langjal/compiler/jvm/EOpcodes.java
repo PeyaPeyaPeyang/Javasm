@@ -76,6 +76,14 @@ public interface EOpcodes extends Opcodes
         return -1;
     }
 
+    static String getName(int opcode)
+    {
+        String name = Printer.OPCODES[opcode];
+        if (name == null)
+            throw new IllegalArgumentException("Unknown opcode: " + opcode);
+        return name.toLowerCase(Locale.ENGLISH);
+    }
+
     static byte getOpcodeSize(int opcode)
     {
         return switch (opcode)

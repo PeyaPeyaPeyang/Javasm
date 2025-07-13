@@ -17,7 +17,7 @@ public class InstructionEvaluatorAAStore extends AbstractSingleInstructionEvalua
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .popObjectRef(TypeDescriptor.parse("[java/lang/Object;"))

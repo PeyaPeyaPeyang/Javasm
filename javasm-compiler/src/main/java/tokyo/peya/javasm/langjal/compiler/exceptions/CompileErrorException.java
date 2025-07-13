@@ -16,6 +16,7 @@ public class CompileErrorException extends RuntimeException
     public CompileErrorException(@NotNull String detailedMessage,
                                  long line, long column, long length)
     {
+        super(detailedMessage);
         this.detailedMessage = detailedMessage;
         this.line = line;
         this.column = column;

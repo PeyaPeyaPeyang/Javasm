@@ -24,7 +24,7 @@ public class InstructionEvaluatorJsrW extends AbstractInstructionEvaluator<JALPa
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .pushReturnAddress()

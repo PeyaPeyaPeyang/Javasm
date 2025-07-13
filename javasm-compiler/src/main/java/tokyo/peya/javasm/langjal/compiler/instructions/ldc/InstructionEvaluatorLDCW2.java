@@ -20,7 +20,7 @@ public class InstructionEvaluatorLDCW2 extends AbstractInstructionEvaluator<JALP
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return InstructionEvaluationHelperLDC.getFrameDifferenceInfo(instruction);
     }

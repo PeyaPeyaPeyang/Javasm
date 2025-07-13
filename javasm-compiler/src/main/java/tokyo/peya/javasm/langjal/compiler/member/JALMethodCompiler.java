@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.MethodAnalyser;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalValueException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
@@ -32,11 +33,9 @@ public class JALMethodCompiler
         this.method = new MethodNode();
 
         this.labels = new LabelsHolder(this);
-        this.instructions = new InstructionsHolder(this.labels);
+        this.instructions = new InstructionsHolder(cn, this.method, this.labels);
         this.locals = new LocalVariablesHolder(this.context, this.labels);
         this.tryCatchDirectives = new TryCatchDirectivesHolder(this.context, this.labels);
-
-        this.labels.initialise(this.method);
     }
 
     public void evaluateMethod(@NotNull JALParser.MethodDefinitionContext method)
@@ -46,6 +45,16 @@ public class JALMethodCompiler
         this.evaluateMethodMetadata(method);
         this.evaluateMethodParameters(method);
         this.evaluateMethodBody(method.methodBody());
+
+        MethodAnalyser analyser = new MethodAnalyser(
+                this.context,
+                this.clazz,
+                this.method,
+                this.instructions,
+                this.labels,
+                this.locals
+        );
+        analyser.analyse();
     }
 
     private void evaluateMethodParameters(@NotNull JALParser.MethodDefinitionContext method)
@@ -59,9 +68,9 @@ public class JALMethodCompiler
         boolean isInstanceMethod = (accessor & EOpcodes.ACC_STATIC) == 0;
         if (isInstanceMethod)
         {
-            // インスタンスメソッドの場合、this パラメータを追加
+            // インスタンスメソッドの場合は，this パラメータを追加
             String thisParamName = "this";
-            TypeDescriptor thisParamType = descriptor.getReturnType(); // インスタンスメソッドの戻り値が this の型
+            TypeDescriptor thisParamType = TypeDescriptor.className(this.clazz.name);
             // パラメータをローカル変数として登録
             this.locals.registerParameter(thisParamName, thisParamType, currentIndex++);
         }
@@ -85,7 +94,7 @@ public class JALMethodCompiler
     private void finaliseMethod()
     {
         this.locals.evaluateLocals(this.method);
-        this.instructions.finaliseInstructions(this.method);
+        this.instructions.finaliseInstructions();
         this.tryCatchDirectives.finaliseTryCatchDirectives(this.method);
         this.labels.finalise(this.method);
     }
@@ -104,6 +113,7 @@ public class JALMethodCompiler
 
     private void evaluateLabels(@NotNull JALParser.MethodBodyContext body)
     {
+        boolean globalStartUpdated = false;
         int instructionCount = 0;
         for (JALParser.InstructionSetContext bodyItem : body.instructionSet())
         {
@@ -111,11 +121,19 @@ public class JALMethodCompiler
             {
                 // ラベルを登録
                 String labelName = bodyItem.label().labelName().getText();
-                this.labels.register(labelName, instructionCount);
+                LabelInfo label = this.labels.register(labelName, instructionCount);
+                // グローバルスタートになり得る場合は，入れ替える。
+                if (instructionCount == 0 && !globalStartUpdated)
+                {
+                    this.labels.setGlobalStart(label);
+                    globalStartUpdated = true;
+                }
             }
 
             instructionCount += bodyItem.instruction().size();
         }
+
+        this.labels.registerGlobalStart(this.method);
     }
 
     private void evaluateMethodBody(@NotNull JALParser.MethodBodyContext body)

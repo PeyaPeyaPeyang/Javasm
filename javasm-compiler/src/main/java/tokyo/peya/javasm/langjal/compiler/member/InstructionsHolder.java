@@ -3,26 +3,36 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorReturn;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class InstructionsHolder
 {
+    private final ClassNode ownerClass;
+    private final MethodNode ownerMethod;
+
     private final LabelsHolder labels;
     private final List<InstructionInfo> instructions;
 
     @Getter
     private int bytecodeOffset;
 
-    public InstructionsHolder(@NotNull LabelsHolder labels)
+    public InstructionsHolder(@NotNull ClassNode ownerClass,
+                              @NotNull MethodNode ownerMethod,
+                              @NotNull LabelsHolder labels)
     {
+        this.ownerClass = ownerClass;
+        this.ownerMethod = ownerMethod;
         this.labels = labels;
 
         this.instructions = new ArrayList<>();
+        this.bytecodeOffset = 0;
     }
 
     public int getSize()
@@ -35,6 +45,8 @@ public class InstructionsHolder
         int returnOpcode = EOpcodes.RETURN;
         InstructionInfo instruction = new InstructionInfo(
                 new InstructionEvaluatorReturn(),
+                this.ownerClass,
+                this.ownerMethod,
                 returnOpcode,
                 this.bytecodeOffset,
                 this.labels.getCurrentLabel(),
@@ -50,6 +62,8 @@ public class InstructionsHolder
     {
         InstructionInfo instruction = new InstructionInfo(
                 evaluatedInstruction.evaluator(),
+                this.ownerClass,
+                this.ownerMethod,
                 evaluatedInstruction.insn(),
                 this.bytecodeOffset,
                 labelAssignation,
@@ -60,14 +74,14 @@ public class InstructionsHolder
         return instruction;
     }
 
-    public void finaliseInstructions(@NotNull MethodNode method)
+    public void finaliseInstructions()
     {
         for (InstructionInfo instruction : this.instructions)
         {
             if (instruction.assignedLabel() != null)  // 命令にラベルが割り当てられている場合
-                method.instructions.add(instruction.assignedLabel().node());
+                this.ownerMethod.instructions.add(instruction.assignedLabel().node());
 
-            method.instructions.add(instruction.insn());
+            this.ownerMethod.instructions.add(instruction.insn());
         }
     }
 
@@ -90,5 +104,23 @@ public class InstructionsHolder
         if (this.instructions.isEmpty())
             throw new IllegalStateException("No instructions available");
         return this.instructions.get(this.instructions.size() - 1);
+    }
+
+    public List<InstructionInfo> getInstructions(LabelInfo instructionSet)
+    {
+        int startIndex = instructionSet.instructionIndex();
+        if (startIndex < 0 || startIndex >= this.instructions.size())
+            throw new IndexOutOfBoundsException("Start index is out of bounds: " + startIndex);
+
+        List<InstructionInfo> instructionSetList = new ArrayList<>();
+        for (int i = startIndex; i < this.instructions.size(); i++)
+        {
+            InstructionInfo instruction = this.instructions.get(i);
+            if (!(instruction.assignedLabel() == null || instruction.assignedLabel().equals(instructionSet)))
+                break; // 次のラベルが割り当てられた命令に到達したら終了
+            instructionSetList.add(instruction);
+        }
+
+        return Collections.unmodifiableList(instructionSetList);
     }
 }

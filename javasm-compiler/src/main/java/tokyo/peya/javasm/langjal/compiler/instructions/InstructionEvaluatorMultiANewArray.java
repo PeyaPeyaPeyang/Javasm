@@ -28,7 +28,7 @@ public class InstructionEvaluatorMultiANewArray
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         MultiANewArrayInsnNode insn = (MultiANewArrayInsnNode) instruction.insn();
 
@@ -36,7 +36,7 @@ public class InstructionEvaluatorMultiANewArray
         for (int i = 0; i < insn.dims; i++)
             builder.popPrimitive(StackElementType.INTEGER);
 
-        builder.pushObjectRef(TypeDescriptor.parse(insn.desc));
+        builder.pushObjectRef(TypeDescriptor.className(insn.desc));
 
         return builder.build();
     }

@@ -15,7 +15,7 @@ public class InstructionEvaluatorSwap extends AbstractSingleInstructionEvaluator
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         StackElementCapsule value1 = new StackElementCapsule(instruction);
         StackElementCapsule value2 = new StackElementCapsule(instruction);

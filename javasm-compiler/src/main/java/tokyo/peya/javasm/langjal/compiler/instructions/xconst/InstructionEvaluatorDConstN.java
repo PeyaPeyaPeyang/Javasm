@@ -26,7 +26,7 @@ public class InstructionEvaluatorDConstN extends AbstractInstructionEvaluator<JA
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .pushPrimitive(StackElementType.DOUBLE)

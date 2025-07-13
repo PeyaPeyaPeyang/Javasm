@@ -18,21 +18,22 @@ public class InstructionEvaluatorAStoreN extends AbstractInstructionEvaluator<JA
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsAstoreNContext ctxt)
     {
+        String type = "Ljava/lang/Object;";
         JALParser.LocalInstigationContext ins = ctxt.localInstigation();
         if (has(ctxt.INSN_ASTORE_0()))
-            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 0, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 0, compiler, type, ins);
         else if (has(ctxt.INSN_ASTORE_1()))
-            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 1, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 1, compiler, type, ins);
         else if (has(ctxt.INSN_ASTORE_2()))
-            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 2, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 2, compiler, type, ins);
         else if (has(ctxt.INSN_ASTORE_3()))
-            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 3, compiler, "I", ins);
+            return InstructionEvaluateHelperXStore.evaluateN(this, EOpcodes.ASTORE, 3, compiler, type, ins);
 
         throw new IllegalInstructionException("Unexpected instruction: " + ctxt.getText(), ctxt);
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         VarInsnNode varInsnNode = (VarInsnNode) instruction.insn();
 

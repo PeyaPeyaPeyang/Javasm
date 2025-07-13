@@ -43,7 +43,6 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionPars
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.JVMScalarNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.SpecialMethodReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicArgumentNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleTypeNode;
@@ -181,7 +180,6 @@ public final class JALParserDefinition implements ParserDefinition
 
 
             case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
-            case JALParser.RULE_jvmInsArgMethodSpecialRef -> new SpecialMethodReferenceNode(node);
             case JALParser.RULE_jvmInsArgScalarType -> new JVMScalarNode(node);
 
             case JALParser.RULE_jvmInsArgInvokeDynamicMethodHandleType -> new InvokeDynamicMethodHandleTypeNode(node);

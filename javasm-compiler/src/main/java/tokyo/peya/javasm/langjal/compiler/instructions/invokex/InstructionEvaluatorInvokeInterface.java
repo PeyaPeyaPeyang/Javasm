@@ -25,7 +25,7 @@ public class InstructionEvaluatorInvokeInterface
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return InstructionEvaluateHelperInvocation.getFrameNormalDifferenceInfo(instruction);
     }

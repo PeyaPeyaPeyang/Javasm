@@ -3,9 +3,11 @@ package tokyo.peya.javasm.langjal.compiler.instructions.calc;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.IincInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.member.LocalVariableInfo;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
@@ -44,6 +46,13 @@ public class InstructionEvaluatorIInc extends AbstractInstructionEvaluator<JALPa
         int size = isWide ? 6: 3;
         IincInsnNode insn = new IincInsnNode(idx, increment);
         return EvaluatedInstruction.of(this, insn, size);
+    }
+
+    @Override
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    {
+        return FrameDifferenceInfo.same();
+
     }
 
     @Override

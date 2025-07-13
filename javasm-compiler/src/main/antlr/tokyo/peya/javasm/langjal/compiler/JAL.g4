@@ -347,7 +347,6 @@ jvmInsArgInvokeDynamicMethodHandleType: INSN_GETFIELD | INSN_GETSTATIC | INSN_PU
                                         | INSN_PUTSTATIC | INSN_INVOKEVIRTUAL | INSN_INVOKESPECIAL | INSN_INVOKESTATIC
                                         | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE;
 
-jvmInsArgMethodSpecialRef : (jvmInsArgMethodRefOwnerType REF)? (KWD_MNAME_INIT | KWD_MNAME_CLINIT) methodDescriptor;
 jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
 jvmInsArgMethodRefOwnerType : FULL_QUALIFIED_CLASS_NAME;
 
@@ -486,7 +485,7 @@ jvmInsIneg: INSN_INEG;
 jvmInsInstanceof: INSN_INSTANCEOF typeDescriptor;
 jvmInsInvokedynamic: INSN_INVOKEDYNAMIC methodName methodDescriptor jvmInsArgInvokeDynamicMethodTypeMethodHandle jvmInsArgInvokeDynamicRef*;
 jvmInsInvokeinterface: INSN_INVOKEINTERFACE jvmInsArgMethodRef;
-jvmInsInvokespecial: INSN_INVOKESPECIAL jvmInsArgMethodSpecialRef;
+jvmInsInvokespecial: INSN_INVOKESPECIAL jvmInsArgMethodRef;
 jvmInsInvokestatic: INSN_INVOKESTATIC jvmInsArgMethodRef;
 jvmInsInvokevirtual: INSN_INVOKEVIRTUAL jvmInsArgMethodRef;
 jvmInsIor: INSN_IOR;

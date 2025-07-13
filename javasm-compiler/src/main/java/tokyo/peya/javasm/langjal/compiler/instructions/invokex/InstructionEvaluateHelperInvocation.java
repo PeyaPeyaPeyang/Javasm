@@ -7,7 +7,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
-import tokyo.peya.javasm.langjal.compiler.jvm.ClassReferenceType;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.javasm.langjal.compiler.jvm.PrimitiveTypes;
@@ -42,14 +41,17 @@ public class InstructionEvaluateHelperInvocation
         TypeDescriptor[] parameterTypes = descriptor.getParameterTypes();
 
         FrameDifferenceInfo.Builder builder = FrameDifferenceInfo.builder(instruction);
+        opArguments(builder, instruction, parameterTypes);
         if (!(method.getOpcode() == EOpcodes.INVOKESTATIC || method.getOpcode() == EOpcodes.INVOKEDYNAMIC))
         {
             // インスタンスメソッドの場合は，所有者クラスのインスタンスをスタックからポップする
-            builder.popObjectRef(ClassReferenceType.parse(method.owner));
+            builder.popObjectRef(TypeDescriptor.className(method.owner));
         }
 
-        return getFrameDifferenceInfo(instruction, returnType, parameterTypes, builder);
+        opReturnType(builder, instruction, returnType);
+        return builder.build();
     }
+
 
     public static FrameDifferenceInfo getFrameInvokedynamicFrameDifference(@NotNull InstructionInfo instruction)
     {
@@ -59,24 +61,33 @@ public class InstructionEvaluateHelperInvocation
         TypeDescriptor[] parameterTypes = descriptor.getParameterTypes();
 
         FrameDifferenceInfo.Builder builder = FrameDifferenceInfo.builder(instruction);
-        return getFrameDifferenceInfo(instruction, returnType, parameterTypes, builder);
+        opArguments(builder, instruction, parameterTypes);
+        opReturnType(builder, instruction, returnType);
+        return builder.build();
     }
 
-    @NotNull
-    private static FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction,
-                                                              @NotNull TypeDescriptor returnType,
-                                                              @NotNull TypeDescriptor[] parameterTypes,
-                                                              @NotNull FrameDifferenceInfo.Builder builder)
+    public static FrameDifferenceInfo.Builder opArguments(@NotNull FrameDifferenceInfo.Builder builder,
+                                                          @NotNull InstructionInfo instruction,
+                                                          @NotNull TypeDescriptor[] parameterTypes)
     {
+
         for (int i = parameterTypes.length - 1; i >= 0; i--)   // 逆順
         {
             TypeDescriptor type = parameterTypes[i];
             builder.pop(type.toStackElement(instruction));
         }
+
+        return builder;
+    }
+
+    @NotNull
+    public static FrameDifferenceInfo.Builder opReturnType(@NotNull FrameDifferenceInfo.Builder builder,
+                                                           @NotNull InstructionInfo instruction,
+                                                           @NotNull TypeDescriptor returnType)
+    {
         if (returnType.getBaseType() != PrimitiveTypes.VOID)
             builder.push(returnType.toStackElement(instruction));
-
-        return builder.build();
+        return builder;
     }
 
     public static EvaluatedInstruction evaluate(@NotNull AbstractInstructionEvaluator<?> evaluator,

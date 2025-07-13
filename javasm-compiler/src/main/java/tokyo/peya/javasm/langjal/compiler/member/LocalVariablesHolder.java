@@ -88,6 +88,13 @@ public class LocalVariablesHolder
         return this.labelsHolder.isInScope(startLabel, endLabel);
     }
 
+    public boolean isLocalLiving(@NotNull LocalVariableInfo local, @NotNull LabelInfo atLabel)
+    {
+        LabelInfo startLabel = local.start();
+        LabelInfo endLabel = local.end();
+        return LabelsHolder.isInScope(startLabel, endLabel, atLabel);
+    }
+
     @Nullable
     public LocalVariableInfo resolve(int localIndex)
     {
@@ -324,4 +331,19 @@ public class LocalVariablesHolder
         ));
     }
 
+    public LocalVariableInfo[] getAvailableLocalsAt(@NotNull LabelInfo globalStart)
+    {
+        return this.locals.stream()
+                          .filter(local -> this.isLocalLiving(local, globalStart))
+                          .toArray(LocalVariableInfo[]::new);
+    }
+
+    @NotNull
+    public LocalVariableInfo[] getParameters()
+    {
+        return this.locals.stream()
+                          .filter(LocalVariableInfo::isParameter)
+                          .sorted(Comparator.comparingInt(LocalVariableInfo::index))
+                          .toArray(LocalVariableInfo[]::new);
+    }
 }

@@ -40,12 +40,24 @@ public class ClassReferenceType implements Type
         return "L" + this.packageName + "/" + this.className + ";";
     }
 
+    public String getInternalName()
+    {
+        return this.packageName.isEmpty() ? this.className: this.packageName + "/" + this.className;
+    }
+
+    public String getDottedName()
+    {
+        return this.getInternalName().replace('/', '.');
+    }
+
     public static ClassReferenceType parse(@NotNull String typeName)
     {
         if (typeName.startsWith("L"))
             typeName = typeName.substring(1);
         if (typeName.endsWith(";"))
             typeName = typeName.substring(0, typeName.length() - 1);
+        if (typeName.contains("."))
+            typeName = typeName.replace('.', '/'); // ドットをスラッシュに変換
 
         String[] parts = typeName.split("/");
         if (parts.length == 1)

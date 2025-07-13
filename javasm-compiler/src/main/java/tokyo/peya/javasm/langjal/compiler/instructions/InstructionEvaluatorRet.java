@@ -36,7 +36,7 @@ public class InstructionEvaluatorRet extends AbstractInstructionEvaluator<JALPar
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.same();
     }

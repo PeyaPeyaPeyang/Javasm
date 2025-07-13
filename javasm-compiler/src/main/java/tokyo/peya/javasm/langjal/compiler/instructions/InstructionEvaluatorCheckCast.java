@@ -26,12 +26,13 @@ public class InstructionEvaluatorCheckCast extends AbstractInstructionEvaluator<
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         TypeInsnNode insn = (TypeInsnNode) instruction.insn();
         return FrameDifferenceInfo.builder(instruction)
                                   .popObjectRef()  // なんでも
-                                  .pushObjectRef(TypeDescriptor.parse(insn.desc)) // キャスト後のオブジェクト参照をプッシュ
+                                  // キャスト後のオブジェクト参照をプッシュ
+                                  .pushObjectRef(TypeDescriptor.className(insn.desc))
                                   .build();
     }
 

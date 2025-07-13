@@ -9,6 +9,8 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LabelsHolder
@@ -17,10 +19,9 @@ public class LabelsHolder
     private final List<LabelInfo> labels;
 
     @Getter
-    private final LabelInfo globalStart;
+    private LabelInfo globalStart;
     @Getter
     private final LabelInfo globalEnd;
-
 
     @Getter
     @Setter
@@ -32,8 +33,18 @@ public class LabelsHolder
 
         this.labels = new ArrayList<>();
 
-        this.globalStart = new LabelInfo("MBEGIN", new Label(), 0);
+        this.globalStart = this.currentLabel = new LabelInfo("MBEGIN", new Label(), 0);
         this.globalEnd = new LabelInfo("MEND", new Label(), Integer.MAX_VALUE);
+    }
+
+    public void setGlobalStart(@NotNull LabelInfo globalStart)
+    {
+        if (!this.globalStart.name().equals("MBEGIN"))
+            throw new IllegalStateException("Global start label cannot be set after it has been initialized.");
+
+        this.globalStart = globalStart;
+        this.currentLabel = globalStart;  // グローバル開始ラベルを現在のラベルに設定
+        // グローバル開始ラベルをメソッドに登録
     }
 
     @NotNull
@@ -72,6 +83,7 @@ public class LabelsHolder
         Label newLabel = new Label();
         LabelInfo labelInfo = new LabelInfo(labelName, newLabel, instructionIndex);
         this.labels.add(labelInfo);
+        this.labels.sort(Comparator.comparingInt(LabelInfo::instructionIndex));
 
         // メソッドへの登録はあと
         return labelInfo;
@@ -90,23 +102,56 @@ public class LabelsHolder
 
     public boolean isInScope(@NotNull LabelInfo scopeStart, @NotNull LabelInfo scopeEnd)
     {
-        int startIndex = scopeStart.instructionIndex();
-        int endIndex = scopeEnd.instructionIndex();
-        int currentIndex = this.currentInstructionIndex();
+        return isInScope(scopeStart, scopeEnd, this.currentLabel);
+    }
 
-        return currentIndex >= startIndex && currentIndex <= endIndex;
+    public LabelInfo getNextBlock(@NotNull LabelInfo label)
+    {
+        int currentIndex = label.instructionIndex();
+        for (LabelInfo nextLabel : this.labels)
+            if (nextLabel.instructionIndex() > currentIndex)
+                return nextLabel;  // 次のラベルを返す
+        return null;  // 次のラベルが見つからない場合は null を返す
     }
 
     public void finalise(@NotNull MethodNode method)
     {
         LabelNode globalEndNode = this.globalEnd.node();
         method.instructions.add(globalEndNode);
+        this.labels.add(this.globalEnd);  // グローバル終了ラベルも登録
         // ↑ END なので，いっちゃんさいご
     }
 
-    public void initialise(@NotNull MethodNode method)
+    public void registerGlobalStart(@NotNull MethodNode method)
     {
         LabelNode globalStartNode = this.globalStart.node();
         method.instructions.add(globalStartNode);
+        this.labels.add(this.globalStart);  // グローバル開始ラベルも登録
+    }
+
+    @NotNull
+    public List<LabelInfo> getLabels()
+    {
+        return Collections.unmodifiableList(this.labels);
+    }
+
+    @Nullable
+    public LabelInfo getLabelByNode(@NotNull LabelNode targetNode)
+    {
+        for (LabelInfo label : this.labels)
+            if (label.node().equals(targetNode))
+                return label;  // ラベルが見つかったら返す
+
+        return null;  // 見つからなかった場合は null を返す
+    }
+
+    public static boolean isInScope(@NotNull LabelInfo scopeStart, @NotNull LabelInfo scopeEnd,
+                                    @NotNull LabelInfo currentLabel)
+    {
+        int startIndex = scopeStart.instructionIndex();
+        int endIndex = scopeEnd.instructionIndex();
+        int currentIndex = currentLabel.instructionIndex();
+
+        return currentIndex >= startIndex && currentIndex <= endIndex;
     }
 }

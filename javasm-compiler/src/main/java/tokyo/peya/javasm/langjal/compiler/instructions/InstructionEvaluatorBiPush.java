@@ -28,7 +28,7 @@ public class InstructionEvaluatorBiPush extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
                                   .pushPrimitive(StackElementType.INTEGER)

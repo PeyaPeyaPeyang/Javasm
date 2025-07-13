@@ -1,8 +1,10 @@
 package tokyo.peya.javasm.langjal.compiler.instructions.xload;
 
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.tree.VarInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementCapsule;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.instructions.AbstractInstructionEvaluator;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
@@ -29,10 +31,13 @@ public class InstructionEvaluatorALoadN extends AbstractInstructionEvaluator<JAL
     }
 
     @Override
-    protected FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
+    public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
+        VarInsnNode insn = (VarInsnNode) instruction.insn();
+        StackElementCapsule capsule = new StackElementCapsule(instruction);
         return FrameDifferenceInfo.builder(instruction)
-                                  .pushObjectRef()
+                                  .consumeLocal(insn.var, capsule)
+                                  .pushFromCapsule(capsule)
                                   .build();
     }
 
