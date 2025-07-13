@@ -32,6 +32,12 @@ public record LocalStackElement(
     }
 
     @Override
+    public Object toASMStackElement()
+    {
+        return this.stackElement.toASMStackElement();
+    }
+
+    @Override
     public @NotNull String toString()
     {
         return "[" + this.index + "]: " + this.stackElement;

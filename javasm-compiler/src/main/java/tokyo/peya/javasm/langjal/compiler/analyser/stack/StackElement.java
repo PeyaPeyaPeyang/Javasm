@@ -13,4 +13,6 @@ public sealed interface StackElement
     @NotNull
     // Pop 系命令のときは，この値を無視する
     StackElementType type();
+
+    Object toASMStackElement();
 }

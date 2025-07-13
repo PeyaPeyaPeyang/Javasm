@@ -88,7 +88,7 @@ public class JALFileCompiler
     private void writeClass(@NotNull FileEvaluatingReporter reporter,
                             @NotNull ClassNode classNode) throws CompileErrorException
     {
-        ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
+        ClassWriter classWriter = new ClassWriter(/*ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS */ 0);
         try
         {
 

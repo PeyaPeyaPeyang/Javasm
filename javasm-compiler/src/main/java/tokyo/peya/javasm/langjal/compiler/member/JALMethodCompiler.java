@@ -3,11 +3,16 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import lombok.Getter;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.analyser.MethodAnalyser;
+import tokyo.peya.javasm.langjal.compiler.analyser.MethodAnalysisResult;
+import tokyo.peya.javasm.langjal.compiler.analyser.StackFrameMapCreator;
+import tokyo.peya.javasm.langjal.compiler.analyser.StackFrameMapEntry;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalValueException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
@@ -45,7 +50,11 @@ public class JALMethodCompiler
         this.evaluateMethodMetadata(method);
         this.evaluateMethodParameters(method);
         this.evaluateMethodBody(method.methodBody());
+        this.addStackMapTable();
+    }
 
+    private void addStackMapTable()
+    {
         MethodAnalyser analyser = new MethodAnalyser(
                 this.context,
                 this.clazz,
@@ -54,7 +63,35 @@ public class JALMethodCompiler
                 this.labels,
                 this.locals
         );
-        analyser.analyse();
+        // 各命令セットを解析して，スタックフレームを作成する。
+        MethodAnalysisResult analysisResult = analyser.analyse();
+
+        StackFrameMapCreator mapCreator = new StackFrameMapCreator(
+                this.context,
+                this.method
+        );
+        mapCreator.updateFrames(analysisResult.propagations());
+        StackFrameMapEntry[] mapEntries = mapCreator.createStackFrameMap();
+        // スタックマップテーブルを追加
+        this.method.visitMaxs(
+                analysisResult.maxStack(),
+                analysisResult.maxLocals()
+        );
+
+        for (StackFrameMapEntry entry : mapEntries)
+        {
+            LabelInfo atLabel = entry.label();
+            FrameNode frameNode = entry.toASMFrameNode();
+            InstructionInfo instruction = this.instructions.getInstruction(atLabel.instructionIndex());
+            if (instruction == null)
+            {
+                this.context.postError("No instruction found for label: " + atLabel.name());
+                continue;
+            }
+
+            AbstractInsnNode node = instruction.insn();
+            this.method.instructions.insertBefore(node, frameNode);
+        }
     }
 
     private void evaluateMethodParameters(@NotNull JALParser.MethodDefinitionContext method)

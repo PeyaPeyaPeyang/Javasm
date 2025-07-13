@@ -141,7 +141,7 @@ public class LocalVariablesHolder
             LocalVariableInfo localVar = this.resolveSafe(localIndex);
             if (localVar != null)
             {
-                if (localIndex >= 3 && callerInsn.endsWith("load")) // xload 系のときに警告
+                if (localIndex <= 3 && callerInsn.endsWith("load")) // xload 系のときに警告
                     this.warnLocalPerformance(localVar, callerInsn);
                 return localVar;
             }

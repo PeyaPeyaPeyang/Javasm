@@ -26,20 +26,19 @@ import java.util.List;
 
 public class MethodAnalyser
 {
-    private final InstructionInfo nop;
-
     private final FileEvaluatingReporter context;
     private final MethodNode method;
     private final InstructionsHolder instructions;
     private final LabelsHolder labels;
     private final LocalVariablesHolder locals;
+    private final InstructionInfo nop;
 
     private final List<InstructionSetAnalyser> analysers;
     private final List<FramePropagation> pendingPropagations;
     private final List<FramePropagation> confirmedPropagations;
 
-    private long maxStackSize;
-    private long maxLocalSize;
+    private int maxStackSize;
+    private int maxLocalSize;
 
     public MethodAnalyser(@NotNull FileEvaluatingReporter context,
                           @NotNull ClassNode ownerClazz,
@@ -62,13 +61,12 @@ public class MethodAnalyser
                 null,
                 0
         );
-
         this.analysers = new ArrayList<>();
         this.pendingPropagations = new ArrayList<>();
         this.confirmedPropagations = new ArrayList<>();
     }
 
-    public void analyse()
+    public MethodAnalysisResult analyse()
     {
         this.context.postInfo("Analysing method: " + this.method.name + " in class: " + this.method.desc);
         this.pendingPropagations.clear();
@@ -76,14 +74,23 @@ public class MethodAnalyser
         if (this.analysers.isEmpty())
         {
             this.context.postInfo("There are no instruction sets to analyse in method: " + this.method.name);
-            return;
+            return MethodAnalysisResult.EMPTY;  // インストラクションセットがない場合は空の結果を返す
         }
         this.printAnalyseTargets();
 
+        // 最初に渡すグローバル開始ラベルの伝播を作成
         FramePropagation firstPropagation = this.createFirstPropagation(this.labels.getGlobalStart());
         this.pendingPropagations.add(firstPropagation);
 
+        // 各インストラクション・セットのスタックとローカル変数の動きを解析
         this.analyseLoop();
+
+        // 分析が完了したら，結果を返答
+        return new MethodAnalysisResult(
+                this.confirmedPropagations.toArray(new FramePropagation[0]),
+                this.maxStackSize,
+                this.maxLocalSize
+        );
     }
 
     private void analyseLoop()

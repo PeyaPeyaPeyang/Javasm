@@ -13,4 +13,10 @@ public record NopElement(
     {
         return StackElementType.NOP;
     }
+
+    @Override
+    public Object toASMStackElement()
+    {
+        return null;
+    }
 }

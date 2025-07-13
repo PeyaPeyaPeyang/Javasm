@@ -58,4 +58,10 @@ public final class StackElementCapsule implements StackElement
             return this.producerFunction.apply(this.element).type();
         return this.element.type();
     }
+
+    @Override
+    public Object toASMStackElement()
+    {
+        return null;
+    }
 }

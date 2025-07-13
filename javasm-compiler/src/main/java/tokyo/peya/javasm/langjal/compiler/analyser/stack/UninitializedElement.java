@@ -28,6 +28,13 @@ public record UninitializedElement(
     }
 
     @Override
+    public Object toASMStackElement()
+    {
+        // TODO: ラベルがいるらしい。
+        return this.instruction.toString();
+    }
+
+    @Override
     public @NotNull String toString()
     {
         return "Uninitialized type (by " + this.instruction + ")";

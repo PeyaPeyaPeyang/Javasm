@@ -19,6 +19,12 @@ public record PrimitiveElement(
             throw new IllegalArgumentException("PrimitiveElement must be INTEGER, FLOAT, LONG, or DOUBLE, but was: " + type);
     }
 
+    @Override
+    public Object toASMStackElement()
+    {
+        return this.type.getOpcode();
+    }
+
     public static PrimitiveElement of(
             @NotNull InstructionInfo producer,
             @NotNull StackElementType type

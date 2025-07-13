@@ -31,6 +31,12 @@ public record ObjectElement(
     }
 
     @Override
+    public Object toASMStackElement()
+    {
+        return this.content.toString();
+    }
+
+    @Override
     public @NotNull String toString()
     {
         return "Object type of " + this.content + " (by " + this.producer + ")";
