@@ -21,7 +21,7 @@ public class InstructionEvaluatorAReturn extends AbstractSingleInstructionEvalua
     protected @NotNull EvaluatedInstruction evaluate(@NotNull JALMethodCompiler compiler,
                                                      JALParser.@NotNull JvmInsAreturnContext ctxt)
     {
-        InstructionEvaluateHelperXReturn.checkReturnType(compiler.getMethod(), TypeDescriptor.OBJECT);
+        InstructionEvaluateHelperXReturn.checkReturnType(compiler.getMethod(), ctxt, TypeDescriptor.OBJECT);
         return super.evaluate(compiler, ctxt);
     }
 
