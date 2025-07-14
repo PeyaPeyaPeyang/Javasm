@@ -107,6 +107,13 @@
                 groupName="JAL Inspections"
                 displayName="Local index overflow inspection"
                 language="JAL"/>
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALMethodReturnTypeInspection"
+                enabledByDefault="true"
+                level="ERROR"
+                groupName="JAL Inspections"
+                displayName="Method return type inspection"
+                language="JAL"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

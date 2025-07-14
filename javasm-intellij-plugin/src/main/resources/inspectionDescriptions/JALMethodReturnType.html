@@ -1,0 +1,24 @@
+<html>
+<body>
+<p>
+    This inspection targets <code>return</code> instructions, including typed variants such as <code>ireturn</code>,
+    <code>lreturn</code>, <code>freturn</code>, <code>dreturn</code>, <code>areturn</code>, and the void
+    <code>return</code>.
+</p>
+<p>
+    It checks whether the type of each return instruction matches the return type specified in the method descriptor.
+    If the types are inconsistent, an error is reported.
+</p>
+<div>
+    For example:
+    <ul>
+        <li>Using <code>ireturn</code> in a method declared to return <code>double</code> is invalid.</li>
+        <li>Using <code>return</code> in a method that returns <code>int</code> is also invalid.</li>
+    </ul>
+</div>
+<p>
+    Ensuring consistency between the method's declared return type and its actual return instructions is essential for
+    valid bytecode.
+</p>
+</body>
+</html>
