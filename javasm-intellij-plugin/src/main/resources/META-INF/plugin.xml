@@ -114,6 +114,13 @@
                 groupName="JAL Inspections"
                 displayName="Method return type inspection"
                 language="JAL"/>
+        <localInspection
+                implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALShortenableVariableOperationInspection"
+                enabledByDefault="true"
+                level="WARNING"
+                groupName="JAL Inspections"
+                displayName="Shortenable variable operation inspection"
+                language="JAL"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

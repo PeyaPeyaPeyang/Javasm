@@ -1,0 +1,27 @@
+<html>
+<body>
+<p>
+    This inspection targets local variable load and store instructions, such as <code>iload</code>, <code>lload</code>,
+    <code>fload</code>, <code>dload</code>, <code>aload</code>,
+    and their corresponding <code>xstore</code> forms.
+</p>
+<p>
+    When the instruction uses a variable index between 0 and 3, a short-form variant is available (e.g.,
+    <code>iload_0</code> instead of <code>iload 0</code>).
+</p>
+<p>
+    This inspection detects cases where the long form is used unnecessarily and issues a warning. A Quick Fix is
+    provided to replace the instruction with the equivalent short form.
+</p>
+<div>
+    The following replacements are suggested:
+    <ul>
+        <li><code>iload 0</code> -&lt; <code>iload_0</code>, <code>iload 1</code> → <code>iload_1</code>, etc.</li>
+        <li><code>fstore 2</code> -&lt; <code>fstore_2</code>, and so on.</li>
+    </ul>
+</div>
+<p>
+    Using the short form reduces bytecode size and improves readability.
+</p>
+</body>
+</html>
