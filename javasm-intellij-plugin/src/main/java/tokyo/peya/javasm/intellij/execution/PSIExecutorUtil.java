@@ -18,6 +18,7 @@ import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
 import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
 import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
 
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
 @UtilityClass
@@ -103,8 +104,19 @@ public class PSIExecutorUtil
         // ここで，実際のソースルート内のパスと，パッケージが一致するかを見る。
         // 一致しなかったらエラーを出す。
         Path sourceRootPath = sourceRoot.toNioPath();
-        Path expectedPath = sourceRootPath.resolve(packageName)
-                                          .resolve(className + ".jal");
+        Path expectedPath;
+        try
+        {
+            expectedPath = sourceRootPath.resolve(packageName).resolve(className + ".jal");
+        }
+        catch (InvalidPathException e)
+        {
+            return new ClassNameValidationResult(
+                    true,
+                    sourceRootPath.resolve(className + ".jal"),
+                    sourceRootPath.relativize(file.getVirtualFile().toNioPath())
+            );
+        }
 
         Path relativePath = sourceRootPath.relativize(file.getVirtualFile().toNioPath());
         VirtualFile expectedFile = sourceRoot.getFileSystem().findFileByPath(expectedPath.toString());
