@@ -63,7 +63,7 @@ public class JALPushIntegerInspection extends AbstractJALInspection
             );
         }
         // 値が 0~5 なら, iconst_X を使える。
-        else if (0 < value && value < 5)
+        else if (0 < value && value <= 5)
         {
             String replacementInstruction = "iconst_" + value;
             holder.registerProblem(
