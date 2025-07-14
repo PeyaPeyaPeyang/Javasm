@@ -12,6 +12,19 @@ import java.util.Objects;
 @Getter
 public class TypeDescriptor
 {
+    public static final TypeDescriptor OBJECT = TypeDescriptor.className("Ljava/lang/Object;");
+
+    public static final TypeDescriptor BYTE = new TypeDescriptor(PrimitiveTypes.BYTE);
+    public static final TypeDescriptor CHAR = new TypeDescriptor(PrimitiveTypes.CHAR);
+    public static final TypeDescriptor DOUBLE = new TypeDescriptor(PrimitiveTypes.DOUBLE);
+    public static final TypeDescriptor FLOAT = new TypeDescriptor(PrimitiveTypes.FLOAT);
+    public static final TypeDescriptor LONG = new TypeDescriptor(PrimitiveTypes.LONG);
+    public static final TypeDescriptor INTEGER = new TypeDescriptor(PrimitiveTypes.INT);
+    public static final TypeDescriptor SHORT = new TypeDescriptor(PrimitiveTypes.SHORT);
+    public static final TypeDescriptor BOOLEAN = new TypeDescriptor(PrimitiveTypes.BOOLEAN);
+    public static final TypeDescriptor VOID = new TypeDescriptor(PrimitiveTypes.VOID);
+
+
     private final Type baseType;
     private final int arrayDimensions;
 
