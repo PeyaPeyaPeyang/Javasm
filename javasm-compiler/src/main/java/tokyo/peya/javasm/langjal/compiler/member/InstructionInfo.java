@@ -58,9 +58,8 @@ public record InstructionInfo(
     @Override
     public @NotNull String toString()
     {
-        return "Instruction " + EOpcodes.getName(this.opcode()) +
-                " at offset " + this.bytecodeOffset +
-                (this.assignedLabel != null ? " with label " + this.assignedLabel: "") +
-                " of size " + this.instructionSize;
+        return EOpcodes.getName(this.opcode()) +
+                " at " + this.bytecodeOffset +
+                (this.assignedLabel != null ? " with label " + this.assignedLabel: "");
     }
 }

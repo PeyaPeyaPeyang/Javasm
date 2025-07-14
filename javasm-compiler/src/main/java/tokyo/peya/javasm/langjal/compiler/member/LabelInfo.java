@@ -20,6 +20,6 @@ public record LabelInfo(
     @Override
     public @NotNull String toString()
     {
-        return this.name + " (index: " + this.instructionIndex + ")";
+        return this.name + " (idx: " + this.instructionIndex + ")";
     }
 }

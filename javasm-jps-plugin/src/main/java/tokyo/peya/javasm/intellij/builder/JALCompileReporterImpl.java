@@ -61,7 +61,7 @@ public class JALCompileReporterImpl implements CompileReporter
         this.compileContext.processMessage(
                 new CompilerMessage(
                         COMPILER_NAME,
-                        BuildMessage.Kind.INFO,
+                        BuildMessage.Kind.PROGRESS,
                         message,
                         sourcePath.toString()
                 )
