@@ -23,7 +23,7 @@ public class InstructionEvaluatorLStore extends AbstractInstructionEvaluator<JAL
                 compiler,
                 ctxt.jvmInsArgLocalRef(),
                 ctxt.localInstigation(),
-                "L",
+                "J",
                 "lstore",
                 ctxt.INSN_WIDE()
         );

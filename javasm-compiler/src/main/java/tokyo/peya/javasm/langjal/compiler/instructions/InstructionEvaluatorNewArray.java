@@ -21,11 +21,11 @@ public class InstructionEvaluatorNewArray extends AbstractInstructionEvaluator<J
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
         if (typeDescriptor.getText().startsWith("L") || typeDescriptor.getText().startsWith("["))
             throw new IllegalInstructionException(
-                    "Primitive type expected for anewarray, but got " + typeDescriptor.getText(),
+                    "Primitive type expected for newarray, but got " + typeDescriptor.getText(),
                     typeDescriptor
             );
 
-        TypeInsnNode type = new TypeInsnNode(EOpcodes.ANEWARRAY, typeDescriptor.getText());
+        TypeInsnNode type = new TypeInsnNode(EOpcodes.NEWARRAY, typeDescriptor.getText());
         return EvaluatedInstruction.of(this, type);
     }
 
@@ -35,7 +35,7 @@ public class InstructionEvaluatorNewArray extends AbstractInstructionEvaluator<J
         TypeInsnNode insn = (TypeInsnNode) instruction.insn();
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.INTEGER) // 配列のサイズを指定する int 型をポップ
-                                  .pushObjectRef(TypeDescriptor.className(insn.desc))
+                                  .pushObjectRef(TypeDescriptor.parse("[" + insn.desc))
                                   .build();
     }
 

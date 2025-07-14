@@ -20,8 +20,8 @@ public class InstructionEvaluatorCALoad extends AbstractSingleInstructionEvaluat
     public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
-                                  .popObjectRef(TypeDescriptor.parse("[C"))
                                   .popPrimitive(StackElementType.INTEGER)
+                                  .popObjectRef(TypeDescriptor.parse("[C"))
                                   .pushPrimitive(StackElementType.INTEGER)  // Char は int として扱われる
                                   .build();
     }

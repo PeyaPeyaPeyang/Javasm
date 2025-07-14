@@ -13,7 +13,7 @@ public record ObjectElement(
 {
     public ObjectElement
     {
-        if (content.getBaseType().isPrimitive())
+        if (!content.isArray() && content.getBaseType().isPrimitive())
             throw new IllegalArgumentException(
                     "ObjectElement content must not be a primitive type: " + content
             );

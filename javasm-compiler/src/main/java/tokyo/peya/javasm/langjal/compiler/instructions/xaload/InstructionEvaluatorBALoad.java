@@ -20,8 +20,8 @@ public class InstructionEvaluatorBALoad extends AbstractSingleInstructionEvaluat
     public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
-                                  .popObjectRef(TypeDescriptor.parse("[B"))
                                   .popPrimitive(StackElementType.INTEGER)
+                                  .popObjectRef(TypeDescriptor.parse("[B"))
                                   .pushPrimitive(StackElementType.INTEGER)  // Byte は int として扱われる
                                   .build();
     }

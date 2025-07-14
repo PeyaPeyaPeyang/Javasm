@@ -20,8 +20,8 @@ public class InstructionEvaluatorAALoad extends AbstractSingleInstructionEvaluat
     public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
         return FrameDifferenceInfo.builder(instruction)
-                                  .popObjectRef(TypeDescriptor.parse("[Ljava/lang/Object;"))
                                   .popPrimitive(StackElementType.INTEGER)
+                                  .popObjectRef(TypeDescriptor.parse("[Ljava/lang/Object;"))
                                   .pushObjectRef()
                                   .build();
     }
