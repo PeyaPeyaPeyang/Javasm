@@ -34,7 +34,7 @@ public class LabelsHolder
         this.labels = new ArrayList<>();
 
         this.globalStart = this.currentLabel = new LabelInfo("MBEGIN", new Label(), 0);
-        this.globalEnd = new LabelInfo("MEND", new Label(), Integer.MAX_VALUE);
+        this.globalEnd = new LabelInfo("MEND", new Label(), 50);
     }
 
     public void setGlobalStart(@NotNull LabelInfo globalStart)

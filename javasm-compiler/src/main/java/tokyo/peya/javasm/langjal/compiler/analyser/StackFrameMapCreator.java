@@ -69,10 +69,10 @@ public class StackFrameMapCreator
     {
         this.context.postInfo("Creating stack frame map for method: " + this.method.name);
         // フレームをラベルのインデックス順にする
-        List<InstructionSetFrame> frames = this.frames.values().stream()
-                                                      .sorted(Comparator.comparingInt(frame -> frame.label()
-                                                                                                    .instructionIndex()))
-                                                      .toList();
+        List<InstructionSetFrame> frames =
+                this.frames.values().stream()
+                           .sorted(Comparator.comparingInt(frame -> frame.label().instructionIndex()))
+                           .toList();
         this.printFrames(frames);
         if (frames.size() < 2)
         {

@@ -222,7 +222,7 @@ public class LocalVariablesHolder
     )
     {
         if (endLabel == null)
-            endLabel = this.labelsHolder.getGlobalStart();  // 終了ラベルが指定されていない場合はメソッドの終了ラベルを使用
+            endLabel = this.labelsHolder.getGlobalEnd();  // 終了ラベルが指定されていない場合はメソッドの終了ラベルを使用
 
         return this.register(localRef, type, name, this.labelsHolder.getCurrentLabel(), endLabel);
     }

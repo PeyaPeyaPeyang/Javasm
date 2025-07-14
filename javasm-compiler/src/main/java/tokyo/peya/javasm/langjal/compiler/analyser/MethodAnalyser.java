@@ -111,7 +111,7 @@ public class MethodAnalyser
             FramePropagation propagation = this.pendingPropagations.remove(0);
             LabelInfo receiver = propagation.receiver();
 
-            if (receiver.instructionIndex() == Integer.MAX_VALUE)
+            if (receiver == this.labels.getGlobalEnd())
             {
                 this.context.postInfo("Reached global end label, stopping analysis for branch: " + propagation.sender()
                                                                                                               .name());

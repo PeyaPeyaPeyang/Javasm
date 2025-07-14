@@ -184,11 +184,11 @@ public class InstructionSetAnalyser
             StackOperation[] stackOperations = frameDifference.getStackOperations();
             this.processStackLocalDifference(instruction, stackOperations);
 
+            this.doesContainCriticalJump |= isCriticalJump(instruction);  // returnn も判定するので, ↓ if 外。
             // ジャンプターゲットを計算
             if (instruction.insn() instanceof JumpInsnNode jumpNode)
             {
                 this.analyseJumpTarget(instruction, jumpNode);
-                this.doesContainCriticalJump |= isCriticalJump(instruction);
                 LabelInfo targetLabel = this.methodLabels.getLabelByNode(jumpNode.label);
                 if (targetLabel == null)
                     throw new UnknownJumpException(

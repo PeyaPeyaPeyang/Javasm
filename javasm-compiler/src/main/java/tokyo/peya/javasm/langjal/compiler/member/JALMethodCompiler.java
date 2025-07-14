@@ -130,10 +130,10 @@ public class JALMethodCompiler
 
     private void finaliseMethod()
     {
-        this.locals.evaluateLocals(this.method);
         this.instructions.finaliseInstructions();
         this.tryCatchDirectives.finaliseTryCatchDirectives(this.method);
         this.labels.finalise(this.method);
+        this.locals.evaluateLocals(this.method);
     }
 
 
