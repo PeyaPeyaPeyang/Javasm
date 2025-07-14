@@ -348,7 +348,7 @@ jvmInsArgInvokeDynamicMethodHandleType: INSN_GETFIELD | INSN_GETSTATIC | INSN_PU
                                         | KWD_METHOD_HANDLE_TAG_NEWINVOKE | INSN_INVOKEINTERFACE;
 
 jvmInsArgMethodRef : (jvmInsArgMethodRefOwnerType REF)? methodName methodDescriptor;
-jvmInsArgMethodRefOwnerType : FULL_QUALIFIED_CLASS_NAME;
+jvmInsArgMethodRefOwnerType : FULL_QUALIFIED_CLASS_NAME | ID;
 
 jvmInsArgLocalRef : NUMBER | ID;
 

@@ -5,9 +5,11 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 
 public class MethodReferenceNode extends InstructionNode
 {
@@ -17,9 +19,23 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @Nullable
-    public FullQualifiedNameNode getMethodOwner()
+    public TypeDescriptor getMethodOwner()
     {
-        return PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
+        String ownerName = null;
+        FullQualifiedNameNode owner = PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
+        if (owner == null)
+        {
+            IdentifierNode idNode = PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
+            if (idNode != null)
+                ownerName = idNode.getText();
+        }
+        else
+            ownerName = owner.getText();
+
+        if (ownerName == null || ownerName.isEmpty())
+            return null;
+        else
+            return TypeDescriptor.className(ownerName);
     }
 
     @NotNull
@@ -45,7 +61,7 @@ public class MethodReferenceNode extends InstructionNode
     @Override
     public String toString()
     {
-        String owner = this.getMethodOwner() == null ? "": this.getMethodOwner().getText() + "->";
+        String owner = this.getMethodOwner() == null ? "": this.getMethodOwner() + "->";
         return "MethodReference(" + owner + "this." + this.getMethodName() + this.getMethodDescriptor() + ")";
     }
 
