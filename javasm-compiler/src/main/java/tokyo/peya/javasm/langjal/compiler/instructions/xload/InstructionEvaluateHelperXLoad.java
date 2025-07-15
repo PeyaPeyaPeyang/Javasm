@@ -50,6 +50,6 @@ public class InstructionEvaluateHelperXLoad
             );
 
         VarInsnNode insn = new VarInsnNode(opcode, idx); // ここには iload_0, iload_1, iload_2, iload_3 などの短い命令が入る
-        return EvaluatedInstruction.of(evaluator, insn);
+        return EvaluatedInstruction.of(evaluator, insn, 1);  // 大体で aload だが，本来は aload_X などカテ１
     }
 }

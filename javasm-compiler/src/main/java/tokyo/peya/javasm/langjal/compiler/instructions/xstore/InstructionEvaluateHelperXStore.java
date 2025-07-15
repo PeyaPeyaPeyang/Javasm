@@ -59,7 +59,7 @@ public class InstructionEvaluateHelperXStore
 
         // 0~3 が確定だから， wide は不要
         VarInsnNode insn = new VarInsnNode(opcode, registeredLocal.index());
-        return EvaluatedInstruction.of(evaluator, insn);
+        return EvaluatedInstruction.of(evaluator, insn, 1);  // 大体で astore だが，本来は astore_X などカテ１
     }
 
     private static LocalVariableInfo registerNewLocal(@NotNull JALMethodCompiler evaluator,
