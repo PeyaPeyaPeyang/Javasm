@@ -477,7 +477,7 @@ jvmInsIfOP: INSN_IFEQ labelName
             | INSN_IFLE labelName;
 jvmInsIfNonnull: INSN_IFNONNULL labelName;
 jvmInsIfNull: INSN_IFNULL labelName;
-jvmInsIinc: INSN_WIDE? INSN_IINC jvmInsArgLocalRef COMMA NUMBER;
+jvmInsIinc: INSN_WIDE? INSN_IINC jvmInsArgLocalRef NUMBER;
 jvmInsIload: INSN_WIDE? INSN_ILOAD jvmInsArgLocalRef;
 jvmInsIloadN: INSN_ILOAD_0 | INSN_ILOAD_1 | INSN_ILOAD_2 | INSN_ILOAD_3;
 jvmInsImul: INSN_IMUL;
