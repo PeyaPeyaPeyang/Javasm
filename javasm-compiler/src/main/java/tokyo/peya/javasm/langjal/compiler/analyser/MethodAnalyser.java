@@ -59,7 +59,8 @@ public class MethodAnalyser
                 EOpcodes.NOP,
                 0,
                 null,
-                0
+                0,
+                -1
         );
         this.analysers = new ArrayList<>();
         this.pendingPropagations = new ArrayList<>();

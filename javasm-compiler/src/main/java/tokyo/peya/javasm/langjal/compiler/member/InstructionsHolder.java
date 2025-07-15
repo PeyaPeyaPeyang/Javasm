@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler.member;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.instructions.InstructionEvaluatorReturn;
@@ -50,7 +51,8 @@ public class InstructionsHolder
                 returnOpcode,
                 this.bytecodeOffset,
                 this.labels.getCurrentLabel(),
-                EOpcodes.getOpcodeSize(returnOpcode)
+                EOpcodes.getOpcodeSize(returnOpcode),
+                -1
         );
         this.instructions.add(instruction);
         this.bytecodeOffset += instruction.instructionSize();
@@ -58,7 +60,8 @@ public class InstructionsHolder
     }
 
     public InstructionInfo addInstruction(@NotNull EvaluatedInstruction evaluatedInstruction,
-                                          @Nullable LabelInfo labelAssignation)
+                                          @Nullable LabelInfo labelAssignation,
+                                          int sourceLine)
     {
         InstructionInfo instruction = new InstructionInfo(
                 evaluatedInstruction.evaluator(),
@@ -67,7 +70,8 @@ public class InstructionsHolder
                 evaluatedInstruction.insn(),
                 this.bytecodeOffset,
                 labelAssignation,
-                evaluatedInstruction.getInstructionSize()
+                evaluatedInstruction.getInstructionSize(),
+                sourceLine
         );
         this.instructions.add(instruction);
         this.bytecodeOffset += instruction.instructionSize();
@@ -80,6 +84,21 @@ public class InstructionsHolder
         {
             if (instruction.assignedLabel() != null)  // 命令にラベルが割り当てられている場合
                 this.ownerMethod.instructions.add(instruction.assignedLabel().node());
+
+            // 行番号を付加する。それにはラベルが必要なので，もし命令にラベルが貼っ付いていたら再利用する。
+            int lineNumber = instruction.sourceLine();
+            if (lineNumber >= 0)
+            {
+                Label label;
+                if (instruction.assignedLabel() == null)
+                {
+                    label = new Label();
+                    this.ownerMethod.visitLabel(label);
+                }
+                else
+                    label = instruction.assignedLabel().node().getLabel();
+                this.ownerMethod.visitLineNumber(lineNumber, label);
+            }
 
             this.ownerMethod.instructions.add(instruction.insn());
         }

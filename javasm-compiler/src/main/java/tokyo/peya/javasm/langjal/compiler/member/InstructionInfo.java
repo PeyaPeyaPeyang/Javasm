@@ -23,7 +23,8 @@ public record InstructionInfo(
         int bytecodeOffset,
         @Nullable
         LabelInfo assignedLabel,
-        int instructionSize
+        int instructionSize,
+        int sourceLine
 )
 {
     public InstructionInfo(@NotNull AbstractInstructionEvaluator<?> evaluator,
@@ -32,9 +33,19 @@ public record InstructionInfo(
                            int insn,
                            int bytecodeOffset,
                            @Nullable LabelInfo assignedLabel,
-                           int instructionSize)
+                           int instructionSize,
+                           int sourceLine)
     {
-        this(evaluator, ownerClass, owner, new InsnNode(insn), bytecodeOffset, assignedLabel, instructionSize);
+        this(
+                evaluator,
+                ownerClass,
+                owner,
+                new InsnNode(insn),
+                bytecodeOffset,
+                assignedLabel,
+                instructionSize,
+                sourceLine
+        );
     }
 
     public int opcode()

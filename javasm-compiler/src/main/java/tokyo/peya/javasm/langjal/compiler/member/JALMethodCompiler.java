@@ -276,7 +276,7 @@ public class JALMethodCompiler
                 if (evaluated == null)
                     continue;
 
-                this.instructions.addInstruction(evaluated, labelAssignation);
+                this.instructions.addInstruction(evaluated, labelAssignation, instruction.start.getLine());
                 labelAssignation = null;  // 次の命令セットのためにラベルをクリア
             }
         }

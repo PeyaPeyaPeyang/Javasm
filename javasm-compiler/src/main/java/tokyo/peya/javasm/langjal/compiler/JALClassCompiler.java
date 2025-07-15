@@ -16,17 +16,19 @@ import java.util.List;
 public class JALClassCompiler
 {
     private final FileEvaluatingReporter reporter;
+    private final String fileName;
 
-    public JALClassCompiler(@NotNull FileEvaluatingReporter reporter)
+    public JALClassCompiler(@NotNull FileEvaluatingReporter reporter, @Nullable String fileName)
     {
         this.reporter = reporter;
+        this.fileName = fileName;
     }
 
     public ClassNode compileClassAST(@NotNull JALParser.ClassDefinitionContext clazz) throws CompileErrorException
     {
         ClassNode classNode = new ClassNode();
-        visitClassInformation(classNode, clazz);
-        visitClassBody(classNode, clazz.classBody());
+        this.visitClassInformation(classNode, clazz);
+        this.visitClassBody(classNode, clazz.classBody());
 
         return classNode;
     }
@@ -71,8 +73,8 @@ public class JALClassCompiler
         classNode.fields.add(fieldNode);
     }
 
-    private static void visitClassInformation(@NotNull ClassNode classNode,
-                                              @NotNull JALParser.ClassDefinitionContext definitionContext)
+    private void visitClassInformation(@NotNull ClassNode classNode,
+                                       @NotNull JALParser.ClassDefinitionContext definitionContext)
             throws CompileErrorException
     {
         int major = -1;
@@ -115,7 +117,6 @@ public class JALClassCompiler
             superClassName = "java/lang/Object"; // デフォルトのスーパークラス
 
         int version = minor << 16 | major;
-
         classNode.visit(
                 version,
                 modifier,
@@ -124,6 +125,9 @@ public class JALClassCompiler
                 superClassName,  // Analysis プロセスで， invokespecial のターゲットを特定するために必要
                 interfaceName.toArray(new String[0])
         );
+
+        if (this.fileName != null)
+            classNode.visitSource(this.fileName, null); // ソースファイル名を設定
     }
 
     private static int visitClassAccessModifier(@NotNull JALParser.AccModClassContext accessModifier)

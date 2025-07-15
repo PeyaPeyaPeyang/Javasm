@@ -78,7 +78,8 @@ public class JALFileCompiler
         if (classDefinition == null)
             return new ClassNode();
 
-        JALClassCompiler classCompiler = new JALClassCompiler(fileReporter);
+        String fileName = sourcePath == null ? null: sourcePath.getFileName().toString();
+        JALClassCompiler classCompiler = new JALClassCompiler(fileReporter, fileName);
         ClassNode evaluatedClass = classCompiler.compileClassAST(classDefinition);
         this.writeClass(fileReporter, evaluatedClass);
 
