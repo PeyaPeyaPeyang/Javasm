@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.langjal.compiler.analyser.stack;
 
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.Opcodes;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 
@@ -34,7 +33,7 @@ public record ObjectElement(
     @Override
     public Object toASMStackElement()
     {
-        return Opcodes.INTEGER;
+        return this.content.toString();
     }
 
     @Override
