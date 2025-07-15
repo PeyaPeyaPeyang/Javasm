@@ -7,12 +7,10 @@ import tokyo.peya.javasm.langjal.compiler.analyser.stack.NullElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.ObjectElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
-import tokyo.peya.javasm.langjal.compiler.analyser.stack.TopElement;
 import tokyo.peya.javasm.langjal.compiler.exceptions.analyse.StackElementMismatchedException;
 import tokyo.peya.javasm.langjal.compiler.exceptions.analyse.StackSizeDifferentException;
 import tokyo.peya.javasm.langjal.compiler.jvm.ClassReferenceType;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
-import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
 
 import java.util.Collection;
@@ -56,51 +54,42 @@ public class StackElementUtils
         return locals;
     }
 
+
     public static LocalStackElement[] mergeLocals(@NotNull LocalStackElement[] existingLocal,
                                                   @NotNull LocalStackElement[] newLocal)
     {
-        // 最大の長さに基づいて，長い方を基準にしてマージする。
-        int max = Math.max(existingLocal.length, newLocal.length);
-        LocalStackElement[] mergedStack = new LocalStackElement[max];
+        return mergeLocals(existingLocal, newLocal, Math.min(existingLocal.length, newLocal.length));
+    }
 
-        for (int i = 0; i < max; i++)
+    public static LocalStackElement[] mergeLocals(@NotNull LocalStackElement[] existingLocal,
+                                                  @NotNull LocalStackElement[] newLocal,
+                                                  int minLocalSize)
+    {
+        if (minLocalSize > existingLocal.length || minLocalSize > newLocal.length)
+            throw new IllegalArgumentException(
+                    "minLocalSize must be less than or equal to the length of both existingLocal and newLocal arrays."
+            );
+
+        LocalStackElement[] mergedLocals = new LocalStackElement[minLocalSize];
+        for (int i = 0; i < minLocalSize; i++)
         {
-            // 既存のローカルスタック要素と新しいローカルスタック要素を取得
-            LocalStackElement existingElement = i < existingLocal.length ? existingLocal[i]: null;
-            LocalStackElement newElement = i < newLocal.length ? newLocal[i]: null;
-
-            InstructionInfo producer = newElement == null ? existingElement.producer(): newElement.producer();
-
-            TopElement top = new TopElement(producer);
-
-            StackElement existingValue = (existingElement == null) ? top: existingElement.stackElement();
-            StackElement newValue = (newElement == null) ? top: newElement.stackElement();
-
-            // 両方 none なら、空のままで OK
-            if (existingValue.type() == StackElementType.TOP && newValue.type() == StackElementType.TOP)
-            {
-                mergedStack[i] = new LocalStackElement(producer, i, top);
-                continue;
-            }
-
-            // 一方が none の場合は、もう一方の値を使う
-            if (existingValue.type() == StackElementType.TOP)
-            {
-                mergedStack[i] = new LocalStackElement(producer, i, newValue);
-                continue;
-            }
-            else if (newValue.type() == StackElementType.TOP)
-            {
-                mergedStack[i] = new LocalStackElement(producer, i, existingValue);
-                continue;
-            }
-
-            // !!!IMPORTANT: ローカル変数の場合は，型のマージをしない。
-            // なぜなら，インストラクションのレベルで随時行われるから。
-            mergedStack[i] = new LocalStackElement(producer, i, newValue);
+            LocalStackElement existingLocalElement = existingLocal[i];
+            LocalStackElement newLocalElement = newLocal[i];
+            StackElement existingElement = existingLocalElement.stackElement();
+            StackElement newElement = newLocalElement.stackElement();
+            // 既存のスタック要素と新しいスタック要素の型が一致しない場合は例外を投げる
+            checkSameType(existingElement, newElement);
+            // ローカル要素をマージする
+            mergedLocals[i] = new LocalStackElement(
+                    existingLocalElement.producer(),
+                    i,
+                    mergeElement(existingElement, newElement),
+                    existingLocalElement.isParameter() || newLocalElement.isParameter()
+            );
         }
 
-        return mergedStack;
+        // ローカル変数の末尾に連続する TOP 要素を削除する
+        return cleanUpLocals(mergedLocals);
     }
 
     private static void checkStackSize(@NotNull LabelInfo frameLabel,

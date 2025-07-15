@@ -42,8 +42,12 @@ public class InstructionSetAnalyser
     private final List<AnalysedInstruction> analysedInstructions;
 
     @NotNull
+    private final Stack<StackElement> propagatedStack;
+    @NotNull
+    private final List<LocalStackElement> propagatedLocals;
+
+    @NotNull
     private final Stack<StackElement> stack;
-    // !!! リストの index == ローカル変数のスロット番号 !!!  （インデックスではない）
     @NotNull
     private final List<LocalStackElement> locals;
     private final List<LabelInfo> jumpTargets;
@@ -65,6 +69,8 @@ public class InstructionSetAnalyser
         this.instructions = new ArrayList<>(instructions);
 
         this.analysedInstructions = new ArrayList<>();
+        this.propagatedStack = new Stack<>();
+        this.propagatedLocals = new ArrayList<>();
         this.stack = new Stack<>();
         this.locals = new ArrayList<>();
         this.jumpTargets = new ArrayList<>();
@@ -119,23 +125,35 @@ public class InstructionSetAnalyser
         {
             // 初回の解析時は，メソッド本体から貰った Propagation のスタックとローカルをそのまま適用する
             // この時点ではまだスタックやローカル変数は空なので，そのまま追加する
-            this.stack.addAll(List.of(stack));
-            this.locals.addAll(List.of(locals));
+            this.propagatedStack.addAll(List.of(stack));
+            this.propagatedLocals.addAll(List.of(locals));
+            this.initialiseCurrentFrameInfo();  // 現在のフレーム情報を初期化
             return;
         }
 
         // 既に解析済みのスタックとローカル変数がある場合は，
         // Propagate で受け取ったスタックとローカル変数をマージする
-        StackElement[] currentStack = this.stack.toArray(new StackElement[0]);
-        StackElement[] mergedStack = StackElementUtils.mergeStack(this.label, currentStack, stack);
-        this.stack.clear();
-        Collections.addAll(this.stack, mergedStack);
+        StackElement[] lastPropagatedStack = this.propagatedStack.toArray(new StackElement[0]);
+        StackElement[] mergedStack = StackElementUtils.mergeStack(this.label, lastPropagatedStack, stack);
+        this.propagatedStack.clear();
+        Collections.addAll(this.propagatedStack, mergedStack);
 
-        LocalStackElement[] currentLocals = this.locals.toArray(new LocalStackElement[0]);
-        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(currentLocals, locals);
-        mergedLocals = StackElementUtils.cleanUpLocals(mergedLocals);
+        LocalStackElement[] lastPropagatedLocals = this.propagatedLocals.toArray(new LocalStackElement[0]);
+        int minLocalSize = Math.min(lastPropagatedLocals.length, locals.length);
+        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(lastPropagatedLocals, locals, minLocalSize);
+        this.propagatedLocals.clear();
+        Collections.addAll(this.propagatedLocals, mergedLocals);
+
+        this.initialiseCurrentFrameInfo();  // 現在のフレーム情報を初期化
+    }
+
+    private void initialiseCurrentFrameInfo()
+    {
         this.locals.clear();
-        Collections.addAll(this.locals, mergedLocals);
+        this.stack.clear();
+
+        this.locals.addAll(this.propagatedLocals);
+        this.stack.addAll(this.propagatedStack);
     }
 
     private void analyseJumpTarget(@NotNull InstructionInfo instructionInfo, @NotNull JumpInsnNode jumpNode)
