@@ -4,6 +4,8 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LookupSwitchInsnNode;
+import org.objectweb.asm.tree.TableSwitchInsnNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.LocalStackElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElement;
@@ -205,18 +207,7 @@ public class InstructionSetAnalyser
 
             this.doesContainCriticalJump |= isCriticalJump(instruction);  // returnn も判定するので, ↓ if 外。
             // ジャンプターゲットを計算
-            if (instruction.insn() instanceof JumpInsnNode jumpNode)
-            {
-                this.analyseJumpTarget(instruction, jumpNode);
-                LabelInfo targetLabel = this.methodLabels.getLabelByNode(jumpNode.label);
-                if (targetLabel == null)
-                    throw new UnknownJumpException(
-                            "Unknown jump target specified by instruction: " + instruction,
-                            instruction
-                    );
-
-                propagations.add(this.createPropagations(targetLabel));
-            }
+            propagations.addAll(this.checkJump(instruction));
 
             this.analysedInstructions.add(new AnalysedInstruction(instruction, frameDifference));
         }
@@ -227,6 +218,55 @@ public class InstructionSetAnalyser
         ));
 
         return propagations.toArray(new FramePropagation[0]);
+    }
+
+    private List<FramePropagation> checkJump(@NotNull InstructionInfo info)
+    {
+        List<FramePropagation> propagations = new ArrayList<>();
+        if (info.insn() instanceof JumpInsnNode jumpNode)
+        {
+            this.analyseJumpTarget(info, jumpNode);
+            LabelInfo targetLabel = this.methodLabels.getLabelByNode(jumpNode.label);
+            if (targetLabel == null)
+                throw new UnknownJumpException(
+                        "Unknown jump target specified by instruction: " + info,
+                        info
+                );
+
+            propagations.add(this.createPropagations(targetLabel));
+        }
+        else if (info.insn() instanceof TableSwitchInsnNode tableSwitchNode)
+        {
+            // テーブルスイッチの場合は，すべてのターゲットラベルを登録
+            for (LabelNode labelNode : tableSwitchNode.labels)
+            {
+                LabelInfo targetLabel = this.methodLabels.getLabelByNode(labelNode);
+                if (targetLabel == null)
+                    throw new UnknownJumpException(
+                            "Unknown jump target specified by instruction: " + info,
+                            info
+                    );
+
+                propagations.add(this.createPropagations(targetLabel));
+            }
+        }
+        else if (info.insn() instanceof LookupSwitchInsnNode lookupSwitchNode)
+        {
+            // ルックアップスイッチの場合は，すべてのターゲットラベルを登録
+            for (LabelNode label : lookupSwitchNode.labels)
+            {
+                LabelInfo targetLabel = this.methodLabels.getLabelByNode(label);
+                if (targetLabel == null)
+                    throw new UnknownJumpException(
+                            "Unknown jump target specified by instruction: " + info,
+                            info
+                    );
+
+                propagations.add(this.createPropagations(targetLabel));
+            }
+        }
+
+        return propagations;
     }
 
     private void updateMaxes()
@@ -353,6 +393,8 @@ public class InstructionSetAnalyser
                 || opcode == EOpcodes.FRETURN
                 || opcode == EOpcodes.LRETURN
                 || opcode == EOpcodes.DRETURN
-                || opcode == EOpcodes.ATHROW;
+                || opcode == EOpcodes.ATHROW
+                || opcode == EOpcodes.TABLESWITCH
+                || opcode == EOpcodes.LOOKUPSWITCH;
     }
 }

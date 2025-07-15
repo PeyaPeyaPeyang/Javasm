@@ -25,7 +25,7 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
         int low = EvaluatorCommons.asInteger(args.NUMBER());
         List<JALParser.LabelNameContext> branches = args.labelName();
         JALParser.LabelNameContext defaultBranch = args.labelName(branches.size() - 1);  // default は最後の要素
-        int high = low + branches.size() - 2; // default を除いて，インデックス化する
+        int high = low + branches.size() - 1; // low から default までの範囲
 
         LabelNode defaultLabel = toLabel(compiler, defaultBranch);
         LabelNode[] labels = branches.stream()
