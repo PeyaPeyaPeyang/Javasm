@@ -8,7 +8,6 @@ public record TopElement(
         InstructionInfo producer
 ) implements StackElement
 {
-
     @Override
     public @NotNull StackElementType type()
     {

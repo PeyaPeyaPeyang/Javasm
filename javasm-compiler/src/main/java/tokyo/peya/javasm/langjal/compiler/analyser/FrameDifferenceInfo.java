@@ -200,10 +200,8 @@ public class FrameDifferenceInfo
             this.stackOperations.add(StackOperation.push(new LocalStackElement(
                     this.instruction,
                     idx,
-                    new PrimitiveElement(this.instruction, type
-                    )
-                                                         )
-            ));
+                    new PrimitiveElement(this.instruction, type)
+            )));
 
             return this;
         }

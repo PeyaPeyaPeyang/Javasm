@@ -90,9 +90,10 @@ public class InstructionSetAnalyser
             if (nextBlockLabel != null)
             {
                 // 次のブロックがある場合は，そのブロックに対する伝搬情報を末尾に作る
-                propagations = new FramePropagation[propagations.length + 1];
-                System.arraycopy(propagations, 0, propagations, 0, propagations.length - 1);
-                propagations[propagations.length - 1] = this.createPropagations(nextBlockLabel);
+                FramePropagation[] newPropagations = new FramePropagation[propagations.length + 1];
+                System.arraycopy(propagations, 0, newPropagations, 0, propagations.length);
+                newPropagations[propagations.length] = this.createPropagations(nextBlockLabel);
+                propagations = newPropagations;
             }
         }
 
@@ -131,7 +132,7 @@ public class InstructionSetAnalyser
         Collections.addAll(this.stack, mergedStack);
 
         LocalStackElement[] currentLocals = this.locals.toArray(new LocalStackElement[0]);
-        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(this.label, currentLocals, locals);
+        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(currentLocals, locals);
         mergedLocals = StackElementUtils.cleanUpLocals(mergedLocals);
         this.locals.clear();
         Collections.addAll(this.locals, mergedLocals);

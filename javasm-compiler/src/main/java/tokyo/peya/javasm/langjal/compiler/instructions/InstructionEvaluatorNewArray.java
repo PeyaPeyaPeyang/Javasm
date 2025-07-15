@@ -1,12 +1,14 @@
 package tokyo.peya.javasm.langjal.compiler.instructions;
 
 import org.jetbrains.annotations.NotNull;
-import org.objectweb.asm.tree.TypeInsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.analyser.FrameDifferenceInfo;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 import tokyo.peya.javasm.langjal.compiler.exceptions.IllegalInstructionException;
 import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.javasm.langjal.compiler.jvm.PrimitiveTypes;
+import tokyo.peya.javasm.langjal.compiler.jvm.Type;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.member.EvaluatedInstruction;
 import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
@@ -19,23 +21,38 @@ public class InstructionEvaluatorNewArray extends AbstractInstructionEvaluator<J
                                                      JALParser.@NotNull JvmInsNewarrayContext ctxt)
     {
         JALParser.TypeDescriptorContext typeDescriptor = ctxt.typeDescriptor();
-        if (typeDescriptor.getText().startsWith("L") || typeDescriptor.getText().startsWith("["))
+        TypeDescriptor desc = TypeDescriptor.parse(typeDescriptor.getText());
+        Type descType = desc.getBaseType();
+        if (!(descType instanceof PrimitiveTypes primitive))
             throw new IllegalInstructionException(
-                    "Primitive type expected for newarray, but got " + typeDescriptor.getText(),
-                    typeDescriptor
+                    "newarray instruction requires a primitive type: " + descType.getDescriptor(),
+                    ctxt
+            );
+        else if (desc.isArray())
+            throw new IllegalInstructionException(
+                    "newarray instruction cannot create an array of arrays: " + desc,
+                    ctxt
             );
 
-        TypeInsnNode type = new TypeInsnNode(EOpcodes.NEWARRAY, typeDescriptor.getText());
+        if (primitive == PrimitiveTypes.VOID)
+            throw new IllegalInstructionException(
+                    "newarray instruction cannot create an array of void type: " + desc,
+                    ctxt
+            );
+
+        IntInsnNode type = new IntInsnNode(EOpcodes.NEWARRAY, primitive.getAsmType());
         return EvaluatedInstruction.of(this, type);
     }
+
 
     @Override
     public FrameDifferenceInfo getFrameDifferenceInfo(@NotNull InstructionInfo instruction)
     {
-        TypeInsnNode insn = (TypeInsnNode) instruction.insn();
+        IntInsnNode insn = (IntInsnNode) instruction.insn();
+        TypeDescriptor desc = TypeDescriptor.parse("[" + PrimitiveTypes.fromASMType(insn.operand));
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.INTEGER) // 配列のサイズを指定する int 型をポップ
-                                  .pushObjectRef(TypeDescriptor.parse("[" + insn.desc))
+                                  .pushObjectRef(desc)
                                   .build();
     }
 

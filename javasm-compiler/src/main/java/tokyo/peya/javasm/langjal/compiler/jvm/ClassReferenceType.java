@@ -3,8 +3,12 @@ package tokyo.peya.javasm.langjal.compiler.jvm;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 
+import java.util.Objects;
+
 public class ClassReferenceType implements Type
 {
+    public static final ClassReferenceType OBJECT = new ClassReferenceType("java/lang", "Object");
+
     @NotNull
     private final String packageName;
     @NotNull
@@ -71,5 +75,20 @@ public class ClassReferenceType implements Type
             String className = parts[parts.length - 1];
             return new ClassReferenceType(packageName, className);
         }
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (!(o instanceof ClassReferenceType that))
+            return false;
+        return Objects.equals(this.packageName, that.packageName)
+                && Objects.equals(this.className, that.className);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(this.packageName, this.className);
     }
 }

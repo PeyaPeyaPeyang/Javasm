@@ -213,11 +213,8 @@ public class StackFrameMapCreator
                 frame1.stack(),
                 frame2.stack()
         );
-        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(
-                frame1.label(),
-                frame1.locals(),
-                frame2.locals()
-        );
+        LocalStackElement[] mergedLocals = StackElementUtils.mergeLocals(frame1.locals(), frame2.locals());
+        StackElementUtils.cleanUpLocals(mergedLocals);
 
         return new InstructionSetFrame(frame1.label(), mergedStack, mergedLocals);
     }

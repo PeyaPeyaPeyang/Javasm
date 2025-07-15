@@ -22,7 +22,7 @@ public class InstructionEvaluatorIALoad extends AbstractSingleInstructionEvaluat
         return FrameDifferenceInfo.builder(instruction)
                                   .popPrimitive(StackElementType.INTEGER)
                                   .popObjectRef(TypeDescriptor.parse("[I"))
-                                  .pushPrimitive(StackElementType.DOUBLE)
+                                  .pushPrimitive(StackElementType.INTEGER)
                                   .build();
     }
 

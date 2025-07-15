@@ -7,10 +7,12 @@ import tokyo.peya.javasm.langjal.compiler.analyser.stack.NullElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.ObjectElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElement;
 import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.TopElement;
 import tokyo.peya.javasm.langjal.compiler.exceptions.analyse.StackElementMismatchedException;
 import tokyo.peya.javasm.langjal.compiler.exceptions.analyse.StackSizeDifferentException;
 import tokyo.peya.javasm.langjal.compiler.jvm.ClassReferenceType;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.javasm.langjal.compiler.member.InstructionInfo;
 import tokyo.peya.javasm.langjal.compiler.member.LabelInfo;
 
 import java.util.Collection;
@@ -54,31 +56,48 @@ public class StackElementUtils
         return locals;
     }
 
-    public static LocalStackElement[] mergeLocals(@NotNull LabelInfo frameLabel,
-                                                  @NotNull LocalStackElement[] existingLocal,
+    public static LocalStackElement[] mergeLocals(@NotNull LocalStackElement[] existingLocal,
                                                   @NotNull LocalStackElement[] newLocal)
     {
-        checkStackSize(frameLabel, "local", List.of(existingLocal), List.of(newLocal));
+        // 最大の長さに基づいて，長い方を基準にしてマージする。
+        int max = Math.max(existingLocal.length, newLocal.length);
+        LocalStackElement[] mergedStack = new LocalStackElement[max];
 
-        LocalStackElement[] mergedStack = new LocalStackElement[existingLocal.length];
-        for (int i = 0; i < newLocal.length; i++)
+        for (int i = 0; i < max; i++)
         {
-            LocalStackElement existingElement = existingLocal[i];
-            LocalStackElement newElement = newLocal[i];
+            // 既存のローカルスタック要素と新しいローカルスタック要素を取得
+            LocalStackElement existingElement = i < existingLocal.length ? existingLocal[i]: null;
+            LocalStackElement newElement = i < newLocal.length ? newLocal[i]: null;
 
-            StackElement existingValue = existingElement.stackElement();
-            StackElement newValue = newElement.stackElement();
-            // 既存のローカルスタック要素と新しいローカルスタック要素の型が一致しない場合は例外を投げる
-            checkSameType(existingValue, newValue);
+            InstructionInfo producer = newElement == null ? existingElement.producer(): newElement.producer();
 
-            // スタック要素をマージする
-            StackElement mergedValue = mergeElement(existingValue, newValue);
-            // マージされたスタック要素を持つ新しいローカルスタック要素を作成
-            mergedStack[i] = new LocalStackElement(
-                    newElement.producer(),
-                    existingElement.index(),
-                    mergedValue
-            );
+            TopElement top = new TopElement(producer);
+
+            StackElement existingValue = (existingElement == null) ? top: existingElement.stackElement();
+            StackElement newValue = (newElement == null) ? top: newElement.stackElement();
+
+            // 両方 none なら、空のままで OK
+            if (existingValue.type() == StackElementType.TOP && newValue.type() == StackElementType.TOP)
+            {
+                mergedStack[i] = new LocalStackElement(producer, i, top);
+                continue;
+            }
+
+            // 一方が none の場合は、もう一方の値を使う
+            if (existingValue.type() == StackElementType.TOP)
+            {
+                mergedStack[i] = new LocalStackElement(producer, i, newValue);
+                continue;
+            }
+            else if (newValue.type() == StackElementType.TOP)
+            {
+                mergedStack[i] = new LocalStackElement(producer, i, existingValue);
+                continue;
+            }
+
+            // !!!IMPORTANT: ローカル変数の場合は，型のマージをしない。
+            // なぜなら，インストラクションのレベルで随時行われるから。
+            mergedStack[i] = new LocalStackElement(producer, i, newValue);
         }
 
         return mergedStack;
@@ -185,9 +204,10 @@ public class StackElementUtils
     {
         TypeDescriptor existingType = existingObject.content();
         TypeDescriptor newType = newObject.content();
-        if (existingType.equals(newType))
+        if (existingType.equals(newType)
+                || existingType.getBaseType().equals(ClassReferenceType.OBJECT))
         {
-            // 型が同じならそのまま返す
+            // 型が同じまたは Object 型の場合はそのまま返す
             return newObject;
         }
 

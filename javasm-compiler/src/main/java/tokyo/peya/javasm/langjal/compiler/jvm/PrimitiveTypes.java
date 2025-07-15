@@ -116,5 +116,20 @@ public enum PrimitiveTypes implements Type
 
         return null; // 該当するプリミティブ型がない場合はnullを返す
     }
+
+    @Override
+    public String toString()
+    {
+        return String.valueOf(this.descriptor);
+    }
+
+    public static PrimitiveTypes fromASMType(int asmType)
+    {
+        for (PrimitiveTypes type : PrimitiveTypes.values())
+            if (type.asmType == asmType)
+                return type; // 該当するASM型を持つプリミティブ型を返す
+
+        return null; // 該当するプリミティブ型がない場合はnullを返す
+    }
 }
 
