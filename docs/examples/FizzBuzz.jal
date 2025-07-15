@@ -58,7 +58,7 @@ public class FizzBuzz (
 
   LoopIncrement:
   // i++
-    iinc 1, 1
+    iinc
     goto LoopStart
 
   LoopEnd:
