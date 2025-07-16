@@ -22,6 +22,12 @@ public class LabelNode extends IdentifierDefSubtree
         return labelNameNode;
     }
 
+    @Override
+    public String getName()
+    {
+        return this.getLabelNameNode().getText();
+    }
+
     @NotNull
     public String getLabelName()
     {

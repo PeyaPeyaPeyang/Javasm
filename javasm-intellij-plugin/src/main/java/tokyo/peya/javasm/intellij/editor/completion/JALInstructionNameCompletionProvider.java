@@ -8,19 +8,17 @@ import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.psi.PsiDocumentManager;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.codeStyle.CodeStyleManager;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class JALInstructionNameCompletionProvider extends CompletionProvider<CompletionParameters>
 {
     private static final Map<String, String> INSTRUCTIONS;
-    private static final Map<String, Object> INSTRUCTIONS_WITH_ARGUMENTS;
+    private static final HashSet<String> INSTRUCTIONS_WITH_ARGUMENTS;
 
     static
     {
@@ -272,62 +270,66 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
 
     static
     {
-        Object v = new Object(); // Placeholder for instructions with arguments
-        INSTRUCTIONS_WITH_ARGUMENTS = new HashMap<>();
+        INSTRUCTIONS_WITH_ARGUMENTS = new HashSet<>();
 
         // <editor-fold desc="Instructions with Arguments">
-        INSTRUCTIONS_WITH_ARGUMENTS.put("aload", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("anewarray", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("astore", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("checkcast", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("dload", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("dstore", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("fload", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("fstore", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("getfield", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("getstatic", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("goto", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("goto_w", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_acmpeq", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_acmpne", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmpeq", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmpne", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmplt", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmpge", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmpgt", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("if_icmple", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifeq", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifne", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("iflt", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifge", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifgt", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifle", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifnonnull", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ifnull", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("iinc", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("iload", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("instanceof", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("invokedynamic", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("invokeinterface", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("invokespecial", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("invokestatic", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("invokevirtual", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("istore", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("jsr", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("jsr_w", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ldc", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ldc_w", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ldc2_w", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("lload", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("lookupswitch", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("lstore", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("multianewarray", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("new", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("newarray", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("putfield", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("putstatic", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("ret", v);
-        INSTRUCTIONS_WITH_ARGUMENTS.put("tableswitch", v);
+        INSTRUCTIONS_WITH_ARGUMENTS.add("aload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("anewarray");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("astore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("bipush");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("checkcast");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("dload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("dstore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("fload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("fstore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("getfield");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("getstatic");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("goto");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("goto_w");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_acmpeq");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_acmpne");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmpeq");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmpne");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmplt");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmpge");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmpgt");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("if_icmple");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifeq");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifne");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("iflt");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifge");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifgt");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifle");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifnonnull");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ifnull");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("iinc");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("iload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("instanceof");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("invokedynamic");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("invokeinterface");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("invokespecial");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("invokestatic");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("invokevirtual");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("istore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("jsr");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("jsr_w");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ldc");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ldc_w");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ldc2_w");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("lload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("lookupswitch");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("lstore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("multianewarray");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("new");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("newarray");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("putfield");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("putstatic");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("ret");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("saload");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("sastore");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("sipush");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("tableswitch");
+        INSTRUCTIONS_WITH_ARGUMENTS.add("wide");
         // </editor-fold>
     }
 
@@ -352,31 +354,17 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
 
     private static InsertHandler<LookupElement> createInsertHandler(String instructionName)
     {
-        return (ctxt, item) -> {
-            Editor editor = ctxt.getEditor();
-            Document doc = editor.getDocument();
-            int offset = editor.getCaretModel().getOffset();
-            if (INSTRUCTIONS_WITH_ARGUMENTS.containsKey(instructionName))
-            {
+
+        if (INSTRUCTIONS_WITH_ARGUMENTS.contains(instructionName))
+            return (ctxt, item) -> {
+                Editor editor = ctxt.getEditor();
+                Document doc = editor.getDocument();
+                int offset = editor.getCaretModel().getOffset();
                 // 現在のカーソル位置にスペースを挿入して移動
                 doc.insertString(offset, " ");
                 editor.getCaretModel().moveToOffset(offset + 1);
-            }
-            else
-            {
-                // 引数が不要な命令の場合は，改行入れてインデント
-                doc.insertString(offset, "\n");
-                PsiFile file = ctxt.getFile();
-                int line = doc.getLineNumber(offset) + 1;
-                int lineStart = doc.getLineStartOffset(line);
-                // カーソルを次の行の先頭に移動
-                editor.getCaretModel().moveToOffset(lineStart);
-
-                // インデントを調整
-                PsiDocumentManager.getInstance(ctxt.getProject()).commitDocument(doc);
-                CodeStyleManager codeStyleManager = CodeStyleManager.getInstance(ctxt.getProject());
-                codeStyleManager.adjustLineIndent(file, lineStart);
-            }
-        };
+            };
+        else
+            return JALCompletionCommons.insertAndNewLine();
     }
 }
