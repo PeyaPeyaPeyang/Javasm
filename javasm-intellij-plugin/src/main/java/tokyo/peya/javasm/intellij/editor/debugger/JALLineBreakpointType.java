@@ -71,11 +71,15 @@ public class JALLineBreakpointType extends JavaLineBreakpointTypeBase<JavaLineBr
         while (element != null && !(element instanceof InstructionNode || element instanceof InstructionSetNode))
         {
             if (element instanceof ANTLRPsiNode)
-                element = element.getParent();
+                element = element.getFirstChild();
             else
                 element = element.getNextSibling();
         }
 
-        return element;
+        if (element == null)
+            return null;
+
+        int elementLine = doc.getLineNumber(element.getTextRange().getStartOffset());
+        return elementLine == line ? element: null;
     }
 }
