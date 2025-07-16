@@ -531,7 +531,7 @@ jvmInsLxor: INSN_LXOR;
 jvmInsMonitorenter: INSN_MONITORENTER;
 jvmInsMonitorexit: INSN_MONITOREXIT;
 jvmInsMultianewarray: INSN_MULTIANEWARRAY typeDescriptor NUMBER;
-jvmInsNew: INSN_NEW typeDescriptor;
+jvmInsNew: INSN_NEW FULL_QUALIFIED_CLASS_NAME;
 jvmInsNewarray: INSN_NEWARRAY typeDescriptor;
 jvmInsNop: INSN_NOP;
 jvmInsPop: INSN_POP;

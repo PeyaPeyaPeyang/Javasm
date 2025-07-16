@@ -121,6 +121,11 @@
                 groupName="JAL Inspections"
                 displayName="Shortenable variable operation inspection"
                 language="JAL"/>
+        <debugger.positionManagerFactory
+                implementation="tokyo.peya.javasm.intellij.editor.debugger.JALPositionManagerFactory" order="first"/>
+        <xdebugger.breakpointType implementation="tokyo.peya.javasm.intellij.editor.debugger.JALLineBreakpointType"/>
+        <debugger.javaBreakpointHandlerFactory
+                implementation="tokyo.peya.javasm.intellij.editor.debugger.JALBreakPointHandlerFactory"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

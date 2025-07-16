@@ -66,7 +66,14 @@ public class PSIExecutorUtil
         else if (!attributes.has(AccessAttribute.STATIC))
             return false; // メインメソッドはstaticでなければならない
 
-        return method.getMethodDescriptor().equals("([Ljava/lang/String;)V");
+        try
+        {
+            return method.getMethodDescriptor().equals("([Ljava/lang/String;)V");
+        }
+        catch (IllegalArgumentException e)
+        {
+            return false; // メソッドのシグネチャが無効な場合はメインメソッドではない
+        }
     }
 
     public static boolean isInSourceRoot(@NotNull PsiElement element)
