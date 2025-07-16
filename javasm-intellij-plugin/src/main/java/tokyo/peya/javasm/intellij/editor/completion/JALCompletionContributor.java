@@ -26,7 +26,6 @@ public class JALCompletionContributor extends CompletionContributor
             "ifge",
             "ifgt",
             "ifle",
-            "iinc",
             "ifnull",
             "ifnonnull",
             "jsr",

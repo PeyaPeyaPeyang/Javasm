@@ -4,6 +4,7 @@ import com.intellij.codeInsight.completion.CompletionParameters;
 import com.intellij.codeInsight.completion.CompletionProvider;
 import com.intellij.codeInsight.completion.CompletionResultSet;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.util.ProcessingContext;
@@ -29,13 +30,16 @@ public class JALLabelNameCompletionProvider extends CompletionProvider<Completio
             if (labelNode == null)
                 continue;
 
+            TextRange instructionSetRange = instructionSet.getTextRange();
+            int lineNumber = position.getContainingFile().getViewProvider().getDocument()
+                                     .getLineNumber(instructionSetRange.getStartOffset());
             String labelName = labelNode.getLabelName();
             LookupElementBuilder lookup =
                     LookupElementBuilder.create(labelName)
                                         .withTypeText("Label")
                                         .withIcon(labelNode.getIcon(0))
                                         .withInsertHandler(JALCompletionCommons.insertAndNewLine())
-                                        .withTailText(" @" + instructionSet.getTextRange().getStartOffset(), true);
+                                        .withTailText(" @" + lineNumber, true);
             result.addElement(lookup);
         }
     }
