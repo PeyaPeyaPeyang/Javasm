@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.JVMScalarNode;
 
@@ -22,7 +23,7 @@ public class InstructionScalarNode extends InstructionNode
         return scalarNode;
     }
 
-    @NotNull
+    @Nullable
     public Object getScalarValue()
     {
         return this.getScalarNode().getScalarValue();

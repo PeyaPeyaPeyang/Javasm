@@ -78,15 +78,15 @@ public class JALUnreachableCodeInspection extends AbstractJALInspection
     private static boolean isJumpInstruction(@NotNull InstructionNode instruction)
     {
         String instructionName = instruction.getInstructionName();
-        return instructionName.equals("goto")
-                || instructionName.equals("return")
-                || instructionName.equals("ireturn")
-                || instructionName.equals("lreturn")
-                || instructionName.equals("freturn")
-                || instructionName.equals("dreturn")
-                || instructionName.equals("areturn")
-                || instructionName.equals("athrow")
-                || instructionName.equals("tableswitch")
-                || instructionName.equals("lookupswitch");
+        return "goto".equals(instructionName)
+                || "return".equals(instructionName)
+                || "ireturn".equals(instructionName)
+                || "lreturn".equals(instructionName)
+                || "freturn".equals(instructionName)
+                || "dreturn".equals(instructionName)
+                || "areturn".equals(instructionName)
+                || "athrow".equals(instructionName)
+                || "tableswitch".equals(instructionName)
+                || "lookupswitch".equals(instructionName);
     }
 }

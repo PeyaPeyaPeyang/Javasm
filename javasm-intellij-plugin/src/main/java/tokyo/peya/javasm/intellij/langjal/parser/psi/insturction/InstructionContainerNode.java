@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InstructionContainerNode extends ANTLRPsiNode
 {
@@ -12,7 +13,7 @@ public class InstructionContainerNode extends ANTLRPsiNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public InstructionNode getInstruction()
     {
         InstructionNode instructionNode = PsiTreeUtil.findChildOfType(this, InstructionNode.class);

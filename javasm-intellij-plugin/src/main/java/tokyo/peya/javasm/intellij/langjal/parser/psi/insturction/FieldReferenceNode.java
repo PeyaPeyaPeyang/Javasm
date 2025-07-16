@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
@@ -15,7 +16,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public FullQualifiedNameNode getFieldOwner()
     {
         FullQualifiedNameNode fullQualifiedNameNode = PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
@@ -25,7 +26,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
         return fullQualifiedNameNode;
     }
 
-    @NotNull
+    @Nullable
     public String getFieldName()
     {
         FieldReferenceNameNode fieldNameNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNameNode.class);
@@ -35,7 +36,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
         return fieldNameNode.getText();
     }
 
-    @NotNull
+    @Nullable
     public TypeDescriptor getType()
     {
         TypeDescriptorNode typeDescriptorNode = PsiTreeUtil.findChildOfType(this, TypeDescriptorNode.class);

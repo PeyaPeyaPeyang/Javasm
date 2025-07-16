@@ -4,6 +4,7 @@ import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
 import tokyo.peya.javasm.langjal.compiler.jvm.InvocationType;
 
@@ -14,7 +15,7 @@ public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public InvocationType getHandleType()
     {
         InvokeDynamicMethodHandleTypeNode handleTypeNode = PsiTreeUtil.findChildOfType(
@@ -22,17 +23,15 @@ public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode
                 InvokeDynamicMethodHandleTypeNode.class
         );
         if (handleTypeNode == null)
-            throw new IllegalStateException("InvokeDynamicMethodHandleTypeNode not found in " + this.getText());
+            return null;
 
         return handleTypeNode.getMethodHandleType();
     }
 
-    @NotNull
+    @Nullable
     public MethodReferenceNode getMethodReference()
     {
         MethodReferenceNode methodReferenceNode = PsiTreeUtil.findChildOfType(this, MethodReferenceNode.class);
-        if (methodReferenceNode == null)
-            throw new IllegalStateException("MethodReferenceNode not found in " + this.getText());
 
         return methodReferenceNode;
     }

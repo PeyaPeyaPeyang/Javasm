@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswit
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
@@ -13,7 +14,7 @@ public class InstructionLookupSwitchNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public InstructionLookupSwitchArgumentNode getTableSwitchArgument()
     {
         InstructionLookupSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(
@@ -25,20 +26,35 @@ public class InstructionLookupSwitchNode extends InstructionNode
         return argumentNode;
     }
 
+    @Nullable
     public LabelNameNode getDefaultBranchLabelName()
     {
-        return this.getTableSwitchArgument().getDefault().getBranchLabel();
+        InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        if (argumentNode == null)
+            return null;
+        InstructionLookupSwitchCaseNode defaultBranch = argumentNode.getDefault();
+        if (defaultBranch == null)
+            return null;
+
+        return defaultBranch.getBranchLabel();
     }
 
+    @NotNull
     public InstructionLookupSwitchCaseNode[] getCaseBranches()
     {
-        return this.getTableSwitchArgument().getBranches();
+        InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        if (argumentNode == null)
+            return null;
+        return argumentNode.getBranches();
     }
 
     @Override
     public int getInstructionSize()
     {
         InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        if (argumentNode == null)
+            return 0;
+
         int npairs = argumentNode.getBranches().length;
 
         int baseOffset = this.getStartInstructionOffset(); // assume you have this

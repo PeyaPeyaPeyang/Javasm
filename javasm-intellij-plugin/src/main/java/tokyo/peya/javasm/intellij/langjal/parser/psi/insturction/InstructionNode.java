@@ -16,12 +16,12 @@ public class InstructionNode extends ANTLRPsiNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public String getInstructionName()
     {
         InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
         if (instructionNameNode == null)
-            return this.getText();
+            return null;
 
         return instructionNameNode.getInstructionName();
     }

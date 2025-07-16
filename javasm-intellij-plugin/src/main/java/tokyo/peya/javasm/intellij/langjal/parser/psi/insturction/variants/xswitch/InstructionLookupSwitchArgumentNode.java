@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswit
 import com.intellij.lang.ASTNode;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class InstructionLookupSwitchArgumentNode extends ANTLRPsiNode
 {
@@ -11,11 +12,13 @@ public class InstructionLookupSwitchArgumentNode extends ANTLRPsiNode
         super(node);
     }
 
+    @NotNull
     public InstructionLookupSwitchCaseNode[] getBranches()
     {
         return this.findChildrenByClass(InstructionLookupSwitchCaseNode.class);
     }
 
+    @Nullable
     public InstructionLookupSwitchCaseNode getDefault()
     {
         InstructionLookupSwitchCaseNode[] cases = this.getBranches();
@@ -23,6 +26,6 @@ public class InstructionLookupSwitchArgumentNode extends ANTLRPsiNode
             if (c.isDefaultCase())
                 return c;
 
-        throw new IllegalStateException("No default case found in lookup switch instruction");
+        return null;
     }
 }

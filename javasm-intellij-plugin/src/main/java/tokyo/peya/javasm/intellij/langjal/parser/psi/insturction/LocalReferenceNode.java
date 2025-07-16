@@ -39,6 +39,12 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
     }
 
     @Override
+    public String getName()
+    {
+        return this.getNameIdentifier() == null ? "": this.getNameIdentifier().getText();
+    }
+
+    @Override
     public PsiElement setName(@NotNull String s) throws IncorrectOperationException
     {
         if (s.isEmpty())

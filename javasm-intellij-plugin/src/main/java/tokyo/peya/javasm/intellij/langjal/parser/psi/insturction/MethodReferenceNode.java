@@ -38,22 +38,22 @@ public class MethodReferenceNode extends InstructionNode
             return TypeDescriptor.className(ownerName);
     }
 
-    @NotNull
+    @Nullable
     public String getMethodName()
     {
         MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (methodNameNode == null)
-            throw new IllegalStateException("MethodReferenceNode must have a MethodNameNode child");
+            return null;
 
         return methodNameNode.getMethodName();
     }
 
-    @NotNull
+    @Nullable
     public MethodDescriptor getMethodDescriptor()
     {
         MethodDescriptorNode methodDescriptorNode = PsiTreeUtil.findChildOfType(this, MethodDescriptorNode.class);
         if (methodDescriptorNode == null)
-            throw new IllegalStateException("MethodReferenceNode must have a MethodDescriptorNode child");
+            return null;
 
         return methodDescriptorNode.getMethodDescriptor();
     }

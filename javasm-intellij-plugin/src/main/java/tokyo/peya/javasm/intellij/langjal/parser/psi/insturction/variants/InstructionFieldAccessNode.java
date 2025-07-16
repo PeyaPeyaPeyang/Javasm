@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
@@ -13,7 +14,7 @@ public class InstructionFieldAccessNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public FieldReferenceNode getFieldReference()
     {
         FieldReferenceNode fieldReferenceNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNode.class);

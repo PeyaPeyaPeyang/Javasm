@@ -5,6 +5,7 @@ import com.intellij.psi.impl.source.tree.LeafPsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
@@ -24,31 +25,28 @@ public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
         return "default".equals(defaultKeyword.getText());
     }
 
+    @Nullable
     public Number getCaseNumber()
     {
         NumberNode numberNode = PsiTreeUtil.findChildOfType(this, NumberNode.class);
         if (numberNode == null)
-            throw new IllegalStateException("Case value is not a number: " + this.getText());
+            return null;
 
         return EvaluatorCommons.toNumber(numberNode.getText());
     }
 
-    @NotNull
+    @Nullable
     public LabelNameNode getBranchLabel()
     {
-        LabelNameNode labelNameNode = PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
-        if (labelNameNode == null)
-            throw new IllegalStateException("Branch label is not found in InstructionLookupSwitchCaseNode: " + this.getText());
-        return labelNameNode;
+        return PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
     }
 
     @Override
     public String toString()
     {
         if (this.isDefaultCase())
-            return "InstructionLookupSwitchCaseNode(default -> " + this.getBranchLabel().getText() + ")";
+            return "InstructionLookupSwitchCaseNode(default -> " + this.getBranchLabel() + ")";
         else
-            return "InstructionLookupSwitchCaseNode(" + this.getCaseNumber() + " -> " + this.getBranchLabel()
-                                                                                            .getText() + ")";
+            return "InstructionLookupSwitchCaseNode(" + this.getCaseNumber() + " -> " + this.getBranchLabel() + ")";
     }
 }

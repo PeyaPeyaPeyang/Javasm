@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invok
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
@@ -15,47 +16,38 @@ public class InstructionInvokeDynamicNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public String getMethodName()
     {
         MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (methodNameNode == null)
-            throw new IllegalStateException("InstructionInvokeDynamic must have a MethodNameNode child");
+            return null;
 
         return methodNameNode.getMethodName();
     }
 
-    @NotNull
+    @Nullable
     public MethodDescriptor getMethodDescriptor()
     {
         MethodDescriptorNode methodDescriptorNode = PsiTreeUtil.findChildOfType(this, MethodDescriptorNode.class);
         if (methodDescriptorNode == null)
-            throw new IllegalStateException("InstructionInvokeDynamic must have a MethodDescriptorNode child");
+            return null;
 
         return methodDescriptorNode.getMethodDescriptor();
     }
 
-    @NotNull
+    @Nullable
     public InvokeDynamicMethodHandleNode getBootstrapMethodHandle()
     {
-        InvokeDynamicMethodHandleNode bootstrapMethodHandleNode = PsiTreeUtil.findChildOfType(
+        return PsiTreeUtil.findChildOfType(
                 this,
                 InvokeDynamicMethodHandleNode.class
         );
-        if (bootstrapMethodHandleNode == null)
-            throw new IllegalStateException("InstructionInvokeDynamic must have a InvokeDynamicMethodHandleNode child");
-
-        return bootstrapMethodHandleNode;
     }
 
     @NotNull
     public InvokeDynamicArgumentNode[] getBootstrapMethodArguments()
     {
-        InvokeDynamicArgumentNode[] arguments = this.findChildrenByClass(InvokeDynamicArgumentNode.class);
-        if (arguments.length == 0)
-            throw new IllegalStateException(
-                    "InstructionInvokeDynamic must have at least one InvokeDynamicArgumentNode child");
-
-        return arguments;
+        return this.findChildrenByClass(InvokeDynamicArgumentNode.class);
     }
 }

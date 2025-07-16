@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
@@ -13,7 +14,7 @@ public class InstructionJumpNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public LabelNameNode getJumpLabel()
     {
         LabelNameNode labelNode = PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
@@ -25,6 +26,6 @@ public class InstructionJumpNode extends InstructionNode
     @Override
     public String toString()
     {
-        return "InstructionNode(" + this.getInstructionName() + " jump=" + this.getJumpLabel().getText() + ")";
+        return "InstructionNode(" + this.getInstructionName() + " jump=" + this.getJumpLabel() + ")";
     }
 }

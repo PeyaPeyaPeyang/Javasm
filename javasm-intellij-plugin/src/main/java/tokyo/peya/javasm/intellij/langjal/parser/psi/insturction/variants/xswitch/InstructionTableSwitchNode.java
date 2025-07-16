@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswit
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
@@ -27,7 +28,10 @@ public class InstructionTableSwitchNode extends InstructionNode
 
     public int getLowIndex()
     {
-        return this.getTableSwitchArgument().getLowIndex().intValue();
+        Number lowIndex = this.getTableSwitchArgument().getLowIndex();
+        if (lowIndex == null)
+            return 0; // Default low index if not specified
+        return lowIndex.intValue();
     }
 
     public LabelNameNode getDefaultBranchLabelName()
@@ -35,6 +39,7 @@ public class InstructionTableSwitchNode extends InstructionNode
         return this.getTableSwitchArgument().getDefaultBranchLabelName();
     }
 
+    @Nullable
     public LabelNameNode[] getBranchLabels()
     {
         return this.getTableSwitchArgument().getBranchLabels();
@@ -44,7 +49,12 @@ public class InstructionTableSwitchNode extends InstructionNode
     public int getInstructionSize()
     {
         InstructionTableSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
-        int lowIndex = argumentNode.getLowIndex().intValue();
+        Number lowIndexValue = argumentNode.getLowIndex();
+        if (lowIndexValue == null)
+        {
+            lowIndexValue = 0; // Default low index if not specified
+        }
+        int lowIndex = lowIndexValue.intValue();
         int highIndex = lowIndex + argumentNode.getBranchLabels().length - 1;
         int nPairs = highIndex - lowIndex + 1;
 

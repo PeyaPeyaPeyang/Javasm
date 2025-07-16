@@ -20,29 +20,20 @@ public class InvokeDynamicArgumentNode extends InstructionNode
         return PsiTreeUtil.findChildOfType(this, JVMScalarNode.class);
     }
 
-    @NotNull
-    public InvokeDynamicMethodHandleTypeNode getMethodHandleTypeArgument()
+    @Nullable InvokeDynamicMethodHandleTypeNode getMethodHandleTypeArgument()
     {
-        InvokeDynamicMethodHandleTypeNode methodHandleTypeNode = PsiTreeUtil.findChildOfType(
+        return PsiTreeUtil.findChildOfType(
                 this,
                 InvokeDynamicMethodHandleTypeNode.class
         );
-        if (methodHandleTypeNode == null)
-            throw new IllegalStateException("InvokeDynamicMethodHandleTypeNode is not found in " + this.getText());
-
-        return methodHandleTypeNode;
     }
 
-    @NotNull
+    @Nullable
     public InvokeDynamicMethodHandleNode getMethodHandleArgument()
     {
-        InvokeDynamicMethodHandleNode methodHandleNode = PsiTreeUtil.findChildOfType(
+        return PsiTreeUtil.findChildOfType(
                 this,
                 InvokeDynamicMethodHandleNode.class
         );
-        if (methodHandleNode == null)
-            throw new IllegalStateException("InvokeDynamicMethodHandleNode is not found in " + this.getText());
-
-        return methodHandleNode;
     }
 }

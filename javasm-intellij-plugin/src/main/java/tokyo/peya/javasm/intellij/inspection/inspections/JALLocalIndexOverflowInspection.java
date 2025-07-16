@@ -42,7 +42,7 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
             return;
 
         LocalReferenceNode localReference = widenable.getLocalReference();
-        if (!localReference.isNumberSpecifier()) // 番号指定のみチェック
+        if (localReference == null || !localReference.isNumberSpecifier()) // 番号指定のみチェック
             return;
 
         PsiElement nameIdentifier = localReference.getNameIdentifier();

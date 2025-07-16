@@ -14,7 +14,7 @@ public class InstructionWidenableNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public LocalReferenceNode getLocalReference()
     {
         LocalReferenceNode localReferenceNode = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
@@ -23,7 +23,7 @@ public class InstructionWidenableNode extends InstructionNode
         return localReferenceNode;
     }
 
-    @NotNull
+    @Nullable
     public String getReferenceName()
     {
         LocalReferenceNode reference = PsiTreeUtil.findChildOfType(this, LocalReferenceNode.class);
