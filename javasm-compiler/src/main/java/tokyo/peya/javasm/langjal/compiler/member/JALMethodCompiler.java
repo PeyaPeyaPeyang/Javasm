@@ -2,11 +2,13 @@ package tokyo.peya.javasm.langjal.compiler.member;
 
 import lombok.Getter;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.MethodNode;
+import tokyo.peya.javasm.langjal.compiler.CompileSettings;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
 import tokyo.peya.javasm.langjal.compiler.analyser.MethodAnalyser;
@@ -24,6 +26,8 @@ public class JALMethodCompiler
 {
     private final FileEvaluatingReporter context;
     private final ClassNode clazz;
+    private final int compileFlags;
+
     private final MethodNode method;
 
     private final InstructionsHolder instructions;
@@ -31,10 +35,12 @@ public class JALMethodCompiler
     private final LocalVariablesHolder locals;
     private final TryCatchDirectivesHolder tryCatchDirectives;
 
-    public JALMethodCompiler(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn)
+    public JALMethodCompiler(@NotNull FileEvaluatingReporter reporter, @NotNull ClassNode cn,
+                             @MagicConstant(valuesFromClass = CompileSettings.class) int compileFlags)
     {
         this.context = reporter;
         this.clazz = cn;
+        this.compileFlags = compileFlags;
         this.method = new MethodNode();
 
         this.labels = new LabelsHolder(this);
@@ -50,7 +56,8 @@ public class JALMethodCompiler
         this.evaluateMethodMetadata(method);
         this.evaluateMethodParameters(method);
         this.evaluateMethodBody(method.methodBody());
-        this.addStackMapTable();
+        if ((this.compileFlags & CompileSettings.COMPUTE_STACK_FRAME_MAP) != 0)
+            this.addStackMapTable();
     }
 
     private void addStackMapTable()
@@ -157,8 +164,7 @@ public class JALMethodCompiler
             if (bodyItem.label() != null)
             {
                 // ラベルを登録
-                String labelName = bodyItem.label().labelName().getText();
-                LabelInfo label = this.labels.register(labelName, instructionCount);
+                LabelInfo label = this.labels.register(bodyItem.label().labelName(), instructionCount);
                 // グローバルスタートになり得る場合は，入れ替える。
                 if (instructionCount == 0 && !globalStartUpdated)
                 {
@@ -196,8 +202,8 @@ public class JALMethodCompiler
             if (endLabel == null)
                 throw new IllegalArgumentException("Try-catch directive must have an end label.");
 
-            LabelInfo tryStartLabel = this.labels.resolve(bodyItem.label().labelName().getText());
-            LabelInfo tryEndLabel = this.labels.resolve(endLabel.getText());
+            LabelInfo tryStartLabel = this.labels.resolve(bodyItem.label().labelName());
+            LabelInfo tryEndLabel = this.labels.resolve(endLabel);
 
             JALParser.TryCatchDirectiveContext directiveContext = bodyItem.tryCatchDirective();
             for (JALParser.TryCatchDirectiveEntryContext entry : directiveContext.tryCatchDirectiveEntry())
@@ -240,9 +246,9 @@ public class JALMethodCompiler
         LabelInfo catchBlockLabel = null;
         LabelInfo finallyBlockLabel = null;
         if (catchLabel != null)
-            catchBlockLabel = this.labels.resolve(catchLabel.getText());
+            catchBlockLabel = this.labels.resolve(catchLabel);
         if (finallyLabel != null)
-            finallyBlockLabel = this.labels.resolve(finallyLabel.getText());
+            finallyBlockLabel = this.labels.resolve(finallyLabel);
 
         // トライキャッチディレクティブを登録
         this.tryCatchDirectives.addTryCatchDirective(
@@ -263,7 +269,7 @@ public class JALMethodCompiler
         {
             if (bodyItem.label() != null)
                 this.labels.setCurrentLabel(
-                        labelAssignation = this.labels.resolve(bodyItem.label().labelName().getText())
+                        labelAssignation = this.labels.resolve(bodyItem.label().labelName())
                 );
 
             for (JALParser.InstructionContext instruction : bodyItem.instruction())

@@ -12,6 +12,8 @@ public record FramePropagation(
         @NotNull
         LabelInfo sender,
         @NotNull
+        AnalysedInstruction[] analysed,
+        @NotNull
         LabelInfo receiver,
         @NotNull
         StackElement[] stack,

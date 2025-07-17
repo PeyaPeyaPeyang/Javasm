@@ -3,6 +3,7 @@ package tokyo.peya.javasm.langjal.compiler;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.ClassWriter;
@@ -20,11 +21,16 @@ public class JALFileCompiler
 {
     private final CompileReporter reporter;
     private final Path outputDir;
+    @MagicConstant(valuesFromClass = CompileSettings.class)
+    private final int settings;
 
-    public JALFileCompiler(@NotNull CompileReporter reporter, @NotNull Path outputDir) throws IOException
+    public JALFileCompiler(@NotNull CompileReporter reporter, @NotNull Path outputDir,
+                           @MagicConstant(valuesFromClass = CompileSettings.class) int settings) throws IOException
     {
+
         this.reporter = reporter;
         this.outputDir = outputDir;
+        this.settings = settings;
 
         // Ensure the output directory exists
         if (!Files.exists(outputDir))
@@ -49,47 +55,23 @@ public class JALFileCompiler
             return null;
         }
 
-        return this.compile(charStream, inputFile);
+        ClassNode compiled = compile(this.reporter, charStream, this.settings, inputFile);
+        this.writeClass(compiled);
+        return compiled;
     }
 
     @NotNull
     public ClassNode compile(@NotNull String sourceCode) throws CompileErrorException
     {
-        return this.compile(CharStreams.fromString(sourceCode), null);
+        CharStream charStream = CharStreams.fromString(sourceCode);
+        ClassNode compiled = compile(this.reporter, charStream, this.settings, null);
+        this.writeClass(compiled);
+        return compiled;
     }
 
-    @NotNull
-    private ClassNode compile(@NotNull CharStream charStream, @Nullable Path sourcePath) throws CompileErrorException
+    private void writeClass(@NotNull ClassNode classNode) throws CompileErrorException
     {
-        JALLexer lexer = new JALLexer(charStream);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        JALParser parser = new JALParser(tokenStream);
-        JALCompileErrorStrategy errorStrategy = new JALCompileErrorStrategy(this.reporter, sourcePath);
-        parser.setErrorHandler(errorStrategy);
-
-        FileEvaluatingReporter fileReporter = new FileEvaluatingReporter(this.reporter, sourcePath);
-        fileReporter.postInfo("Compiling JAL source code");
-
-        JALParser.RootContext tree = parser.root();
-        if (errorStrategy.isError())
-            return new ClassNode();
-
-        JALParser.ClassDefinitionContext classDefinition = tree.classDefinition();
-        if (classDefinition == null)
-            return new ClassNode();
-
-        String fileName = sourcePath == null ? null: sourcePath.getFileName().toString();
-        JALClassCompiler classCompiler = new JALClassCompiler(fileReporter, fileName);
-        ClassNode evaluatedClass = classCompiler.compileClassAST(classDefinition);
-        this.writeClass(fileReporter, evaluatedClass);
-
-        return evaluatedClass;
-    }
-
-    private void writeClass(@NotNull FileEvaluatingReporter reporter,
-                            @NotNull ClassNode classNode) throws CompileErrorException
-    {
-        ClassWriter classWriter = new ClassWriter(/*ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS */ 0);
+        ClassWriter classWriter = new ClassWriter(0);
         try
         {
 
@@ -106,8 +88,6 @@ public class JALFileCompiler
             Files.createDirectories(outputFile.getParent());
 
             Files.write(outputFile, classWriter.toByteArray());
-            reporter.postInfo("Class file written: " + outputFile.toAbsolutePath());
-
             /*
             this.outputConsumer.registerCompiledClass(
                     this.target,
@@ -123,6 +103,44 @@ public class JALFileCompiler
         {
             throw new ClassWritingException(e);
         }
+    }
+
+    @NotNull
+    public static ClassNode compileOnly(@NotNull String sourceCode, @NotNull CompileReporter reporter,
+                                        @MagicConstant(valuesFromClass = CompileSettings.class) int settings
+    ) throws CompileErrorException
+    {
+        CharStream charStream = CharStreams.fromString(sourceCode);
+        return compile(reporter, charStream, settings, null);
+    }
+
+    @NotNull
+    private static ClassNode compile(@NotNull CompileReporter reporter,
+                                     @NotNull CharStream charStream,
+                                     @MagicConstant(valuesFromClass = CompileSettings.class) int settings,
+                                     @Nullable Path sourcePath) throws CompileErrorException
+    {
+        JALLexer lexer = new JALLexer(charStream);
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        JALParser parser = new JALParser(tokenStream);
+        JALCompileErrorStrategy errorStrategy = new JALCompileErrorStrategy(reporter, sourcePath);
+        parser.setErrorHandler(errorStrategy);
+
+        FileEvaluatingReporter fileReporter = new FileEvaluatingReporter(reporter, sourcePath);
+        fileReporter.postInfo("Compiling JAL source code");
+
+        JALParser.RootContext tree = parser.root();
+        if (errorStrategy.isError())
+            return new ClassNode();
+
+        JALParser.ClassDefinitionContext classDefinition = tree.classDefinition();
+        if (classDefinition == null)
+            return new ClassNode();
+
+        String fileName = sourcePath == null ? null: sourcePath.getFileName().toString();
+        JALClassCompiler classCompiler = new JALClassCompiler(fileReporter, fileName, settings);
+
+        return classCompiler.compileClassAST(classDefinition);
     }
 
     private static String toClassName(@NotNull String fullQualifiedName)

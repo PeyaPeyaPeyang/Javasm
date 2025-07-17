@@ -20,7 +20,7 @@ public class InstructionEvaluatorIfACmpOP extends AbstractInstructionEvaluator<J
     {
         int opcode = getOpcode(ctxt);
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = compiler.getLabels().resolve(labelNameContext.getText());
+        LabelInfo label = compiler.getLabels().resolve(labelNameContext);
 
         JumpInsnNode insn = new JumpInsnNode(opcode, label.node());
         return EvaluatedInstruction.of(this, insn);

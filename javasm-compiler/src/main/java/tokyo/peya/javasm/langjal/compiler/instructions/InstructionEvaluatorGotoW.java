@@ -17,7 +17,7 @@ public class InstructionEvaluatorGotoW extends AbstractInstructionEvaluator<JALP
                                                      JALParser.@NotNull JvmInsGotoWContext ctxt)
     {
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = compiler.getLabels().resolve(labelNameContext.getText());
+        LabelInfo label = compiler.getLabels().resolve(labelNameContext);
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.GOTO_W, label.node());
         return EvaluatedInstruction.of(this, insn);

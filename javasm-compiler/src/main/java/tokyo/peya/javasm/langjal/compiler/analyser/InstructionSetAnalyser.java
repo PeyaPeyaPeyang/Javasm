@@ -186,6 +186,7 @@ public class InstructionSetAnalyser
         LocalStackElement[] localsCopy = this.locals.toArray(new LocalStackElement[0]);
         return new FramePropagation(
                 this.label,
+                this.analysedInstructions.toArray(new AnalysedInstruction[0]),
                 toLabel,
                 stackCopy,
                 localsCopy,

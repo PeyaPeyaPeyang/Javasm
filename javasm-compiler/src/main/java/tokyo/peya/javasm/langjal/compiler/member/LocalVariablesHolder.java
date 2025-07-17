@@ -7,6 +7,7 @@ import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
 import tokyo.peya.javasm.langjal.compiler.FileEvaluatingReporter;
 import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.UnknownLocalVariableException;
 import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 
@@ -96,16 +97,6 @@ public class LocalVariablesHolder
     }
 
     @Nullable
-    public LocalVariableInfo resolve(int localIndex)
-    {
-        for (LocalVariableInfo foundLocal : this.locals)
-            if (foundLocal.index() == localIndex && this.isLocalLiving(foundLocal))
-                return foundLocal;
-
-        throw new IllegalArgumentException("Local variable at index " + localIndex + " is not defined.");
-    }
-
-    @Nullable
     public LocalVariableInfo resolveSafe(@NotNull String localName)
     {
         for (LocalVariableInfo localVar : this.locals)
@@ -129,13 +120,21 @@ public class LocalVariablesHolder
             if (localVar != null)
                 return localVar;
 
-            throw new IllegalArgumentException("Local variable with name '" + localName + "' is not defined.");
+            throw new UnknownLocalVariableException(
+                    "Local variable with name '" + localName + "' is not defined.",
+                    localName,
+                    localRef
+            );
         }
         else if (localNumber != null)
         {
             int localIndex = EvaluatorCommons.asInteger(localNumber);
             if (localIndex < 0)
-                throw new IllegalArgumentException("Local variable index cannot be negative: " + localIndex);
+                throw new UnknownLocalVariableException(
+                        "Local variable index cannot be negative: " + localIndex,
+                        String.valueOf(localIndex),
+                        localRef
+                );
 
             // ローカル変数番号を参照
             LocalVariableInfo localVar = this.resolveSafe(localIndex);
@@ -146,10 +145,18 @@ public class LocalVariablesHolder
                 return localVar;
             }
 
-            throw new IllegalArgumentException("Local variable at index " + localIndex + " is not defined.");
+            throw new UnknownLocalVariableException(
+                    "Local variable at index " + localIndex + " is not defined.",
+                    String.valueOf(localIndex),
+                    localRef
+            );
         }
 
-        throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
+        throw new UnknownLocalVariableException(
+                "Invalid local reference: " + localRef.getText(),
+                localRef.getText(),
+                localRef
+        );
     }
 
     @Nullable
@@ -179,8 +186,10 @@ public class LocalVariablesHolder
 
         LocalVariableInfo maxLocalNum = this.locals.stream()
                                                    .max(Comparator.comparingInt(LocalVariableInfo::index))
-                                                   .orElseThrow(() -> new IllegalStateException(
-                                                           "No local variables registered."));
+                                                   .orElseThrow(
+                                                           () -> new IllegalStateException(
+                                                                   "No local variables registered yet.")
+                                                   );
 
         TypeDescriptor lastType = maxLocalNum.type();
         if (lastType.getBaseType().getCategory() == 2)
@@ -208,8 +217,10 @@ public class LocalVariablesHolder
         if (localID == null)
             return registeredLocal;
         else  // 同じ ID で登録されている場合は例外を投げる
-            throw new IllegalArgumentException(
-                    "Local variable with name '" + localID.getText() + "' is already defined as " + registeredLocal.name()
+            throw new UnknownLocalVariableException(
+                    "Local variable with name '" + localID.getText() + "' is already defined as " + registeredLocal.name(),
+                    localID.getText(),
+                    localRef
             );
     }
 
@@ -267,13 +278,21 @@ public class LocalVariablesHolder
         {
             newLocalIndex = EvaluatorCommons.asInteger(localNumber);
             if (newLocalIndex < 0)
-                throw new IllegalArgumentException("Local variable index cannot be negative: " + newLocalIndex);
+                throw new UnknownLocalVariableException(
+                        "Local variable index cannot be negative: " + newLocalIndex,
+                        String.valueOf(newLocalIndex),
+                        localRef
+                );
 
             newLocalName = name == null ? String.format("local%05d", newLocalIndex): name;
 
         }
         else
-            throw new IllegalArgumentException("Invalid local reference: " + localRef.getText());
+            throw new UnknownLocalVariableException(
+                    "Invalid local reference: " + localRef.getText(),
+                    localRef.getText(),
+                    localRef
+            );
 
         // 新しいローカル変数を登録
         registeredLocal = new LocalVariableInfo(
@@ -297,13 +316,17 @@ public class LocalVariablesHolder
                                       @NotNull LabelInfo endLabel)
     {
         if (idx < 0)
-            throw new IllegalArgumentException("Local variable index cannot be negative: " + idx);
+            throw new UnknownLocalVariableException(
+                    "Local variable index cannot be negative: " + idx,
+                    String.valueOf(idx)
+            );
 
         // すでに登録されているか確認
         LocalVariableInfo existingLocal = this.resolveSafe(idx);
         if (existingLocal != null)  // インデックス指定なのに，すでにあるのは問題。
-            throw new IllegalArgumentException(
-                    "Local variable at index " + idx + " is already defined as " + existingLocal.name()
+            throw new UnknownLocalVariableException(
+                    "Local variable at index " + idx + " is already defined as " + existingLocal.name(),
+                    String.valueOf(idx)
             );
 
         String nameToUse = name == null ? String.format("local%05d", idx): name;

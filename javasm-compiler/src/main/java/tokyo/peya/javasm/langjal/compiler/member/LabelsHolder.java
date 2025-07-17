@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodNode;
+import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.javasm.langjal.compiler.exceptions.UnknownLabelException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -48,11 +50,15 @@ public class LabelsHolder
     }
 
     @NotNull
-    public LabelInfo resolve(@NotNull String labelName)
+    public LabelInfo resolve(@NotNull JALParser.LabelNameContext labelName)
     {
-        LabelInfo resolvedLabel = this.resolveSafe(labelName);
+        LabelInfo resolvedLabel = this.resolveSafe(labelName.getText());
         if (resolvedLabel == null)
-            throw new IllegalArgumentException("Label '" + labelName + "' is not defined in this method.");
+            throw new UnknownLabelException(
+                    "Label '" + labelName.getText() + "' is not defined in this method.",
+                    labelName.getText(),
+                    labelName
+            );
 
         return resolvedLabel;  // すでに登録されているラベルを返す
     }
@@ -70,29 +76,24 @@ public class LabelsHolder
     }
 
     @NotNull
-    public LabelInfo register(@NotNull String labelName, int instructionIndex)
+    public LabelInfo register(@NotNull JALParser.LabelNameContext labelName, int instructionIndex)
     {
-        LabelInfo existingLabel = this.resolveSafe(labelName);
+        LabelInfo existingLabel = this.resolveSafe(labelName.getText());
         if (existingLabel != null)
-            throw new IllegalArgumentException(
-                    "Label '" + labelName + "' is already defined at instruction index "
-                            + existingLabel.instructionIndex()
+            throw new UnknownLabelException(
+                    "Label '" + labelName.getText() + "' is already defined in this method.",
+                    labelName.getText(),
+                    labelName
             );
 
         // 新しいラベルを登録
         Label newLabel = new Label();
-        LabelInfo labelInfo = new LabelInfo(labelName, newLabel, instructionIndex);
+        LabelInfo labelInfo = new LabelInfo(labelName.getText(), newLabel, instructionIndex);
         this.labels.add(labelInfo);
         this.labels.sort(Comparator.comparingInt(LabelInfo::instructionIndex));
 
         // メソッドへの登録はあと
         return labelInfo;
-    }
-
-    @NotNull
-    public LabelInfo register(@NotNull String labelName)
-    {
-        return this.register(labelName, this.currentInstructionIndex());
     }
 
     private int currentInstructionIndex()

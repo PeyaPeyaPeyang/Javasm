@@ -55,7 +55,7 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
 
     private LabelNode toLabel(@NotNull JALMethodCompiler evaluator, @NotNull JALParser.LabelNameContext labelName)
     {
-        LabelInfo labelInfo = evaluator.getLabels().resolve(labelName.getText());
+        LabelInfo labelInfo = evaluator.getLabels().resolve(labelName);
         return labelInfo.node();
     }
 

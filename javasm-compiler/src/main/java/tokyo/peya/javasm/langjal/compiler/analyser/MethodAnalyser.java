@@ -211,6 +211,7 @@ public class MethodAnalyser
 
         return new FramePropagation(
                 sender,
+                new AnalysedInstruction[0],
                 receiver,
                 stack,
                 localStack,

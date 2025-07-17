@@ -96,7 +96,7 @@ public class InstructionEvaluateHelperXStore
         if (labelNameContext == null || labelNameContext.ID() == null)
             return null;
 
-        return evaluator.getLabels().resolve(labelNameContext.ID().getText());
+        return evaluator.getLabels().resolve(labelNameContext);
     }
 
     private static String pickLocalName(

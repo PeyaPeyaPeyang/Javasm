@@ -17,7 +17,7 @@ public class InstructionEvaluatorJsrW extends AbstractInstructionEvaluator<JALPa
                                                      JALParser.@NotNull JvmInsJsrWContext ctxt)
     {
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = compiler.getLabels().resolve(labelNameContext.getText());
+        LabelInfo label = compiler.getLabels().resolve(labelNameContext);
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.JSR, label.node());
         return EvaluatedInstruction.of(this, insn);

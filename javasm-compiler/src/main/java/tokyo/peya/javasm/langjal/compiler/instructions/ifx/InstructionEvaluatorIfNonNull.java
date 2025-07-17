@@ -18,7 +18,7 @@ public class InstructionEvaluatorIfNonNull extends AbstractInstructionEvaluator<
                                                      JALParser.@NotNull JvmInsIfNonnullContext ctxt)
     {
         JALParser.LabelNameContext labelNameContext = ctxt.labelName();
-        LabelInfo label = compiler.getLabels().resolve(labelNameContext.getText());
+        LabelInfo label = compiler.getLabels().resolve(labelNameContext);
 
         JumpInsnNode insn = new JumpInsnNode(EOpcodes.IFNONNULL, label.node());
         return EvaluatedInstruction.of(this, insn);

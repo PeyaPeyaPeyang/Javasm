@@ -13,6 +13,7 @@ import org.jetbrains.jps.incremental.ModuleLevelBuilder.ExitCode;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
 import tokyo.peya.javasm.langjal.compiler.CompileReporter;
+import tokyo.peya.javasm.langjal.compiler.CompileSettings;
 import tokyo.peya.javasm.langjal.compiler.JALFileCompiler;
 import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
 
@@ -116,7 +117,7 @@ public class JALDirtyCompiler
     {
         ExitCode exitCode = ExitCode.OK;
         CompileReporter reporter = new JALCompileReporterImpl(this.compileContext);
-        JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir);
+        JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir, CompileSettings.COMPUTE_STACK_FRAME_MAP);
 
         for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries())
         {

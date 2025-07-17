@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.langjal.compiler;
 
+import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
@@ -17,8 +18,10 @@ public class JALClassCompiler
 {
     private final FileEvaluatingReporter reporter;
     private final String fileName;
+    private int compileFlags;
 
-    public JALClassCompiler(@NotNull FileEvaluatingReporter reporter, @Nullable String fileName)
+    public JALClassCompiler(@NotNull FileEvaluatingReporter reporter, @Nullable String fileName,
+                            @MagicConstant(valuesFromClass = CompileSettings.class) int compileFlags)
     {
         this.reporter = reporter;
         this.fileName = fileName;
@@ -43,7 +46,7 @@ public class JALClassCompiler
         {
             if (item.methodDefinition() != null)
             {
-                JALMethodCompiler evaluator = new JALMethodCompiler(this.reporter, classNode);
+                JALMethodCompiler evaluator = new JALMethodCompiler(this.reporter, classNode, this.compileFlags);
                 evaluator.evaluateMethod(item.methodDefinition());
             }
             if (item.fieldDefinition() != null)
