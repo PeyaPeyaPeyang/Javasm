@@ -126,6 +126,13 @@
         <xdebugger.breakpointType implementation="tokyo.peya.javasm.intellij.editor.debugger.JALLineBreakpointType"/>
         <debugger.javaBreakpointHandlerFactory
                 implementation="tokyo.peya.javasm.intellij.editor.debugger.JALBreakPointHandlerFactory"/>
+        <toolWindow factoryClass="tokyo.peya.javasm.intellij.stackviewer.StackFrameInfoToolWindowFactory"
+                    id="JALStackFrameInfo"
+                    anchor="bottom"
+                    secondary="true"
+                    canCloseContents="false"
+                    order="last"
+        />
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

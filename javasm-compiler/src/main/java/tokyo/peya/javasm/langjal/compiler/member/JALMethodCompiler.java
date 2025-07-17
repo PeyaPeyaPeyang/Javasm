@@ -60,7 +60,7 @@ public class JALMethodCompiler
             this.addStackMapTable();
     }
 
-    private void addStackMapTable()
+    public MethodAnalysisResult analyseMethod()
     {
         MethodAnalyser analyser = new MethodAnalyser(
                 this.context,
@@ -70,8 +70,13 @@ public class JALMethodCompiler
                 this.labels,
                 this.locals
         );
+        return analyser.analyse();
+    }
+
+    private void addStackMapTable()
+    {
         // 各命令セットを解析して，スタックフレームを作成する。
-        MethodAnalysisResult analysisResult = analyser.analyse();
+        MethodAnalysisResult analysisResult = this.analyseMethod();
 
         StackFrameMapCreator mapCreator = new StackFrameMapCreator(
                 this.context,

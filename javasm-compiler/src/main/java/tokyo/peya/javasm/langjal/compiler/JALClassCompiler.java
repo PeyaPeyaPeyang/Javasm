@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.langjal.compiler;
 
+import lombok.Getter;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +12,7 @@ import tokyo.peya.javasm.langjal.compiler.member.JALMethodCompiler;
 import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
 import tokyo.peya.javasm.langjal.compiler.utils.RuntimeUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,22 +20,35 @@ public class JALClassCompiler
 {
     private final FileEvaluatingReporter reporter;
     private final String fileName;
-    private int compileFlags;
+    @MagicConstant(valuesFromClass = CompileSettings.class)
+    private final int compileFlags;
+
+    @Getter
+    private final ClassNode compiledClass;
+    private final List<JALMethodCompiler> methodCompilers;
 
     public JALClassCompiler(@NotNull FileEvaluatingReporter reporter, @Nullable String fileName,
                             @MagicConstant(valuesFromClass = CompileSettings.class) int compileFlags)
     {
         this.reporter = reporter;
         this.fileName = fileName;
+        this.compileFlags = compileFlags;
+
+        this.compiledClass = new ClassNode();
+        this.methodCompilers = new ArrayList<>();
     }
 
     public ClassNode compileClassAST(@NotNull JALParser.ClassDefinitionContext clazz) throws CompileErrorException
     {
-        ClassNode classNode = new ClassNode();
-        this.visitClassInformation(classNode, clazz);
-        this.visitClassBody(classNode, clazz.classBody());
+        this.visitClassInformation(this.compiledClass, clazz);
+        this.visitClassBody(this.compiledClass, clazz.classBody());
 
-        return classNode;
+        return this.compiledClass;
+    }
+
+    public List<JALMethodCompiler> getMethodCompilers()
+    {
+        return Collections.unmodifiableList(this.methodCompilers);
     }
 
     private void visitClassBody(@NotNull ClassNode classNode, @Nullable JALParser.ClassBodyContext body)
@@ -48,6 +63,7 @@ public class JALClassCompiler
             {
                 JALMethodCompiler evaluator = new JALMethodCompiler(this.reporter, classNode, this.compileFlags);
                 evaluator.evaluateMethod(item.methodDefinition());
+                this.methodCompilers.add(evaluator);
             }
             if (item.fieldDefinition() != null)
                 visitField(classNode, item.fieldDefinition());

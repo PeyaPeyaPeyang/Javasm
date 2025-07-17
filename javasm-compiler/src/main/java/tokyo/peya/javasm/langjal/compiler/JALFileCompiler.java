@@ -55,7 +55,7 @@ public class JALFileCompiler
             return null;
         }
 
-        ClassNode compiled = compile(this.reporter, charStream, this.settings, inputFile);
+        ClassNode compiled = compile(this.reporter, charStream, this.settings, inputFile).getCompiledClass();
         this.writeClass(compiled);
         return compiled;
     }
@@ -64,7 +64,7 @@ public class JALFileCompiler
     public ClassNode compile(@NotNull String sourceCode) throws CompileErrorException
     {
         CharStream charStream = CharStreams.fromString(sourceCode);
-        ClassNode compiled = compile(this.reporter, charStream, this.settings, null);
+        ClassNode compiled = compile(this.reporter, charStream, this.settings, null).getCompiledClass();
         this.writeClass(compiled);
         return compiled;
     }
@@ -106,7 +106,7 @@ public class JALFileCompiler
     }
 
     @NotNull
-    public static ClassNode compileOnly(@NotNull String sourceCode, @NotNull CompileReporter reporter,
+    public static JALClassCompiler compileOnly(@NotNull String sourceCode, @NotNull CompileReporter reporter,
                                         @MagicConstant(valuesFromClass = CompileSettings.class) int settings
     ) throws CompileErrorException
     {
@@ -114,8 +114,9 @@ public class JALFileCompiler
         return compile(reporter, charStream, settings, null);
     }
 
+
     @NotNull
-    private static ClassNode compile(@NotNull CompileReporter reporter,
+    private static JALClassCompiler compile(@NotNull CompileReporter reporter,
                                      @NotNull CharStream charStream,
                                      @MagicConstant(valuesFromClass = CompileSettings.class) int settings,
                                      @Nullable Path sourcePath) throws CompileErrorException
@@ -131,16 +132,17 @@ public class JALFileCompiler
 
         JALParser.RootContext tree = parser.root();
         if (errorStrategy.isError())
-            return new ClassNode();
+            throw new CompileErrorException("Failed to parse JAL source code", 0, 0, 0);
 
         JALParser.ClassDefinitionContext classDefinition = tree.classDefinition();
         if (classDefinition == null)
-            return new ClassNode();
+            throw new CompileErrorException("No class definition found in JAL source code", 0, 0, 0);
 
         String fileName = sourcePath == null ? null: sourcePath.getFileName().toString();
         JALClassCompiler classCompiler = new JALClassCompiler(fileReporter, fileName, settings);
 
-        return classCompiler.compileClassAST(classDefinition);
+        classCompiler.compileClassAST(classDefinition);
+        return classCompiler;
     }
 
     private static String toClassName(@NotNull String fullQualifiedName)
