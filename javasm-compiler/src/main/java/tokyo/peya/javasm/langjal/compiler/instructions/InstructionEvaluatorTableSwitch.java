@@ -71,7 +71,7 @@ public class InstructionEvaluatorTableSwitch extends AbstractInstructionEvaluato
         List<JALParser.LabelNameContext> branches = args.labelName();
 
         int padding = (int) ((4 - (startOffset + 1) % 4) % 4);
-        int numCases = branches.size();
+        int numCases = branches.size() - 1; // 最後の要素は default ブランチなので除外
 
         return 1               // opcode
                 + padding         // padding to 4-byte boundary

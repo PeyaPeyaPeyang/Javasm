@@ -119,6 +119,7 @@ public class StackFrameInfoComputer
         boolean isFirst = true;
         StackElement[] lastStack = null;
         LocalStackElement[] lastLocals = null;
+        List<Integer> analysedOffsets = new ArrayList<>();
         for (FramePropagation propagation : propagations)
         {
             if (isFirst)
@@ -133,6 +134,10 @@ public class StackFrameInfoComputer
             for (AnalysedInstruction analysedInstruction : analysedInstructions)
             {
                 int instructionOffset = analysedInstruction.instruction().bytecodeOffset();
+                if (analysedOffsets.contains(instructionOffset))
+                    continue;  // 既に処理済みのオフセットはスキップ
+                analysedOffsets.add(instructionOffset);
+
                 StackElement[] stackSnapshot = analysedInstruction.stackSnapshot();
                 LocalStackElement[] localSnapshot = analysedInstruction.localSnapshot();
 
