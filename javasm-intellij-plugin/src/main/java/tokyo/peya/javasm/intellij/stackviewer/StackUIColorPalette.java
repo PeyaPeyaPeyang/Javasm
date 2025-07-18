@@ -10,16 +10,58 @@ import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 @AllArgsConstructor
 public enum StackUIColorPalette
 {
-    TOP("TOP", new JBColor(0x666666, 0xBBBBBB), new JBColor(0xEEEEEE, 0x333333)),
-    INTEGER("Integer", new JBColor(0x004080, 0xBBDDFF), new JBColor(0xCCEEFF, 0x003366)),
-    FLOAT("Float", new JBColor(0x005C99, 0xBBE5FF), new JBColor(0xD6ECFF, 0x336699)),
-    LONG("Long", new JBColor(0x4A2D7D, 0xBFAAF0), new JBColor(0xD9D0FF, 0x4F3F8A)),
-    DOUBLE("Double", new JBColor(0x5C3A92, 0xD2BFFF), new JBColor(0xE1D9FF, 0x5B4FA3)),
-    NULL("Null", new JBColor(0x880000, 0xFF9999), new JBColor(0xFFCCCC, 0x662222)),
-    UNINITIALIZED_THIS("Uninitialized_this", new JBColor(0x7A5E00, 0xFFD700), new JBColor(0xFFF2B0, 0x554400)),
-    OBJECT("Object", new JBColor(0x226622, 0xAADD99), new JBColor(0xD5F5D5, 0x226622)),
-    UNINITIALIZED("Uninitialized", new JBColor(0x8A6A00, 0xFFDD88), new JBColor(0xFFF5CC, 0x664400));
+    TOP(
+            "TOP",
+            new JBColor(0x333333, 0xCCCCCC),
+            new JBColor(0xEEEEEE, 0x222222)
+    ),
 
+    INTEGER(
+            "Integer",
+            new JBColor(0x003366, 0x99CCFF),
+            new JBColor(0xCCE5FF, 0x002244)
+    ),
+
+    FLOAT(
+            "Float",
+            new JBColor(0x007ACC, 0x66BBFF),
+            new JBColor(0xD6F0FF, 0x224466)
+    ),
+
+    LONG(
+            "Long",
+            new JBColor(0x3B2F72, 0xB3A0E6),
+            new JBColor(0xDDD6FF, 0x3A2F72)
+    ),
+
+    DOUBLE(
+            "Double",
+            new JBColor(0x4A3C8A, 0xC2B3FF),
+            new JBColor(0xE2DFFF, 0x4B3D8A)
+    ),
+
+    NULL(
+            "Null",
+            new JBColor(0x990000, 0xFF9999),
+            new JBColor(0xFFCCCC, 0x661111)
+    ),
+
+    UNINITIALIZED_THIS(
+            "Uninitialized_this",
+            new JBColor(0x665500, 0xFFDD44),
+            new JBColor(0xFFF3B0, 0x554400)
+    ),
+
+    OBJECT(
+            "Object",
+            new JBColor(0x0077CC, 0x99DDEE),
+            new JBColor(0xD0F0FF, 0x224466)
+    ),
+    UNINITIALIZED(
+            "Uninitialized",
+            new JBColor(0x886600, 0xFFDD88),
+            new JBColor(0xFFF5CC, 0x664400)
+    );
     private final String displayName;
     private final JBColor color;
     private final JBColor backgroundColor;
