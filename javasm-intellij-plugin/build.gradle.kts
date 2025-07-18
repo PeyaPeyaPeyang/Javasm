@@ -1,4 +1,6 @@
 import org.jetbrains.changelog.markdownToHTML
+import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 
 plugins {
     id("java")
@@ -50,6 +52,18 @@ intellijPlatform {
         })
     }
 
+    pluginVerification {
+        ides {
+            ide(IntelliJPlatformType.IntellijIdeaCommunity, "2025.1")
+            recommended()
+            select {
+                types = listOf(IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.IntellijIdeaUltimate)
+                channels = listOf(ProductRelease.Channel.RELEASE)
+                sinceBuild = "251"
+                untilBuild = "261.*"
+            }
+        }
+    }
 }
 
 tasks {
