@@ -75,6 +75,16 @@ public class JALFile extends PsiFileBase
 
         if (element == null)
             return null;
+        else if (element instanceof InstructionSetNode node)
+        {
+            PsiElement firstChild = node.getFirstChild();
+            if (firstChild instanceof ANTLRPsiNode antlrNode)
+            {
+                firstChild = antlrNode.getFirstChild();
+                if (firstChild instanceof InstructionNode instructionNode)
+                    element = instructionNode;
+            }
+        }
 
         int elementLine = doc.getLineNumber(element.getTextRange().getStartOffset());
         return elementLine == line ? element: null;
