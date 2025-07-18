@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.intellij.stackviewer;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.editor.colors.EditorColorsManager;
 import com.intellij.openapi.editor.colors.EditorFontType;
 import com.intellij.ui.JBColor;
@@ -44,8 +45,6 @@ public class StackFramePanelFactory
     private final JPanel stackPanel;
 
     private final JLabel instructionLabel;
-
-    private boolean frameInfoRetrieved;
 
     public StackFramePanelFactory(@NotNull Runnable onAnalyseButtonClick)
     {
@@ -103,7 +102,6 @@ public class StackFramePanelFactory
         controlPanel.add(this.statusLabel);
         controlPanel.add(Box.createVerticalStrut(4));
         controlPanel.add(bottomPanel);
-        controlPanel.setBackground(JBColor.BLUE);
         return controlPanel;
     }
 
@@ -114,9 +112,8 @@ public class StackFramePanelFactory
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mainPanel.setPreferredSize(new Dimension(400, 300));
 
-
         // 上のパネル
-        this.statusPanel.add(this.controlPanel, BorderLayout.WEST);
+        this.statusPanel.add(this.controlPanel, BorderLayout.SOUTH);
         mainPanel.add(this.statusPanel, BorderLayout.NORTH);
 
         // ====== 中央に上下分割の JBSplitter を配置 ======
@@ -137,19 +134,24 @@ public class StackFramePanelFactory
         return mainPanel;
     }
 
-    public void onEditorChanged()
+    public void onEditorContentChanged()
     {
-        if (!this.frameInfoRetrieved)
-            return;
-
-        this.frameInfoRetrieved = false;
         this.statusPanel.removeAll();
+        this.statusLabel.setText("Content changed. Click 'Analyse' to re-compute stack frames.");
         this.statusPanel.add(this.controlPanel, BorderLayout.CENTER);
+    }
+
+    public void onEditorSelectionChanged()
+    {
+        this.statusPanel.removeAll();
+        this.statusLabel.setText("Welcome! 'Analyse' to compute stack frames.");
+        this.statusPanel.add(this.controlPanel, BorderLayout.CENTER);
+        this.stackPanel.removeAll();
+        this.localsPanel.removeAll();
     }
 
     public void onUpdateCancelled()
     {
-        this.frameInfoRetrieved = false;
         this.statusPanel.removeAll();
         this.statusPanel.add(this.controlPanel, BorderLayout.CENTER);
 
@@ -159,33 +161,46 @@ public class StackFramePanelFactory
         this.analyseButton.setEnabled(true);
     }
 
-    public void updateStackFrameInfo(@NotNull StackUIInstruction instruction,
+    public void onUpdateFinished()
+    {
+        this.statusPanel.removeAll();
+        this.statusPanel.add(this.controlPanel, BorderLayout.CENTER);
+
+        this.instructionLabel.setText("Update finished.");
+        this.progressBar.setIndeterminate(false);
+        this.progressBar.setValue(0);
+        this.analyseButton.setEnabled(true);
+    }
+
+    public void updateStackFrameInfo(boolean isAfterChanged,
+                                     @NotNull StackUIInstruction instruction,
                                      @NotNull StackUIElement[] stack,
                                      @NotNull StackUIElement[] locals)
     {
-        this.frameInfoRetrieved = true;
-        this.instructionLabel.setText(
-                "Selecting: " + instruction.instruction() + " @ " + instruction.bytecodeOffset()
-        );
-        this.statusPanel.removeAll();
-        this.statusPanel.add(this.instructionLabel, BorderLayout.WEST);
-
+        // エディタの内容が変更されている場合は，コントロールパネルを出しっぱにする
+        if (!isAfterChanged)
+        {
+            this.instructionLabel.setText(
+                    "Selecting: " + instruction.instruction() + " @ " + instruction.bytecodeOffset()
+            );
+            this.statusPanel.removeAll();
+            this.statusPanel.add(this.instructionLabel, BorderLayout.WEST);
+        }
         updateStack(this.stackPanel, "Stack", stack);
         updateStack(this.localsPanel, "Locals", locals);
     }
 
     private static JBTextArea createStatusLabel()
     {
-        JBTextArea statusLabel = new JBTextArea("Welcome! 'Analyse' computes stack frames.");
+        JBTextArea statusLabel = new JBTextArea("Welcome! 'Analyse' to compute stack frames.");
         Font editorFont = EditorColorsManager.getInstance().getGlobalScheme().getFont(EditorFontType.PLAIN);
         statusLabel.setFont(editorFont.deriveFont(editorFont.getSize() - 1f));
-        statusLabel.setMaximumSize(new Dimension(Short.MAX_VALUE, 40)); // ← これ追加
 
-        statusLabel.setLineWrap(true);                  // 行の折り返しを有効に
-        statusLabel.setWrapStyleWord(true);             // 単語単位で折り返す
-        statusLabel.setEditable(false);                 // 編集不可
-        statusLabel.setOpaque(false);                   // 背景透過
-        statusLabel.setFocusable(false);                // フォーカスしない
+        statusLabel.setLineWrap(true);
+        statusLabel.setWrapStyleWord(true);
+        statusLabel.setEditable(false);
+        statusLabel.setOpaque(false);
+        statusLabel.setFocusable(false);
         statusLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // 左揃え
 
         return statusLabel;
@@ -296,7 +311,7 @@ public class StackFramePanelFactory
                 int textY = (h + textHeight) / 2 - 2;
 
                 // UNCHANGING では文字は textColor、それ以外は bg（コントラスト考慮）
-                g2.setColor(displayType == StackUIElement.DisplayType.UNCHANGING ? textColor: bg);
+                g2.setColor(textColor);
                 g2.drawString(text, textX, textY);
 
                 if (displayType == StackUIElement.DisplayType.POP)
@@ -361,13 +376,20 @@ public class StackFramePanelFactory
 
         public void setIndeterminate(boolean indeterminate)
         {
-            this.progressBar.setIndeterminate(indeterminate);
-            this.button.setEnabled(!indeterminate);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                this.progressBar.setIndeterminate(indeterminate);
+                this.progressBar.setValue(0);
+                this.button.setEnabled(!indeterminate);
+            });
         }
 
         public void updateStatus(String status)
         {
-            this.statusLabel.setText(status);
+            ApplicationManager.getApplication().invokeLater(() -> {
+                this.statusLabel.setText(status);
+                this.statusLabel.revalidate();
+                this.statusLabel.repaint();
+            });
         }
     }
 }

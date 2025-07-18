@@ -75,7 +75,7 @@ public class MethodAnalyser
         if (this.analysers.isEmpty())
         {
             this.context.postInfo("There are no instruction sets to analyse in method: " + this.method.name);
-            return MethodAnalysisResult.EMPTY;  // インストラクションセットがない場合は空の結果を返す
+            return MethodAnalysisResult.empty(this.method);  // インストラクションセットがない場合は空の結果を返す
         }
         this.printAnalyseTargets();
 
@@ -88,6 +88,7 @@ public class MethodAnalyser
 
         // 分析が完了したら，結果を返答
         return new MethodAnalysisResult(
+                this.method,
                 this.confirmedPropagations.toArray(new FramePropagation[0]),
                 this.maxStackSize,
                 this.maxLocalSize

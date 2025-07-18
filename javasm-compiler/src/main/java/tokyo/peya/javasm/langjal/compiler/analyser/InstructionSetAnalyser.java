@@ -210,7 +210,12 @@ public class InstructionSetAnalyser
             // ジャンプターゲットを計算
             propagations.addAll(this.checkJump(instruction));
 
-            this.analysedInstructions.add(new AnalysedInstruction(instruction, frameDifference));
+            this.analysedInstructions.add(new AnalysedInstruction(
+                    instruction,
+                    frameDifference,
+                    this.stack.toArray(new StackElement[0]),  // この操作を実行した時点でのスナップショット
+                    this.locals.toArray(new LocalStackElement[0])
+            ));
         }
 
         this.context.postInfo(String.format(

@@ -127,11 +127,10 @@
         <debugger.javaBreakpointHandlerFactory
                 implementation="tokyo.peya.javasm.intellij.editor.debugger.JALBreakPointHandlerFactory"/>
         <toolWindow factoryClass="tokyo.peya.javasm.intellij.stackviewer.StackFrameInfoToolWindowFactory"
-                    id="JALStackFrameInfo"
-                    anchor="bottom"
+                    id="Frame and Stack Viewer"
+                    anchor="right"
                     secondary="true"
                     canCloseContents="false"
-                    order="last"
         />
     </extensions>
     <actions>

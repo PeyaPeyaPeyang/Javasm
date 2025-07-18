@@ -4,6 +4,7 @@ import com.intellij.ui.JBColor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
 
 @Getter
 @AllArgsConstructor
@@ -26,6 +27,22 @@ public enum StackUIColorPalette
     public StackUIElement toUIElement(@NotNull StackUIElement.DisplayType displayType)
     {
         return new StackUIElement(this.displayName, displayType, this.backgroundColor, this.color);
+    }
+
+    public static StackUIColorPalette fromStackElementType(@NotNull StackElementType type)
+    {
+        return switch (type)
+        {
+            case INTEGER -> INTEGER;
+            case FLOAT -> FLOAT;
+            case LONG -> LONG;
+            case DOUBLE -> DOUBLE;
+            case NULL -> NULL;
+            case UNINITIALIZED_THIS -> UNINITIALIZED_THIS;
+            case OBJECT -> OBJECT;
+            case UNINITIALIZED -> UNINITIALIZED;
+            default -> TOP; // TOP, NOP, RETURN_ADDRESS
+        };
     }
 
     public static StackUIElement toUIObjectElement(@NotNull StackUIElement.DisplayType displayType,
