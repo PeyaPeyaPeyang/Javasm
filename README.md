@@ -1,8 +1,8 @@
-<center>
+<div align="center">
   <h1>Javasm & JAL</h1>
   <p>If you can't understand it, you don't belong here - Mike Gancarz</p>
-  <img src="docs/logo.svg" alt="Javasm Logo" width="200">
-</center>
+  <img src="https://github.com/PeyaPeyaPeyang/Javasm/blob/main/docs/logo.svg?raw=true" alt="Javasm Logo" width="200">
+</div>
 
 **Javasm** is the IntelliJ IDEA plugin for the **JAL (Java Assembly Language)** — a custom-designed assembly language for the Java Virtual Machine.  
 It makes exploring the internals of the JVM not just possible, but genuinely fun.
@@ -82,7 +82,7 @@ Javasm supercharges your JAL development inside IntelliJ IDEA:
   Full integration with IntelliJ's standard JVM debugger (JDWP).  
   Breakpoints, step-over, step-into — all supported.
 
-- 📊 **Frame and Stack Viewer**  
+- 📊 **Frame and Stack Viewer**   
   A custom tool window that shows:
   - Stack state at the selected instruction
   - Local variable states
