@@ -7,6 +7,7 @@ version = "0.0.1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven("https://www.jetbrains.com/intellij-repository/releases")
     maven("https://www.jetbrains.com/intellij-repository/snapshots")
     maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
@@ -29,7 +30,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.8")
 
     compileOnly("com.google.guava:guava:33.4.8-jre")
-    implementation(project(":javasm-compiler"))
+    implementation("tokyo.peya:langjal:0.0.1")
 }
 
 tasks {

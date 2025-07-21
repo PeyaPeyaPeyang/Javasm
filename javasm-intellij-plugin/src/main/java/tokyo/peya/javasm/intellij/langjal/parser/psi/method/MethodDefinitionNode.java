@@ -15,9 +15,9 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
-import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.langjal.compiler.jvm.AccessLevel;
+import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 
 public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeNode
 {

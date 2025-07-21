@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
+import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 
 import java.util.List;
 import java.util.Objects;
@@ -74,7 +74,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel getAccessLevel()
+    public tokyo.peya.langjal.compiler.jvm.AccessLevel getAccessLevel()
     {
         AccessModifierNode accessLevelNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
         if (accessLevelNode == null)

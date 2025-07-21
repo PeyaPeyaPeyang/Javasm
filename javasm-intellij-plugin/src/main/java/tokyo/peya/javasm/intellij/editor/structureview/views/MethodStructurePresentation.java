@@ -5,8 +5,8 @@ import javax.swing.Icon;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.editor.structureview.JALStructureViewItemPresentationBase;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.langjal.compiler.jvm.AccessAttribute;
+import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 
 public class MethodStructurePresentation extends JALStructureViewItemPresentationBase
 {

@@ -9,7 +9,7 @@ import tokyo.peya.javasm.intellij.inspection.JALPsiElementVisitor;
 import tokyo.peya.javasm.intellij.inspection.quickfixes.JALReplaceInstructionQuickFix;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
 public class JALShortenableVariableOperationInspection extends AbstractJALInspection
 {

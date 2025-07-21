@@ -14,7 +14,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethod
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierMethodInitNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionParseContributor;
-import tokyo.peya.javasm.langjal.compiler.JALLexer;
+import tokyo.peya.langjal.compiler.JALLexer;
 
 public class JALASTFactory extends DefaultASTFactoryImpl
 {

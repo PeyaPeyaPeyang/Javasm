@@ -20,8 +20,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.Instru
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InstructionInvokeDynamicNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchNode;
-import tokyo.peya.javasm.langjal.compiler.JALLexer;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.langjal.compiler.JALLexer;
+import tokyo.peya.langjal.compiler.JALParser;
 
 public class InstructionParseContributor
 {

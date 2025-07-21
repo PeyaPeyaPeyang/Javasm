@@ -4,7 +4,7 @@
   <img src="https://github.com/PeyaPeyaPeyang/Javasm/blob/main/docs/logo.svg?raw=true" alt="Javasm Logo" width="200">
 </div>
 
-**Javasm** is the IntelliJ IDEA plugin for the **JAL (Java Assembly Language)** — a custom-designed assembly language for the Java Virtual Machine.  
+Javasm is the IntelliJ IDEA plugin for the **[JAL \(Java Assembly Language)](https://github.com/PeyaPeyaPeyang/JAL)** — a custom-designed assembly language for the Java Virtual Machine.  
 It makes exploring the internals of the JVM not just possible, but genuinely fun.
 
 ---

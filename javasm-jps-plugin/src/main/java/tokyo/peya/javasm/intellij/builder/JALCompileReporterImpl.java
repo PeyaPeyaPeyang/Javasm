@@ -7,8 +7,8 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.jps.incremental.CompileContext;
 import org.jetbrains.jps.incremental.messages.BuildMessage;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import tokyo.peya.javasm.langjal.compiler.CompileReporter;
-import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
+import tokyo.peya.langjal.compiler.CompileReporter;
+import tokyo.peya.langjal.compiler.exceptions.CompileErrorException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

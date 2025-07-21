@@ -3,7 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser;
 import com.intellij.psi.tree.TokenSet;
 import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
-import tokyo.peya.javasm.langjal.compiler.JALLexer;
+import tokyo.peya.langjal.compiler.JALLexer;
 
 public interface JALTokens
 {

@@ -3,7 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
 public class InstructionNameNode extends ANTLRPsiLeafNode
 {

@@ -13,7 +13,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWideNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWidenableNode;
-import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
+import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
 public class JALLocalIndexOverflowInspection extends AbstractJALInspection
 {

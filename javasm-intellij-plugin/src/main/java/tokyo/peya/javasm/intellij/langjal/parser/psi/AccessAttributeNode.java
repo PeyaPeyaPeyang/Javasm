@@ -4,7 +4,7 @@ import com.intellij.lang.ASTNode;
 import lombok.Getter;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
+import tokyo.peya.langjal.compiler.jvm.AccessAttribute;
 
 @Getter
 public class AccessAttributeNode extends ANTLRPsiNode

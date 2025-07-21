@@ -4,7 +4,7 @@ import com.intellij.lang.ASTNode;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.langjal.compiler.jvm.InvocationType;
+import tokyo.peya.langjal.compiler.jvm.InvocationType;
 
 public class InvokeDynamicMethodHandleTypeNode extends ANTLRPsiNode
 {

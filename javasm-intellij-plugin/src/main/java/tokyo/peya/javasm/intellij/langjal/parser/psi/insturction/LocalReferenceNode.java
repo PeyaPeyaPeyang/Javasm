@@ -10,7 +10,7 @@ import org.antlr.intellij.adaptor.psi.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
-import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
+import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
 public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
 {

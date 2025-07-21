@@ -11,8 +11,8 @@ import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
-import tokyo.peya.javasm.langjal.compiler.JALLexer;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.langjal.compiler.JALLexer;
+import tokyo.peya.langjal.compiler.JALParser;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 

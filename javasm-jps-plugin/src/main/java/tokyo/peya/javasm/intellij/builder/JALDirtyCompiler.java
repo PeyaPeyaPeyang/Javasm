@@ -12,10 +12,10 @@ import org.jetbrains.jps.incremental.ModuleLevelBuilder;
 import org.jetbrains.jps.incremental.ModuleLevelBuilder.ExitCode;
 import org.jetbrains.jps.incremental.ProjectBuildException;
 import org.jetbrains.jps.incremental.messages.CompilerMessage;
-import tokyo.peya.javasm.langjal.compiler.CompileReporter;
-import tokyo.peya.javasm.langjal.compiler.CompileSettings;
-import tokyo.peya.javasm.langjal.compiler.JALFileCompiler;
-import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
+import tokyo.peya.langjal.compiler.CompileReporter;
+import tokyo.peya.langjal.compiler.CompileSettings;
+import tokyo.peya.langjal.compiler.JALFileCompiler;
+import tokyo.peya.langjal.compiler.exceptions.CompileErrorException;
 
 import java.io.File;
 import java.io.IOException;

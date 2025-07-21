@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 
 public class InstructionInvokeDynamicNode extends InstructionNode
 {

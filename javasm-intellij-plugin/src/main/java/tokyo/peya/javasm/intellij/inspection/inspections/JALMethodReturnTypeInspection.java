@@ -9,9 +9,9 @@ import tokyo.peya.javasm.intellij.inspection.AbstractJALInspection;
 import tokyo.peya.javasm.intellij.inspection.JALPsiElementVisitor;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.EOpcodes;
-import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
-import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.langjal.compiler.jvm.EOpcodes;
+import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
 public class JALMethodReturnTypeInspection extends AbstractJALInspection
 {

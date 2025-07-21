@@ -13,6 +13,7 @@ version = "0.0.1"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     intellijPlatform {
         defaultRepositories()
     }
@@ -37,7 +38,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.8")
 
     implementation(project(":javasm-jps-plugin"))
-    implementation(project(":javasm-compiler"))
+    implementation("tokyo.peya:langjal:0.0.1")
     implementation("org.antlr:antlr4-intellij-adaptor:0.1")
 }
 

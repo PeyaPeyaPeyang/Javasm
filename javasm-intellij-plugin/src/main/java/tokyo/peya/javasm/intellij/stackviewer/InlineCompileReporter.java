@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.langjal.compiler.CompileReporter;
-import tokyo.peya.javasm.langjal.compiler.exceptions.CompileErrorException;
+import tokyo.peya.langjal.compiler.CompileReporter;
+import tokyo.peya.langjal.compiler.exceptions.CompileErrorException;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;

@@ -3,8 +3,8 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.method;
 import com.intellij.lang.ASTNode;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
-import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
 public class MethodDescriptorNode extends ANTLRPsiNode
 {

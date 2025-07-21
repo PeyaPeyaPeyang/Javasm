@@ -16,7 +16,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.DescriptorReader;
+import tokyo.peya.langjal.compiler.jvm.DescriptorReader;
 
 public class JSLSyntaxHighlightAnnotator implements Annotator
 {

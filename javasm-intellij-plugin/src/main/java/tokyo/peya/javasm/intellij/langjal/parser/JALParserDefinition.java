@@ -59,8 +59,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.TryCatchDirectiveEntryNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.TryCatchDirectiveNode;
-import tokyo.peya.javasm.langjal.compiler.JALLexer;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.langjal.compiler.JALLexer;
+import tokyo.peya.langjal.compiler.JALParser;
 
 import java.util.List;
 

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LabelNameReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LocalReference;
-import tokyo.peya.javasm.langjal.compiler.JALParser;
+import tokyo.peya.langjal.compiler.JALParser;
 
 public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
 {

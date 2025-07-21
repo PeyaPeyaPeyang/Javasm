@@ -8,8 +8,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNam
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.MethodDescriptor;
-import tokyo.peya.javasm.langjal.compiler.jvm.TypeDescriptor;
+import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
+import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
 public class MethodReferenceNode extends InstructionNode
 {

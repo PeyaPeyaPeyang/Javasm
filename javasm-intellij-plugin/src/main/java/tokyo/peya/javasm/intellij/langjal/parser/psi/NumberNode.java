@@ -3,7 +3,7 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.utils.EvaluatorCommons;
+import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
 public class NumberNode extends ANTLRPsiLeafNode
 {

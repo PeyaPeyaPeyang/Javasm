@@ -14,9 +14,9 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttribute;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessAttributeSet;
-import tokyo.peya.javasm.langjal.compiler.jvm.AccessLevel;
+import tokyo.peya.langjal.compiler.jvm.AccessAttribute;
+import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
+import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;

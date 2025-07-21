@@ -4,7 +4,7 @@ import com.intellij.ui.JBColor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.langjal.compiler.analyser.stack.StackElementType;
+import tokyo.peya.langjal.analyser.stack.StackElementType;
 
 @Getter
 @AllArgsConstructor
