@@ -19,6 +19,8 @@ jobs:
           distribution: zulu
           java-version: 24
       - uses: gradle/actions/setup-gradle@v4
+      - name: Free gradlew
+        run: chmod +x ./gradlew
       - name: Build plugin
         run: ./gradlew buildPlugin
   verify:
@@ -46,6 +48,8 @@ jobs:
           path: ~/.pluginVerifier/ides
           key: plugin-verifier-${{ hashFiles('build/listProductsReleases.txt') }}
 
+      - name: Free gradlew
+        run: chmod +x ./gradlew
       - name: Run verification
         run: ./gradlew verifyPlugin -Dplugin.verifier.home.dir=${{ needs.build.outputs.pluginVerifierHomeDir }}
 
