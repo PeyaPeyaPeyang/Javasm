@@ -80,14 +80,20 @@ intellijPlatform {
         }
     }
 
-    signing {
-        val projectRoot = project.rootDir.toPath()
-        certificateChain.set(Files.readString(projectRoot.resolve("certificates/chain.crt")))
-        privateKey.set(Files.readString(projectRoot.resolve("certificates/private.pem")))
-        password.set(Files.readString(projectRoot.resolve("certificates/password.txt")))
+
+    val projectRoot = project.rootDir.toPath()
+    val chainPath = projectRoot.resolve("certificates/chain.crt")
+    val keyPath = projectRoot.resolve("certificates/private.pem")
+    val passPath = projectRoot.resolve("certificates/password.txt")
+
+    if (Files.exists(chainPath) && Files.exists(keyPath) && Files.exists(passPath)) {
+        signing {
+            certificateChain.set(Files.readString(chainPath))
+            privateKey.set(Files.readString(keyPath))
+            password.set(Files.readString(passPath))
+        }
     }
 }
-
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
