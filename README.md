@@ -92,15 +92,17 @@ Javasm supercharges your JAL development inside IntelliJ IDEA:
 
 ## 📦 Installation
 
-Install **Javasm** from the IntelliJ Plugin Marketplace.
+Install **Javasm** from the [IntelliJ Plugin Marketplace](https://plugins.jetbrains.com/plugin/27944-javasm).
+
+This plugin contains JAL implementation V1.0.0!
 
 No manual build needed — just plug and play.
 
 ---
 
-## 📄 License
+## 📄 Licence
 
-MIT License. See the [LICENCE](./LICENCE) file for details.
+MIT Licence. See the [LICENCE](./LICENCE) file for details.
 
 ---
 
