@@ -14,46 +14,54 @@ public class InstructionTableSwitchNode extends InstructionNode
         super(node);
     }
 
-    @NotNull
+    @Nullable
     public InstructionTableSwitchArgumentNode getTableSwitchArgument()
     {
-        InstructionTableSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(
+        return PsiTreeUtil.findChildOfType(
                 this,
                 InstructionTableSwitchArgumentNode.class
         );
-        if (argumentNode == null)
-            throw new IllegalStateException("Table switch instruction must have an argument node.");
-        return argumentNode;
     }
 
     public int getLowIndex()
     {
-        Number lowIndex = this.getTableSwitchArgument().getLowIndex();
+        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+        if (arg == null)
+            return 0;
+        Number lowIndex = arg.getLowIndex();
         if (lowIndex == null)
             return 0; // Default low index if not specified
         return lowIndex.intValue();
     }
 
+    @Nullable
     public LabelNameNode getDefaultBranchLabelName()
     {
-        return this.getTableSwitchArgument().getDefaultBranchLabelName();
+        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+        if (arg == null)
+            return null;
+        return arg.getDefaultBranchLabelName();
     }
 
     @Nullable
     public LabelNameNode[] getBranchLabels()
     {
-        return this.getTableSwitchArgument().getBranchLabels();
+        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+        if (arg == null)
+            return null;
+        return arg.getBranchLabels();
     }
 
     @Override
     public int getInstructionSize()
     {
         InstructionTableSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
+        if  (argumentNode == null)
+            return 0;
+
         Number lowIndexValue = argumentNode.getLowIndex();
         if (lowIndexValue == null)
-        {
             lowIndexValue = 0; // Default low index if not specified
-        }
         int lowIndex = lowIndexValue.intValue();
         int highIndex = lowIndex + argumentNode.getBranchLabels().length - 1;
         int nPairs = highIndex - lowIndex + 1;

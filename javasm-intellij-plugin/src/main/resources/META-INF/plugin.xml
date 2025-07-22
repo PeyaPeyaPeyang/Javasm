@@ -132,6 +132,7 @@
                     secondary="true"
                     canCloseContents="false"
         />
+        <lang.foldingBuilder language="JAL" implementationClass="tokyo.peya.javasm.intellij.editor.JALFoldingBuilder"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"

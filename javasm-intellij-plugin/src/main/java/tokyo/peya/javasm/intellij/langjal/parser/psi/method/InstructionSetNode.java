@@ -31,6 +31,15 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
         return PsiTreeUtil.findChildOfType(this, LabelNode.class);
     }
 
+    @Override
+    public @Nullable PsiElement getNameIdentifier()
+    {
+        LabelNode label = this.getLabel();
+        if (label == null)
+            return null;
+        return label.getLabelNameNode();
+    }
+
     @Nullable
     public TryCatchDirectiveNode getTryCatchDirective()
     {

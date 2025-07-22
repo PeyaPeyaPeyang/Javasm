@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 import tokyo.peya.langjal.compiler.jvm.AccessLevel;
@@ -32,13 +33,16 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
         return SymtabUtils.resolve(this, JALLanguage.INSTANCE, element, "/root/classDefinition/className");
     }
 
-    @NotNull
+    @Nullable
     public ClassNameNode getClassNameNode()
     {
-        ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
-        if (classNameNode == null)
-            throw new IllegalStateException("Class name node not found in " + this.getText());
-        return classNameNode;
+        return PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
+    }
+
+    @Nullable
+    public ClassBodyNode getClassBodyNode()
+    {
+        return PsiTreeUtil.findChildOfType(this, ClassBodyNode.class);
     }
 
     @NotNull
@@ -74,7 +78,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public tokyo.peya.langjal.compiler.jvm.AccessLevel getAccessLevel()
+    public AccessLevel getAccessLevel()
     {
         AccessModifierNode accessLevelNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
         if (accessLevelNode == null)
@@ -91,6 +95,12 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
             return AccessAttributeSet.EMPTY;
 
         return accessModifierNode.getAccessAttributes();
+    }
+
+    @Override
+    public @Nullable PsiElement getNameIdentifier()
+    {
+        return PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
     }
 
     @NotNull

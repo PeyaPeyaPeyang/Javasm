@@ -15,6 +15,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
@@ -24,6 +25,18 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     public MethodDefinitionNode(@NotNull ASTNode node, @NotNull IElementType idElementType)
     {
         super(node, idElementType);
+    }
+
+    @Nullable
+    public MethodBodyNode getMethodBody()
+    {
+        return PsiTreeUtil.findChildOfType(this, MethodBodyNode.class);
+    }
+
+    @Override
+    public @Nullable PsiElement getNameIdentifier()
+    {
+        return PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
     }
 
     @Override

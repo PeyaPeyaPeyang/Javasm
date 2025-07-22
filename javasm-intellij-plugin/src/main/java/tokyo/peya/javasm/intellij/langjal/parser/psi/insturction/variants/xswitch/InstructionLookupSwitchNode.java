@@ -17,13 +17,10 @@ public class InstructionLookupSwitchNode extends InstructionNode
     @Nullable
     public InstructionLookupSwitchArgumentNode getTableSwitchArgument()
     {
-        InstructionLookupSwitchArgumentNode argumentNode = PsiTreeUtil.findChildOfType(
+        return PsiTreeUtil.findChildOfType(
                 this,
                 InstructionLookupSwitchArgumentNode.class
         );
-        if (argumentNode == null)
-            throw new IllegalStateException("Lookup switch instruction must have an argument node.");
-        return argumentNode;
     }
 
     @Nullable

@@ -5,6 +5,7 @@ import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 
 public class JALPsiElementVisitorRecursive extends PsiRecursiveElementWalkingVisitor
@@ -21,6 +22,7 @@ public class JALPsiElementVisitorRecursive extends PsiRecursiveElementWalkingVis
         {
             case ClassDefinitionNode classDefinitionNode -> this.visitClass(classDefinitionNode);
             case MethodDefinitionNode methodDefinitionNode -> this.visitMethod(methodDefinitionNode);
+            case InstructionSetNode instructionSetNode -> this.visitInstructionSet(instructionSetNode);
             case InstructionNode instructionNode -> this.visitInstruction(instructionNode);
             default ->
             {
@@ -38,6 +40,10 @@ public class JALPsiElementVisitorRecursive extends PsiRecursiveElementWalkingVis
     }
 
     protected void visitMethod(@NotNull MethodDefinitionNode node)
+    {
+    }
+
+    protected void visitInstructionSet(@NotNull InstructionSetNode node)
     {
     }
 
