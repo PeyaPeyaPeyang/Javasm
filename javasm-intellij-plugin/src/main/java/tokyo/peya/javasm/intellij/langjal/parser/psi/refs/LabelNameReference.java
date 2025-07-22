@@ -6,6 +6,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.JALElementReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
 public class LabelNameReference extends JALElementReference
 {
@@ -17,6 +18,6 @@ public class LabelNameReference extends JALElementReference
     @Override
     public boolean isSubtree(PsiElement psiElement)
     {
-        return psiElement instanceof LabelNode || psiElement instanceof LabelNameNode;
+        return psiElement instanceof LabelNode || psiElement instanceof LabelNameNode || psiElement instanceof InstructionSetNode;
     }
 }
