@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "tokyo.peya.plugin"
-version = "0.0.1"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -51,13 +51,7 @@ fun extractLatestChangeNotes(): String {
     val regex = Regex("## \\[.*?] - .*?\n(.*?)(?=\n## |\\Z)", RegexOption.DOT_MATCHES_ALL)
     val match = regex.find(content)
 
-    return match?.groups?.get(1)?.value
-        ?.lines()
-        ?.joinToString("<br>") { it.trim() }
-        ?.replace("<", "&lt;")
-        ?.replace(">", "&gt;")
-        ?.trim()
-        ?: "No changelog available."
+    return match?.groups?.get(1)?.value ?: "No changelog available."
 }
 
 
@@ -84,6 +78,13 @@ intellijPlatform {
                 untilBuild = "261.*"
             }
         }
+    }
+
+    signing {
+        val projectRoot = project.rootDir.toPath()
+        certificateChain.set(Files.readString(projectRoot.resolve("certificates/chain.crt")))
+        privateKey.set(Files.readString(projectRoot.resolve("certificates/private.pem")))
+        password.set(Files.readString(projectRoot.resolve("certificates/password.txt")))
     }
 }
 
