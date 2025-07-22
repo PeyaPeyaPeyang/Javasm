@@ -8,11 +8,16 @@ import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.ANTLRLexerAdaptor;
 import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
+import org.antlr.v4.runtime.Vocabulary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
+import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.langjal.compiler.JALLexer;
 import tokyo.peya.langjal.compiler.JALParser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
@@ -110,7 +115,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
 
     static
     {
-        initialise();
+        JALParserDefinition.initStatic();
     }
 
     @Override
@@ -392,15 +397,5 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             return EMPTY;
         else
             return new TextAttributesKey[]{key};
-    }
-
-    @SuppressWarnings("deprecation")
-    private static void initialise()
-    {
-        PSIElementTypeFactory.defineLanguageIElementTypes(
-                JALLanguage.INSTANCE,
-                JALParser.tokenNames,
-                JALParser.ruleNames
-        );
     }
 }

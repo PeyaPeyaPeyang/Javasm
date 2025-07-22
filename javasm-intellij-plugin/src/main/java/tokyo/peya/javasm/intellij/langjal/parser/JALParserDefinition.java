@@ -18,6 +18,7 @@ import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.antlr.intellij.adaptor.parser.ANTLRParserAdaptor;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.Vocabulary;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
@@ -62,6 +63,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.TryCatchDirectiveNod
 import tokyo.peya.langjal.compiler.JALLexer;
 import tokyo.peya.langjal.compiler.JALParser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class JALParserDefinition implements ParserDefinition
@@ -206,15 +208,25 @@ public final class JALParserDefinition implements ParserDefinition
         return new JALFile(fileViewProvider);
     }
 
-    @SuppressWarnings("deprecation")
-    private static void initStatic()
+    public static void initStatic()
     {
         if (ID != null)
             return;
 
+        List<String> tokens = new ArrayList<>();
+        Vocabulary vocab = JALParser.VOCABULARY;
+        for(int i = 0; i < vocab.getMaxTokenType(); ++i)
+        {
+            String name = vocab.getLiteralName(i);
+            if (name == null)
+                name = vocab.getSymbolicName(i);
+            if (name == null)
+                name = "<invalid>";
+            tokens.add(name);
+        }
         PSIElementTypeFactory.defineLanguageIElementTypes(
                 JALLanguage.INSTANCE,
-                JALParser.tokenNames,
+                tokens.toArray(new String[0]),
                 JALParser.ruleNames
         );
         List<TokenIElementType> tokenIElementTypes =
