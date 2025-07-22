@@ -1,6 +1,7 @@
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.models.ProductRelease
+import java.nio.file.Files
 
 plugins {
     id("java")
@@ -42,6 +43,24 @@ dependencies {
     implementation("org.antlr:antlr4-intellij-adaptor:0.1")
 }
 
+fun extractLatestChangeNotes(): String {
+    val projectRoot = project.rootDir.toPath()
+    val changelogPath = projectRoot.resolve("CHANGELOG.md")
+    val content = Files.readString(changelogPath)
+
+    val regex = Regex("## \\[.*?] - .*?\n(.*?)(?=\n## |\\Z)", RegexOption.DOT_MATCHES_ALL)
+    val match = regex.find(content)
+
+    return match?.groups?.get(1)?.value
+        ?.lines()
+        ?.joinToString("<br>") { it.trim() }
+        ?.replace("<", "&lt;")
+        ?.replace(">", "&gt;")
+        ?.trim()
+        ?: "No changelog available."
+}
+
+
 intellijPlatform {
     pluginConfiguration {
         ideaVersion {
@@ -51,6 +70,7 @@ intellijPlatform {
         description.set(providers.fileContents(layout.projectDirectory.file("../README.md")).asText.map {
             markdownToHTML(it)
         })
+        changeNotes.set(extractLatestChangeNotes())
     }
 
     pluginVerification {
