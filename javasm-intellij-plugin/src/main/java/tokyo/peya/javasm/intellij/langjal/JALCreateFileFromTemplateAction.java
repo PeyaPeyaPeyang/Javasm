@@ -14,7 +14,7 @@ public class JALCreateFileFromTemplateAction extends CreateFileFromTemplateActio
 {
     public JALCreateFileFromTemplateAction()
     {
-        super("JAL Class", "Create a new JAL class file", Assets.JAL_ICON);
+        super("JAL Class", "Create a new JAL class file", Assets.JAL);
     }
 
     @Override

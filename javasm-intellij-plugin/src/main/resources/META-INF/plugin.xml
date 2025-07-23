@@ -128,6 +128,7 @@
                 implementation="tokyo.peya.javasm.intellij.editor.debugger.JALBreakPointHandlerFactory"/>
         <toolWindow factoryClass="tokyo.peya.javasm.intellij.stackviewer.StackFrameInfoToolWindowFactory"
                     id="Frame and Stack Viewer"
+                    icon="/assets/icons/stackViewer.svg"
                     anchor="right"
                     secondary="true"
                     canCloseContents="false"

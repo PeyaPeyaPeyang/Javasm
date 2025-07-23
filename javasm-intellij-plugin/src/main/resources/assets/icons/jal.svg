@@ -1,4 +1,4 @@
-<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+<svg width="16" height="16" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
     <defs>
         <mask id="cutout">
             <!-- 白が見える部分、黒が透明になる部分 -->
@@ -17,6 +17,6 @@
 
     <!-- テキスト -->
     <text x="62" y="110" font-size="25" text-anchor="middle" fill="#cc9900" font-family="monospace" font-weight="bold">
-        .jasm
+        .jal
     </text>
 </svg>

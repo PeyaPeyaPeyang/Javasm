@@ -73,7 +73,7 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
     @Override
     public @Nullable Icon getIcon()
     {
-        return Assets.JAL_ICON;
+        return Assets.JAL;
     }
 
     @Override

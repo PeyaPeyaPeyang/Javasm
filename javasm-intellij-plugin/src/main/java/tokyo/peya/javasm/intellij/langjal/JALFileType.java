@@ -13,7 +13,7 @@ public class JALFileType extends LanguageFileType
     private final String name = "Java Assembly Language File";
     private final String description = "A file type for Java Assembly Language (JAL) files.";
     private final String defaultExtension = "assets";
-    private final Icon icon = Assets.JAL_ICON;
+    private final Icon icon = Assets.JAL;
 
     protected JALFileType()
     {

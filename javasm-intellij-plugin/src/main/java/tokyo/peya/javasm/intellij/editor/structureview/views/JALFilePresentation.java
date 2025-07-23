@@ -16,6 +16,6 @@ public class JALFilePresentation extends JALStructureViewItemPresentationBase
     @Override
     public @Nullable Icon getIcon(boolean b)
     {
-        return Assets.JAL_ICON;
+        return Assets.JAL;
     }
 }

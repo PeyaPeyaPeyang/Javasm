@@ -4,11 +4,8 @@ import com.intellij.openapi.util.IconLoader;
 import javax.swing.Icon;
 import javax.swing.UIManager;
 
-public class Assets
+public interface Assets
 {
-    public static final Icon JAL_ICON =
-            (UIManager.getLookAndFeelDefaults() == null || UIManager.getLookAndFeelDefaults()
-                                                                    .getBoolean("ui.theme.isd.dark"))
-                    ? IconLoader.getIcon("/assets/icons/jal_dark.png", Assets.class):
-                    IconLoader.getIcon("/assets/icons/jal.png", Assets.class);
+    Icon JAL = IconLoader.getIcon("/assets/icons/jal.svg", Assets.class);
+    Icon STACK_VIEWER = IconLoader.getIcon("/assets/icons/stackViewer.svg", Assets.class);
 }
