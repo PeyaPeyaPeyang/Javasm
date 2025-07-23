@@ -215,7 +215,7 @@ public final class JALParserDefinition implements ParserDefinition
 
         List<String> tokens = new ArrayList<>();
         Vocabulary vocab = JALParser.VOCABULARY;
-        for(int i = 0; i < vocab.getMaxTokenType(); ++i)
+        for(int i = 0; i < vocab.getMaxTokenType() + 1; ++i)
         {
             String name = vocab.getLiteralName(i);
             if (name == null)
