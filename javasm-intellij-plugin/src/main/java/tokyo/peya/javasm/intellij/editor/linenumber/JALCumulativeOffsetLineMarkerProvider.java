@@ -25,7 +25,16 @@ public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
         if (instr == null)
             return null;
 
-        int cumulative = instr.getStartInstructionOffset();
+        int cumulative;
+        try
+        {
+            cumulative = instr.getStartInstructionOffset();
+        }
+        catch (IllegalStateException e)
+        {
+            // コードが不完全だったり構文エラーのときにおきる。
+            return null;
+        }
 
         Editor editor = FileEditorManager.getInstance(element.getProject()).getSelectedTextEditor();
         if (editor == null)

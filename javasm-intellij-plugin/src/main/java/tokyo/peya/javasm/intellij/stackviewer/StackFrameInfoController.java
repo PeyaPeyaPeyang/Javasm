@@ -185,7 +185,16 @@ public final class StackFrameInfoController
 
         String methodName = methodNode.getMethodName();
         String methodDesc = methodNode.getMethodDescriptor().getDescriptorString();
-        int offset = node.getStartInstructionOffset();
+        int offset;
+        try
+        {
+            offset = node.getStartInstructionOffset();
+        }
+        catch (IllegalStateException e)
+        {
+            // コードが不完全だったり構文エラーのときにおきる。
+            return;
+        }
 
         // スタックフレームの情報を取得する。
         InstructionUIElement instruction = result.getInstructionAt(methodName, methodDesc, offset);

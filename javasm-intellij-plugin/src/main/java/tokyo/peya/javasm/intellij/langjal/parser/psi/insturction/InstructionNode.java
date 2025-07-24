@@ -55,21 +55,21 @@ public class InstructionNode extends ANTLRPsiNode
     {
         InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
         if (instructionNameNode == null)
-            return 0;
+            throw new IllegalStateException();
 
         return instructionNameNode.getInstructionSize();
     }
 
-    public final int getStartInstructionOffset()
+    public final int getStartInstructionOffset() throws IllegalStateException
     {
         MethodBodyNode methodBody = PsiTreeUtil.getParentOfType(this, MethodBodyNode.class);
         if (methodBody == null)
-            return 0;
+            throw new IllegalStateException();
 
         InstructionOffsetCalculator calculator = InstructionOffsetCalculator.get(methodBody);
         Integer offset = calculator.getCumulativeOffset(this);
         if (offset == null)
-            return 0;
+            throw new IllegalStateException();
 
         return offset;
     }

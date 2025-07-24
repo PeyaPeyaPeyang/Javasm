@@ -12,8 +12,8 @@ import java.util.Map;
 
 public class InstructionOffsetCalculator
 {
-    private static final Key<InstructionOffsetCalculator> KEY = Key.create(
-            "javasm.intellij.editor.linenumber.InstructionOffsetCalculator");
+    private static final Key<InstructionOffsetCalculator> KEY =
+            Key.create("javasm.intellij.editor.linenumber.InstructionOffsetCalculator");
 
     private final Map<InstructionNode, Integer> instructionOffsets;
 
@@ -35,7 +35,6 @@ public class InstructionOffsetCalculator
                 currentOffset += instruction.getInstructionSize();
             }
         }
-
     }
 
     @Nullable
@@ -50,9 +49,16 @@ public class InstructionOffsetCalculator
         if (cached != null)
             return cached;
 
-        InstructionOffsetCalculator fresh;
-        methodNode.putUserData(KEY, fresh = new InstructionOffsetCalculator());
-        fresh.buildOffsets(methodNode);
+        InstructionOffsetCalculator fresh = new InstructionOffsetCalculator();
+        try
+        {
+            fresh.buildOffsets(methodNode);
+            methodNode.putUserData(KEY, fresh);
+        }
+        catch (IllegalStateException ignored)
+        {
+            // これは，コードの記述が不完全だったり構文エラーのときにおきる。
+        }
         return fresh;
     }
 

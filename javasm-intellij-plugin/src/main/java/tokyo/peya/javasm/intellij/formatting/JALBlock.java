@@ -24,10 +24,28 @@ import tokyo.peya.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class JALBlock extends AbstractBlock
 {
     private final SpacingBuilder spacingBuilder;
+
+    private static final Map<Integer, Integer> FIXED_COLUMN_BY_THIS_RULE = Map.of(
+            JALParser.RULE_classBody, 0,
+            JALParser.RULE_jvmInsArgTableSwitchCaseList, 0,
+            JALParser.RULE_jvmInsArgLookupSwitchCaseList, 0
+    );
+
+    private static final Map<Integer, Integer> FIXED_COLUMN_BY_PREV_RULE = Map.of(
+            JALParser.RULE_instruction, 2
+    );
+
+    private static final Set<Integer> FIXED_COLUMN_TOKENS = Set.of(
+            JALParser.LINE_COMMENT,
+            JALParser.BLOCK_COMMENT,
+            JALParser.LBR
+    );
 
     protected JALBlock(
             @NotNull ASTNode node,
@@ -68,10 +86,13 @@ public class JALBlock extends AbstractBlock
 
         int ruleIndex = rule.getRuleIndex();
 
+        // 特定ルールにだけインデントを与える
         if (ruleIndex == JALParser.RULE_classMetaItem
                 || ruleIndex == JALParser.RULE_fieldDefinition
                 || ruleIndex == JALParser.RULE_methodDefinition
-                || ruleIndex == JALParser.RULE_instruction)
+                || ruleIndex == JALParser.RULE_instruction
+                || ruleIndex == JALParser.RULE_jvmInsArgLookupSwitchCaseList
+                || ruleIndex == JALParser.RULE_jvmInsArgTableSwitchCaseList)
             return Indent.getNormalIndent();
         else if (ruleIndex == JALParser.RULE_label)
             return Indent.getLabelIndent();
@@ -106,42 +127,41 @@ public class JALBlock extends AbstractBlock
         ASTNode prevNode = ((JALBlock) prevBlock).getNode();
         IElementType prevType = prevNode.getElementType();
 
-        // { のあとの調整
+        // 現在のノード（this）のタイプ
         IElementType thisType = this.myNode.getElementType();
         if (thisType instanceof RuleIElementType rule)
         {
-            int ruleIndex = rule.getRuleIndex();
-            if (ruleIndex == JALParser.RULE_classBody)
-                return 1; // 固定カラム
+            Integer col = FIXED_COLUMN_BY_THIS_RULE.get(rule.getRuleIndex());
+            if (col != null)
+                return col;
         }
 
-        // 命令ノードなら固定カラムにする（例えば 4 カラム）
         if (prevType instanceof RuleIElementType rule)
         {
-            int ruleIndex = rule.getRuleIndex();
-            if (ruleIndex == JALParser.RULE_instruction)
-                return 2; // 固定カラム
-        }
-        if (prevType instanceof TokenIElementType token)
-        {
-            int tokenIndex = token.getANTLRTokenType();
-            if (tokenIndex == JALParser.LINE_COMMENT
-                    || tokenIndex == JALParser.BLOCK_COMMENT
-                    || tokenIndex == JALParser.LBR)
-                return 2; // 固定カラム
+            Integer col = FIXED_COLUMN_BY_PREV_RULE.get(rule.getRuleIndex());
+            if (col != null)
+                return col;
         }
 
-        // 普通の方法
-        PsiElement psi = prevNode.getPsi();
-        if (psi == null)
-            return 4;
+        if (prevType instanceof TokenIElementType token)
+        {
+            if (FIXED_COLUMN_TOKENS.contains(token.getANTLRTokenType()))
+                return 2;
+        }
+
+        return computeDocumentColumn(prevNode);
+    }
+
+    private int computeDocumentColumn(ASTNode node)
+    {
+        PsiElement psi = node.getPsi();
+        if (psi == null) return 4;
 
         PsiFile file = psi.getContainingFile();
         Document doc = PsiDocumentManager.getInstance(psi.getProject()).getDocument(file);
-        if (doc == null)
-            return 4;
+        if (doc == null) return 4;
 
-        int offset = prevNode.getTextRange().getStartOffset();
+        int offset = node.getTextRange().getStartOffset();
         int lineStart = doc.getLineStartOffset(doc.getLineNumber(offset));
         return offset - lineStart;
     }

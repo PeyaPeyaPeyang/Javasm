@@ -57,13 +57,24 @@ public class InstructionTableSwitchNode extends InstructionNode
     {
         InstructionTableSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
         if  (argumentNode == null)
-            return 0;
+            throw new IllegalStateException();
+        LabelNameNode branches = argumentNode.getDefaultBranchLabelName();
+        if (branches == null)
+            throw new IllegalStateException();
+        LabelNameNode[] branchLabels = argumentNode.getBranchLabels();
+        if (branchLabels == null)
+            throw new IllegalStateException();
 
         Number lowIndexValue = argumentNode.getLowIndex();
         if (lowIndexValue == null)
-            lowIndexValue = 0; // Default low index if not specified
+            throw new IllegalStateException();
         int lowIndex = lowIndexValue.intValue();
-        int highIndex = lowIndex + argumentNode.getBranchLabels().length - 1;
+        return calcActualSize(lowIndex, branchLabels);
+    }
+
+    private int calcActualSize(int lowIndex, LabelNameNode[] branchLabels)
+    {
+        int highIndex = lowIndex + branchLabels.length - 1;
         int nPairs = highIndex - lowIndex + 1;
 
         int baseOffset = this.getStartInstructionOffset(); // assume you have this

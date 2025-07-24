@@ -50,7 +50,7 @@ public class InstructionLookupSwitchNode extends InstructionNode
     {
         InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
         if (argumentNode == null)
-            return 0;
+            throw new IllegalStateException();
 
         int npairs = argumentNode.getBranches().length;
 
