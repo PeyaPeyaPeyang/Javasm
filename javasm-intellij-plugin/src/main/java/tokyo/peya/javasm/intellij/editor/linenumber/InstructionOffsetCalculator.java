@@ -49,11 +49,11 @@ public class InstructionOffsetCalculator
         if (cached != null)
             return cached;
 
-        InstructionOffsetCalculator fresh = new InstructionOffsetCalculator();
+        InstructionOffsetCalculator fresh;
+        methodNode.putUserData(KEY, fresh = new InstructionOffsetCalculator());
         try
         {
             fresh.buildOffsets(methodNode);
-            methodNode.putUserData(KEY, fresh);
         }
         catch (IllegalStateException ignored)
         {

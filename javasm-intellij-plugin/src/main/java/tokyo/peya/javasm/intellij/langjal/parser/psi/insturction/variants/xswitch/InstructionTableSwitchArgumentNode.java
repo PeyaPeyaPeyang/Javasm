@@ -19,7 +19,7 @@ public class InstructionTableSwitchArgumentNode extends ANTLRPsiNode
     @Nullable
     public LabelNameNode getDefaultBranchLabelName()
     {
-        PsiElement firstChild = this.getFirstChild();
+        PsiElement firstChild = this.getLastChild();  // tableswitch N { ... } default LabelNameNode という構文だから。
         if (!(firstChild instanceof LabelNameNode))
             return null;
         return (LabelNameNode) firstChild;
