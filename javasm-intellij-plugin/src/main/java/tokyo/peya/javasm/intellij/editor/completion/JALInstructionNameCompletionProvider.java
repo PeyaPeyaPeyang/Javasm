@@ -11,9 +11,14 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JALInstructionNameCompletionProvider extends CompletionProvider<CompletionParameters>
 {
@@ -22,7 +27,7 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
 
     static
     {
-        HashMap<String, String> instructions = new HashMap<>();
+        HashMap<String, String> instructions = new LinkedHashMap<>();
         // <editor-fold desc="Instruction Definitions">
         instructions.putAll(Map.ofEntries(
                 Map.entry("aaload", "Reference: Array Load"),
@@ -265,7 +270,17 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
                 )
         );
         // </editor-fold>
-        INSTRUCTIONS = instructions;
+        // Value のほうで昇順にソートする。
+
+        INSTRUCTIONS = instructions.entrySet()
+                                   .stream()
+                                   .sorted(Map.Entry.comparingByValue()) // 昇順
+                                   .collect(Collectors.toMap(
+                                                             Map.Entry::getKey,
+                                                             Map.Entry::getValue,
+                                                             (e1, e2) -> e1, // マージ関数は無視
+                                                             LinkedHashMap::new // LinkedHashMap に詰める
+                                                     ));
     }
 
     static
@@ -333,7 +348,6 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
         // </editor-fold>
     }
 
-
     @Override
     protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
                                   @NotNull CompletionResultSet result)
@@ -348,7 +362,6 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
                                                                              instructionName))
                                                                      .withCaseSensitivity(true);
             result.addElement(lookupElement);
-
         }
     }
 
