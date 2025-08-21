@@ -117,7 +117,7 @@ public class JALDirtyCompiler
     {
         ExitCode exitCode = ExitCode.OK;
         CompileReporter reporter = new JALCompileReporterImpl(this.compileContext);
-        JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir, CompileSettings.COMPUTE_STACK_FRAME_MAP);
+        JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir, CompileSettings.FULL);
 
         for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries())
         {
