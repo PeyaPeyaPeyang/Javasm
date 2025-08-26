@@ -92,7 +92,7 @@ Javasm supercharges your JAL development inside IntelliJ IDEA:
 
 ## 📦 Installation
 
-<a href=""><img src=".github/readme/marketplace.svg" alt="Javasm on JetBrains Marketplace" width="200"></a>
+<a href="https://plugins.jetbrains.com/plugin/27944-javasm/"><img src=".github/readme/marketplace.svg" alt="Javasm on JetBrains Marketplace" width="200"></a>
 
 This plugin contains JAL implementation V1.0.0!
 
