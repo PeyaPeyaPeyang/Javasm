@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "tokyo.peya.plugin"
-version = "1.0.0"
+version = "1.1.0"
 
 repositories {
     mavenCentral()
@@ -30,7 +30,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.8")
 
     compileOnly("com.google.guava:guava:33.4.8-jre")
-    implementation("tokyo.peya:langjal:1.1.1")
+    implementation("tokyo.peya:langjal:1.2.1")
 }
 
 tasks {
