@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.1.0] - 2025/08/26
+
+JAL Implementation: 1.2.1
+
+This release introduces several new features and improvements to enhance the user experience.
+
+- feat: Instruction names are now sorted by category in the code completion list.
+- chore: Changing stack viewer icon to a more suitable one.
+- fix: Fixed a bug on cumulative offset calculation when a label is declared at the first line of a method.
+- fix: Fixed a bug on cumulative offset calculation when the default label of tableswitch instruction is not considered as a target label.
+
 ## [1.0.0] - 2025/07/23
 
 JAL Implementation: 1.0.0
