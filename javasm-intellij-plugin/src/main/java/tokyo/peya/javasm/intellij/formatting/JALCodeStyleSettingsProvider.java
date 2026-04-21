@@ -3,6 +3,7 @@ package tokyo.peya.javasm.intellij.formatting;
 import com.intellij.application.options.CodeStyleAbstractConfigurable;
 import com.intellij.application.options.CodeStyleAbstractPanel;
 import com.intellij.application.options.TabbedLanguageCodeStylePanel;
+import com.intellij.lang.Language;
 import com.intellij.openapi.util.NlsContexts;
 import com.intellij.psi.codeStyle.CodeStyleConfigurable;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
@@ -38,6 +39,12 @@ public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider
     public @Nullable @NlsContexts.ConfigurableName String getConfigurableDisplayName()
     {
         return "Java Assembly Language";
+    }
+
+    @Override
+    public @Nullable Language getLanguage()
+    {
+        return JALLanguage.INSTANCE;
     }
 
     private static class JALCodeStyleMainPanel extends TabbedLanguageCodeStylePanel
