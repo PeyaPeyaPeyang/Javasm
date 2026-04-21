@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class JVMDocumentationLinkProvider
 {
-    private static final String JVM_DOCUMENT_URL = "https://docs.oracle.com/javase/specs/jvms/se24/html/jvms-6.html";
+    private static final String JVM_DOCUMENT_URL = "https://docs.oracle.com/javase/specs/jvms/se26/html/jvms-6.html";
 
     public static String getDocumentationLink(String instructionName)
     {
