@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.MethodNode;
+import tokyo.peya.langjal.analyser.InstructionSetAnalysisResult;
 import tokyo.peya.langjal.compiler.CompileSettings;
 import tokyo.peya.langjal.compiler.JALClassCompiler;
 import tokyo.peya.langjal.compiler.JALFileCompiler;
@@ -115,22 +116,24 @@ public class StackFrameInfoComputer
     {
         MethodWrapper methodWrapper = new MethodWrapper(methodAnalysis.node());
         FramePropagation[] propagations = methodAnalysis.propagations();
+        InstructionSetAnalysisResult[] instructionAnalysisResults = methodAnalysis.instructionAnalysisResults();
 
         boolean isFirst = true;
         StackElement[] lastStack = null;
         LocalStackElement[] lastLocals = null;
         List<Integer> analysedOffsets = new ArrayList<>();
-        for (FramePropagation propagation : propagations)
+        for (int i = 0; i < propagations.length; i++)
         {
+            FramePropagation propagation = propagations[i];
+            InstructionSetAnalysisResult instructionSetAnalysis = instructionAnalysisResults[i];
             if (isFirst)
             {
                 isFirst = false;
                 lastStack = propagation.stack();
                 lastLocals = propagation.locals();
-                continue;
             }
 
-            AnalysedInstruction[] analysedInstructions = propagation.analysed();
+            AnalysedInstruction[] analysedInstructions = instructionSetAnalysis.analyzedInstructions();
             for (AnalysedInstruction analysedInstruction : analysedInstructions)
             {
                 int instructionOffset = analysedInstruction.instruction().bytecodeOffset();
