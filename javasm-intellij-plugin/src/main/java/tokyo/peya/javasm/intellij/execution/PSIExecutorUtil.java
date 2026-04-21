@@ -70,7 +70,7 @@ public class PSIExecutorUtil
         {
             return method.getMethodDescriptor().equals("([Ljava/lang/String;)V");
         }
-        catch (IllegalArgumentException e)
+        catch (Exception e)
         {
             return false; // メソッドのシグネチャが無効な場合はメインメソッドではない
         }

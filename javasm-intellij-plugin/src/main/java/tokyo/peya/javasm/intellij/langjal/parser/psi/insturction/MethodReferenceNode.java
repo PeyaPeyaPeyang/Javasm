@@ -55,7 +55,11 @@ public class MethodReferenceNode extends InstructionNode
         if (methodDescriptorNode == null)
             return null;
 
-        return methodDescriptorNode.getMethodDescriptor();
+        try {
+            return methodDescriptorNode.getMethodDescriptor();
+        } catch (IllegalArgumentException e) {
+            return null; // メソッド記述子の解析に失敗した場合は null を返す
+        }
     }
 
     @Override
