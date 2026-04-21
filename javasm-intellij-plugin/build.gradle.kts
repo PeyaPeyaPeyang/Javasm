@@ -94,6 +94,12 @@ intellijPlatform {
         }
     }
 }
+
+tasks.publishPlugin {
+    token.set(System.getenv("JETBRAINS_PUBLISH_TOKEN"))
+    channels.set(listOf("default"))
+}
+
 tasks {
     // Set the JVM compatibility versions
     withType<JavaCompile> {
