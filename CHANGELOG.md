@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.1.1] - 2026/04/21
+
+JAL Implementation: 1.2.1
+
+This release includes a minor bug fix to improve the stability of the application.
+
+- fix: Fixed a bug related to the legacy configurable id calculation mode for the JALCodeStyleSettingsProvider class, which caused a PluginException in IntelliJ IDEA.
+
 ## [1.1.0] - 2025/08/26
 
 JAL Implementation: 1.2.1
