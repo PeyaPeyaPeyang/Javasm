@@ -14,22 +14,22 @@ repositories {
 }
 
 dependencies {
-    compileOnly("com.jetbrains.intellij.platform:core:251.+")
-    compileOnly("com.jetbrains.intellij.platform:jps-build:251.+")
-    compileOnly("com.jetbrains.intellij.platform:jps-model:251.+")
-    compileOnly("com.jetbrains.intellij.platform:util:251.+")
-    compileOnly("com.jetbrains.intellij.tools:jps-build-standalone:251.+")
+    compileOnly("com.jetbrains.intellij.platform:core:261.+")
+    compileOnly("com.jetbrains.intellij.platform:jps-build:261.+")
+    compileOnly("com.jetbrains.intellij.platform:jps-model:261.+")
+    compileOnly("com.jetbrains.intellij.platform:util:261.+")
+    compileOnly("com.jetbrains.intellij.tools:jps-build-standalone:261.+")
 
-    compileOnly("org.projectlombok:lombok:1.18.38")
-    annotationProcessor("org.projectlombok:lombok:1.18.38")
+    compileOnly("org.projectlombok:lombok:1.18.44")
+    annotationProcessor("org.projectlombok:lombok:1.18.44")
     compileOnly("org.jetbrains:annotations:26.0.2")
     annotationProcessor("org.jetbrains:annotations:26.0.2")
 
-    implementation("org.ow2.asm:asm:9.8")
-    implementation("org.ow2.asm:asm-commons:9.8")
-    implementation("org.ow2.asm:asm-util:9.8")
+    implementation("org.ow2.asm:asm:9.9.1")
+    implementation("org.ow2.asm:asm-commons:9.9.1")
+    implementation("org.ow2.asm:asm-util:9.9.1")
 
-    compileOnly("com.google.guava:guava:33.4.8-jre")
+    implementation("com.google.guava:guava:33.4.8-jre")
     implementation("tokyo.peya:langjal:1.2.1")
 }
 
