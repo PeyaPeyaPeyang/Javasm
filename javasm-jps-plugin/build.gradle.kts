@@ -30,7 +30,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.9.1")
 
     implementation("com.google.guava:guava:33.4.8-jre")
-    implementation("tokyo.peya:langjal:1.2.1")
+    implementation("tokyo.peya:langjal:1.2.2")
 }
 
 tasks {
