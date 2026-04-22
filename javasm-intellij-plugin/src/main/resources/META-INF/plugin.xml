@@ -136,6 +136,7 @@
         <lang.foldingBuilder language="JAL" implementationClass="tokyo.peya.javasm.intellij.editor.JALFoldingBuilder"/>
         <projectViewNodeDecorator implementation="tokyo.peya.javasm.intellij.editor.JALProjectViewDecorator"/>
         <braceMatcher filetype="Java Assembly Language File" implementationClass="tokyo.peya.javasm.intellij.editor.JALPairedBraceMatcherAdapter"/>
+        <fileDocumentManagerListener implementation="tokyo.peya.javasm.intellij.editor.document.JALSaveListener"/>
     </extensions>
     <actions>
         <action id="tokyo.peya.javasm.intellij.langjal.JALCreateFileFromTemplateAction"
