@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.stackviewer;
 
 import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.editor.Document;
@@ -50,13 +51,13 @@ public final class StackFrameInfoController
     public StackFrameInfoController(@NotNull Project project)
     {
         this.project = project;
-        this.uiFactory = new StackFramePanelFactory(this::onAnalyseButtonPushed);
+        this.uiFactory = new StackFramePanelFactory(this::analyseStackFrame);
 
         // エディタの変更を監視するためにリスナーを登録する。
         this.project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 
-    private void onAnalyseButtonPushed()
+    public void analyseStackFrame()
     {
         new Task.Backgroundable(null, "Analyzing stack frame", true)
         {
@@ -162,7 +163,7 @@ public final class StackFrameInfoController
             return;
 
         // 現在の行のスタックフレームを表示する。
-        this.showCurrentLineStackFrame(editor);
+        ApplicationManager.getApplication().runReadAction(() -> this.showCurrentLineStackFrame(editor));
     }
 
     private void showCurrentLineStackFrame(@NotNull Editor editor)
@@ -212,8 +213,15 @@ public final class StackFrameInfoController
         if (editor.getUserData(EVENT_LISTENER_CONNECTED_KEY) != null)
             return;
 
-        editor.getDocument().addDocumentListener(this, this);
-        editor.getCaretModel().addCaretListener(this, this);
+        try {
+            editor.getDocument().addDocumentListener(this, this);
+            editor.getCaretModel().addCaretListener(this, this);
+        }
+        catch (Exception e)
+        {
+            // 何らかの理由でリスナーの登録に失敗した場合は， 以降のイベントを受け取れないが， 仕方ないので無視する。
+            return;
+        }
         editor.putUserData(EVENT_LISTENER_CONNECTED_KEY, MAKER);
     }
 
