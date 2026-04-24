@@ -10,8 +10,14 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.antlr.intellij.adaptor.psi.Trees;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.ClassReference;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.ClassTypeDescriptorReference;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.FieldReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LabelNameReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LocalReference;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.MethodReference;
 import tokyo.peya.langjal.compiler.JALParser;
 
 public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
@@ -55,14 +61,40 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
     public PsiReference getReference()
     {
         PsiElement parent = this.getParent();
+        if (parent == null || parent.getNode() == null)
+            return null;
+
         IElementType type = parent.getNode().getElementType();
         if (!(type instanceof RuleIElementType rule))
             return null;
 
         return switch (rule.getRuleIndex())
         {
-            case JALParser.RULE_label, JALParser.RULE_labelName -> new LabelNameReference(this);
-            case JALParser.RULE_jvmInsArgLocalRef -> new LocalReference(this);
+            case JALParser.RULE_label,
+                 JALParser.RULE_labelName ->
+                    new LabelNameReference(this);
+
+            case JALParser.RULE_jvmInsArgFieldRefType, JALParser.RULE_jvmInsArgMethodRefOwnerType ->
+                    new ClassReference(this);
+
+            case JALParser.RULE_jvmInsArgFieldRefName -> {
+                PsiElement g = parent.getParent();
+                if (g instanceof FieldReferenceNode field)
+                    yield new FieldReference(field);
+                yield null;
+            }
+            case JALParser.RULE_methodName -> {
+                PsiElement g = parent.getParent();
+                if (g instanceof MethodReferenceNode method)
+                    yield new MethodReference(method);
+                yield null;
+            }
+            case JALParser.RULE_typeDescriptor ->
+                    new ClassTypeDescriptorReference(this);
+
+            case JALParser.RULE_jvmInsArgLocalRef ->
+                    new LocalReference(this);
+
             default -> null;
         };
     }

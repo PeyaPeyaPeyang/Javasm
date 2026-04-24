@@ -8,6 +8,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
+import java.util.Objects;
+
 public class LabelNameReference extends JALElementReference
 {
     public LabelNameReference(@NotNull IdentifierNode element)

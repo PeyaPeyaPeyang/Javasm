@@ -38,6 +38,7 @@ public class JALASTFactory extends DefaultASTFactoryImpl
                 case JALLexer.STRING:
                     return new StringNode(type, text);
                 case JALLexer.FULL_QUALIFIED_CLASS_NAME:
+                case JALLexer.TYPE_DESC_OBJECT:
                     return new FullQualifiedNameNode(type, text);
                 case JALLexer.KWD_CLASS_PROP_MAJOR,
                      JALLexer.KWD_CLASS_PROP_MINOR,

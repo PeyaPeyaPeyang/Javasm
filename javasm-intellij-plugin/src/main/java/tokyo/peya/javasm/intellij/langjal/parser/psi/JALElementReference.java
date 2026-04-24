@@ -38,20 +38,24 @@ public abstract class JALElementReference extends PsiReferenceBase<IdentifierNod
     public boolean isReferenceTo(@NotNull PsiElement element)
     {
         String refName = this.getElement().getName();
-        if ((element instanceof IdentifierNode | element instanceof FullQualifiedNameNode) && isSubtree(element.getParent()))
-            element = element.getParent();
 
-        if (isSubtree(element))
-        {
-            PsiElement identifier = ((PsiNameIdentifierOwner) element).getNameIdentifier();
-            if (identifier != null)
-            {
-                String name = identifier.getText();
-                return refName.equals(name);
-            }
+        PsiElement target = element;
+
+        if (element instanceof IdentifierNode && this.isSubtree(element.getParent())) {
+            target = element.getParent();
         }
 
-        return false;
+        if (!(target instanceof PsiNameIdentifierOwner owner)) {
+            return false;
+        }
+
+        PsiElement identifier = owner.getNameIdentifier();
+        if (identifier == null) {
+            return false;
+        }
+
+        String name = identifier.getText();
+        return refName.equals(name);
     }
 
     public abstract boolean isSubtree(PsiElement psiElement);

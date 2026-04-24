@@ -19,10 +19,16 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @Nullable
-    public TypeDescriptor getMethodOwner()
+    public FullQualifiedNameNode getMethodOwner()
+    {
+        return PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
+    }
+
+    @Nullable
+    public TypeDescriptor getMethodOwnerDescriptor()
     {
         String ownerName = null;
-        FullQualifiedNameNode owner = PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
+        FullQualifiedNameNode owner = this.getMethodOwner();
         if (owner == null)
         {
             IdentifierNode idNode = PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
@@ -48,6 +54,20 @@ public class MethodReferenceNode extends InstructionNode
         return methodNameNode.getMethodName();
     }
 
+    @NotNull
+    public IdentifierNode getMethodNameNode()
+    {
+        MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
+        if (methodNameNode == null)
+            throw new IllegalStateException("Method name node is not found in instruction method reference node");
+
+        IdentifierNode identifierNode = PsiTreeUtil.findChildOfType(methodNameNode, IdentifierNode.class);
+        if (identifierNode == null)
+            throw new IllegalStateException("Identifier node is not found in MethodNameNode");
+
+        return identifierNode;
+    }
+
     @Nullable
     public MethodDescriptor getMethodDescriptor()
     {
@@ -65,7 +85,7 @@ public class MethodReferenceNode extends InstructionNode
     @Override
     public String toString()
     {
-        String owner = this.getMethodOwner() == null ? "": this.getMethodOwner() + "->";
+        String owner = this.getMethodOwnerDescriptor() == null ? "": this.getMethodOwnerDescriptor() + "->";
         return "MethodReference(" + owner + "this." + this.getMethodName() + this.getMethodDescriptor() + ")";
     }
 

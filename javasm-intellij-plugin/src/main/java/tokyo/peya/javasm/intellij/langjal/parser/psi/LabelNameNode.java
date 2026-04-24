@@ -10,6 +10,7 @@ import org.antlr.intellij.adaptor.psi.Trees;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 
 public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
 {
@@ -53,7 +54,7 @@ public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiN
     }
 
     @Override
-    public @Nullable PsiElement getNameIdentifier()
+    public @Nullable IdentifierNode getNameIdentifier()
     {
         return this.findChildByType(JALParserDefinition.ID);
     }

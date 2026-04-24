@@ -6,7 +6,9 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
 public class FieldReferenceNode extends ANTLRPsiNode
@@ -34,6 +36,20 @@ public class FieldReferenceNode extends ANTLRPsiNode
             throw new IllegalStateException("Field name not found in instruction field reference node");
 
         return fieldNameNode.getText();
+    }
+
+    @NotNull
+    public IdentifierNode getFieldNameNode()
+    {
+        FieldReferenceNameNode fieldNameNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNameNode.class);
+        if (fieldNameNode == null)
+            throw new IllegalStateException("Field name not found in instruction field reference node");
+
+        IdentifierNode identifierNode = PsiTreeUtil.findChildOfType(fieldNameNode, IdentifierNode.class);
+        if (identifierNode == null)
+            throw new IllegalStateException("Identifier node is not found in FieldReferenceNameNode");
+
+        return identifierNode;
     }
 
     @Nullable
