@@ -69,10 +69,10 @@ intellijPlatform {
 
     pluginVerification {
         ides {
-            create(IntelliJPlatformType.IntellijIdeaCommunity, "2026.1") { useInstaller = true }
+            create(IntelliJPlatformType.IntellijIdea, "2026.1") { useInstaller = true }
             recommended()
             select {
-                types = listOf(IntelliJPlatformType.IntellijIdeaCommunity, IntelliJPlatformType.IntellijIdeaUltimate)
+                types = listOf(IntelliJPlatformType.IntellijIdea, IntelliJPlatformType.IntellijIdeaUltimate)
                 channels = listOf(ProductRelease.Channel.RELEASE)
                 sinceBuild = "261"
                 untilBuild = "271.*"
