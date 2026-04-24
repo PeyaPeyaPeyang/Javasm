@@ -14,6 +14,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.JALElementReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
+import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 import tokyo.peya.javasm.intellij.utils.TypeDescriptorUtil;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
@@ -50,7 +51,7 @@ public class MethodReference extends JALElementReference
         }
 
         // JavaPsiFacadeを使用して、完全修飾クラス名からPsiClassを取得
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(dotClassName, GlobalSearchScope.allScope(project));
+        PsiClass psiClass = ClassResolutionUtil.resolve(JavaPsiFacade.getInstance(project), GlobalSearchScope.allScope(project), dotClassName);
         if (psiClass == null) {
             return null;
         }

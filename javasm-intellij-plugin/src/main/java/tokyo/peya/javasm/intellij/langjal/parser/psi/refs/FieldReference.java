@@ -14,6 +14,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNam
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
+import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 
 public class FieldReference extends JALElementReference
 {
@@ -47,7 +48,7 @@ public class FieldReference extends JALElementReference
         }
 
         // JavaPsiFacadeを使用して、完全修飾クラス名からPsiClassを取得
-        PsiClass psiClass = JavaPsiFacade.getInstance(project).findClass(dotClassName, GlobalSearchScope.allScope(project));
+        PsiClass psiClass = ClassResolutionUtil.resolve(JavaPsiFacade.getInstance(project), GlobalSearchScope.allScope(project), dotClassName);
         if (psiClass == null) {
             return null;
         }

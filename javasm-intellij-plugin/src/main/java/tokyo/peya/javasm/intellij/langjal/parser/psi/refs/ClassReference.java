@@ -10,6 +10,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.JALElementReference;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
+import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 
 public class ClassReference extends JALElementReference
 {
@@ -34,7 +35,7 @@ public class ClassReference extends JALElementReference
         JavaPsiFacade facade = JavaPsiFacade.getInstance(project);
         GlobalSearchScope scope = GlobalSearchScope.allScope(project);
 
-        return facade.findClass(className, scope);
+        return ClassResolutionUtil.resolve(facade, scope, className);
     }
 
     protected String getQualifiedName(IdentifierNode node)
