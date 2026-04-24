@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.2.0] - 2026/04/24
+
+JAL Implementation: 1.2.2
+
+This release includes new features and improvements.
+
+- **Now supports IntelliJ IDEA 2026.1+**
+- **feat**: Allow instructions at the first label of a method.
+- feat: Reanalyse files on save.
+- chore: Update JVM instruction documentation to Java 26.
+- fix: Handle exception during file loading.
+
 ### [1.1.1] - 2026/04/21
 
 JAL Implementation: 1.2.1
