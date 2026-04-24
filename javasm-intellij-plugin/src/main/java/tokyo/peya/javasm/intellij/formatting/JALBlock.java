@@ -91,7 +91,7 @@ public class JALBlock extends AbstractBlock
                 || ruleIndex == JALParser.RULE_fieldDefinition
                 || ruleIndex == JALParser.RULE_methodDefinition
                 || ruleIndex == JALParser.RULE_instruction
-                || ruleIndex == JALParser.RULE_jvmInsArgLookupSwitchCaseList
+                || ruleIndex == JALParser.RULE_jvmInsArgLookupSwitchCase
                 || ruleIndex == JALParser.RULE_jvmInsArgTableSwitchCaseList)
             return Indent.getNormalIndent();
         else if (ruleIndex == JALParser.RULE_label)
@@ -109,14 +109,22 @@ public class JALBlock extends AbstractBlock
     @Override
     public @NotNull ChildAttributes getChildAttributes(int newChildIndex)
     {
-        List<Block> subBlocks = getSubBlocks();
+        IElementType type = this.myNode.getElementType();
 
-        if (newChildIndex > 0 && newChildIndex <= subBlocks.size())
+        if (type instanceof RuleIElementType rule)
         {
-            Block prevBlock = subBlocks.get(newChildIndex - 1);
-            int column = calcColumn(prevBlock);
+            int ruleIndex = rule.getRuleIndex();
 
-            return new ChildAttributes(Indent.getSpaceIndent(column), null);
+            if (ruleIndex == JALParser.RULE_methodBody
+                    || ruleIndex == JALParser.RULE_classBody)
+            {
+                return new ChildAttributes(Indent.getNormalIndent(), null);
+            }
+
+            if (ruleIndex == JALParser.RULE_instructionSet)
+            {
+                return new ChildAttributes(Indent.getNormalIndent(), null);
+            }
         }
 
         return new ChildAttributes(Indent.getNoneIndent(), null);
