@@ -37,9 +37,9 @@ public class JALPositionManager implements PositionManager
     }
 
     @Override
-    public @Nullable Set<? extends FileType> getAcceptedFileTypes()
+    public boolean isAcceptedFileType(@NotNull FileType fileType)
     {
-        return Set.of(JALFileType.INSTANCE);
+        return fileType == JALFileType.INSTANCE;
     }
 
     @Override
