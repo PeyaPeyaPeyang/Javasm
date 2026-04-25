@@ -11,63 +11,62 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.Assets;
+import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 import java.util.Map;
 
 public class JALGeneralColorSettingsPage implements ColorSettingsPage
 {
     private static final AttributesDescriptor[] DESCRIPTORS = {
-            new AttributesDescriptor("Comment//Block comment", JALSyntaxHighlighter.BLOCK_COMMENT),
-            new AttributesDescriptor("Comment//Line comment", JALSyntaxHighlighter.COMMENT),
-            new AttributesDescriptor("Literals//Number", JALSyntaxHighlighter.NUMBER),
-            new AttributesDescriptor("Literals//String", JALSyntaxHighlighter.STRING),
-            new AttributesDescriptor("Literals//Braces", JALSyntaxHighlighter.BRACES),
-            new AttributesDescriptor("Symbols//Semicolon", JALSyntaxHighlighter.SEMICOLON),
-            new AttributesDescriptor("Symbols//Comma", JALSyntaxHighlighter.COMMA),
-            new AttributesDescriptor("Symbols//Parenthesis", JALSyntaxHighlighter.PARENTHESIS),
-            new AttributesDescriptor("Symbols//Brackets", JALSyntaxHighlighter.BRACKETS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.comment.block"), JALSyntaxHighlighter.BLOCK_COMMENT),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.comment.line"), JALSyntaxHighlighter.COMMENT),
 
-            new AttributesDescriptor("Members//Method name", JALSyntaxHighlighter.METHOD_NAME),
-            new AttributesDescriptor("Members//Method call", JALSyntaxHighlighter.METHOD_CALL),
-            new AttributesDescriptor("Members//Class name", JALSyntaxHighlighter.CLASS_NAME),
-            new AttributesDescriptor("Members//Parameter", JALSyntaxHighlighter.PARAMETER),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.literals.number"), JALSyntaxHighlighter.NUMBER),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.literals.string"), JALSyntaxHighlighter.STRING),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.literals.braces"), JALSyntaxHighlighter.BRACES),
 
-            new AttributesDescriptor("Types//Byte(B)", JALSyntaxHighlighter.DESC_BYTE),
-            new AttributesDescriptor("Types//Short(S)", JALSyntaxHighlighter.DESC_SHORT),
-            new AttributesDescriptor("Types//Char(C)", JALSyntaxHighlighter.DESC_CHAR),
-            new AttributesDescriptor("Types//Int(I)", JALSyntaxHighlighter.DESC_INT),
-            new AttributesDescriptor("Types//Long(J)", JALSyntaxHighlighter.DESC_LONG),
-            new AttributesDescriptor("Types//Float(F)", JALSyntaxHighlighter.DESC_FLOAT),
-            new AttributesDescriptor("Types//Double(D)", JALSyntaxHighlighter.DESC_DOUBLE),
-            new AttributesDescriptor("Types//Boolean(Z)", JALSyntaxHighlighter.DESC_BOOLEAN),
-            new AttributesDescriptor("Types//Void(V)", JALSyntaxHighlighter.DESC_VOID),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.symbols.semicolon"), JALSyntaxHighlighter.SEMICOLON),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.symbols.comma"), JALSyntaxHighlighter.COMMA),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.symbols.parenthesis"), JALSyntaxHighlighter.PARENTHESIS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.symbols.brackets"), JALSyntaxHighlighter.BRACKETS),
 
-            new AttributesDescriptor("Instructions//NOP", JALSyntaxHighlighter.INSN_NOP),
-            new AttributesDescriptor("Instructions//Variable access", JALSyntaxHighlighter.INSN_VARIABLE_ACCESS),
-            new AttributesDescriptor("Instructions//Instance creation", JALSyntaxHighlighter.INSN_INSTANCE_CREATION),
-            new AttributesDescriptor("Instructions//Flow controls", JALSyntaxHighlighter.INSN_FLOW_CONTROLS),
-            new AttributesDescriptor("Instructions//Flow jumps", JALSyntaxHighlighter.INSN_FLOW_JUMPS),
-            new AttributesDescriptor("Instructions//Value generations", JALSyntaxHighlighter.INSN_VALUE_GENERATIONS),
-            new AttributesDescriptor("Instructions//Value castings", JALSyntaxHighlighter.INSN_VALUE_CASTINGS),
-            new AttributesDescriptor("Instructions//Value calculations", JALSyntaxHighlighter.INSN_VALUE_CALCULATIONS),
-            new AttributesDescriptor(
-                    "Instructions//Value logical calculations",
-                    JALSyntaxHighlighter.INSN_VALUE_LOGICAL_CALCULATIONS
-            ),
-            new AttributesDescriptor("Instructions//Value comparisons", JALSyntaxHighlighter.INSN_VALUE_COMPARISONS),
-            new AttributesDescriptor("Instructions//Stack controls", JALSyntaxHighlighter.INSN_STACK_CONTROLS),
-            new AttributesDescriptor("Instructions//Field access", JALSyntaxHighlighter.INSN_FIELD_ACCESS),
-            new AttributesDescriptor("Instructions//Method invocations", JALSyntaxHighlighter.INSN_METHOD_INVOCATIONS),
-            new AttributesDescriptor("Instructions//Switch", JALSyntaxHighlighter.INSN_SWITCH),
-            new AttributesDescriptor("Instructions//Array access", JALSyntaxHighlighter.INSN_ARRAY_ACCESS),
-            new AttributesDescriptor("Instructions//Array creations", JALSyntaxHighlighter.INSN_ARRAY_CREATIONS),
-            new AttributesDescriptor("Instructions//Monitoring", JALSyntaxHighlighter.INSN_MONITORING),
-            new AttributesDescriptor("Instructions//Wide", JALSyntaxHighlighter.INSN_WIDE),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.method.name"), JALSyntaxHighlighter.METHOD_NAME),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.method.call"), JALSyntaxHighlighter.METHOD_CALL),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.class.name"), JALSyntaxHighlighter.CLASS_NAME),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.parameter"), JALSyntaxHighlighter.PARAMETER),
 
-            new AttributesDescriptor("Label", JALSyntaxHighlighter.LABEL),
-            new AttributesDescriptor("Identifier", JALSyntaxHighlighter.ID),
-            new AttributesDescriptor("Keywords", JALSyntaxHighlighter.KEYWORD),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.byte"), JALSyntaxHighlighter.DESC_BYTE),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.short"), JALSyntaxHighlighter.DESC_SHORT),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.char"), JALSyntaxHighlighter.DESC_CHAR),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.int"), JALSyntaxHighlighter.DESC_INT),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.long"), JALSyntaxHighlighter.DESC_LONG),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.float"), JALSyntaxHighlighter.DESC_FLOAT),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.double"), JALSyntaxHighlighter.DESC_DOUBLE),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.boolean"), JALSyntaxHighlighter.DESC_BOOLEAN),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.void"), JALSyntaxHighlighter.DESC_VOID),
 
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.nop"), JALSyntaxHighlighter.INSN_NOP),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.variable.access"), JALSyntaxHighlighter.INSN_VARIABLE_ACCESS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.instance.creation"), JALSyntaxHighlighter.INSN_INSTANCE_CREATION),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.flow.controls"), JALSyntaxHighlighter.INSN_FLOW_CONTROLS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.flow.jumps"), JALSyntaxHighlighter.INSN_FLOW_JUMPS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.value.generations"), JALSyntaxHighlighter.INSN_VALUE_GENERATIONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.value.castings"), JALSyntaxHighlighter.INSN_VALUE_CASTINGS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.value.calculations"), JALSyntaxHighlighter.INSN_VALUE_CALCULATIONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.value.logical.calculations"), JALSyntaxHighlighter.INSN_VALUE_LOGICAL_CALCULATIONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.value.comparisons"), JALSyntaxHighlighter.INSN_VALUE_COMPARISONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.stack.controls"), JALSyntaxHighlighter.INSN_STACK_CONTROLS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.field.access"), JALSyntaxHighlighter.INSN_FIELD_ACCESS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.method.invocations"), JALSyntaxHighlighter.INSN_METHOD_INVOCATIONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.switch"), JALSyntaxHighlighter.INSN_SWITCH),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.array.access"), JALSyntaxHighlighter.INSN_ARRAY_ACCESS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.array.creations"), JALSyntaxHighlighter.INSN_ARRAY_CREATIONS),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.monitoring"), JALSyntaxHighlighter.INSN_MONITORING),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.instructions.wide"), JALSyntaxHighlighter.INSN_WIDE),
+
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.label"), JALSyntaxHighlighter.LABEL),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.identifier"), JALSyntaxHighlighter.ID),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.keyword"), JALSyntaxHighlighter.KEYWORD),
     };
 
     @Override
@@ -220,6 +219,6 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
     @Override
     public @NotNull @NlsContexts.ConfigurableName String getDisplayName()
     {
-        return "Java Assembly Language (JAL) - General";
+        return JALMessages.message("jal.editor.highlight.settings.title");
     }
 }
