@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
+import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
 {
@@ -40,7 +41,7 @@ public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
         if (editor == null)
             return null;
 
-        String tooltip = "Cumulative Offset: " + cumulative;
+        String tooltip = JALMessages.message("jal.editor.marker.offset", cumulative);
         return new LineMarkerInfo<>(
                 element,
                 element.getTextRange(),
