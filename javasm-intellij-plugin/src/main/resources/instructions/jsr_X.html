@@ -8,14 +8,26 @@
 
     <h4>Purpose</h4>
     <p>
-        Transfers control to a subroutine at the specified label and pushes the return address onto the operand
-        stack.<br>
-        <b>jsr</b> uses a 16-bit signed offset, while <b>jsr_w</b> uses a 32-bit signed offset.
+        Transfers control to a subroutine entry point and pushes a return address onto the operand stack.
+        Historically, this was used by older compilers to implement <code>finally</code> blocks.
+    </p>
+    <p>
+        <b>{link:jsr}</b> uses a signed 16-bit branch offset.
+        <b>{link:jsr_w}</b> uses a signed 32-bit branch offset.
+        The offset is relative to the opcode address of the current instruction.
+    </p>
+
+    <p>
+        These instructions are DEPRECATED since Java SE 6 and should not be used in modern bytecode.
+        They are retained for backward compatibility and may be rejected by newer verification strategies.
+        Use structured exception handlers for <code>finally</code>-style logic instead.
     </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>label</code>: The target label to jump to.</li>
+        <li><code>label</code>: target label resolved to a bytecode branch offset within the same method.</li>
+        <li><b>{link:jsr}</b>: offset range <code>-32768..32767</code>.</li>
+        <li><b>{link:jsr_w}</b>: offset range <code>-2147483648..2147483647</code>.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -26,14 +38,31 @@
 
     <h5><b>Examples:</b></h5>
     <ul>
-        <li><code>jsr subroutine_start</code></li>
-        <li><code>jsr_w long_subroutine_start</code></li>
+        <li><code>jsr cleanup_subroutine</code> (legacy-style <code>finally</code> pattern)</li>
+        <li><code>jsr_w far_cleanup_subroutine</code> (same semantics with wider offset)</li>
     </ul>
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., returnAddress (reference)</code></li>
+        <li>After: <code>..., returnAddress</code> (special <code>returnAddress</code> type, category-1)</li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>These instructions are obsolete in modern class-file workflows and are not emitted by current Java compilers.</li>
+        <li>They require strict verifier consistency for control flow and <code>returnAddress</code> type usage.</li>
+        <li>Modern verification strategies centered on stack-map frames MAY REJECT legacy subroutine patterns.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Use structured exception handlers for <code>finally</code>-style logic in contemporary bytecode.</li>
+        <li>No constant-pool resolution is performed by <code>jsr</code>/<code>jsr_w</code> themselves.</li>
+        <li>These instructions are OBSOLETE and may be rejected by newer verification strategies.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>
 

@@ -12,6 +12,11 @@
     <p>Divides the second-top operand on the stack by the top operand and pushes the result. For integer types, division
         by zero throws <code>ArithmeticException</code>. For floating types, division by zero results in
         <code>Infinity</code> or <code>NaN</code> per IEEE 754.</p>
+    <ul>
+        <li><b>{link:idiv}</b>/<b>{link:ldiv}</b>: integer division truncates toward zero.</li>
+        <li><b>{link:fdiv}</b>/<b>{link:ddiv}</b>: IEEE 754 arithmetic (including NaN propagation and signed infinities/zeros).</li>
+        <li>The integer overflow corner case <code>MIN_VALUE / -1</code> yields <code>MIN_VALUE</code> (wraparound semantics).</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -26,6 +31,16 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., value1, value2</code> (value1 is dividend, value2 is divisor)</li>
-        <li>After: <code>..., result</code></li>
+        <li>After: <code>..., result</code> (category follows instruction type)</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values for the instruction type at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions:</b></h5>
+    <ul>
+        <li><code>ArithmeticException</code>: if an integer division by zero occurs.</li>
     </ul>
 </div>

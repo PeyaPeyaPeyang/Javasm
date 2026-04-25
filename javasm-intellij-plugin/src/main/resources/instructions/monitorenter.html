@@ -6,6 +6,9 @@
     <h4>Purpose</h4>
     <p>Acquires the monitor lock for the object referenced on top of the operand stack. Used to enter a synchronized
         block or method.</p>
+    <p>
+        If the current thread already owns the monitor, entry is reentrant and the monitor's hold count is incremented.
+    </p>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -19,13 +22,32 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., objectref</code></li>
-        <li>After: <code>...</code></li> <!-- monitor acquired, objectref popped -->
+        <li>After: <code>...</code> (consumes one category-1 reference)</li>
     </ul>
 
-    <p>If the object reference is <code>null</code>, a <code>NullPointerException</code> is thrown.</p>
+    <h5><b>Runtime and Concurrency Notes:</b></h5>
+    <ul>
+        <li>Monitor acquisition may block until ownership becomes available.</li>
+        <li>Successful <code>monitorenter</code> establishes synchronisation ordering as defined by the Java Memory Model.</li>
+        <li>No constant-pool resolution is involved in this instruction.</li>
+    </ul>
 
-    <h4>Usage Note</h4>
+    <h5>Usage Note</h5>
     <p><code>monitorenter</code> should always be paired with <code>monitorexit</code> to properly release the acquired
         monitor lock and avoid deadlocks. Typically, <code>monitorenter</code> is used at the start of a synchronized
         block, and <code>monitorexit</code> at the end.</p>
+    <p>
+        In compiler-generated patterns, a <code>try/finally</code>-equivalent shape ensures the lock is released on both
+        normal and exceptional exits.
+    </p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: if the object reference on top of the stack is <code>null</code>.</li>
+    </ul>
 </div>

@@ -11,6 +11,10 @@
 
     <h4>Purpose</h4>
     <p>Loads a value from a local variable at index <code>N</code> onto the operand stack.</p>
+    <p>
+        In bytecode encoding, <code>N</code> is an unsigned 8-bit index unless the instruction is prefixed with
+        <code>wide</code>, in which case it is unsigned 16-bit.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
@@ -34,12 +38,22 @@
     <ul>
         <li><b>iload, fload, aload</b><br>
             Before: <code>...</code><br>
-            After: <code>..., value</code> (of corresponding type)
+            After: <code>..., value</code> (category-1)
         </li>
         <li><b>lload, dload</b><br>
             Before: <code>...</code><br>
-            After: <code>..., value2, value1</code><br>
-            (Note: long and double occupy two stack words)
+            After: <code>..., value</code> (category-2)<br>
+            (Note: long and double occupy two stack slots)
         </li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires the local slot type at <code>N</code> to match the selected load opcode.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>IndexOutOfBoundsException</code> if the local variable index is out of range (e.g. negative or beyond the method's local variable array size).</li>
     </ul>
 </div>

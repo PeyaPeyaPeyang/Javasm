@@ -7,51 +7,68 @@
 
     <h4>Purpose</h4>
     <p>
-        Performs a dynamic method invocation using a bootstrap method and call site descriptor.<br>
-        Designed to support dynamically typed languages and lambda expressions by deferring method binding until
-        runtime.
+        Performs a dynamic call-site invocation whose target is linked by a bootstrap method at runtime.
+        It is the foundation for Java lambda translation and language-level dynamic dispatch mechanisms.
+    </p>
+    <p>
+        Unlike the other invoke instructions, the call target is not fixed solely by a class/method symbolic reference.
+        Instead, linkage produces a <code>CallSite</code> whose target method handle is then invoked.
     </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>methodName</code>: Name of the method to invoke dynamically</li>
-        <li><code>methodDescriptor</code>: JVM method descriptor specifying argument and return types</li>
-        <li><code>MethodHandle</code>: A fixed prefix <code>MethodHandle|</code> followed by an operation and a method
-            reference, e.g. <code>MethodHandle|getfield|java/lang/String->length()I</code></li>
-        <li><code>MethodType</code>: Method type descriptor instance representing the method signature, e.g. <code>MethodType|(Ljava/lang/String;)V</code>
-        </li>
-        <li>Optional additional <code>MethodHandle</code> or scalar arguments depending on the bootstrap method</li>
+        <li>Bytecode operand is a constant-pool index to <code>CONSTANT_InvokeDynamic_info</code>, followed by two zero bytes.</li>
+        <li><code>CONSTANT_InvokeDynamic_info</code> links to a bootstrap method entry and a name-and-type descriptor.</li>
+        <li>Bootstrap static arguments are encoded in the class-file <code>BootstrapMethods</code> attribute.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
     <pre>
-invokedynamic &lt;methodName&gt; &lt;methodDescriptor&gt; MethodHandle|&lt;operation&gt;|&lt;methodRef&gt; MethodType|&lt;methodTypeDescriptor&gt; [additional MethodHandle or scalar arguments...]
+invokedynamic &lt;name&gt; &lt;methodDescriptor&gt; [bootstrap = MethodHandle + static args]
     </pre>
 
     <h5><b>Details:</b></h5>
     <ul>
-        <li><b>MethodHandle</b> specifies a method handle with the fixed prefix <code>MethodHandle|</code>, an operation
-            like <code>getfield</code>, <code>invokeinterface</code>, or <code>putstatic</code>, and a method reference.
-        </li>
-        <li><b>MethodType</b> provides the method descriptor as a MethodType instance, indicating the arguments and
-            return type.
-        </li>
+        <li>At first execution, the JVM resolves the call site and invokes the bootstrap method.</li>
+        <li>The bootstrap method receives lookup context, call-site name, method type, and static arguments.</li>
+        <li>It must return a non-null <code>CallSite</code> whose target type exactly matches the call-site descriptor.</li>
+        <li>After successful linkage, subsequent executions reuse the linked call site.</li>
     </ul>
 
     <h5><b>Example:</b></h5>
     <pre>
-invokedynamic myMethod (Ljava/lang/String;)Ljava/lang/String; MethodHandle|getstatic|java/lang/String->awdw$1_35(Ljava/lang/String;)Ljava/lang/String; MethodType|(Ljava/lang/String;)V
+invokedynamic apply (Ljava/lang/Object;)Ljava/lang/Object;
+  // bootstrap: java/lang/invoke/LambdaMetafactory.metafactory
     </pre>
 
     <h5><b>Stack Effect:</b></h5>
     <p>
         Before: <code>..., arg1, arg2, ..., argN</code><br>
         After: <code>..., returnValue</code><br>
-        Arguments are passed according to <code>methodDescriptor</code>, and return value is pushed if non-void.
+        Arguments and return type are defined by <code>methodDescriptor</code>.
+        Category-2 values (<code>long</code>/<code>double</code>) consume or produce two slots.
     </p>
 
-    <p>
-        <b>Note:</b> Actual linkage is performed at runtime via a bootstrap method associated with the call site.<br>
-        This mechanism enables flexible method invocation patterns like lambdas and dynamic language features.
-    </p>
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification checks operand-stack compatibility with the call-site descriptor.</li>
+        <li>Linkage failures are reported as linkage errors (commonly <code>BootstrapMethodError</code> wrappers).</li>
+        <li>If the linked target cannot be invoked with actual argument types, method-handle invocation type errors may occur.</li>
+        <li>No objectref is implicit in this instruction; all arguments are explicit in the descriptor.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Use <code>invokedynamic</code> when call behaviour is intentionally deferred to bootstrap logic.</li>
+        <li>In Java compilation, lambda expressions and string concatenation are common producers of this opcode.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>BootstrapMethodError</code>: if the bootstrap method fails to link the call site (e.g., throws an exception, returns null, or returns a CallSite with an incompatible target type).</li>
+        <li><code>LinkageError</code>: if the symbolic reference cannot be resolved or if the resolved method is not accessible.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method handle is not a valid method handle or if the resolved call site is not a valid call site.</li>
+        <li><code>NullPointerException</code>: if the operand stack does not contain enough arguments for the call site descriptor.</li>
+        <li><code>WrongMethodTypeException</code>: if the actual argument types do not match the call site descriptor at runtime.</li>
+    </ul>
 </div>

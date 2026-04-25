@@ -6,6 +6,10 @@
     <h4>Purpose</h4>
     <p>Releases the monitor lock for the object referenced on top of the operand stack. Used to exit a synchronized
         block or method.</p>
+    <p>
+        The current thread must own the monitor. For reentrant locking, each <code>monitorexit</code> decrements hold
+        count and releases the monitor only when the count reaches zero.
+    </p>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -19,12 +23,30 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., objectref</code></li>
-        <li>After: <code>...</code></li> <!-- monitor released, objectref popped -->
+        <li>After: <code>...</code> (consumes one category-1 reference)</li>
     </ul>
 
-    <p>If the object reference is <code>null</code>, a <code>NullPointerException</code> is thrown.</p>
+    <h5><b>Runtime and Concurrency Notes:</b></h5>
+    <ul>
+        <li>If the current thread does not own the monitor, <code>IllegalMonitorStateException</code> is thrown.</li>
+        <li>Successful monitor release participates in Java Memory Model synchronization ordering.</li>
+        <li>No constant-pool resolution is involved in this instruction.</li>
+    </ul>
 
-    <h4>Usage Note</h4>
+    <h5>Usage Note</h5>
     <p><code>monitorexit</code> must always be paired with <code>monitorenter</code> to properly release the monitor
         lock acquired earlier. Failure to do so may cause deadlocks or inconsistent synchronization.</p>
+    <p>
+        Correct bytecode ensures monitor release on all paths, including exceptional control flow.
+    </p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions:</b></h5>
+    <ul>
+        <li><code>IllegalMonitorStateException</code>: if the current thread does not own the monitor for the object reference on top of the stack.</li>
+    </ul>
 </div>

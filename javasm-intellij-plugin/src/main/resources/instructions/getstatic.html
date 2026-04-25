@@ -7,6 +7,10 @@
     <p>
         Fetches the value of a static field from a class and pushes it onto the operand stack.
     </p>
+    <p>
+        Before reading the field, the symbolic field reference is resolved, and the declaring class or interface is
+        initialised if needed.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
@@ -38,14 +42,31 @@
         <li><code>B</code>: <code>byte</code></li>
         <li><code>C</code>: <code>char</code></li>
         <li><code>S</code>: <code>short</code></li>
-        <li><code>L&lt;classname&gt;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+        <li><code>L&lt;classname&gt;;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
         <li><code>[</code>: An array type (e.g., <code>[I</code> for <code>int[]</code>)</li>
     </ul>
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., value</code> (the value of the static field)</li>
+        <li>After: <code>..., value</code> (the static field value; category 1 for most types, category 2 for
+            <code>long</code>/<code>double</code>)</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a value of the field type at the point of this instruction.</li>
+        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved field is not static.</li>
+        <li>Linkage errors (such as <code>NoSuchFieldError</code>,
+            <code>IllegalAccessError</code>,
+            or <code>NoClassDefFoundError</code>):
+            if the symbolic field reference cannot be resolved or if the resolved field is not accessible.
+        </li>
     </ul>
 </div>
 

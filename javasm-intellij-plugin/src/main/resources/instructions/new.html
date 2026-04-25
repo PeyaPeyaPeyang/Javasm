@@ -8,45 +8,60 @@
         Allocates memory for a new object of the specified class. The object is not initialized; the constructor must be
         invoked explicitly using the <code>invokespecial</code> instruction.
     </p>
+    <p>
+        The pushed value is an <em>uninitialized</em> object reference tracked by the verifier until a matching
+        constructor call completes.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>TypeDescriptor</code>: Specifies the class of the object to be created. The format is <code>L
-            &lt;classname&gt;;
-        </code>, where <code>
-            &lt;classname&gt;
-        </code> is the fully qualified name of the class (e.g., <code>Ljava/lang/String;</code>).
-        </li>
+        <li><code>ClassRef</code>: constant-pool index to <code>CONSTANT_Class_info</code> naming a non-array, non-interface class.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
-    <p><code>new &lt;TypeDescriptor&gt;</code></p>
+    <p><code>new &lt;ClassRef&gt;</code></p>
 
     <h5><b>Examples:</b></h5>
     <ul>
-        <li><code>new Ljava/lang/String;</code> (creates a new <code>String</code> object)</li>
-        <li><code>new Ljava/util/ArrayList;</code> (creates a new <code>ArrayList</code> object)</li>
+        <li><code>new java/lang/String</code> followed by <code>invokespecial java/lang/String-&gt;&lt;init&gt;()V</code></li>
+        <li><code>new java/util/ArrayList</code> followed by its constructor invocation</li>
     </ul>
 
-    <h5><b>TypeDescriptor:</b></h5>
-    <p>
-        The <code>TypeDescriptor</code> specifies the class of the object to be created. It must represent a valid
-        reference type:
-    </p>
+    <h5><b>Class Reference Constraints:</b></h5>
     <ul>
-        <li><code>L&lt;classname&gt;;</code>: A reference type (e.g., <code>Ljava/lang/String;</code>)</li>
+        <li>Must resolve to a class type, not an array type and not an interface.</li>
+        <li>Class access checks and loading/linking rules apply at resolution time.</li>
     </ul>
 
     <h5><b>Stack Effect:</b></h5>
     <p>
-        The operand stack is updated with a reference to the newly allocated object.
+        The operand stack is updated with an uninitialized reference to the newly allocated object.
     </p>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., objectref</code> (a reference to the newly created object)</li>
+        <li>After: <code>..., uninitialized-objectref</code> (category-1 reference)</li>
     </ul>
 
-    <p>If the class cannot be found or instantiated, a <code>ClassNotFoundException</code> or <code>InstantiationException</code>
-        is thrown.</p>
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+        <li>Verification tracks uninitialized references to ensure proper constructor invocation patterns.</li>
+        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>The verifier enforces correct constructor initialisation flow before normal use of the reference.</li>
+        <li>Object creation is logically separate from constructor execution.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>OutOfMemoryError</code>: if the Java Virtual Machine cannot allocate the object because it is out of memory.</li>
+        <li><code>LinkageError</code>: if the symbolic class reference cannot be resolved or if the resolved class is not accessible.</li>
+        <li><code>InstantiationError</code>: if the resolved class is abstract or an interface.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved class is not a class (e.g., if it's an array or interface) or if it violates other constraints.</li>
+    </ul>
+
 </div>
 

@@ -45,7 +45,7 @@
             After: (method exits, value passed to caller)
         </li>
         <li><b>lreturn, dreturn</b><br>
-            Before: <code>..., value2, value1</code><br>
+            Before: <code>..., value</code> (category-2)<br>
             After: (method exits, 64-bit value passed to caller)<br>
             <small>Note: <code>long</code> and <code>double</code> values consume two stack slots.</small>
         </li>
@@ -57,13 +57,24 @@
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>The type of the return instruction must match the method's declared return type; otherwise, a <code>VerifierError</code>
-            is thrown at runtime or class loading.
-        </li>
-        <li>Returning from a synchronized method involves unlocking the monitor before exiting.</li>
+        <li>Returning from a synchronised method performs implicit monitor release for the method monitor.</li>
         <li>If a return instruction is executed while an exception is being propagated, it is skipped entirely.</li>
         <li><code>areturn</code> is used not only for user-defined objects but also arrays (e.g., <code>String[]</code>,
             <code>int[]</code>)
         </li>
+        <li>Normal return completes the current frame and transfers control to the caller continuation point.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of value for
+            the return type at the point of this instruction.</li>
+        <li>For <code>return</code>, verification requires that the method's return type is <code>void</code>.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>IllegalMonitorStateException</code> if a return instruction is executed while the current thread does
+            not hold the monitor for a synchronised method.</li>
     </ul>
 </div>

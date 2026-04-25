@@ -19,34 +19,50 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li><b>{link:dup}</b><br>
-            Before: <code>..., value</code><br>
-            After: <code>..., value, value</code>
+            Before: <code>..., value1</code> (value1 is category 1)<br>
+            After: <code>..., value1, value1</code>
         </li>
         <li><b>{link:dup_x1}</b><br>
-            Before: <code>..., value2, value1</code><br>
+            Before: <code>..., value2, value1</code> (both category 1)<br>
             After: <code>..., value1, value2, value1</code>
         </li>
         <li><b>{link:dup_x2}</b><br>
+            Form 1 (all category 1):<br>
             Before: <code>..., value3, value2, value1</code><br>
-            After: <code>..., value1, value3, value2, value1</code>
+            After: <code>..., value1, value3, value2, value1</code><br>
+            Form 2:<br>
+            Before: <code>..., value2, value1</code> (value2 is category 2, value1 is category 1)<br>
+            After: <code>..., value1, value2, value1</code>
         </li>
         <li><b>{link:dup2}</b><br>
-            Before: <code>..., value2, value1</code><br>
+            Form 1:<br>
+            Before: <code>..., value2, value1</code> (both category 1)<br>
             After: <code>..., value2, value1, value2, value1</code><br>
-            (Note: used for either two category-1 values or one category-2 value like long/double)
+            Form 2:<br>
+            Before: <code>..., value1</code> (category 2)<br>
+            After: <code>..., value1, value1</code>
         </li>
         <li><b>{link:dup2_x1}</b><br>
+            Form 1 (all category 1):<br>
             Before: <code>..., value3, value2, value1</code><br>
-            After: <code>..., value2, value1, value3, value2, value1</code>
+            After: <code>..., value2, value1, value3, value2, value1</code><br>
+            Form 2:<br>
+            Before: <code>..., value2, value1</code> (value2 is category 1, value1 is category 2)<br>
+            After: <code>..., value1, value2, value1</code>
         </li>
         <li><b>{link:dup2_x2}</b><br>
-            Complex. Two patterns:<br>
-            - If all values are category-1 (e.g., int/float):<br>
+            Form 1 (all category 1):<br>
             Before: <code>..., value4, value3, value2, value1</code><br>
-            After: <code>..., value2, value1, value4, value3, value2, value1</code><br><br>
-            - If top is a category-2 value (long/double):<br>
-            Before: <code>..., value3, value2</code> (where value2 is category-2)<br>
-            After: <code>..., value2, value3, value2</code>
+            After: <code>..., value2, value1, value4, value3, value2, value1</code><br>
+            Form 2:<br>
+            Before: <code>..., value3, value2, value1</code> (value3/value2 are category 1, value1 is category 2)<br>
+            After: <code>..., value1, value3, value2, value1</code><br>
+            Form 3:<br>
+            Before: <code>..., value3, value2, value1</code> (value3 is category 2, value2/value1 are category 1)<br>
+            After: <code>..., value2, value1, value3, value2, value1</code><br>
+            Form 4:<br>
+            Before: <code>..., value2, value1</code> (both category 2)<br>
+            After: <code>..., value1, value2, value1</code>
         </li>
     </ul>
 
@@ -57,12 +73,13 @@
         <li><code>dup2</code> (with <code>long</code> or two <code>int</code>s)</li>
     </ul>
 
-    <h5><b>Notes:</b></h5>
-    <p>
-        These instructions are sensitive to the <b>category</b> of the operand types:<br>
-        - Category 1: 1-word (int, float, reference)<br>
-        - Category 2: 2-words (long, double)<br>
-        Using the wrong <code>dup</code> variant on the wrong operand type configuration causes a
-        <code>VerifyError</code> at runtime.
-    </p>
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the required values and resulting duplicates at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>VerifyError</code>: if the operand stack shape or category does not match any valid form for the instruction.</li>
+    </ul>
 </div>

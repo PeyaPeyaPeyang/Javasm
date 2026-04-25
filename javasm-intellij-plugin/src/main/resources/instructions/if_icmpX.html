@@ -12,20 +12,24 @@
 
     <h4>Purpose</h4>
     <p>
-        Compare two integer values from the operand stack and branches to the specified label based on the result.
+        Compares two <code>int</code> values from the operand stack using signed integer comparison
+        and conditionally branches.
     </p>
     <ul>
-        <li><b>{link:if_icmpeq}</b>: Branches if the two integers are equal.</li>
-        <li><b>{link:if_icmpne}</b>: Branches if the two integers are not equal.</li>
-        <li><b>{link:if_icmplt}</b>: Branches if the first integer is less than the second.</li>
-        <li><b>{link:if_icmpge}</b>: Branches if the first integer is greater than or equal to the second.</li>
-        <li><b>{link:if_icmpgt}</b>: Branches if the first integer is greater than the second.</li>
-        <li><b>{link:if_icmple}</b>: Branches if the first integer is less than or equal to the second.</li>
+        <li><b>{link:if_icmpeq}</b>: branches if <code>value1 == value2</code>.</li>
+        <li><b>{link:if_icmpne}</b>: branches if <code>value1 != value2</code>.</li>
+        <li><b>{link:if_icmplt}</b>: branches if <code>value1 &lt; value2</code>.</li>
+        <li><b>{link:if_icmpge}</b>: branches if <code>value1 &gt;= value2</code>.</li>
+        <li><b>{link:if_icmpgt}</b>: branches if <code>value1 &gt; value2</code>.</li>
+        <li><b>{link:if_icmple}</b>: branches if <code>value1 &lt;= value2</code>.</li>
     </ul>
+    <p>
+        Here, <code>value2</code> is the top of stack, and <code>value1</code> is the next value below it.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>label</code>: The target label to branch to if the condition is met.</li>
+        <li><code>label</code>: target label encoded as a signed 16-bit offset relative to the current opcode.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -51,7 +55,22 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., value1 (int), value2 (int)</code></li>
-        <li>After: <code>...</code> (both values are consumed)</li>
+        <li>After: <code>...</code> (consumes two category-1 int values)</li>
     </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Comparisons are signed; these opcodes do not provide unsigned comparison semantics.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept two category-1 <code>int</code> values at the point of this instruction.</li>
+        <li>No constant-pool resolution is performed by these instructions.</li>
+        <li>Branch target and frame-type consistency are verified at class loading/linking time.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected during verification.</p>
 </div>
 

@@ -12,20 +12,21 @@
 
     <h4>Purpose</h4>
     <p>
-        Compares the top value on the operand stack with zero and branches to the specified label based on the result.
+        Compares a single <code>int</code> value on the operand stack against zero and conditionally branches.
+        These opcodes are the canonical primitive predicates for integer-based control flow.
     </p>
     <ul>
-        <li><b>{link:ifeq}</b>: Branches if the value is equal to zero.</li>
-        <li><b>{link:ifne}</b>: Branches if the value is not equal to zero.</li>
-        <li><b>{link:iflt}</b>: Branches if the value is less than zero.</li>
-        <li><b>{link:ifge}</b>: Branches if the value is greater than or equal to zero.</li>
-        <li><b>{link:ifgt}</b>: Branches if the value is greater than zero.</li>
-        <li><b>{link:ifle}</b>: Branches if the value is less than or equal to zero.</li>
+        <li><b>{link:ifeq}</b>: branches if <code>value == 0</code>.</li>
+        <li><b>{link:ifne}</b>: branches if <code>value != 0</code>.</li>
+        <li><b>{link:iflt}</b>: branches if <code>value &lt; 0</code>.</li>
+        <li><b>{link:ifge}</b>: branches if <code>value &gt;= 0</code>.</li>
+        <li><b>{link:ifgt}</b>: branches if <code>value &gt; 0</code>.</li>
+        <li><b>{link:ifle}</b>: branches if <code>value &lt;= 0</code>.</li>
     </ul>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>label</code>: The target label to branch to if the condition is met.</li>
+        <li><code>label</code>: target label encoded as a signed 16-bit offset relative to the current opcode.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -46,12 +47,23 @@
         <li><code>ifge non_negative_label</code></li>
         <li><code>ifgt positive_label</code></li>
         <li><code>ifle non_positive_label</code></li>
+        <li><code>lcmp ; ifgt greater_label</code> (typical two-stage compare for long values)</li>
     </ul>
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., value (int)</code></li>
-        <li>After: <code>...</code> (the value is consumed)</li>
+        <li>After: <code>...</code> (consumes one category-1 int value)</li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept one category-1 <code>int</code> value at the point of this instruction.</li>
+        <li>No constant-pool resolution is performed by these instructions.</li>
+        <li>Branch target and frame-type consistency are verified at class loading/linking time.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>
 

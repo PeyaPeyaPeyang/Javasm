@@ -8,6 +8,9 @@
         instruction is used for values outside the range handled by <code>{link:bipush}</code> and <code>{link:iconst_m1}</code>
         to
         <code>{link:iconst_5}</code>.</p>
+    <p>
+        The two-byte immediate operand is sign-extended to a 32-bit integer before being pushed.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
@@ -29,6 +32,14 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., value</code> (int)</li>
+        <li>After: <code>..., value</code> (category-1 <code>int</code>)</li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept one category-1 <code>int</code> value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

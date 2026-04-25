@@ -7,8 +7,8 @@
 
     <h4>Purpose</h4>
     <p>
-        Invokes a static method of a class.<br>
-        Since the method is static, no object reference is needed.
+        Invokes a static method without consuming an object reference.
+        The call target is selected from the symbolic method reference after resolution.
     </p>
 
     <h5><b>Operands:</b></h5>
@@ -45,12 +45,30 @@
     <h5><b>Stack Effect:</b></h5>
     <p>
         Before: <code>..., arg1, arg2, ..., argN</code><br>
-        After: <code>..., returnValue?</code>
+        After: <code>..., returnValue?</code> (if return type is non-void)
     </p>
     <p>
-        - Pops all arguments from the stack.<br>
-        - Pushes return value if the method is non-void.<br>
-        - Throws <code>NoSuchMethodError</code> if method not found.<br>
-        - Throws <code>IncompatibleClassChangeError</code> if method is not static.
+        Pops all descriptor arguments. Pushes return value according to the declared return type
+        (category-2 for <code>long</code>/<code>double</code>, category-1 otherwise).
     </p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification checks argument types and stack shape against the method descriptor.</li>
+        <li>Before invocation, the target class or interface is initialised if required.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>No receiver object is consumed; all arguments are explicit in the descriptor.</li>
+        <li>Class initialisation side effects can execute user code before the target method body runs.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>LinkageError</code>: if the symbolic method reference cannot be resolved or if the resolved method is not accessible.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method is not static or if the resolved method is not a valid method handle for the invocation type.</li>
+        <li><code>IllegalAccessError</code>: if the resolved method is not accessible from the current class.</li>
+        <li><code>WrongMethodTypeException</code>: if the actual argument types do not match the method descriptor at runtime.</li>
+    </ul>
 </div>

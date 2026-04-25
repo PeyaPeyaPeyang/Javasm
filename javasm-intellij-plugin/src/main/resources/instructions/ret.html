@@ -8,10 +8,15 @@
     <h4>Purpose</h4>
     <p>The <b>ret</b> instruction is used to return from a subroutine. It retrieves the return address from a local
         variable and transfers control to that address.</p>
+    <p>
+        This instruction is part of the legacy <code>jsr</code>/<code>ret</code> subroutine model historically used for
+        old <code>finally</code> compilation patterns.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>index</code>: Local variable index (decimal or hexadecimal, e.g. <code>3</code> or <code>0x03</code>)
+        <li><code>index</code>: local variable index containing a value of the special <code>returnAddress</code> type.
+            In bytecode encoding, this is an unsigned 8-bit index.
         </li>
     </ul>
 
@@ -31,6 +36,24 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>...</code></li>
+        <li>After: <code>...</code> (no operand stack change)</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires local variable <code>index</code> to contain a valid <code>returnAddress</code> value.</li>
+        <li>Control-flow and stack/local type states must remain consistent across all branch targets.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>ret</code> is obsolete in modern class-file workflows and is generally considered legacy-only.</li>
+        <li>Use structured exception handlers for <code>finally</code>-style logic in contemporary bytecode instead of legacy <code>jsr</code>/<code>ret</code> patterns.</li>
+        <li>Modern verification strategies centered on stack-map frames MAY REJECT legacy subroutine patterns.</li>
+    </ul>
+
+    <h5><b>Related Instructions:</b></h5>
+    <ul>
+        <li><b>{link:jsr}</b> and <b>{link:jsr_w}</b> for jumping to subroutines.</li>
     </ul>
 </div>

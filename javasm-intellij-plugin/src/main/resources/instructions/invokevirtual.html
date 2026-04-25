@@ -61,20 +61,43 @@
     <p>
         The object reference is consumed, along with all arguments. If the method returns a value, it is pushed back
         onto the stack. If the return type is <code>void</code>, nothing is pushed.
+        Return category follows descriptor type rules (category-2 for <code>long</code>/<code>double</code>).
     </p>
+
+    <h5><b>Dispatch Insight:</b></h5>
+    <ul>
+        <li>Resolution validates the symbolic method reference and access constraints.</li>
+        <li>Dynamic dispatch then selects the most specific applicable implementation in the receiver class hierarchy.</li>
+        <li>This two-step model is central to understanding polymorphic behaviour and late failures.</li>
+    </ul>
+
+    <h5><b>Tutorial Pattern:</b></h5>
+    <ul>
+        <li>A common safe sequence is <code>instanceof</code>, then branch, then <code>checkcast</code>, then
+            <code>invokevirtual</code>.</li>
+        <li>When transforming bytecode, preserve exact receiver position and descriptor slot accounting.</li>
+    </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>The method must not be static or private—use <code>invokestatic</code> or <code>invokespecial</code> for
-            those cases.
-        </li>
-        <li>If <code>objectref</code> is <code>null</code>, a <code>NullPointerException</code> is thrown before
-            resolution.
-        </li>
-        <li>If the resolved method is static or not accessible, <code>IncompatibleClassChangeError</code> is thrown.
-        </li>
-        <li>Can be used to invoke methods from superclasses, but not constructors or private methods (which require
-            <code>invokespecial</code>).
-        </li>
+        <li>The resolved target must be an instance method suitable for virtual invocation.</li>
+        <li><code>&lt;init&gt;</code> and <code>&lt;clinit&gt;</code> are not invoked via <code>invokevirtual</code>.</li>
+        <li>Use <code>invokespecial</code> for constructors, private methods, and explicit super calls.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification ensures the operand stack has a reference-compatible object and arguments matching the method
+            descriptor.</li>
+        <li>Linkage errors occur if the symbolic reference cannot be resolved or if the resolved method is not accessible.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: if the object reference is null.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method is static or if the resolved class is an interface.</li>
+        <li><code>AbstractMethodError</code>: if the resolved method is abstract and the actual class of the receiver does not provide an implementation.</li>
+        <li><code>LinkageError</code>: if the symbolic method reference cannot be resolved or if the resolved method is not accessible.</li>
+        <li><code>WrongMethodTypeException</code>: if the actual argument types do not match the method descriptor at runtime.</li>
     </ul>
 </div>

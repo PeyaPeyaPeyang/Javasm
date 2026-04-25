@@ -34,7 +34,16 @@
             reference, or <code>returnAddress</code>.
         </li>
         <li>Using <code>swap</code> with category 2 values (e.g. <code>long</code>, <code>double</code>) results in a
-            <code>VerifyError</code>.
+            verification failure (commonly surfaced as <code>VerifyError</code> during loading/linking).
         </li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept two category-1 values at the point of this instruction.</li>
+        <li>Category 2 values are not allowed and will cause a verification failure.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

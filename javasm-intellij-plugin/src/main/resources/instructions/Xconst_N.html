@@ -20,6 +20,12 @@
 
     <h4>Purpose</h4>
     <p>Pushes a specific constant value of a given primitive type onto the operand stack.</p>
+    <ul>
+        <li><code>iconst_m1</code> to <code>iconst_5</code>: push int constants -1 through 5.</li>
+        <li><code>lconst_0</code>, <code>lconst_1</code>: push long 0 and 1.</li>
+        <li><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code>: push float 0.0, 1.0, 2.0.</li>
+        <li><code>dconst_0</code>, <code>dconst_1</code>: push double 0.0 and 1.0.</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -28,7 +34,7 @@
     <h5><b>Examples:</b></h5>
     <ul>
         <li><code>iconst_3</code> (pushes int 3)</li>
-        <li><code>iconst_3</code> (pushes int 3)</li>
+        <li><code>lconst_1</code> (pushes long 1)</li>
         <li><code>dconst_1</code> (pushes double 1.0)</li>
         <li><code>fconst_0</code> (pushes float 0.0)</li>
     </ul>
@@ -36,6 +42,18 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., value</code> (of the corresponding primitive type)</li>
+        <li>After: <code>..., value</code> (category-1 for int/float, category-2 for long/double)</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>These instructions are optimised for frequently used constants, avoiding the need for constant pool references for these values.</li>
+        <li>Use <code>bipush</code> for byte-range constants and <code>sipush</code> for short-range constants. For other values, use <code>ldc</code> or related instructions to load from the constant pool.</li>
+        <li>These instructions do not resolve constant-pool entries and have no instruction-specific runtime exception.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of value for each instruction at the point of this instruction.</li>
     </ul>
 </div>

@@ -12,6 +12,10 @@
     <p>Computes the remainder of dividing the second-top operand by the top operand and pushes the result. Integer
         division by zero throws <code>ArithmeticException</code>. Floating-point operations follow IEEE 754 semantics.
     </p>
+    <ul>
+        <li><b>{link:irem}</b>/<b>{link:lrem}</b>: result sign follows dividend; division-by-zero is exceptional.</li>
+        <li><b>{link:frem}</b>/<b>{link:drem}</b>: IEEE 754 remainder behaviour, including NaN propagation.</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -25,7 +29,23 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value1, value2</code> (value1 is dividend, value2 is divisor)</li>
-        <li>After: <code>..., remainder</code></li>
+        <li><b>{link:irem}</b>, <b>{link:frem}</b><br>
+            Before: <code>..., value1, value2</code> (category-1; value1 is dividend)<br>
+            After: <code>..., remainder</code> (category-1)
+        </li>
+        <li><b>{link:lrem}</b>, <b>{link:drem}</b><br>
+            Before: <code>..., value1, value2</code> (category-2 values; value1 is dividend)<br>
+            After: <code>..., remainder</code> (category-2)
+        </li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions:</b></h5>
+    <ul>
+        <li><code>ArithmeticException</code>: if the divisor (top operand) is zero for <code>irem</code> or <code>lrem</code>.</li>
     </ul>
 </div>

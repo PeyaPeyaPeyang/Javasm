@@ -10,6 +10,9 @@
         If it fails, a <code>ClassCastException</code> is thrown at runtime.
     </p>
     <p>
+        The target type is obtained by resolving a symbolic reference from the run-time constant pool.
+    </p>
+    <p>
         This instruction implements runtime type checking as seen in expressions like <code>(String) obj</code> in Java
         source code.
     </p>
@@ -55,6 +58,17 @@
         <li>If you already know the object is the right type (e.g. after <code>instanceof</code>),
             <code>checkcast</code> is safe to use.
         </li>
-        <li>Attempting to cast primitives will result in a <code>VerifyError</code> at class loading.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires a reference-compatible input and guarantees a reference result for successor frames.</li>
+        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>ClassCastException</code>: if the object reference is not null and is not assignment-compatible with the target type.</li>
+        <li>Linkage errors (such as <code>NoClassDefFoundError</code>, <code>IllegalAccessError</code>, or <code>IncompatibleClassChangeError</code>): if the symbolic reference cannot be resolved or if the resolved type is not accessible.</li>
     </ul>
 </div>

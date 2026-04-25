@@ -41,7 +41,29 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value</code></li>
-        <li>After: <code>...</code> (value stored into local variable, value removed from stack)</li>
+        <li><b>istore_&lt;n&gt;, fstore_&lt;n&gt;, astore_&lt;n&gt;</b><br>
+            Before: <code>..., value</code> (category-1)<br>
+            After: <code>...</code>
+        </li>
+        <li><b>lstore_&lt;n&gt;, dstore_&lt;n&gt;</b><br>
+            Before: <code>..., value</code> (category-2)<br>
+            After: <code>...</code>
+        </li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can provide the appropriate category of value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>These instructions are a compact form of the more general <code>istore</code>, <code>lstore</code>, <code>fstore</code>, <code>dstore</code>, and <code>astore</code> instructions, which take an explicit local variable index operand.</li>
+        <li>They are used for local variable indices 0 to 3 to save space in the bytecode.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>IndexOutOfBoundsException</code> if the local variable index (0 to 3) is out of range for the method's local variable array size.</li>
     </ul>
 </div>

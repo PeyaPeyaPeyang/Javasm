@@ -8,12 +8,13 @@
 
     <h4>Purpose</h4>
     <p>
-        Performs a bitwise XOR operation on two values.<br>
-        The result is pushed onto the operand stack.
+        Performs a bitwise exclusive OR (XOR) operation on the top two values of the operand stack.
+        The result is pushed back onto the operand stack.
     </p>
+
     <ul>
-        <li><b>{link:ixor}</b>: performs a bitwise XOR on two <code>int</code> values</li>
-        <li><b>{link:lxor}</b>: performs a bitwise XOR on two <code>long</code> values</li>
+        <li><b>{link:ixor}</b>: operates on two <code>int</code> values</li>
+        <li><b>{link:lxor}</b>: operates on two <code>long</code> values</li>
     </ul>
 
     <h5><b>Operands:</b> None</h5>
@@ -29,13 +30,32 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li><b>ixor</b><br>
-            Before: <code>..., value1 (int), value2 (int)</code><br>
-            After: <code>..., result (int)</code>
+            Before: <code>..., value1 (int), value2 (int)</code> (category-1)<br>
+            After: <code>..., result (int)</code> (category-1)<br>
+            Operation: <code>value1 ^ value2</code>
         </li>
         <li><b>lxor</b><br>
-            Before: <code>..., value1 (long), value2 (long)</code><br>
-            After: <code>..., result (long)</code>
+            Before: <code>..., value1 (long), value2 (long)</code> (category-2)<br>
+            After: <code>..., result (long)</code> (category-2)<br>
+            Operation: <code>value1 ^ value2</code>
         </li>
     </ul>
-</div>
 
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+    </ul>
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>
+            The XOR operation is performed independently on each corresponding bit of the operands.
+            The result bit is <code>1</code> if the operand bits differ, and <code>0</code> if they are the same.
+        </li>
+        <li>
+            The operation treats values purely as bit patterns; it is independent of signed or unsigned interpretation.
+        </li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
+</div>

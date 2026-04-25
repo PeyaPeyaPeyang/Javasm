@@ -10,7 +10,11 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li>A list of <code>int</code> key and label pairs, plus a mandatory <code>default</code> label.</li>
+        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after the opcode.</li>
+        <li><code>default</code>: signed 32-bit branch offset relative to the opcode address.</li>
+        <li><code>npairs</code>: signed 32-bit count of match-offset pairs (must be non-negative).</li>
+        <li><code>match_i</code>/<code>offset_i</code>: signed 32-bit key and branch offset pairs.</li>
+        <li>The <code>match_i</code> keys must appear in strictly increasing numeric order.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -37,9 +41,25 @@ lookupswitch {
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., key</code> (an <code>int</code> value)</li>
-        <li>After: (no values; control flow jumps to the matched label)</li>
+        <li>After: <code>...</code> (consumes one category-1 int, then branches)</li>
     </ul>
 
     <p>If the key does not match any listed case, the control jumps to the <code>default</code> label, which is
         mandatory.</p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>All branch targets must point to valid instruction boundaries in the same method.</li>
+        <li>Control-flow merges from all switch targets must satisfy local/stack type consistency.</li>
+        <li>No constant-pool resolution is performed by this opcode.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Use <code>lookupswitch</code> for sparse key sets; dense key intervals are usually encoded as <code>tableswitch</code>.</li>
+        <li>Bytecode tooling must preserve required padding and key sort order.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected during verification.</p>
 </div>

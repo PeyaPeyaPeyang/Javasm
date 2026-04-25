@@ -10,6 +10,10 @@
 
     <h4>Purpose</h4>
     <p>Adds the top two operands on the operand stack and pushes the result, respecting the instruction's type.</p>
+    <ul>
+        <li><b>{link:iadd}</b> and <b>{link:ladd}</b> use two's-complement arithmetic with wraparound on overflow.</li>
+        <li><b>{link:fadd}</b> and <b>{link:dadd}</b> follow IEEE 754 semantics (including NaN propagation and signed zero behaviour).</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -23,7 +27,22 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value1, value2</code></li>
-        <li>After: <code>..., result</code></li>
+        <li><b>{link:iadd}</b>, <b>{link:fadd}</b><br>
+            Before: <code>..., value1, value2</code> (category-1)<br>
+            After: <code>..., result</code> (category-1)
+        </li>
+        <li><b>{link:ladd}</b>, <b>{link:dadd}</b><br>
+            Before: <code>..., value1, value2</code> (category-2 values)<br>
+            After: <code>..., result</code> (category-2)
+        </li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+        <li>No constant-pool resolution is performed by these instructions.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

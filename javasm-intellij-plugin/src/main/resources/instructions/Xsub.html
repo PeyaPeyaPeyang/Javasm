@@ -9,8 +9,17 @@
     </p>
 
     <h4>Purpose</h4>
-    <p>Subtracts the top operand from the second-top operand on the stack and pushes the result, according to the
-        instruction's type.</p>
+    <p>
+        Subtracts the top operand from the second-top operand on the operand stack and pushes the result back onto the stack.
+        The operation performed depends on the instruction variant.
+    </p>
+
+    <ul>
+        <li><b>isub</b>: subtracts two <code>int</code> values</li>
+        <li><b>lsub</b>: subtracts two <code>long</code> values</li>
+        <li><b>fsub</b>: subtracts two <code>float</code> values</li>
+        <li><b>dsub</b>: subtracts two <code>double</code> values</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -24,7 +33,49 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value1, value2</code> (value1 - value2)</li>
-        <li>After: <code>..., result</code></li>
+        <li><b>isub</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code> (category-1)<br>
+            After: <code>..., result (int)</code> (category-1)<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>lsub</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code> (category-2)<br>
+            After: <code>..., result (long)</code> (category-2)<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>fsub</b><br>
+            Before: <code>..., value1 (float), value2 (float)</code> (category-1)<br>
+            After: <code>..., result (float)</code> (category-1)<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>dsub</b><br>
+            Before: <code>..., value1 (double), value2 (double)</code> (category-2)<br>
+            After: <code>..., result (double)</code> (category-2)<br>
+            Operation: <code>value1 - value2</code>
+        </li>
     </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>
+            Integer subtraction (<code>isub</code>, <code>lsub</code>) uses two's complement arithmetic.
+            Overflow is ignored and results wrap around silently.
+        </li>
+        <li>
+            Floating-point subtraction (<code>fsub</code>, <code>dsub</code>) follows IEEE 754 semantics:
+            <ul>
+                <li>If either operand is NaN, the result is NaN.</li>
+                <li>Subtraction involving infinities follows IEEE 754 rules.</li>
+                <li>Signed zero is preserved where applicable (e.g., <code>+0.0 - +0.0 = +0.0</code>).</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values for the instruction type at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

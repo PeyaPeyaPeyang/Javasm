@@ -29,12 +29,26 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li><b>iand</b><br>
-            Before: <code>..., value1 (int), value2 (int)</code><br>
-            After: <code>..., result (int)</code>
+            Before: <code>..., value1 (int), value2 (int)</code> (category-1)<br>
+            After: <code>..., result (int)</code> (category-1)
         </li>
         <li><b>land</b><br>
-            Before: <code>..., value1 (long), value2 (long)</code><br>
-            After: <code>..., result (long)</code>
+            Before: <code>..., value1 (long), value2 (long)</code> (category-2)<br>
+            After: <code>..., result (long)</code> (category-2)
         </li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>These instructions perform a bitwise AND on the binary representations of the input values.</li>
+        <li>They do not perform any type conversion; the input values must already be of the correct type (<code>int</code> for <code>iand</code> and <code>long</code> for <code>land</code>).</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

@@ -6,6 +6,10 @@
     <h4>Purpose</h4>
     <p>Throws the exception object currently on top of the operand stack. The object must be a reference to a throwable
         object (subclass of <code>java.lang.Throwable</code>).</p>
+    <p>
+        Normal execution of the current instruction stream does not continue past <code>athrow</code>. The JVM begins
+        exception handler lookup in the current frame and unwinds frames as needed.
+    </p>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -22,6 +26,16 @@
         <li>After: <code>(no values)</code> (method execution is terminated by throwing the exception)</li>
     </ul>
 
-    <p>Throws the exception referenced by the object on the stack. If the object is <code>null</code>, a <code>NullPointerException</code>
-        is thrown instead.</p>
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+        <li>At runtime, the reference on top of the stack is resolved to a class. If resolution fails, the corresponding linkage error is thrown.</li>
+    </ul>
+
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: if the reference on top of the stack is <code>null</code>.</li>
+        <li><code>ClassCastException</code>: if the reference on top of the stack is not an instance of <code>java.lang.Throwable</code>.</li>
+    </ul>
 </div>

@@ -5,7 +5,8 @@
 
     <h4>Purpose</h4>
     <p>
-        Does nothing. It is used as a placeholder or for alignment purposes in bytecode.
+        It does nothing.
+        It is commonly used as a placeholder in transformed bytecode and for patch-friendly instruction layout.
     </p>
 
     <h5><b>Operands:</b></h5>
@@ -22,7 +23,22 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>...</code></li>
+        <li>After: <code>...</code> (no stack or local changes)</li>
     </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>nop</code> has no constant-pool interaction and no instruction-specific runtime exception.</li>
+        <li>Although semantically inert, it still has bytecode index impact and can affect branch offsets/debug mapping.</li>
+        <li>Do not use <code>nop</code> for switch padding; <code>tableswitch</code>/<code>lookupswitch</code> define their own padding rules.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification does not require any specific operand stack or local variable state for <code>nop</code>.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>
 

@@ -11,9 +11,10 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>low_index</code>: the first (lowest) int key value</li>
-        <li>Labels for each consecutive key, in order</li>
-        <li>A mandatory <code>default</code> label</li>
+        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after opcode.</li>
+        <li><code>default</code>: signed 32-bit branch offset relative to the opcode address.</li>
+        <li><code>low</code>, <code>high</code>: signed 32-bit key bounds (inclusive).</li>
+        <li><code>jump offsets</code>: <code>high - low + 1</code> signed 32-bit offsets, one for each key in order.</li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -37,9 +38,23 @@ tableswitch 1 {
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., key</code> (an <code>int</code> value)</li>
-        <li>After: (no values; control flow jumps to matched label)</li>
+        <li>After: <code>...</code> (consumes one category-1 int, then branches)</li>
     </ul>
 
     <p>If the <code>key</code> is outside the continuous range starting from <code>low_index</code> to <code>low_index +
         number_of_labels - 1</code>, the control jumps to the <code>default</code> label, which is mandatory.</p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>All computed targets (default and case targets) must point to valid instruction boundaries in the same method.</li>
+        <li>Frame types at all switch targets must be merge-compatible.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>tableswitch</code> is optimal for dense key ranges; sparse keys are usually better served by <code>lookupswitch</code>.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <pThis instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

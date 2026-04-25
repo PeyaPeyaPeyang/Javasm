@@ -7,12 +7,13 @@
 
     <h4>Purpose</h4>
     <div>
-        Invokes instance initialization methods with special handling:<br>
+        Invokes methods using special (non-virtual) invocation rules:<br>
         <ul>
-            <li>Instance constructors (&lt;init&gt; methods)</li>
-            <li>Class initialization methods (&lt;clinit&gt; methods)</li>
+            <li>Instance constructors (<code>&lt;init&gt;</code>)</li>
+            <li>Private instance methods</li>
+            <li>Explicit superclass method invocations (for example <code>super.m()</code>)</li>
         </ul>
-        This instruction bypasses virtual dispatch.
+        This instruction bypasses normal virtual dispatch lookup.
     </div>
 
     <h5><b>Operands:</b></h5>
@@ -31,11 +32,7 @@
     <ul>
         <li><b>&lt;classname&gt;</b>: Fully qualified class name in JVM internal form (slash-separated), e.g., <code>java/lang/Object</code>
         </li>
-        <li><b>&lt;methodname&gt;</b>: Must be either:</li>
-        <ul>
-            <li><code>&lt;init&gt;</code> (instance constructor)</li>
-            <li><code>&lt;clinit&gt;</code> (class initializer, static constructor)</li>
-        </ul>
+        <li><b>&lt;methodname&gt;</b>: instance method name or <code>&lt;init&gt;</code> (constructor)</li>
         <li><b>&lt;argument_descriptor&gt;</b>: JVM method argument descriptor</li>
         <li><b>&lt;return_descriptor&gt;</b>: JVM return type descriptor</li>
     </ul>
@@ -43,7 +40,8 @@
     <h5><b>Examples:</b></h5>
     <ul>
         <li><code>invokespecial java/lang/Object-&gt;&lt;init&gt;()V</code></li>
-        <li><code>invokespecial my/pkg/MyClass-&gt;&lt;clinit&gt;()V</code></li>
+        <li><code>invokespecial my/pkg/Base-&gt;doWork()V</code> (super invocation)</li>
+        <li><code>invokespecial my/pkg/MyClass-&gt;privateHelper(I)V</code></li>
     </ul>
 
     <h5><b>Stack Effect:</b></h5>
@@ -52,10 +50,26 @@
         After: <code>..., returnValue?</code>
     </p>
     <p>
-        - Pops object reference and arguments.<br>
-        - Pushes return value if non-void.<br>
-        - Throws <code>NullPointerException</code> if <code>objectref</code> is null when calling
-        <code>&lt;init&gt;</code>.<br>
-        - Bypasses virtual method dispatch.
+        Pops receiver plus all arguments. Pushes return value if method return type is non-void.
+        Constructor calls use return type <code>V</code>.
     </p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification enforces constructor rules for uninitialized objects and legal <code>&lt;init&gt;</code> usage.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>&lt;clinit&gt;</code> is not invoked by bytecode call instructions; class initialization is triggered implicitly.</li>
+        <li>Use <code>invokespecial</code> when semantic intent requires non-virtual selection.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: if the operand stack is empty (i.e., no object reference to invoke on).</li>
+        <li><code>LinkageError</code>: if the symbolic method reference cannot be resolved or if the resolved method is not accessible.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method is static, if an instance method is resolved for a constructor reference, or if the resolved method is not a valid method handle for the invocation type.</li>
+        <li><code>IllegalAccessError</code>: if the resolved method is an instance method that is not accessible from the current class.</li>
+    </ul>
 </div>

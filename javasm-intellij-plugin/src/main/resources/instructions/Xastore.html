@@ -28,6 +28,10 @@
     </ul>
 
     <p>If the array reference is <code>null</code> or the index is out of bounds, an exception is thrown.</p>
+    <p>
+        For <code>{link:aastore}</code>, the stored reference must be assignment-compatible with the runtime component
+        type of the destination array.
+    </p>
 
     <h5><b>Operands:</b> (none)</h5>
     <h5><b>Format:</b> <code>{instruction}</code></h5>
@@ -50,9 +54,28 @@
             After: <code>...</code>
         </li>
         <li><b>lastore, dastore</b><br>
-            Before: <code>..., arrayref, index, value2, value1</code><br>
+            Before: <code>..., arrayref, index, value</code> (value is category-2)<br>
             After: <code>...</code><br>
-            (Note: long and double values occupy two stack words)
+            (Note: long and double values occupy two stack slots)
         </li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can provide the appropriate types for the array reference, index, and value at the point of this instruction.</li>
+        <li>For <code>{link:aastore}</code>, verification checks that the value is a reference type and that the array reference is compatible with an array of that reference type.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>These instructions do not resolve constant-pool entries and have no instruction-specific linkage errors.</li>
+        <li>For category-2 value types (<code>long</code>, <code>double</code>), operand-stack slot accounting is two words for value plus one for <code>arrayref</code> and one for <code>index</code>.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code> if <code>arrayref</code> is <code>null</code>.</li>
+        <li><code>ArrayIndexOutOfBoundsException</code> if <code>index</code> is out of range.</li>
+        <li><code>ArrayStoreException</code> for <code>aastore</code> when the value is not assignment-compatible.</li>
     </ul>
 </div>

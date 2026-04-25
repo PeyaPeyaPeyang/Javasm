@@ -6,11 +6,15 @@
     <h4>Purpose</h4>
     <p>Tests whether the object reference on top of the operand stack is an instance of the specified reference type.
         Pushes <code>1</code> if true, <code>0</code> if false.</p>
+    <p>
+        The target type is obtained by resolving a symbolic class reference from the run-time constant pool.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>TypeDescriptor</code>: constant pool index referencing a class or interface type descriptor (e.g.,
-            <code>Ljava/lang/String;</code>). Primitive types are not allowed.
+        <li><code>TypeDescriptor</code>: constant-pool class reference naming a class, interface, or array type
+            (e.g., <code>Ljava/lang/String;</code>, <code>[Ljava/lang/Object;</code>).
+            Primitive targets are not valid.
         </li>
     </ul>
 
@@ -25,6 +29,32 @@
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>..., objectref</code></li>
-        <li>After: <code>..., result</code> (<code>int</code> 0 or 1)</li>
+        <li>After: <code>..., result</code> (category-1 <code>int</code>: 0 or 1)</li>
+    </ul>
+
+    <h5><b>Semantics:</b></h5>
+    <ul>
+        <li>If <code>objectref</code> is <code>null</code>, result is <code>0</code> (no exception is thrown).</li>
+        <li>If non-null, result is <code>1</code> iff the runtime class is assignment-compatible with target type.</li>
+        <li>For array targets, normal JVM array assignability rules apply.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Typical pattern: <code>instanceof T</code> followed by conditional branch and <code>checkcast T</code>.</li>
+        <li>Use this instruction for safe type tests before value-dependent casts in polymorphic code.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires a reference-compatible input and guarantees an int result for successor frames.</li>
+        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
+        <li>There is no <code>ClassCastException</code> path in <code>instanceof</code>; failed checks return <code>0</code>.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: if the operand stack is empty (i.e., no object reference to check).</li>
+        <li><code>LinkageError</code>: if the symbolic type reference cannot be resolved or if the resolved type is not accessible.</li>
     </ul>
 </div>

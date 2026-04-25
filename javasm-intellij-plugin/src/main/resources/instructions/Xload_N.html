@@ -42,13 +42,26 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li><b>aload, iload, fload</b><br>
+        <li><b>aload_&lt;n&gt;, iload_&lt;n&gt;, fload_&lt;n&gt;</b><br>
             Before: <code>...</code><br>
-            After: <code>..., value</code> (1 word value)
+            After: <code>..., value</code> (category-1 value)
         </li>
-        <li><b>lload, dload</b><br>
+        <li><b>lload_&lt;n&gt;, dload_&lt;n&gt;</b><br>
             Before: <code>...</code><br>
-            After: <code>..., value2, value1</code> (2 word value)
+            After: <code>..., value</code> (category-2 value, two stack slots)
         </li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>These instructions are optimised shortcuts for loading from local variable indices 0 to 3. For indices 4 and above, the corresponding non-shortcut instructions (e.g. <code>iload</code>, <code>aload</code>, etc.) with explicit operands must be used.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

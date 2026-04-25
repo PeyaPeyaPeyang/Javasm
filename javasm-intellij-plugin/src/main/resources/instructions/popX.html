@@ -37,9 +37,18 @@
     </ul>
 
     <h5><b>Notes:</b></h5>
-    <p>
-        Using <code>pop</code> on a category-2 value (like long or double) results in a <code>VerifyError</code> at
-        runtime.
-        Likewise, using <code>pop2</code> when the stack does not match one of the expected patterns is invalid.
-    </p>
+    <ul>
+        <li><code>pop</code> is valid only when the top stack value is category-1.</li>
+        <li><code>pop2</code> is valid only for the two forms shown above.</li>
+        <li>Invalid category/shape usage is rejected by bytecode verification (commonly surfaced as <code>VerifyError</code> during loading/linking).</li>
+        <li>These instructions do not resolve constant-pool entries and have no instruction-specific runtime exception.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

@@ -6,6 +6,9 @@
     <h4>Purpose</h4>
     <p>Pushes a signed byte value (−128 to 127) onto the operand stack as an <code>int</code>. This instruction is used
         for values outside the range handled by <code>iconst_m1</code> to <code>iconst_5</code>.</p>
+    <p>
+        The immediate byte operand is sign-extended to a 32-bit <code>int</code> before being pushed.
+    </p>
 
     <h5><b>Operands:</b></h5>
     <ul>
@@ -20,13 +23,21 @@
         <li><code>bipush -128</code></li>
     </ul>
 
-    <h5><b>Note:</b></h5>
-    <p>For values between −1 and 5 inclusive, use the corresponding <code>iconst_m1</code> to <code>iconst_5</code>
-        instructions instead of <code>bipush</code>.</p>
-
     <h5><b>Stack Effect:</b></h5>
     <ul>
         <li>Before: <code>...</code></li>
-        <li>After: <code>..., value</code> (int)</li>
+        <li>After: <code>..., value</code> (category-1 <code>int</code>)</li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept an <code>int</code> value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Notes:</b></h5>
+    <p>For values between −1 and 5 inclusive, use the corresponding <code>iconst_m1</code> to <code>iconst_5</code>
+        instructions instead of <code>bipush</code>.</p>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

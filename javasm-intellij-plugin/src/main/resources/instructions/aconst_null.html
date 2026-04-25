@@ -5,8 +5,8 @@
 
     <h4>Purpose</h4>
     <p>
-        Pushes a <code>null</code> reference onto the operand stack. This is typically used to initialize variables or
-        as a placeholder for objects that are not yet assigned.
+        Pushes the <code>null</code> reference onto the operand stack. In verifier terms, this value has the special
+        <em>null type</em>, which is assignment-compatible with any reference type.
     </p>
 
     <h5><b>Operands:</b> (none)</h5>
@@ -21,7 +21,7 @@
 
     <h5><b>Stack Effect:</b></h5>
     <p>
-        The operand stack is updated with a <code>null</code> reference.
+        The operand stack is updated with a <code>null</code> reference (category-1 value).
     </p>
     <ul>
         <li>Before: <code>...</code></li>
@@ -31,7 +31,14 @@
     <h5><b>Notes:</b></h5>
     <p>
         The <code>aconst_null</code> instruction is used for reference types only. It cannot be used for primitive types
-        such as <code>int</code> or <code>float</code>. Attempting to use a <code>null</code> reference without proper
-        handling may result in a <code>NullPointerException</code>.
+        such as <code>int</code> or <code>float</code>.
     </p>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>

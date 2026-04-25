@@ -30,7 +30,21 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value1 (float), value2 (float)</code></li>
-        <li>After: <code>..., result (int)</code> (<code>-1</code>, <code>0</code>, or <code>1</code>)</li>
+        <li>Before: <code>..., value1 (category-1 float), value2 (category-1 float)</code></li>
+        <li>After: <code>..., result (category-1 int)</code> (<code>-1</code>, <code>0</code>, or <code>1</code>)</li>
     </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>+0.0f</code> and <code>-0.0f</code> compare as equal.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept two category-1 <code>float</code> values and one category-1 <code>int</code> result at the point of this instruction.</li>
+
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

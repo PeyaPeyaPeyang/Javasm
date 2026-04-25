@@ -11,6 +11,10 @@
     <h4>Purpose</h4>
     <p>Multiplies the top two operands on the operand stack and pushes the result. The operation respects the type of
         the instruction.</p>
+    <ul>
+        <li><b>{link:imul}</b>/<b>{link:lmul}</b>: two's-complement multiplication with wraparound on overflow.</li>
+        <li><b>{link:fmul}</b>/<b>{link:dmul}</b>: IEEE 754 multiplication (NaN propagation, signed zeros, infinities).</li>
+    </ul>
 
     <h5><b>Operands:</b> None</h5>
 
@@ -24,7 +28,31 @@
 
     <h5><b>Stack Effect:</b></h5>
     <ul>
-        <li>Before: <code>..., value1, value2</code></li>
-        <li>After: <code>..., result</code></li>
+        <li><b>{link:imul}</b>, <b>{link:fmul}</b><br>
+            Before: <code>..., value1, value2</code> (category-1)<br>
+            After: <code>..., result</code> (category-1)
+        </li>
+        <li><b>{link:lmul}</b>, <b>{link:dmul}</b><br>
+            Before: <code>..., value1, value2</code> (category-2 values)<br>
+            After: <code>..., result</code> (category-2)
+        </li>
     </ul>
+
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><b>{link:imul}</b> and <b>{link:lmul}</b> perform two's-complement multiplication.
+            If the mathematical result exceeds the range of the type,
+            it wraps around modulo 2^32 for <code>imul</code> and modulo 2^64 for <code>lmul</code>.</li>
+        <li><b>{link:fmul}</b> and <b>{link:dmul}</b> follow IEEE 754 rules for floating-point multiplication,
+            including handling of NaN, infinities, and signed zeros.</li>
+        <li>These instructions do not resolve constant-pool entries and have no instruction-specific runtime exceptions.</li>
+    </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction (two category-1 values for <code>imul</code> and <code>fmul</code>, two category-2 values for <code>lmul</code> and <code>dmul</code>).</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

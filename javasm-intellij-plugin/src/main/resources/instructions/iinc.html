@@ -24,6 +24,10 @@
         If either operand exceeds the 1-byte limit, the instruction must be prefixed with <code>wide</code>, which
         promotes operands to 2 bytes.
     </p>
+    <ul>
+        <li><code>wide iinc</code> uses an unsigned 16-bit <code>index</code> and a signed 16-bit <code>const</code>.</li>
+        <li>The increment is arithmetic in 32-bit two's-complement int semantics.</li>
+    </ul>
 
     <h5><b>Format:</b></h5>
     <ul>
@@ -38,6 +42,9 @@
     <pre>
 local_variables[index] = local_variables[index] + const;
     </pre>
+    <p>
+        Overflow wraps modulo 2^32, exactly like normal JVM <code>int</code> arithmetic.
+    </p>
 
     <h5><b>Examples:</b></h5>
     <ul>
@@ -49,7 +56,7 @@ local_variables[index] = local_variables[index] + const;
 
     <h5><b>Stack Effect:</b></h5>
     <p>
-        None — this instruction does not read from or write to the operand stack.
+        None - this instruction does not read from or write to the operand stack.
     </p>
 
     <h5><b>Notes:</b></h5>
@@ -64,4 +71,12 @@ local_variables[index] = local_variables[index] + const;
         <li>May not work with bytecode instrumentation tools that assume all arithmetic happens via the operand stack.
         </li>
     </ul>
+
+    <h5><b>Verification:</b></h5>
+    <ul>
+        <li>Verification requires that the local variable at the specified index is of type <code>int</code> and that the increment constant is a valid-signed byte (or short if using <code>wide</code>).</li>
+    </ul>
+
+    <h5><b>Runtime Exceptions and Errors:</b></h5>
+    <p>This instruction does not throw any instruction-specific runtime exceptions.</p>
 </div>
