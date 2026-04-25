@@ -1,5 +1,15 @@
 # Changelog
 
+### [1.2.1] - 2026/04/25
+
+JAL Implementation: 1.2.2
+
+This release includes new features and improvements.
+
+- **feat**: Partially support classes/methods navigation in the editor.
+- fix: Correct rule index for lookupswitch instruction.
+- fix: Calculation logic of instruction indexes.
+
 ### [1.2.0] - 2026/04/24
 
 JAL Implementation: 1.2.2
