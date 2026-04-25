@@ -47,7 +47,12 @@ public class InstructionPsiChangeListener extends PsiTreeChangeAdapter
         if (!(element.getContainingFile() instanceof JALFile))
             return;
 
-        MethodBodyNode methodBody = PsiTreeUtil.getParentOfType(element, MethodBodyNode.class);
+        MethodBodyNode methodBody;
+        if (element instanceof MethodBodyNode)
+            methodBody = (MethodBodyNode) element;
+        else
+            methodBody = PsiTreeUtil.getParentOfType(element, MethodBodyNode.class);
+
         if (methodBody == null)
             return; // メソッドボディでない場合は無視
 
