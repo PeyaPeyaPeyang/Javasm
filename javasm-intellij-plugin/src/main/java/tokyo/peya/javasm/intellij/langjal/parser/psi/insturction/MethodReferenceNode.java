@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 
+import com.intellij.ide.navigationToolbar.rider.RiderMainToolbarBorderLayout;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -77,7 +78,7 @@ public class MethodReferenceNode extends InstructionNode
 
         try {
             return methodDescriptorNode.getMethodDescriptor();
-        } catch (IllegalArgumentException e) {
+        } catch (RuntimeException e) {
             return null; // メソッド記述子の解析に失敗した場合は null を返す
         }
     }
