@@ -1,5 +1,6 @@
 package tokyo.peya.javasm.intellij.inspection;
 
+import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
