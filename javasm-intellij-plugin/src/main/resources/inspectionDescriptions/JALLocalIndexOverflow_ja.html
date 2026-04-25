@@ -1,0 +1,25 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，<code>Xload</code>，<code>Xstore</code>，<code>iinc</code> 命令を含むローカル変数操作を対象にします。
+</p>
+<p>
+    参照しているローカル変数インデックスが 1 バイトの範囲（0～255）を超えていないかを確認します。
+    超えている場合，その命令は <code>wide</code> 修飾子が付いていない限り無効と見なされます。
+</p>
+<p>
+    このインスペクションの対象となる命令タイプは次のとおりです。
+</p>
+<ul>
+    <li><code>iload</code>，<code>lload</code>，<code>fload</code>，<code>dload</code>，<code>aload</code></li>
+    <li><code>istore</code>，<code>lstore</code>，<code>fstore</code>，<code>dstore</code>，<code>astore</code></li>
+    <li><code>iinc</code></li>
+    <li><code>ret</code></li>
+</ul>
+<p>
+    変数インデックスが 255 を超えるとエラーが報告され，命令に <code>wide</code> 接頭辞を自動で追加するクイックフィックスが利用できます。
+</p>
+</body>
+</html>
+
+

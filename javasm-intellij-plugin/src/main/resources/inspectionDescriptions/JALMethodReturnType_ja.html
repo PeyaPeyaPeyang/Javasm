@@ -1,0 +1,24 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，<code>ireturn</code>，<code>lreturn</code>，<code>freturn</code>，<code>dreturn</code>，<code>areturn</code> のような型付きの命令を含む，
+    <code>return</code> 命令を対象にします。
+</p>
+<p>
+    各 return 命令の型が，メソッド記述子で指定された戻り値型と一致しているかを確認します。
+    型が一致しない場合はエラーが報告されます。
+</p>
+<div>
+    たとえば，次のようなケースは無効です。
+    <ul>
+        <li><code>double</code> を返すと宣言されたメソッドで <code>ireturn</code> を使用する。</li>
+        <li><code>int</code> を返すメソッドで <code>return</code> を使用する。</li>
+    </ul>
+</div>
+<p>
+    メソッドの宣言上の戻り値型と，実際の return 命令の整合性を保つことは，有効なバイトコードのために不可欠です。
+</p>
+</body>
+</html>
+
+

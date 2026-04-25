@@ -1,0 +1,22 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，スタックへスカラー値をプッシュする <code>bipush</code> および <code>sipush</code> 命令を対象にします。
+</p>
+<p>
+    プッシュする値が <code>sipush</code> の有効範囲（つまり -32,768 ～ 32,767）を超える場合，その命令は <code>ldc</code> に置き換える必要があります。
+</p>
+<p>
+    <code>ldc</code> 命令は，次のような構文で定数プールから定数を読み込めます。
+</p>
+<pre><code>
+ldc 1000000
+ldc "ExampleString"
+    </code></pre>
+<p>
+    このインスペクションはそのようなケースを報告し，値を直接表現できない場合には <code>bipush</code> または <code>sipush</code> を <code>ldc</code> に置き換えることを推奨します。
+</p>
+</body>
+</html>
+
+

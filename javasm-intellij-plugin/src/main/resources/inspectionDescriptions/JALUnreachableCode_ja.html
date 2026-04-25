@@ -1,0 +1,28 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，コード内のすべての命令を解析し，実行時に到達不能な命令を報告します。
+</p>
+<p>
+    ジャンプやメソッド終了などの無条件の制御移動によって制御フローが到達できない場合，その命令は到達不能と見なされます。
+</p>
+<p>
+    次の命令は，無条件に制御フローを終了させるものと見なされます。
+</p>
+<ul>
+    <li><code>goto</code></li>
+    <li><code>return</code></li>
+    <li><code>ireturn</code>，<code>lreturn</code>，<code>freturn</code>，<code>dreturn</code>，<code>areturn</code></li>
+    <li><code>athrow</code></li>
+    <li><code>tableswitch</code> と <code>lookupswitch</code>（すべての分岐が別の場所へジャンプする場合）</li>
+</ul>
+<p>
+    注意: <code>jsr</code>（サブルーチンへのジャンプ）は，サブルーチンの完了後に実行が再開されるため，制御フローを終了させるものとは <strong>見なされません</strong>。
+</p>
+<p>
+    このような終了命令の後に続き，かついずれのジャンプ先や例外ハンドラの対象でもない命令は，警告としてフラグ付けされます。
+</p>
+</body>
+</html>
+
+

@@ -64,31 +64,35 @@
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALClassfileNameInspection"
                 language="JAL"
-                displayName="Class name inspection"
                 enabledByDefault="true"
                 level="ERROR"
-                groupName="JAL Inspections"/>
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.classfile.name" />
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushIntegerInspection"
                 language="JAL"
-                displayName="Push integer inspection"
                 enabledByDefault="true"
                 level="WARNING"
-                groupName="JAL Inspections"/>
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.integer.small.name" />
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushBigIntegerInspection"
                 language="JAL"
-                displayName="Push big integer inspection"
                 enabledByDefault="true"
                 level="ERROR"
-                groupName="JAL Inspections"/>
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.integer.big.name" />
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALUnreachableCodeInspection"
                 language="JAL"
-                displayName="Unreachable code inspection"
                 enabledByDefault="true"
                 level="WARNING"
-                groupName="JAL Inspections"/>
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.unreachable.name" />
         <psi.treeChangeListener
                 implementation="tokyo.peya.javasm.intellij.editor.linenumber.InstructionPsiChangeListener"/>
         <codeInsight.lineMarkerProvider language="JAL"
@@ -104,23 +108,26 @@
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALLocalIndexOverflowInspection"
                 enabledByDefault="true"
                 level="ERROR"
-                groupName="JAL Inspections"
-                displayName="Local index overflow inspection"
-                language="JAL"/>
+                language="JAL"
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.localOverflow.name" />
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALMethodReturnTypeInspection"
                 enabledByDefault="true"
                 level="ERROR"
-                groupName="JAL Inspections"
-                displayName="Method return type inspection"
-                language="JAL"/>
+                language="JAL"
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.returnType.name" />
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALShortenableVariableOperationInspection"
                 enabledByDefault="true"
                 level="WARNING"
-                groupName="JAL Inspections"
-                displayName="Shortenable variable operation inspection"
-                language="JAL"/>
+                language="JAL"
+                bundle="messages.JALMessages"
+                groupKey="jal.inspection"
+                key="jal.inspection.shortenableVariable.name" />
         <debugger.positionManagerFactory
                 implementation="tokyo.peya.javasm.intellij.editor.debugger.JALPositionManagerFactory" order="first"/>
         <xdebugger.breakpointType implementation="tokyo.peya.javasm.intellij.editor.debugger.JALLineBreakpointType"/>

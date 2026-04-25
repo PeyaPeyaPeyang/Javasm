@@ -1,0 +1,25 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，<code>iload</code>，<code>lload</code>，<code>fload</code>，<code>dload</code>，<code>aload</code> といったローカル変数の読み込み／書き込み命令，および対応する <code>xstore</code> 形式を対象にします。
+</p>
+<p>
+    命令が 0 から 3 の変数インデックスを使用している場合，短縮形のバリアントが利用できます（たとえば，<code>iload 0</code> の代わりに <code>iload_0</code>）。
+</p>
+<p>
+    このインスペクションは，長い形式が不要に使われているケースを検出し，警告を出します。等価な短縮形に置き換えるクイックフィックスも提供されます。
+</p>
+<div>
+    次の置き換えが推奨されます。
+    <ul>
+        <li><code>iload 0</code> -&lt; <code>iload_0</code>，<code>iload 1</code> → <code>iload_1</code> など。</li>
+        <li><code>fstore 2</code> -&lt; <code>fstore_2</code>，以下同様です。</li>
+    </ul>
+</div>
+<p>
+    短縮形を使用すると，バイトコードサイズが小さくなり，可読性も向上します。
+</p>
+</body>
+</html>
+
+

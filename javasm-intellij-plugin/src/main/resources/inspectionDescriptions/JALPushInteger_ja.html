@@ -1,0 +1,32 @@
+<html lang="ja">
+<body>
+<p>
+    このインスペクションは，整数値をスタックにプッシュする命令を監査します。
+</p>
+<div>
+    対象となる命令は次のとおりです。
+    <ul>
+        <li><code>bipush X</code>: 値 X が <code>iconst_X</code> の範囲に収まる場合は，対応する <code>iconst</code> 命令の使用が推奨されます。</li>
+        <li><code>sipush X</code>: 適用可能な場合は，<code>bipush</code> または <code>iconst</code> 命令に置き換えるべきです。</li>
+    </ul>
+</div>
+<div>
+    <code>iconst</code> 命令には次のものがあります。
+    <ul>
+        <li><code>iconst_m1</code> は -1</li>
+        <li><code>iconst_0</code> は 0</li>
+        <li><code>iconst_1</code> は 1</li>
+        <li><code>iconst_2</code> は 2</li>
+        <li><code>iconst_3</code> は 3</li>
+        <li><code>iconst_4</code> は 4</li>
+        <li><code>iconst_5</code> は 5</li>
+    </ul>
+</div>
+<p>
+    より効率の悪い命令が検出されると，弱い警告が報告されます。
+    さらに，適切な <code>iconst</code> または <code>bipush</code> 命令に置き換えるクイックフィックスが提供されます。
+</p>
+</body>
+</html>
+
+
