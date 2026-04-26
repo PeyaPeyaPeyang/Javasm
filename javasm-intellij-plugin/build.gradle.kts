@@ -48,7 +48,7 @@ fun extractLatestChangeNotes(): String {
     val changelogPath = projectRoot.resolve("CHANGELOG.md")
     val content = Files.readString(changelogPath)
 
-    val regex = Regex("## \\[.*?] - .*?\n(.*?)(?=\n## |\\Z)", RegexOption.DOT_MATCHES_ALL)
+    val regex = Regex("### \\[.*?] - .*?\n(.*?)(?=\n### |\\Z)", RegexOption.DOT_MATCHES_ALL)
     val match = regex.find(content)
 
     return match?.groups?.get(1)?.value ?: "No changelog available."
