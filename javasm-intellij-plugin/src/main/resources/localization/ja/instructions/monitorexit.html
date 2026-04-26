@@ -1,0 +1,51 @@
+<!-- Instructions: monitorexit -->
+<div class="definition">
+    <h2>モニタ・ロックの解放</h2>
+    <p><b>{link:monitorexit}</b> - <code>0xc3</code> (195)</p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭のオブジェクト参照に対するモニタロックを解放します。同期ブロックまたは同期メソッドの終了で使用されます。</p>
+    <p>
+        現在スレッドは当該モニタを保持している必要があります。リエントラント・ロックでは，<code>monitorexit</code> ごとに保持カウントを減算し，
+        カウントが 0 になった時点でモニタが解放されます。
+    </p>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>monitorexit</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>monitorexit</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>...</code>（カテゴリ 1 参照を 1 つ消費）</li>
+    </ul>
+
+    <h5><b>実行時・並行性に関する備考:</b></h5>
+    <ul>
+        <li>現在スレッドがモニタを保持していない場合，<code>IllegalMonitorStateException</code> がスローされます。</li>
+        <li>モニタ解放の成功は，Java メモリモデルの同期順序に参加します。</li>
+        <li>この命令は定数プール解決を伴いません。</li>
+    </ul>
+
+    <h5>使用上の注意</h5>
+    <p><code>monitorexit</code> は，先に取得したモニタロックを正しく解放するため，必ず <code>monitorenter</code> と対で使用する必要があります。これを満たさない場合，デッドロックや同期不整合の原因になります。</p>
+    <p>
+        正しいバイトコードは，例外経路を含むすべての経路でモニタ解放を保証します。
+    </p>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが参照値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外:</b></h5>
+    <ul>
+        <li><code>IllegalMonitorStateException</code>: 現在スレッドが，スタック先頭オブジェクト参照のモニタを保持していない場合。</li>
+    </ul>
+</div>
+

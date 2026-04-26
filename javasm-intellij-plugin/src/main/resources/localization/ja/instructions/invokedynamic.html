@@ -1,0 +1,74 @@
+<!-- Instructions: invokedynamic -->
+<div class="definition">
+    <h2>動的な呼び出し</h2>
+    <p>
+        <b>{link:invokedynamic}</b> - <code>0xba</code> (186)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        実行時にブートストラップメソッドでリンクされる動的コールサイト呼び出しを実行します。
+        Java のラムダ変換や言語レベルの動的ディスパッチ機構の基盤です。
+    </p>
+    <p>
+        他の invoke 命令と異なり，呼び出し先はクラス/メソッドのシンボリック参照だけでは固定されません。
+        リンケージの結果として <code>CallSite</code> が生成され，その target メソッドハンドルが呼び出されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li>バイトコードオペランドは <code>CONSTANT_InvokeDynamic_info</code> を指す定数プールインデックスで，後続に 0 バイトが 2 つ続きます。</li>
+        <li><code>CONSTANT_InvokeDynamic_info</code> は，ブートストラップメソッド項目と name-and-type 記述子へリンクします。</li>
+        <li>ブートストラップ静的引数は，クラスファイルの <code>BootstrapMethods</code> 属性にエンコードされます。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <pre>
+invokedynamic &lt;name&gt; &lt;methodDescriptor&gt; [bootstrap = MethodHandle + static args]
+    </pre>
+
+    <h5><b>詳細:</b></h5>
+    <ul>
+        <li>初回実行時に JVM はコールサイトを解決し，ブートストラップメソッドを呼び出します。</li>
+        <li>ブートストラップメソッドには，lookup 文脈，コールサイト名，メソッド型，静的引数が渡されます。</li>
+        <li>戻り値は null でない <code>CallSite</code> であり，その target 型はコールサイト記述子と完全一致する必要があります。</li>
+        <li>リンク成功後の実行では，リンク済みコールサイトが再利用されます。</li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <pre>
+invokedynamic apply (Ljava/lang/Object;)Ljava/lang/Object;
+  // bootstrap: java/lang/invoke/LambdaMetafactory.metafactory
+    </pre>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        Before: <code>..., arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue</code><br>
+        引数と戻り値型は <code>methodDescriptor</code> で定義されます。
+        カテゴリ 2 値（<code>long</code>/<code>double</code>）は 2 スロットを消費または生成します。
+    </p>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，コールサイト記述子に対するオペランド・スタック互換性を確認します。</li>
+        <li>リンケージ失敗はリンケージエラー（一般に <code>BootstrapMethodError</code> ラッパー）として報告されます。</li>
+        <li>リンク済みターゲットを実引数型で呼び出せない場合，メソッドハンドル呼び出し型エラーが発生することがあります。</li>
+        <li>この命令に暗黙の objectref はありません。すべての引数は記述子で明示されます。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>呼び出し挙動をブートストラップロジックへ意図的に遅延させる場合に <code>invokedynamic</code> を使用します。</li>
+        <li>Java コンパイルでは，ラムダ式と文字列連結がこの命令の代表的生成元です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>BootstrapMethodError</code>: ブートストラップメソッドがコールサイトリンクに失敗した場合（例: 例外スロー，null 返却，不整合な target 型を持つ CallSite の返却）。</li>
+        <li><code>LinkageError</code>: シンボリック参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決されたメソッドハンドルが不正，または解決されたコールサイトが不正な場合。</li>
+        <li><code>WrongMethodTypeException</code>: 実引数型が実行時にコールサイト記述子と一致しない場合。</li>
+    </ul>
+</div>
+

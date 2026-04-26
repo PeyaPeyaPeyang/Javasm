@@ -1,0 +1,71 @@
+<!-- Instructions: ldc, ldc_w, ldc2_w -->
+<div class="definition">
+    <h2>定数の読み込み</h2>
+    <p>
+        <b>{link:ldc}</b> - <code>0x12</code> (18)<br>
+        <b>{link:ldc_w}</b> - <code>0x13</code> (19)<br>
+        <b>{link:ldc2_w}</b> - <code>0x14</code> (20)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        実行時定数プールから定数をオペランド・スタックへロードします。
+        使用できる定数の種類は，命令と定数のカテゴリによって決まります。
+    </p>
+    <p>
+        JAL 言語では，文字列をロードするために <b>{link:ldc}</b> を使用することが一般的です。
+        数値定数は，コードの可読性のためにカテゴリ 1 と 2 の定数を明示的に区別して示すことが推奨されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>ConstantIndex</code>: 定数プールのインデックス。定数型に応じて使用可能な命令が異なります:
+            <ul>
+                <li><b>{link:ldc}</b>: 8 ビットインデックス。カテゴリ 1 定数（例: <code>int</code>，
+                    <code>float</code>，<code>String</code>，クラスリテラル，メソッド型，メソッドハンドル，または カテゴリ 1 の動的定数）をロードします。</li>
+                <li><b>{link:ldc_w}</b>: <b>{link:ldc}</b> と同じ種類の定数を，16 ビットインデックスでロードします。</li>
+                <li><b>{link:ldc2_w}</b>: 16 ビットインデックス。カテゴリ 2 定数（<code>long</code>，<code>double</code>，または カテゴリ 2 の動的定数）をロードします。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <ul>
+        <li><code>ldc &lt;ConstantIndex&gt;</code></li>
+        <li><code>ldc_w &lt;ConstantIndex&gt;</code></li>
+        <li><code>ldc2_w &lt;ConstantIndex&gt;</code></li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ldc 10</code>（CP インデックス 10 から カテゴリ 1 定数をロード）</li>
+        <li><code>ldc_w 300</code>（意味は同じで，より広いインデックス幅を使用）</li>
+        <li><code>ldc2_w 5</code>（<code>long</code> や <code>double</code> などの カテゴリ 2 定数をロード）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>ldc, ldc_w</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code>（カテゴリ 1 値 1 つ）
+        </li>
+        <li><b>ldc2_w</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code>（2 スロットを占有する カテゴリ 2 値 1 つ）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>定数種別と互換性のない命令の使用は，検証またはリンク時に拒否されます。</li>
+        <li>クラス，メソッド型，メソッドハンドル，動的定数では，解決またはリンケージ処理が発生する場合があります。</li>
+        <li>動的定数はブートストラップメソッドで計算され，リンケージ失敗はリンケージエラーとして報告されます。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><b>{link:ldc}</b> と <b>{link:ldc_w}</b> の違いはインデックス幅のみであり，ロードされる値の意味は同一です。</li>
+        <li>定数カテゴリが検証器の挙動を左右するため，例はカテゴリが分かる形で示すことを推奨します。</li>
+    </ul>
+</div>
+

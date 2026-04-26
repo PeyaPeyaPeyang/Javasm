@@ -1,0 +1,77 @@
+<!-- Instructions: iinc -->
+<div class="definition">
+    <h2>整数のインクリメント</h2>
+    <p>
+        <b>{link:iinc}</b> - <code>0x84</code> (132)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        <code>int</code> 型ローカル変数に対して，その場で加算（または減算）を行います。オペランド・スタックを使わずに
+        ループ・カウンタや局所的なカウンタを更新する場合によく用いられます。
+    </p>
+    <p>
+        ローカル変数インデックスと増分値は，いずれもオペランドとして指定します。増分定数は符号付き値のため，
+        正負どちらの変化量も指定できます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>index</code>: 符号なし byte（0〜255）- ローカル変数配列のインデックス</li>
+        <li><code>const</code>: 符号付き byte（-128〜127）- 増分値</li>
+    </ul>
+    <p>
+        いずれかのオペランドが 1 バイト範囲を超える場合，<code>wide</code> 接頭辞が必要です。
+        この場合，オペランドは 2 バイトへ拡張されます。
+    </p>
+    <ul>
+        <li><code>wide iinc</code> では，<code>index</code> は符号なし 16 ビット，<code>const</code> は符号付き 16 ビットです。</li>
+        <li>加算は 32 ビット 2 の補数 <code>int</code> の算術規則に従います。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <ul>
+        <li><code>iinc &lt;index&gt;, &lt;const&gt;</code></li>
+        <li><code>wide iinc &lt;index&gt;, &lt;const&gt;</code>（拡張オペランド使用時）</li>
+    </ul>
+
+    <h5><b>意味論:</b></h5>
+    <p>
+        疑似コードでは次のように表現されます。
+    </p>
+    <pre>
+local_variables[index] = local_variables[index] + const;
+    </pre>
+    <p>
+        オーバーフローは 2^32 の剰余で折り返し，JVM の通常の <code>int</code> 算術と同一です。
+    </p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iinc 2 1</code> - インデックス 2 のローカル変数を 1 増加</li>
+        <li><code>iinc 5, -3</code> - インデックス 5 のローカル変数を 3 減少</li>
+        <li><code>wide iinc 258, 1000</code> - インデックス 258 を 1000 増加（<code>wide</code> が必要）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        なし - この命令はオペランド・スタックを読み書きしません。
+    </p>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>int</code> 型のローカル変数にのみ適用できます。<code>long</code> など他の型に使うことはできません。</li>
+        <li><code>iinc</code> は他の算術命令と異なり，スタックへの push/pop を介さずローカル変数スロットを直接更新するため，単純なカウンタ更新では効率的です。</li>
+        <li>コンパイラは <code>i++</code> や <code>i += constant</code> のような構文でよくこの命令を生成します。</li>
+        <li>すべての算術処理がスタック経由だと仮定するバイトコード計測ツールでは，期待どおり動作しない場合があります。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，指定インデックスのローカル変数が <code>int</code> 型であり，増分定数が有効な符号付き byte（<code>wide</code> 使用時は short）であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

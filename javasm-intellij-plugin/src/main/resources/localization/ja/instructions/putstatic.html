@@ -1,0 +1,75 @@
+<!-- Instructions: putstatic -->
+<div class="definition">
+    <h2>静的フィールドへの格納</h2>
+    <p><b>{link:putstatic}</b> - <code>0xb3</code> (179)</p>
+
+    <h4>目的</h4>
+    <p>
+        クラスの静的フィールドへ値を格納します。値はオペランド・スタックからポップされ，
+        指定された静的フィールドへ代入されます。
+    </p>
+    <p>
+        書き込み前にシンボリックフィールド参照が解決され，必要に応じてクラス/インターフェースの初期化が実行されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>FieldDescriptor</code>: 格納対象静的フィールドのクラス，フィールド名，型記述子を指定します。
+            形式は <code>Owner-&gt;FieldName:TypeDescriptor</code> です。
+            <code>Owner</code> には型記述子で使う <code>L</code> と <code>;</code> は含めません。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <p><code>putstatic &lt;FieldDescriptor&gt;</code></p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>putstatic java/lang/System-&gt;out:Ljava/io/PrintStream;</code></li>
+        <li><code>putstatic java/lang/Math-&gt;PI:D</code></li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        <code>TypeDescriptor</code> はフィールド型を示し，有効な Java 型である必要があります。
+    </p>
+    <ul>
+        <li><code>I</code>: <code>int</code></li>
+        <li><code>J</code>: <code>long</code></li>
+        <li><code>F</code>: <code>float</code></li>
+        <li><code>D</code>: <code>double</code></li>
+        <li><code>Z</code>: <code>boolean</code></li>
+        <li><code>B</code>: <code>byte</code></li>
+        <li><code>C</code>: <code>char</code></li>
+        <li><code>S</code>: <code>short</code></li>
+        <li><code>L&lt;classname&gt;;</code>: 参照型（例: <code>Ljava/lang/String;</code>）</li>
+        <li><code>[</code>: 配列型（例: <code>[I</code> は <code>int[]</code>）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value</code>（フィールド記述子に応じて カテゴリ 1 または カテゴリ 2）</li>
+        <li>After: <code>...</code>（フィールド値を消費）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，この命令位置でオペランド・スタックがフィールド型の値を供給できることを確認します。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>検証器の型検査では，スタック値がフィールド記述子と互換であることが必要です。</li>
+        <li>参照代入規則には通常の JVM 代入互換性が適用されます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>IncompatibleClassChangeError</code>: 解決先フィールドが static でない場合。</li>
+        <li><code>NoSuchFieldError</code>: フィールドを見つけられない場合。</li>
+        <li><code>IllegalAccessError</code>: 現在の文脈からフィールドにアクセスできない場合。</li>
+        <li><code>NoClassDefFoundError</code>: フィールドを含むクラスを見つけられない場合。</li>
+    </ul>
+</div>
+

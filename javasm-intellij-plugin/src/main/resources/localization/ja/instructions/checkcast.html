@@ -1,0 +1,69 @@
+<!-- Instructions: checkcast -->
+<div class="definition">
+    <h2>キャスト可能性の検査</h2>
+    <p><b>{link:checkcast}</b> - <code>0xc0</code> (192)</p>
+
+    <h4>目的</h4>
+    <p>
+        オペランド・スタック先頭のオブジェクトが，指定した参照型に適合するかを検査します。
+        検査に成功した場合，オブジェクトは変更されずそのままスタックに残ります。
+        失敗した場合は実行時に <code>ClassCastException</code> がスローされます。
+    </p>
+    <p>
+        対象型は，実行時定数プールのシンボリック参照を解決して取得されます。
+    </p>
+    <p>
+        この命令は，Java ソースにおける <code>(String) obj</code> のような実行時型検査を実装します。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: クラス・インターフェース・配列型記述子を指す定数プールインデックス
+            （例: <code>Ljava/lang/String;</code>, <code>[Ljava/lang/Object;</code>）
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <code>checkcast &lt;TypeDescriptor&gt;</code>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>..., objectref</code></li>
+    </ul>
+
+    <h5><b>意味論:</b></h5>
+    <ul>
+        <li><code>objectref == null</code> の場合，キャストは常に成功します（<code>null</code> は任意の参照型に代入可能）。</li>
+        <li><code>objectref</code> が null でなく，かつ対象型に代入可能でない場合，<code>ClassCastException</code> がスローされます。</li>
+        <li>オブジェクト参照そのものは変更されず，検査のみが行われます。</li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>checkcast Ljava/lang/String;</code> - オブジェクトが <code>String</code> またはそのサブクラスかを検査</li>
+        <li><code>checkcast Ljava/util/List;</code> - <code>List</code> 互換性を検査</li>
+        <li><code>checkcast [Ljava/lang/String;</code> - オブジェクトが <code>String[]</code> かを検査</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>この命令は純粋な型検査であり，オブジェクトの変換や複製は行いません。</li>
+        <li>参照型間のキャストで，Java コンパイラがよく挿入します。</li>
+        <li>多相的な処理を実装する際，<code>instanceof</code> と組み合わせて使われます。</li>
+        <li>対象型であることが既に分かっている場合（例: <code>instanceof</code> の直後）は，<code>checkcast</code> を安全に利用できます。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，参照互換の入力が必要であり，後続フレームに対して参照結果が保証されます。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>ClassCastException</code>: オブジェクト参照が null ではなく，対象型と代入互換でない場合。</li>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー: シンボリック参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+    </ul>
+</div>
+

@@ -1,0 +1,77 @@
+<!-- Instructions: multianewarray -->
+<div class="definition">
+    <h2>多次元配列の生成</h2>
+    <p><b>{link:multianewarray}</b> - <code>0xc5</code> (197)</p>
+
+    <h4>目的</h4>
+    <p>
+        指定された型の多次元配列を新規作成します。初期化する次元のサイズはオペランド・スタックから取得されます。
+        生成されるのは指定された先頭次元までです。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li>
+            <code>indexbyte1, indexbyte2</code>: 現在クラスの実行時定数プールにおけるインデックス。
+            配列型へのシンボリック参照を指します。
+        </li>
+        <li>
+            <code>dimensions</code>: 初期化する次元数を表す符号なし byte。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <p><code>multianewarray &lt;indexbyte1&gt; &lt;indexbyte2&gt; &lt;dimensions&gt;</code></p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>multianewarray [[I 2</code></li>
+        <li><code>multianewarray [[[Ljava/lang/String; 2</code></li>
+    </ul>
+
+    <h5><b>TypeDescriptor:</b></h5>
+    <p>
+        参照先の定数プールエントリは，配列型記述子へのシンボリック参照である必要があります。
+        記述子は次の規則で表現されます。
+    </p>
+    <ul>
+        <li><code>[</code>: 配列の次元を表す</li>
+        <li>プリミティブ型: <code>I</code>, <code>J</code>, <code>F</code>, <code>D</code>, <code>Z</code>, <code>B</code>, <code>C</code>, <code>S</code></li>
+        <li><code>L&lt;classname&gt;;</code>: 参照型</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>
+            Before: <code>..., count1, count2, ..., countN</code>（すべて <code>int</code>, カテゴリ 1）
+        </li>
+        <li>
+            After: <code>..., arrayref</code>（カテゴリ 1）
+        </li>
+    </ul>
+    <p>
+        サイズ値は順に消費され，<code>count1</code> が最外次元に対応します。
+    </p>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>
+            <code>dimensions</code> の値は，配列型記述子が持つ次元数以下でなければなりません。
+        </li>
+        <li>
+            生成されるのは先頭 <code>dimensions</code> 次元のみです。残りの次元は未初期化で，
+            それらの要素は <code>null</code> 参照になります。
+        </li>
+        <li>
+            JVM における多次元配列は「配列の配列」として実装されています。
+        </li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NegativeArraySizeException</code>: いずれかの次元サイズが負の場合。</li>
+        <li><code>ClassNotFoundException</code>（<code>NoClassDefFoundError</code> にラップ）: 配列型を解決できない場合。</li>
+        <li><code>IllegalAccessError</code>: 参照先クラスまたはインターフェースへアクセスできない場合。</li>
+    </ul>
+</div>
+

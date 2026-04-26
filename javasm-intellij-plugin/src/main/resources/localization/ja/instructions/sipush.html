@@ -1,0 +1,45 @@
+<!-- Instructions: sipush -->
+<div class="definition">
+    <h2>符号付き short 値のプッシュ</h2>
+    <p><b>{link:sipush}</b> - <code>0x11</code> (17)</p>
+
+    <h4>目的</h4>
+    <p>符号付き 16 ビット short 値（-32,768 〜 32,767）を <code>int</code> としてオペランド・スタックにプッシュします。この
+        命令は <code>{link:bipush}</code> および <code>{link:iconst_m1}</code> から <code>{link:iconst_5}</code>
+        では扱えない範囲の値に使用します。</p>
+    <p>
+        即値の 2 byte オペランドは，プッシュ前に符号拡張されて 32 ビット整数になります。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>short</code>: スタックへプッシュする 16 ビット符号付き即値。</li>
+    </ul>
+
+    <h5><b>形式:</b> <code>sipush &lt;short&gt;</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>sipush 1000</code></li>
+        <li><code>sipush -32000</code></li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <p>-128 〜 127 の値は <code>bipush</code> を使用します。-1 〜 5 の値は
+        <code>iconst_m1</code> から <code>iconst_5</code> を使用します。</p>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code>（カテゴリ 1 の <code>int</code>）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが カテゴリ 1 の <code>int</code> 値 1 つを受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

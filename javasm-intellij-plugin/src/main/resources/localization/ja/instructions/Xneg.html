@@ -1,0 +1,55 @@
+<!-- Instructions: ineg, lneg, fneg, dneg -->
+<div class="definition">
+    <h2>符号反転</h2>
+    <p>
+        <b>{link:ineg}</b> - <code>0x74</code> (116)<br>
+        <b>{link:lneg}</b> - <code>0x75</code> (117)<br>
+        <b>{link:fneg}</b> - <code>0x76</code> (118)<br>
+        <b>{link:dneg}</b> - <code>0x77</code> (119)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭の値の符号を反転（-1 倍）し，結果をプッシュします。</p>
+    <ul>
+        <li><b>{link:ineg}</b>/<b>{link:lneg}</b>: 2 の補数の符号反転。<code>MIN_VALUE</code> は反転しても同じ値になります。</li>
+        <li><b>{link:fneg}</b>/<b>{link:dneg}</b>: IEEE 754 の符号反転（<code>+0.0</code> から <code>-0.0</code> への変換を含む）。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ineg</code></li>
+        <li><code>dneg</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>{link:ineg}</b>, <b>{link:fneg}</b><br>
+            Before: <code>..., value</code>（カテゴリ 1）<br>
+            After: <code>..., -value</code>（カテゴリ 1）
+        </li>
+        <li><b>{link:lneg}</b>, <b>{link:dneg}</b><br>
+            Before: <code>..., value</code>（カテゴリ 2）<br>
+            After: <code>..., -value</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><b>{link:ineg}</b> と <b>{link:lneg}</b> は 2 の補数の符号反転を行うため，最小値（例: <code>Integer.MIN_VALUE</code>）を反転するとオーバーフローにより同じ値になります。</li>
+        <li><b>{link:fneg}</b> と <b>{link:dneg}</b> は IEEE 754 に基づく符号反転です。<code>+0.0</code> は <code>-0.0</code> へ，<code>-0.0</code> は <code>+0.0</code> へ反転します。</li>
+        <li>これらの命令は定数プール解決を行わず，命令固有の実行時例外はありません。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

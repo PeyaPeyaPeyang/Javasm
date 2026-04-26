@@ -1,0 +1,58 @@
+<!-- Instructions: iconst_m1, iconst_0, iconst_1, iconst_2, iconst_3, iconst_4, iconst_5, lconst_0, lconst_1, fconst_0, fconst_1, fconst_2, dconst_0, dconst_1 -->
+<div class="definition">
+    <h2>定数のプッシュ</h2>
+    <p>
+        <b>{link:iconst_m1}</b> - <code>0x02</code> (2)<br>
+        <b>{link:iconst_0}</b> - <code>0x03</code> (3)<br>
+        <b>{link:iconst_1}</b> - <code>0x04</code> (4)<br>
+        <b>{link:iconst_2}</b> - <code>0x05</code> (5)<br>
+        <b>{link:iconst_3}</b> - <code>0x06</code> (6)<br>
+        <b>{link:iconst_4}</b> - <code>0x07</code> (7)<br>
+        <b>{link:iconst_5}</b> - <code>0x08</code> (8)<br>
+        <b>{link:lconst_0}</b> - <code>0x09</code> (9)<br>
+        <b>{link:lconst_1}</b> - <code>0x0a</code> (10)<br>
+        <b>{link:fconst_0}</b> - <code>0x0b</code> (11)<br>
+        <b>{link:fconst_1}</b> - <code>0x0c</code> (12)<br>
+        <b>{link:fconst_2}</b> - <code>0x0d</code> (13)<br>
+        <b>{link:dconst_0}</b> - <code>0x0e</code> (14)<br>
+        <b>{link:dconst_1}</b> - <code>0x0f</code> (15)
+    </p>
+
+    <h4>目的</h4>
+    <p>指定されたプリミティブ型の定数値をオペランド・スタックへプッシュします。</p>
+    <ul>
+        <li><code>iconst_m1</code> 〜 <code>iconst_5</code>: int 定数 -1 〜 5 をプッシュします。</li>
+        <li><code>lconst_0</code>, <code>lconst_1</code>: long の 0 と 1 をプッシュします。</li>
+        <li><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code>: float の 0.0, 1.0, 2.0 をプッシュします。</li>
+        <li><code>dconst_0</code>, <code>dconst_1</code>: double の 0.0 と 1.0 をプッシュします。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iconst_3</code>（int 3 をプッシュ）</li>
+        <li><code>lconst_1</code>（long 1 をプッシュ）</li>
+        <li><code>dconst_1</code>（double 1.0 をプッシュ）</li>
+        <li><code>fconst_0</code>（float 0.0 をプッシュ）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code>（int/float は カテゴリ 1，long/double は カテゴリ 2）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，各命令が生成する値カテゴリをオペランド・スタックが受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらの命令は，頻繁に使用される定数向けに最適化されており，該当値の定数プール参照を不要にします。</li>
+        <li>byte 範囲の定数には <code>bipush</code>，short 範囲の定数には <code>sipush</code> を使用します。その他の値は <code>ldc</code> などの関連命令で定数プールからロードします。</li>
+    </ul>
+</div>

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
+import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.zip.ZipFile;
 public class JALInstructionDocumentProvider extends AbstractDocumentationProvider
 {
     private static final String DOCUMENTATION_PATH = "instructions";
+    private static final String LOCALISED_DOCUMENTATION_PATH = "localization/%s/instructions";
     private static final Pattern INSTRUCTION_NAME_PATTERN =
             Pattern.compile("<!--\\s*Instructions:\\s*([a-z_0-9]+(,\\s*[a-z_0-9]+)*)\\s*-->");
     private static final Pattern INSTRUCTION_LINK_PATTERN =
@@ -78,57 +80,21 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
 
         return null;
     }
-
     public static List<String> loadHTMLFiles()
     {
         List<String> htmlContents = new ArrayList<>();
         try
         {
             ClassLoader classLoader = JALInstructionDocumentProvider.class.getClassLoader();
-            Enumeration<URL> resources = classLoader.getResources(DOCUMENTATION_PATH);
 
-            while (resources.hasMoreElements())
-            {
-                URL url = resources.nextElement();
+            String lang = JALMessages.getLocale().getLanguage();
+            String localizedPath = String.format(LOCALISED_DOCUMENTATION_PATH, lang);
 
-                if (!"jar".equals(url.getProtocol()))
-                    throw new RuntimeException("This method supports JAR protocol only!");
+            // 1. ローカライズ優先
+            loadFromPath(classLoader, localizedPath, true);
 
-                // jar:file:/path/to/plugin.jar!/myplugin/docs
-                String urlPath = url.getPath();
-                String jarPath = urlPath.substring("file:".length(), urlPath.indexOf("!"));
-
-                jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
-
-                try (ZipFile jarFile = new ZipFile(jarPath))
-                {
-                    Enumeration<? extends ZipEntry> entries = jarFile.entries();
-
-                    boolean foundDocumentation = false;
-                    while (entries.hasMoreElements())
-                    {
-                        ZipEntry entry = entries.nextElement();
-
-                        if (!entry.isDirectory()
-                                && entry.getName().startsWith(DOCUMENTATION_PATH + "/")
-                                && entry.getName().endsWith(".html"))
-                        {
-                            foundDocumentation = true;
-                            String content = new String(
-                                    jarFile.getInputStream(entry).readAllBytes(),
-                                    StandardCharsets.UTF_8
-                            );
-                            content = replaceContents(content);
-                            String[] instructionNames = extractInstructionNames(content);
-                            for (String instructionName : instructionNames)
-                                DOCUMENTS.put(instructionName, content);
-                        }
-                        else if (foundDocumentation)
-                            break; // ドキュメントの捜査完了
-                    }
-                }
-            }
-
+            // 2. デフォルト（未登録のみ）
+            loadFromPath(classLoader, DOCUMENTATION_PATH, false);
         }
         catch (IOException e)
         {
@@ -136,6 +102,54 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
         }
 
         return htmlContents;
+    }
+
+    private static void loadFromPath(ClassLoader classLoader, String path, boolean overwrite) throws IOException
+    {
+        Enumeration<URL> resources = classLoader.getResources(path);
+
+        while (resources.hasMoreElements())
+        {
+            URL url = resources.nextElement();
+
+            if (!"jar".equals(url.getProtocol()))
+                throw new RuntimeException("This method supports JAR protocol only!");
+
+            String urlPath = url.getPath();
+            String jarPath = urlPath.substring("file:".length(), urlPath.indexOf("!"));
+            jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
+
+            try (ZipFile jarFile = new ZipFile(jarPath))
+            {
+                Enumeration<? extends ZipEntry> entries = jarFile.entries();
+
+                while (entries.hasMoreElements())
+                {
+                    ZipEntry entry = entries.nextElement();
+
+                    if (!entry.isDirectory()
+                            && entry.getName().startsWith(path + "/")
+                            && entry.getName().endsWith(".html"))
+                    {
+                        String content = new String(
+                                jarFile.getInputStream(entry).readAllBytes(),
+                                StandardCharsets.UTF_8
+                        );
+
+                        content = replaceContents(content);
+                        String[] instructionNames = extractInstructionNames(content);
+
+                        for (String instructionName : instructionNames)
+                        {
+                            if (overwrite || !DOCUMENTS.containsKey(instructionName))
+                            {
+                                DOCUMENTS.put(instructionName, content);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @NotNull

@@ -1,0 +1,78 @@
+<!-- Instructions: isub, lsub, fsub, dsub -->
+<div class="definition">
+    <h2>減算</h2>
+    <p>
+        <b>{link:isub}</b> - <code>0x64</code> (100)<br>
+        <b>{link:lsub}</b> - <code>0x65</code> (101)<br>
+        <b>{link:fsub}</b> - <code>0x66</code> (102)<br>
+        <b>{link:dsub}</b> - <code>0x67</code> (103)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        オペランド・スタックの 2 番目の値から先頭の値を減算し，結果をスタックへプッシュします。
+        実際に行われる演算は命令種別によって異なります。
+    </p>
+
+    <ul>
+        <li><b>isub</b>: <code>int</code> 値同士の減算</li>
+        <li><b>lsub</b>: <code>long</code> 値同士の減算</li>
+        <li><b>fsub</b>: <code>float</code> 値同士の減算</li>
+        <li><b>dsub</b>: <code>double</code> 値同士の減算</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>isub</code></li>
+        <li><code>dsub</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>isub</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code>（カテゴリ 1）<br>
+            After: <code>..., result (int)</code>（カテゴリ 1）<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>lsub</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code>（カテゴリ 2）<br>
+            After: <code>..., result (long)</code>（カテゴリ 2）<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>fsub</b><br>
+            Before: <code>..., value1 (float), value2 (float)</code>（カテゴリ 1）<br>
+            After: <code>..., result (float)</code>（カテゴリ 1）<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+        <li><b>dsub</b><br>
+            Before: <code>..., value1 (double), value2 (double)</code>（カテゴリ 2）<br>
+            After: <code>..., result (double)</code>（カテゴリ 2）<br>
+            Operation: <code>value1 - value2</code>
+        </li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>整数減算（<code>isub</code>, <code>lsub</code>）は 2 の補数演算です。オーバーフローは無視され，結果は循環します。</li>
+        <li>浮動小数点減算（<code>fsub</code>, <code>dsub</code>）は IEEE 754 に従います。
+            <ul>
+                <li>いずれかのオペランドが NaN の場合，結果は NaN になります。</li>
+                <li>無限大を含む減算も IEEE 754 規則で処理されます。</li>
+                <li>必要に応じて符号付きゼロが保持されます（例: <code>+0.0 - +0.0 = +0.0</code>）。</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，命令型に対応したカテゴリの値をオペランド・スタックが受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

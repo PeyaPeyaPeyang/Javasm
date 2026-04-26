@@ -1,0 +1,55 @@
+<!-- Instructions: pop, pop2 -->
+<div class="definition">
+    <h2>スタックからのポップ</h2>
+    <p>
+        <b>{link:pop}</b> - <code>0x57</code> (87)<br>
+        <b>{link:pop2}</b> - <code>0x58</code> (88)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭から 1 つまたは 2 つの値を取り除きます。</p>
+
+    <h5><b>オペランド:</b> なし</h5>
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>pop</b><br>
+            Before: <code>..., value</code><br>
+            After: <code>...</code><br>
+            （カテゴリ 1 値を 1 つ取り除く: <code>int</code>, <code>float</code>, 参照型など）
+        </li>
+        <li><b>pop2</b><br>
+            有効な使用形は次の 2 つです。<br>
+            - <b>Case 1（カテゴリ 1 値を 2 つ）</b><br>
+            Before: <code>..., value2, value1</code><br>
+            After: <code>...</code><br><br>
+            - <b>Case 2（カテゴリ 2 値を 1 つ）</b><br>
+            Before: <code>..., value</code>（long または double）<br>
+            After: <code>...</code>
+        </li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>pop</code>（例: 不要な int 値を破棄）</li>
+        <li><code>pop2</code>（例: double 1 つ，または int 2 つを破棄）</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>pop</code> はスタック先頭が カテゴリ 1 の場合のみ有効です。</li>
+        <li><code>pop2</code> は上記 2 形のみ有効です。</li>
+        <li>カテゴリやスタック形が不正な場合，バイトコード検証で拒否されます（通常はロード/リンク時に <code>VerifyError</code> として現れます）。</li>
+        <li>これらの命令は定数プール解決を行わず，命令固有の実行時例外はありません。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

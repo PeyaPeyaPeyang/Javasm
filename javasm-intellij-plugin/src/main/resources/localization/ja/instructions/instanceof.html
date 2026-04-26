@@ -1,0 +1,59 @@
+<!-- Instructions: instanceof -->
+<div class="definition">
+    <h2>インスタンス型の検査</h2>
+    <p><b>{link:instanceof}</b> - <code>0xc1</code> (193)</p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭のオブジェクト参照が，指定された参照型のインスタンスかどうかを判定します。真なら <code>1</code>，偽なら <code>0</code> をプッシュします。</p>
+    <p>
+        対象型は，実行時定数プールのシンボリッククラス参照を解決して取得されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: クラス，インターフェース，または配列型を表す定数プール参照
+            （例: <code>Ljava/lang/String;</code>, <code>[Ljava/lang/Object;</code>）。
+            プリミティブ型は対象にできません。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b> <code>instanceof &lt;TypeDescriptor&gt;</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>instanceof Ljava/lang/String;</code></li>
+        <li><code>instanceof Ljava/util/List;</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., objectref</code></li>
+        <li>After: <code>..., result</code>（カテゴリ 1 の <code>int</code>: 0 または 1）</li>
+    </ul>
+
+    <h5><b>意味論:</b></h5>
+    <ul>
+        <li><code>objectref</code> が <code>null</code> の場合，結果は <code>0</code> です（例外はスローされません）。</li>
+        <li>null でない場合，実行時クラスが対象型に代入可能なときに限り結果は <code>1</code> です。</li>
+        <li>配列型が対象の場合も，JVM の通常の配列代入可能性規則が適用されます。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>典型パターン: <code>instanceof T</code> の後に条件分岐し，<code>checkcast T</code> を実行する。</li>
+        <li>多相コードで値依存のキャストを安全に行う前段として利用します。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，参照互換の入力が必要であり，後続フレームに対して <code>int</code> 結果が保証されます。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+        <li><code>instanceof</code> には <code>ClassCastException</code> 経路はなく，判定失敗時は <code>0</code> を返します。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー: シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+    </ul>
+</div>
+

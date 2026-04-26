@@ -1,0 +1,55 @@
+<!-- Instructions: imul, lmul, fmul, dmul -->
+<div class="definition">
+    <h2>乗算</h2>
+    <p>
+        <b>{link:imul}</b> - <code>0x68</code> (104)<br>
+        <b>{link:lmul}</b> - <code>0x69</code> (105)<br>
+        <b>{link:fmul}</b> - <code>0x6a</code> (106)<br>
+        <b>{link:dmul}</b> - <code>0x6b</code> (107)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭の 2 値を乗算し，結果をプッシュします。演算は命令の型に従って行われます。</p>
+    <ul>
+        <li><b>{link:imul}</b>/<b>{link:lmul}</b>: 2 の補数乗算（オーバーフロー時はラップアラウンド）。</li>
+        <li><b>{link:fmul}</b>/<b>{link:dmul}</b>: IEEE 754 乗算（NaN 伝播，符号付きゼロ，無限大を含む）。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>imul</code></li>
+        <li><code>dmul</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>{link:imul}</b>, <b>{link:fmul}</b><br>
+            Before: <code>..., value1, value2</code>（カテゴリ 1）<br>
+            After: <code>..., result</code>（カテゴリ 1）
+        </li>
+        <li><b>{link:lmul}</b>, <b>{link:dmul}</b><br>
+            Before: <code>..., value1, value2</code>（カテゴリ 2 値）<br>
+            After: <code>..., result</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><b>{link:imul}</b> と <b>{link:lmul}</b> は 2 の補数乗算を行います。数学的結果が型の範囲を超える場合，<code>imul</code> は 2^32，<code>lmul</code> は 2^64 を法として循環します。</li>
+        <li><b>{link:fmul}</b> と <b>{link:dmul}</b> は IEEE 754 規則に従い，NaN・無限大・符号付きゼロを処理します。</li>
+        <li>これらの命令は定数プール解決を行わず，命令固有の実行時例外はありません。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です（<code>imul</code>/<code>fmul</code> は カテゴリ 1 を 2 つ，<code>lmul</code>/<code>dmul</code> は カテゴリ 2 を 2 つ）。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

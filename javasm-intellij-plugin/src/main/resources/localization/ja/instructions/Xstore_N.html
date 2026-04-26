@@ -1,0 +1,69 @@
+<!-- Instructions: istore_0, istore_1, istore_2, istore_3, lstore_0, lstore_1, lstore_2, lstore_3, fstore_0, fstore_1, fstore_2, fstore_3, dstore_0, dstore_1, dstore_2, dstore_3, astore_0, astore_1, astore_2, astore_3 -->
+<div class="definition">
+    <h2>ローカル変数への格納（短縮形）</h2>
+    <p>
+        <b>{link:istore_0}</b> - <code>0x3b</code> (59)<br>
+        <b>{link:istore_1}</b> - <code>0x3c</code> (60)<br>
+        <b>{link:istore_2}</b> - <code>0x3d</code> (61)<br>
+        <b>{link:istore_3}</b> - <code>0x3e</code> (62)<br>
+        <b>{link:lstore_0}</b> - <code>0x3f</code> (63)<br>
+        <b>{link:lstore_1}</b> - <code>0x40</code> (64)<br>
+        <b>{link:lstore_2}</b> - <code>0x41</code> (65)<br>
+        <b>{link:lstore_3}</b> - <code>0x42</code> (66)<br>
+        <b>{link:fstore_0}</b> - <code>0x43</code> (67)<br>
+        <b>{link:fstore_1}</b> - <code>0x44</code> (68)<br>
+        <b>{link:fstore_2}</b> - <code>0x45</code> (69)<br>
+        <b>{link:fstore_3}</b> - <code>0x46</code> (70)<br>
+        <b>{link:dstore_0}</b> - <code>0x47</code> (71)<br>
+        <b>{link:dstore_1}</b> - <code>0x48</code> (72)<br>
+        <b>{link:dstore_2}</b> - <code>0x49</code> (73)<br>
+        <b>{link:dstore_3}</b> - <code>0x4a</code> (74)<br>
+        <b>{link:astore_0}</b> - <code>0x4b</code> (75)<br>
+        <b>{link:astore_1}</b> - <code>0x4c</code> (76)<br>
+        <b>{link:astore_2}</b> - <code>0x4d</code> (77)<br>
+        <b>{link:astore_3}</b> - <code>0x4e</code> (78)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭の値を，インデックス 0〜3 のローカル変数へ格納します。値の型は命令の接頭辞で決まります。</p>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>istore_1</code></li>
+        <li><code>astore_0</code></li>
+        <li><code>dstore_3</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>istore_&lt;n&gt;, fstore_&lt;n&gt;, astore_&lt;n&gt;</b><br>
+            Before: <code>..., value</code>（カテゴリ 1）<br>
+            After: <code>...</code>
+        </li>
+        <li><b>lstore_&lt;n&gt;, dstore_&lt;n&gt;</b><br>
+            Before: <code>..., value</code>（カテゴリ 2）<br>
+            After: <code>...</code>
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが適切なカテゴリの値を供給できる必要があります。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらの命令は，明示的なローカル変数インデックスを取る <code>istore</code>，<code>lstore</code>，<code>fstore</code>，<code>dstore</code>，<code>astore</code> の短縮形です。</li>
+        <li>バイトコードサイズを節約するため，インデックス 0〜3 の場合に使用されます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li>ローカル変数配列サイズに対してインデックス（0〜3）が範囲外の場合，<code>IndexOutOfBoundsException</code>。</li>
+    </ul>
+</div>
+

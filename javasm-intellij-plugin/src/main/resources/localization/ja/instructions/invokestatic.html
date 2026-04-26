@@ -1,0 +1,70 @@
+<!-- Instructions: invokestatic -->
+<div class="definition">
+    <h2>静的メソッドの呼び出し</h2>
+    <p>
+        <b>{link:invokestatic}</b> - <code>0xb8</code> (184)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        オブジェクト参照を消費せずに static メソッドを呼び出します。
+        呼び出し対象は，解決後のシンボリックメソッド参照から決定されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>methodref</code>（2 バイト）: <code>Methodref</code> を指す定数プールインデックス</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <code>invokestatic &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>メソッド参照形式は，対象メソッドを次のように指定します。</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス名。例: <code>java/lang/Math</code></li>
+        <li><b>&lt;methodname&gt;</b>: メソッド名。例: <code>max</code>, <code>abs</code></li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例: <code>I</code>（int），<code>Ljava/lang/String;</code>（String）</li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>（void），<code>I</code>（int），<code>Ljava/lang/Object;</code>（Object）</li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>invokestatic java/lang/Math-&gt;max(II)I</code></li>
+        <li><code>invokestatic my/pkg/Utils-&gt;doStaticThing()V</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        Before: <code>..., arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>（戻り型が void でない場合）
+    </p>
+    <p>
+        記述子で定義された全引数をポップし，宣言された戻り型に従って戻り値をプッシュします
+        （<code>long</code>/<code>double</code> は カテゴリ 2，それ以外は カテゴリ 1）。
+    </p>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，引数型とスタック形状がメソッド記述子に一致することを確認します。</li>
+        <li>呼び出し前に，必要であれば対象クラスまたはインターフェースの初期化が行われます。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>受け手オブジェクトは消費されません。すべての引数は記述子で明示されます。</li>
+        <li>クラス初期化の副作用により，対象メソッド本体実行前にユーザーコードが実行される場合があります。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドが static でない場合，または呼び出し型に対して無効なメソッドハンドルである場合。</li>
+        <li><code>IllegalAccessError</code>: 現在クラスから解決先メソッドにアクセスできない場合。</li>
+        <li><code>WrongMethodTypeException</code>: 実引数型が実行時にメソッド記述子と一致しない場合。</li>
+    </ul>
+</div>
+

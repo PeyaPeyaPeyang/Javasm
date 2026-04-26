@@ -1,0 +1,66 @@
+<!-- Instructions: new -->
+<div class="definition">
+    <h2>オブジェクトの新規生成</h2>
+    <p><b>{link:new}</b> - <code>0xbb</code> (187)</p>
+
+    <h4>目的</h4>
+    <p>
+        指定クラスの新規オブジェクト用メモリを確保します。この時点ではオブジェクトは初期化されません。
+        コンストラクタは <code>invokespecial</code> 命令で明示的に呼び出す必要があります。
+    </p>
+    <p>
+       プッシュされる値は <em>未初期化</em> オブジェクト参照であり，対応するコンストラクタ呼び出しが完了するまで検証器が追跡します。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>ClassRef</code>: 非配列・非インターフェースクラスを示す <code>CONSTANT_Class_info</code> への定数プールインデックス。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <p><code>new &lt;ClassRef&gt;</code></p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>new java/lang/String</code> の後に <code>invokespecial java/lang/String-&gt;&lt;init&gt;()V</code></li>
+        <li><code>new java/util/ArrayList</code> の後に対応コンストラクタを呼び出し</li>
+    </ul>
+
+    <h5><b>クラス参照の制約:</b></h5>
+    <ul>
+        <li>解決先はクラス型である必要があり，配列型およびインターフェースは不可です。</li>
+        <li>クラスアクセス検査およびロード/リンク規則は解決時に適用されます。</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        新規確保されたオブジェクトへの未初期化参照がオペランド・スタックへ追加されます。
+    </p>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., uninitialized-objectref</code>（カテゴリ 1 参照）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが参照値を受け入れ可能であることが必要です。</li>
+        <li>未初期化参照について，コンストラクタ呼び出しパターンの妥当性が検証されます。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>検証器は，参照が通常利用される前に正しく初期化フローを通ることを強制します。</li>
+        <li>オブジェクト生成とコンストラクタ実行は，意味論上分離されています。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>OutOfMemoryError</code>: JVM がメモリ不足でオブジェクトを確保できない場合。</li>
+        <li><code>LinkageError</code>: シンボリッククラス参照を解決できない場合，または解決先クラスにアクセスできない場合。</li>
+        <li><code>InstantiationError</code>: 解決先クラスが抽象クラスまたはインターフェースである場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先がクラスでない場合（配列型やインターフェースなど），またはその他の制約違反がある場合。</li>
+    </ul>
+
+</div>
+

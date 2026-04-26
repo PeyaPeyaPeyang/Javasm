@@ -1,0 +1,58 @@
+<!-- Instructions: istore, lstore, fstore, dstore, astore -->
+<div class="definition">
+    <h2>ローカル変数への格納</h2>
+    <p>
+        <b>{link:istore}</b> - <code>0x36</code> (54)<br>
+        <b>{link:lstore}</b> - <code>0x37</code> (55)<br>
+        <b>{link:fstore}</b> - <code>0x38</code> (56)<br>
+        <b>{link:dstore}</b> - <code>0x39</code> (57)<br>
+        <b>{link:astore}</b> - <code>0x3a</code> (58)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック上の値を，指定したローカル変数インデックス <code>N</code> に格納します。</p>
+    <p>
+        バイトコード上では，<code>wide</code> 接頭辞なしの場合 <code>N</code> は符号なし 8 ビットです。
+        <code>wide</code> 接頭辞付きの場合は符号なし 16 ビットになります。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>N</code>: ローカル変数インデックス（10 進または 16 進。例: <code>5</code>, <code>0x05</code>）</li>
+    </ul>
+
+    <h5><b>形式:</b> <code>{instruction} N</code></h5>
+
+    <h5><b><code>wide</code> 接頭辞に関する備考:</b></h5>
+    <p><code>wide</code> 接頭辞を使用すると，インデックスオペランド <code>N</code> は 1 バイトから 2 バイトに拡張され，大きなローカル変数インデックスを扱えます。</p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>istore 3</code></li>
+        <li><code>lstore 0x0A</code></li>
+        <li><code>wide fstore 0x0100</code>（インデックス 256）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>istore, fstore, astore</b><br>
+            Before: <code>..., value</code><br>
+            After: <code>...</code>（カテゴリ 1 値をローカル変数 <code>N</code> に格納）
+        </li>
+        <li><b>lstore, dstore</b><br>
+            Before: <code>..., value</code>（カテゴリ 2）<br>
+            After: <code>...</code>（値をローカル変数 <code>N</code> に格納）<br>
+            （備考: <code>long</code> と <code>double</code> はスタックスロットを 2 つ使用します）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックに命令に対応する適切な型の値が存在する必要があります。</li>
+        <li><code>istore</code> は <code>int</code>，<code>lstore</code> は <code>long</code>，<code>fstore</code> は <code>float</code>，<code>dstore</code> は <code>double</code>，<code>astore</code> は参照型が必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

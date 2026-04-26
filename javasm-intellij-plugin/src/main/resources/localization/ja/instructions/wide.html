@@ -1,0 +1,76 @@
+<!-- Instructions: wide -->
+<div class="definition">
+    <h2>オペランドの拡張（wide）</h2>
+    <p><b>{link:wide}</b> - <code>0xc4</code> (196)</p>
+
+    <h4>目的</h4>
+    <p>
+        特定のローカル変数命令に対し，ローカル変数インデックスを 16 ビットで符号化するように変更します。
+        <code>iinc</code> の場合は，増分定数も符号付き 16 ビットへ拡張されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>Instruction</code>: <code>iload</code>, <code>fload</code>, <code>aload</code>, <code>lload</code>,
+            <code>dload</code>, <code>istore</code>, <code>fstore</code>, <code>astore</code>, <code>lstore</code>,
+            <code>dstore</code>, <code>ret</code>, <code>iinc</code> のいずれか。</li>
+        <li><code>Index</code>: 符号なし 16 ビットのローカル変数インデックス。</li>
+        <li><code>Const</code>: 符号付き 16 ビットの増分値（<code>wide iinc</code> のみ）。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <p><code>wide &lt;Instruction&gt; &lt;Index&gt; [const]</code></p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>wide iload 300</code>（インデックス 300 のローカル変数をロード）</li>
+        <li><code>wide iinc 300 5</code>（インデックス 300 のローカル変数を 5 増加）</li>
+    </ul>
+
+    <h5><b>対応命令:</b></h5>
+    <p><b>wide</b> で拡張できる命令は次のとおりです。</p>
+    <ul>
+        <li><code>iload</code></li>
+        <li><code>fload</code></li>
+        <li><code>aload</code></li>
+        <li><code>lload</code></li>
+        <li><code>dload</code></li>
+        <li><code>istore</code></li>
+        <li><code>fstore</code></li>
+        <li><code>astore</code></li>
+        <li><code>lstore</code></li>
+        <li><code>dstore</code></li>
+        <li><code>ret</code></li>
+        <li><code>iinc</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        スタック効果は，<b>wide</b> が修飾する元の命令に依存します。例:
+    </p>
+    <ul>
+        <li><b>wide iload</b>:<br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code>
+        </li>
+        <li><b>wide istore</b>:<br>
+            Before: <code>..., value</code><br>
+            After: <code>...</code>
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li><code>wide</code> は命令の意味そのものは変更せず，オペランドの符号化幅のみを変更します。</li>
+        <li>未対応命令に <code>wide</code> を適用することは，不正なクラスファイル構造です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>
+        <code>wide</code> 自体は命令固有の実行時例外を投げません。
+        ただし，修飾対象の命令は通常どおり例外を投げる場合があります
+        （例: <code>wide iload</code> で未初期化ローカル変数の参照を読み出すと，
+        <code>NullPointerException</code> が発生する可能性があります）。
+    </p>
+</div>
+

@@ -1,0 +1,77 @@
+<!-- Instructions: invokeinterface -->
+<div class="definition">
+    <h2>インターフェース・メソッドの呼び出し</h2>
+    <p>
+        <b>{link:invokeinterface}</b> - <code>0xb9</code> (185)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        インターフェースディスパッチ規則でインスタンスメソッドを呼び出します。
+        受け手オブジェクト参照はオペランド・スタックから取得され，null であってはなりません。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>methodref</code>（2 バイト）: <code>InterfaceMethodref</code> を指す定数プールインデックス</li>
+        <li><code>count</code>（1 バイト）: 受け手 <code>this</code> を含む引数スロット数。
+            カテゴリ 2 引数（<code>long</code>/<code>double</code>）は 2 スロットとして数えます</li>
+        <li><code>zero</code>（1 バイト）: 0 固定（将来拡張用予約）</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <code>invokeinterface &lt;methodref&gt; &lt;count&gt; 0</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>メソッド参照形式は，対象メソッドを次のように指定します。</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス/インターフェース名。例: <code>java/lang/String</code></li>
+        <li><b>&lt;methodname&gt;</b>: メソッド名。例: <code>substring</code>, <code>size</code></li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例: <code>I</code>，<code>Ljava/lang/String;</code></li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>，<code>I</code>，<code>Ljava/lang/Object;</code></li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>invokeinterface java/lang/String-&gt;awdw$1_35(Ljava/lang/String;)Ljava/lang/String;</code></li>
+        <li><code>invokeinterface my/pkg/MyInterface-&gt;doSomething(I)V</code></li>
+        <li><code>invokeinterface java/util/List-&gt;size()I</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        Before: <code>..., objectref, arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>（戻り型が void でない場合）
+    </p>
+    <p>
+        受け手参照と記述子引数をすべてポップし，メソッド記述子に従って戻り値をプッシュします
+        （<code>long</code>/<code>double</code> は カテゴリ 2，それ以外は カテゴリ 1）。
+    </p>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>この命令は <code>invokevirtual</code> と異なり，引数スロット数を明示的にエンコードします。</li>
+        <li>シンボリックインターフェースメソッドを解決後，実行時クラスに対して実装選択ディスパッチを行います。</li>
+        <li>JVM のインターフェース解決規則に従い，default メソッドが選択に関与する場合があります。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，メソッド参照の妥当性，互換な受け手参照，十分な引数スロット，および解決先がインターフェースメソッドであることを確認します。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+        <li>実行時には，受け手実クラスに基づき JVM のインターフェース解決・選択規則でディスパッチされます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: 受け手オブジェクト参照が null の場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドがインターフェースメソッドでない場合。</li>
+        <li><code>AbstractMethodError</code>: 解決先メソッドが abstract で，受け手実クラスが実装を提供しない場合。</li>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>WrongMethodTypeException</code>: 実引数型が実行時にメソッド記述子と一致しない場合。</li>
+    </ul>
+</div>
+

@@ -1,0 +1,50 @@
+<!-- Instructions: idiv, ldiv, fdiv, ddiv -->
+<div class="definition">
+    <h2>除算</h2>
+    <p>
+        <b>{link:idiv}</b> - <code>0x6c</code> (108)<br>
+        <b>{link:ldiv}</b> - <code>0x6d</code> (109)<br>
+        <b>{link:fdiv}</b> - <code>0x6e</code> (110)<br>
+        <b>{link:ddiv}</b> - <code>0x6f</code> (111)
+    </p>
+
+    <h4>目的</h4>
+    <p>スタックの 2 番目の値を先頭の値で割り，結果をプッシュします。整数型では 0 除算で <code>ArithmeticException</code> が発生し，浮動小数点型では IEEE 754 に従って <code>Infinity</code> または <code>NaN</code> になります。</p>
+    <ul>
+        <li><b>{link:idiv}</b>/<b>{link:ldiv}</b>: 整数除算。結果は 0 方向へ切り捨てられます。</li>
+        <li><b>{link:fdiv}</b>/<b>{link:ddiv}</b>: IEEE 754 算術（NaN 伝播，符号付き無限大/ゼロを含む）。</li>
+        <li>整数の特殊ケース <code>MIN_VALUE / -1</code> は <code>MIN_VALUE</code>（ラップアラウンド）になります。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>idiv</code></li>
+        <li><code>ddiv</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1, value2</code>（value1 は被除数，value2 は除数）</li>
+        <li>After: <code>..., result</code>（カテゴリは命令型に依存）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令型に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>fdiv</code> と <code>ddiv</code> は IEEE 754 の規則に従うため，0 除算は例外ではなく特定の値（<code>Infinity</code> または <code>NaN</code>）になります。</li>
+    </ul>
+
+    <h5><b>実行時例外:</b></h5>
+    <ul>
+        <li><code>ArithmeticException</code> は <code>idiv</code> または <code>ldiv</code> で除数（先頭オペランド）が 0 の場合に発生します。</li>
+    </ul>
+</div>
+

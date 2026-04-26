@@ -1,0 +1,43 @@
+<!-- Instructions: bipush -->
+<div class="definition">
+    <h2>byte 値のプッシュ</h2>
+    <p><b>{link:bipush}</b> - <code>0x10</code> (16)</p>
+
+    <h4>目的</h4>
+    <p>符号付き byte 値（-128 〜 127）を <code>int</code> としてオペランド・スタックにプッシュします。この命令は
+        <code>iconst_m1</code> ～ <code>iconst_5</code> で扱えない値をロードするときに使用します。</p>
+    <p>
+        即値の 1 byte オペランドは，プッシュ前に符号拡張されて 32 ビットの <code>int</code> になります。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>byte</code>: スタックへプッシュする 8 ビット符号付き即値。</li>
+    </ul>
+
+    <h5><b>形式:</b> <code>bipush &lt;byte&gt;</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>bipush 100</code></li>
+        <li><code>bipush -128</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., value</code>（カテゴリ 1 の <code>int</code>）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが <code>int</code> 値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <p>-1 から 5 までの値には，<code>bipush</code> ではなく対応する <code>iconst_m1</code> から <code>iconst_5</code>を使用してください。</p>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

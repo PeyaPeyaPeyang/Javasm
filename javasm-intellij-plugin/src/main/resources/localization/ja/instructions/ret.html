@@ -1,0 +1,57 @@
+<!-- Instructions: ret -->
+<div class="definition">
+    <h2>サブルーチンからの復帰</h2>
+    <p>
+        <b>{link:ret}</b> - <code>0xa9</code> (169)
+    </p>
+
+    <h4>目的</h4>
+    <p><b>ret</b> 命令はサブルーチンから復帰するために使用されます。ローカル変数から復帰アドレスを取得し，そのアドレスへ制御を移します。</p>
+    <p>
+        この命令は，旧来の <code>finally</code> コンパイル方式で使われた <code>jsr</code>/<code>ret</code> サブルーチンモデルの一部です。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>index</code>: 特殊な <code>returnAddress</code> 型値を保持するローカル変数インデックス。
+            バイトコード上では符号なし 8 ビットインデックスです。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b> <code>ret &lt;index&gt;</code></h5>
+
+    <h5><b><code>wide</code> 接頭辞に関する備考:</b></h5>
+    <p><code>wide</code> 接頭辞を使用すると，オペランド <code>index</code> は 1 バイトから 2 バイトへ拡張され，255 を超えるローカル変数インデックスを指定できます。</p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ret 1</code></li>
+        <li><code>ret 0x05</code></li>
+        <li><code>wide ret 0x0100</code>（インデックス 256）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>...</code>（オペランド・スタック変化なし）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，ローカル変数 <code>index</code> に有効な <code>returnAddress</code> 値があることが必要です。</li>
+        <li>すべての分岐先で，制御フローとスタック/ローカル型状態の整合性が維持される必要があります。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>ret</code> は現代のクラスファイルでは廃止扱いであり，通常は旧来用途に限定されます。</li>
+        <li>現代的バイトコードで <code>finally</code> 相当の処理を実装する場合は，旧来の <code>jsr</code>/<code>ret</code> ではなく構造化例外ハンドラを使用します。</li>
+        <li>スタック・マップ・フレームを中心とした現代的な検証戦略では，旧来のサブルーチン・モデルが拒否される場合があります。</li>
+    </ul>
+
+    <h5><b>関連命令:</b></h5>
+    <ul>
+        <li><b>{link:jsr}</b> および <b>{link:jsr_w}</b>（サブルーチンへのジャンプ）。</li>
+    </ul>
+</div>
+

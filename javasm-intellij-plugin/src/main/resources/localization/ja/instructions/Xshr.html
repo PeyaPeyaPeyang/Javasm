@@ -1,0 +1,56 @@
+<!-- Instructions: ishr, lshr -->
+<div class="definition">
+    <h2>右シフト</h2>
+    <p>
+        <b>{link:ishr}</b> - <code>0x7a</code> (122)<br>
+        <b>{link:lshr}</b> - <code>0x7b</code> (123)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        指定ビット数だけ値を算術右シフト（符号拡張あり）します。<br>
+        シフト量はマスクされ，<code>ishr</code> では下位 5 ビット，<code>lshr</code> では下位 6 ビットのみが使用されます。
+    </p>
+    <ul>
+        <li><b>ishr</b>: <code>int</code> を <code>int</code> 量だけ算術右シフト</li>
+        <li><b>lshr</b>: <code>long</code> を <code>int</code> 量だけ算術右シフト</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ishr</code></li>
+        <li><code>lshr</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>ishr</b><br>
+            Before: <code>..., value (int), shift (int)</code>（両方 カテゴリ 1）<br>
+            After: <code>..., result (int)</code>（カテゴリ 1）
+        </li>
+        <li><b>lshr</b><br>
+            Before: <code>..., value (long), shift (int)</code>（value は カテゴリ 2）<br>
+            After: <code>..., result (long)</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらは算術右シフトであり，左側の空いたビットは符号ビット（最上位ビット）で埋められます。これにより符号付き値の符号が保持されます。</li>
+        <li>シフト量は値のビット幅を超えないようにマスクされます。<code>ishr</code> は実質 32 での剰余，<code>lshr</code> は実質 64 での剰余として扱われます。</li>
+        <li>ビット幅以上のシフト量を指定してもエラーにはなりません。マスク後の値で演算されます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

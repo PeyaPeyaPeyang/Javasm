@@ -1,0 +1,57 @@
+<!-- Instructions: tableswitch -->
+<div class="definition">
+    <h2>範囲ベースの switch </h2>
+    <p><b>{link:tableswitch}</b> - <code>0xaa</code> (170)</p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック上の <code>int</code> キーに基づいて switch 形式の分岐を行います。キーは指定された下限インデックスから始まる連続範囲と照合され，<code>low</code> からの差分に対応するラベルへ分岐します。キーが範囲外の場合は <code>default</code> ラベルへ分岐します。</p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li>命令後に続く最初の 32 ビット項目が 4 バイト境界に揃うように入るパディング用バイト（<code>0x00</code>）。</li>
+        <li><code>default</code>: 命令の位置を基準とした符号付き 32 ビット分岐オフセット。</li>
+        <li><code>low</code>, <code>high</code>: 符号付き 32 ビットのキー範囲（両端含む）。</li>
+        <li><code>jump offsets</code>: <code>high - low + 1</code> 個の符号付き 32 ビットオフセット（キー順に 1 つずつ）。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <pre>
+tableswitch &lt;low_index&gt; {
+  label_0;
+  label_1;
+  ...
+} default &lt;default_label&gt;
+    </pre>
+
+    <h5><b>例:</b></h5>
+    <pre>
+tableswitch 1 {
+  case_one;
+  case_two;
+  case_three;
+} default default_case;
+    </pre>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., key</code>（<code>int</code> 値）</li>
+        <li>After: <code>...</code>（カテゴリ 1 の int を 1 つ消費して分岐）</li>
+    </ul>
+
+    <p><code>key</code> が <code>low_index</code> から <code>low_index + number_of_labels - 1</code> までの連続範囲外であれば，必須の <code>default</code> ラベルへ分岐します。</p>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>計算されるすべての分岐先（default および各 case）は，同一メソッド内の有効な命令境界を指す必要があります。</li>
+        <li>すべての switch 分岐先で，フレーム型がマージ可能である必要があります。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>tableswitch</code> はキー範囲が密な場合に最適です。疎なキー集合には通常 <code>lookupswitch</code> が適しています。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

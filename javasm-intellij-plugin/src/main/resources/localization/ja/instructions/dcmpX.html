@@ -1,0 +1,46 @@
+<!-- Instructions: dcmpg, dcmpl -->
+<div class="definition">
+    <h2>double の比較</h2>
+    <p>
+        <b>{link:dcmpg}</b> - <code>0x98</code> (152)<br>
+        <b>{link:dcmpl}</b> - <code>0x97</code> (151)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック上の 2 つの <code>double</code> 値を比較します。先頭 2 値をポップし，結果として <code>int</code> をプッシュします。結果は value1 &lt; value2 なら <code>-1</code>，等しければ <code>0</code>，value1 &gt; value2 なら <code>1</code> です。</p>
+    <p><code>dcmpg</code> と <code>dcmpl</code> の違いは，<code>NaN</code>（Not-a-Number）の扱いです。</p>
+    <ul>
+        <li><b>{link:dcmpg}</b>: いずれかの値が <code>NaN</code> の場合，<code>1</code> をプッシュします。</li>
+        <li><b>{link:dcmpl}</b>: いずれかの値が <code>NaN</code> の場合，<code>-1</code> をプッシュします。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>dcmpg</code></li>
+        <li><code>dcmpl</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (カテゴリ 2 double), value2 (カテゴリ 2 double)</code></li>
+        <li>After: <code>..., result (カテゴリ 1 int)</code>（<code>-1</code>, <code>0</code>, <code>1</code>）</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>+0.0</code> と <code>-0.0</code> は等しいものとして比較されます。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが カテゴリ 2 の <code>double</code> 値 2 つを受け入れ，かつ カテゴリ 1 の <code>int</code> 結果を返せることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

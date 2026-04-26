@@ -1,0 +1,52 @@
+<!-- Instructions: ifnull, ifnonnull -->
+<div class="definition">
+    <h2>null の判定による分岐</h2>
+    <p>
+        <b>{link:ifnull}</b> - <code>0xc6</code> (198)<br>
+        <b>{link:ifnonnull}</b> - <code>0xc7</code> (199)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        オペランド・スタック先頭の値が <code>null</code> かどうかを判定し，条件に応じて分岐します。
+        これらの命令は，高速な <code>null</code> チェックや，参照をデリファレンスする前のガードとしてよく使用されます。
+
+    </p>
+    <ul>
+        <li><b>{link:ifnull}</b>: 値が <code>null</code> のとき分岐。</li>
+        <li><b>{link:ifnonnull}</b>: 値が <code>null</code> でないとき分岐。</li>
+    </ul>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>label</code>: 現在命令位置を基準とする符号付き 16 ビット相対オフセットで表される分岐先ラベル。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <ul>
+        <li><code>ifnull &lt;label&gt;</code></li>
+        <li><code>ifnonnull &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ifnull null_path</code>（<code>getfield</code> / <code>invokevirtual</code> 前のガード）</li>
+        <li><code>ifnonnull cast_path</code>（非 null のときのみ <code>checkcast</code> へ分岐）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value (reference)</code></li>
+        <li>After: <code>...</code>（カテゴリ 1 の参照値を 1 つ消費）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが カテゴリ 1 の参照値 1 つを受け入れ可能であることが必要です。</li>
+        <li>分岐先妥当性とフレーム型整合性は，クラスのロード/リンク時に検証されます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。不正な分岐先は検証時に拒否されます。</p>
+</div>
+

@@ -1,0 +1,47 @@
+<!-- Instructions: anewarray -->
+<div class="definition">
+    <h2>参照配列の新規作成</h2>
+    <p><b>{link:anewarray}</b> - <code>0xbd</code> (189)</p>
+
+    <h4>目的</h4>
+    <p><code>TypeDescriptor</code> で指定された要素型を持つ参照配列を新規作成します。配列長はスタックからポップされます。</p>
+    <p>
+        シンボリック型参照は実行時定数プールから解決され，参照型の要素型（クラス，インターフェース，配列型）を示している必要があります。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>TypeDescriptor</code>: クラスまたはインターフェース型記述子を参照する定数プールインデックス。
+            参照型（例: <code>Ljava/lang/String;</code>）である必要があり，<strong>プリミティブ型は使用できません</strong>。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b> <code>anewarray &lt;TypeDescriptor&gt;</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>anewarray Ljava/lang/String;</code></li>
+        <li><code>anewarray Ljava/util/List;</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., count</code></li>
+        <li>After: <code>..., arrayref</code>（新しい参照配列）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，参照互換の入力が必要であり，後続フレームに対して参照結果が保証されます。</li>
+        <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NegativeArraySizeException</code>: 配列長が負の場合。</li>
+        <li><code>OutOfMemoryError</code>: JVM がメモリ不足で配列を確保できない場合。</li>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー:
+            シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+    </ul>
+</div>
+

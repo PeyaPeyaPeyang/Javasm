@@ -1,0 +1,51 @@
+<!-- Instructions: fcmpg, fcmpl -->
+<div class="definition">
+    <h2>float の比較</h2>
+    <p>
+        <b>{link:fcmpg}</b> - <code>0x96</code> (150)<br>
+        <b>{link:fcmpl}</b> - <code>0x95</code> (149)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        2 つの <code>float</code> 値を比較します。オペランド・スタックから 2 値をポップし，
+        結果として <code>int</code> をプッシュします。<br>
+        value1 &lt; value2 なら <code>-1</code>，等しければ <code>0</code>，value1 &gt; value2 なら <code>1</code> です。
+    </p>
+    <p>
+        いずれかの値が <code>NaN</code> の場合:<br>
+        - <b>{link:fcmpg}</b> は <code>1</code> を push<br>
+        - <b>{link:fcmpl}</b> は <code>-1</code> を push
+    </p>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>fcmpg</code></li>
+        <li><code>fcmpl</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (カテゴリ 1 float), value2 (カテゴリ 1 float)</code></li>
+        <li>After: <code>..., result (カテゴリ 1 int)</code>（<code>-1</code>, <code>0</code>, <code>1</code>）</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>+0.0f</code> と <code>-0.0f</code> は等しいものとして比較されます。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが カテゴリ 1 の <code>float</code> 値 2 つを受け入れ，かつ カテゴリ 1 の <code>int</code> 結果を返せることが必要です。</li>
+
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

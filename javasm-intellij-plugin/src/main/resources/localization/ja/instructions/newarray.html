@@ -1,0 +1,63 @@
+<!-- Instructions: newarray -->
+<div class="definition">
+    <h2>配列の新規作成</h2>
+    <p><b>{link:newarray}</b> - <code>0xbc</code> (188)</p>
+
+    <h4>目的</h4>
+    <p>
+        プリミティブ要素型の 1 次元配列を新規作成します。
+        配列長はオペランド・スタックからポップされ，配列参照がプッシュされます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>atype</code>: プリミティブ要素型を選択する符号なし byte:
+            <ul>
+                <li><code>4</code>: boolean</li>
+                <li><code>5</code>: char</li>
+                <li><code>6</code>: float</li>
+                <li><code>7</code>: double</li>
+                <li><code>8</code>: byte</li>
+                <li><code>9</code>: short</li>
+                <li><code>10</code>: int</li>
+                <li><code>11</code>: long</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <p><code>newarray &lt;atype&gt;</code></p>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>newarray 10</code>（<code>int[]</code> を作成）</li>
+        <li><code>newarray 7</code>（<code>double[]</code> を作成）</li>
+    </ul>
+
+    <h5><b>型の適用範囲:</b></h5>
+    <p>
+        <code>newarray</code> はプリミティブ配列専用です。
+        参照型要素の配列には <code>anewarray</code>，多次元配列には <code>multianewarray</code> を使用します。
+    </p>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        オペランド・スタックには作成する配列サイズ（負でない整数）が必要です。
+    </p>
+    <ul>
+        <li>Before: <code>..., count</code></li>
+        <li>After: <code>..., arrayref</code>（カテゴリ 1 参照）</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NegativeArraySizeException</code>: 配列長が負の場合。</li>
+        <li><code>OutOfMemoryError</code>: JVM がメモリ不足で配列を確保できない場合。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，配列サイズとして <code>int</code> 値を受け入れ可能であり，かつ <code>atype</code> オペランドが有効であることが必要です。</li>
+    </ul>
+</div>
+

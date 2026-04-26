@@ -1,0 +1,75 @@
+<!-- Instructions: invokespecial -->
+<div class="definition">
+    <h2>特殊なメソッドの呼び出し</h2>
+    <p>
+        <b>{link:invokespecial}</b> - <code>0xb7</code> (183)
+    </p>
+
+    <h4>目的</h4>
+    <div>
+        特殊（非 virtual）呼び出し規則でメソッドを呼び出します:<br>
+        <ul>
+            <li>インスタンスコンストラクタ（<code>&lt;init&gt;</code>）</li>
+            <li>private インスタンスメソッド</li>
+            <li>明示的なスーパークラスメソッド呼び出し（例: <code>super.m()</code>）</li>
+        </ul>
+        この命令は通常の virtual ディスパッチ探索をバイパスします。
+    </div>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>methodref</code>（2 バイト）: <code>Methodref</code> を指す定数プールインデックス</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <code>invokespecial &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>メソッド参照形式は，対象メソッドを次のように指定します。</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス名。例: <code>java/lang/Object</code></li>
+        <li><b>&lt;methodname&gt;</b>: インスタンスメソッド名，または <code>&lt;init&gt;</code>（コンストラクタ）</li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子</li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子</li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>invokespecial java/lang/Object-&gt;&lt;init&gt;()V</code></li>
+        <li><code>invokespecial my/pkg/Base-&gt;doWork()V</code>（super 呼び出し）</li>
+        <li><code>invokespecial my/pkg/MyClass-&gt;privateHelper(I)V</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        Before: <code>..., objectref, arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>
+    </p>
+    <p>
+        受け手参照と全引数をポップします。戻り型が void でない場合は戻り値をプッシュします。
+        コンストラクタ呼び出しの戻り型は <code>V</code> です。
+    </p>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，未初期化オブジェクトに対するコンストラクタ規則および <code>&lt;init&gt;</code> の適法利用が強制されます。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>&lt;clinit&gt;</code> はバイトコード呼び出し命令で直接呼ばれず，クラス初期化として暗黙的に実行されます。</li>
+        <li>意味的に非 virtual 選択が必要な場合は <code>invokespecial</code> を使用します。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: 受け手オブジェクト参照が null の場合。</li>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドが static の場合，コンストラクタ参照に対して不正なインスタンスメソッドが解決された場合，または呼び出し型に対して無効なメソッドハンドルの場合。</li>
+        <li><code>IllegalAccessError</code>: 解決先インスタンスメソッドが現在クラスからアクセス不可の場合。</li>
+    </ul>
+</div>
+

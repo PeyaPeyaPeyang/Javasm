@@ -1,0 +1,97 @@
+<!-- Instructions: dup, dup_x1, dup_x2, dup2, dup2_x1, dup2_x2 -->
+<div class="definition">
+    <h2>スタックの複製</h2>
+    <p>
+        <b>{link:dup}</b> - <code>0x59</code> (89)<br>
+        <b>{link:dup_x1}</b> - <code>0x5a</code> (90)<br>
+        <b>{link:dup_x2}</b> - <code>0x5b</code> (91)<br>
+        <b>{link:dup2}</b> - <code>0x5c</code> (92)<br>
+        <b>{link:dup2_x1}</b> - <code>0x5d</code> (93)<br>
+        <b>{link:dup2_x2}</b> - <code>0x5e</code> (94)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック上の 1 つまたは 2 つの値を複製し，必要に応じてより深い位置へ挿入します。</p>
+
+    <h5><b>オペランド:</b> なし</h5>
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>スタック効果:</b></h5>
+    <style>
+        .base { color: #666; }
+        .new  { color: #2e7d32; font-weight: bold; }
+        .move { color: #f57c00; font-weight: bold; }
+    </style>
+
+    <ul>
+        <li><b>{link:dup}</b><br>
+            Before: <code>..., <span class="base">value1</span></code>（value1 は カテゴリ 1）<br>
+            After: <code>..., <span class="base">value1</span>, <span class="new">value1</span></code>
+        </li>
+
+        <li><b>{link:dup_x1}</b><br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（両方 カテゴリ 1）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
+        </li>
+
+        <li><b>{link:dup_x2}</b><br>
+            Form 1（すべて カテゴリ 1）:<br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="new">value1</span></code><br>
+            Form 2:<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 は カテゴリ 2，value1 は カテゴリ 1）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
+        </li>
+
+        <li><b>{link:dup2}</b><br>
+            Form 1:<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（両方 カテゴリ 1）<br>
+            After: <code>..., <span class="base">value2</span>, <span class="base">value1</span>, <span class="new">value2</span>, <span class="new">value1</span></code><br>
+            Form 2:<br>
+            Before: <code>..., <span class="base">value1</span></code>（カテゴリ 2）<br>
+            After: <code>..., <span class="base">value1</span>, <span class="new">value1</span></code>
+        </li>
+
+        <li><b>{link:dup2_x1}</b><br>
+            Form 1（すべて カテゴリ 1）:<br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            Form 2:<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 は カテゴリ 1，value1 は カテゴリ 2）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
+        </li>
+
+        <li><b>{link:dup2_x2}</b><br>
+            Form 1（すべて カテゴリ 1）:<br>
+            Before: <code>..., <span class="base">value4</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value4</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            Form 2:<br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3/value2 は カテゴリ 1，value1 は カテゴリ 2）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="new">value1</span></code><br>
+            Form 3:<br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3 は カテゴリ 2，value2/value1 は カテゴリ 1）<br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            Form 4:<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（両方 カテゴリ 2）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
+        </li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>dup</code></li>
+        <li><code>dup_x1</code></li>
+        <li><code>dup2</code>（<code>long</code> 1 つ，または <code>int</code> 2 つを対象）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが必要な形状・カテゴリを満たし，複製後のスタック形も妥当であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li>これらの命令固有の実行時例外は発生しません。</li>
+    </ul>
+</div>
+

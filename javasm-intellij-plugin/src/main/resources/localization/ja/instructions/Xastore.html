@@ -1,0 +1,79 @@
+<!-- Instructions: iastore, lastore, fastore, dastore, aastore, bastore, castore, sastore -->
+<div class="definition">
+    <h2>配列ストア</h2>
+    <p>
+        <b>{link:iastore}</b> - <code>0x4f</code> (79)<br>
+        <b>{link:lastore}</b> - <code>0x50</code> (80)<br>
+        <b>{link:fastore}</b> - <code>0x51</code> (81)<br>
+        <b>{link:dastore}</b> - <code>0x52</code> (82)<br>
+        <b>{link:aastore}</b> - <code>0x53</code> (83)<br>
+        <b>{link:bastore}</b> - <code>0x54</code> (84)<br>
+        <b>{link:castore}</b> - <code>0x55</code> (85)<br>
+        <b>{link:sastore}</b> - <code>0x56</code> (86)
+    </p>
+
+    <h4>目的</h4>
+    <p>配列へ値を格納します。配列参照，インデックス，格納値の順でオペランド・スタックからポップされます。</p>
+    <ul>
+        <li><b>{link:iastore}</b>: <code>int[]</code> に <code>int</code> を格納</li>
+        <li><b>{link:lastore}</b>: <code>long[]</code> に <code>long</code> を格納</li>
+        <li><b>{link:fastore}</b>: <code>float[]</code> に <code>float</code> を格納</li>
+        <li><b>{link:dastore}</b>: <code>double[]</code> に <code>double</code> を格納</li>
+        <li><b>{link:aastore}</b>: <code>Object[]</code> に参照を格納</li>
+        <li><b>{link:bastore}</b>: <code>byte[]</code>/<code>boolean[]</code> に <code>byte</code> または <code>boolean</code> を格納</li>
+        <li><b>{link:castore}</b>: <code>char[]</code> に <code>char</code> を格納</li>
+        <li><b>{link:sastore}</b>: <code>short[]</code> に <code>short</code> を格納</li>
+    </ul>
+
+    <p>配列参照が <code>null</code> の場合，またはインデックスが範囲外の場合は例外が発生します。</p>
+    <p>
+        <code>{link:aastore}</code> では，格納する参照値が，格納先配列の実行時要素型に代入可能である必要があります。
+    </p>
+
+    <h5><b>オペランド:</b> なし</h5>
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iastore</code></li>
+        <li><code>lastore</code></li>
+        <li><code>fastore</code></li>
+        <li><code>dastore</code></li>
+        <li><code>aastore</code></li>
+        <li><code>bastore</code></li>
+        <li><code>castore</code></li>
+        <li><code>sastore</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>iastore, fastore, aastore, bastore, castore, sastore</b><br>
+            Before: <code>..., arrayref, index, value</code><br>
+            After: <code>...</code>
+        </li>
+        <li><b>lastore, dastore</b><br>
+            Before: <code>..., arrayref, index, value</code>（value は カテゴリ 2）<br>
+            After: <code>...</code><br>
+            （備考: <code>long</code> と <code>double</code> はスタックスロットを 2 つ使用します）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが配列参照，インデックス，格納値として適切な型を供給できる必要があります。</li>
+        <li><code>{link:aastore}</code> では，格納値が参照型であり，配列参照がその参照型配列と互換であることを検証します。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらの命令は定数プールエントリを解決せず，命令固有のリンケージエラーはありません。</li>
+        <li>カテゴリ 2 値型（<code>long</code>, <code>double</code>）では，オペランド・スタックのスロット計算は「値 2 ワード + <code>arrayref</code> 1 + <code>index</code> 1」となります。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>：配列参照が <code>null</code> の場合。</li>
+        <li><code>ArrayIndexOutOfBoundsException</code>：インデックスが範囲外の場合。</li>
+        <li><code>ArrayStoreException</code>：<code>aastore</code> で格納値が配列の実行時要素型に代入可能でない場合。</li>
+    </ul>
+</div>
+

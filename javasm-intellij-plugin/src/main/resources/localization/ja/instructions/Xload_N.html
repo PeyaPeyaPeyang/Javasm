@@ -1,0 +1,68 @@
+<!-- Instructions: aload_0, aload_1, aload_2, aload_3, iload_0, iload_1, iload_2, iload_3, dload_0, dload_1, dload_2, dload_3, lload_0, lload_1, lload_2, lload_3, fload_0, fload_1, fload_2, fload_3 -->
+<div class="definition">
+    <h2>ローカル変数の読み出し（短縮形）</h2>
+    <p>
+        <b>{link:aload_0}</b> - <code>0x2a</code> (42)<br>
+        <b>{link:aload_1}</b> - <code>0x2b</code> (43)<br>
+        <b>{link:aload_2}</b> - <code>0x2c</code> (44)<br>
+        <b>{link:aload_3}</b> - <code>0x2d</code> (45)<br>
+        <b>{link:iload_0}</b> - <code>0x1a</code> (26)<br>
+        <b>{link:iload_1}</b> - <code>0x1b</code> (27)<br>
+        <b>{link:iload_2}</b> - <code>0x1c</code> (28)<br>
+        <b>{link:iload_3}</b> - <code>0x1d</code> (29)<br>
+        <b>{link:dload_0}</b> - <code>0x26</code> (38)<br>
+        <b>{link:dload_1}</b> - <code>0x27</code> (39)<br>
+        <b>{link:dload_2}</b> - <code>0x28</code> (40)<br>
+        <b>{link:dload_3}</b> - <code>0x29</code> (41)<br>
+        <b>{link:lload_0}</b> - <code>0x1e</code> (30)<br>
+        <b>{link:lload_1}</b> - <code>0x1f</code> (31)<br>
+        <b>{link:lload_2}</b> - <code>0x20</code> (32)<br>
+        <b>{link:lload_3}</b> - <code>0x21</code> (33)<br>
+        <b>{link:fload_0}</b> - <code>0x22</code> (34)<br>
+        <b>{link:fload_1}</b> - <code>0x23</code> (35)<br>
+        <b>{link:fload_2}</b> - <code>0x24</code> (36)<br>
+        <b>{link:fload_3}</b> - <code>0x25</code> (37)
+    </p>
+
+    <h4>目的</h4>
+    <p>ローカル変数インデックス <code>N</code>（0〜3）から値をオペランド・スタックへロードします。
+        これらは明示的なオペランドを必要としない <code>{/instruction} N</code> の短縮命令です。</p>
+
+    <h5><b>オペランド:</b></h5>
+    <p>なし。インデックスは命令名に含まれます。</p>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iload_0</code></li>
+        <li><code>aload_3</code></li>
+        <li><code>dload_2</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>aload_&lt;n&gt;, iload_&lt;n&gt;, fload_&lt;n&gt;</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code>（カテゴリ 1 値）
+        </li>
+        <li><b>lload_&lt;n&gt;, dload_&lt;n&gt;</b><br>
+            Before: <code>...</code><br>
+            After: <code>..., value</code>（カテゴリ 2 値。スタックスロット 2 つ）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが適切なカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらはローカル変数インデックス 0〜3 の読み出しを最適化する短縮命令です。インデックスが 4 以上の場合は，<code>iload</code> や <code>aload</code> など，明示オペランド付きの通常命令を使用します。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>この命令固有の実行時例外は発生しません。</p>
+</div>
+

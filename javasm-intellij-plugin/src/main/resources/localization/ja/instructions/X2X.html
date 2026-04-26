@@ -1,0 +1,65 @@
+<!-- Instructions: d2f, d2i, d2l, f2d, f2i, f2l, i2b, i2c, i2d, i2f, i2l, i2s, l2d, l2f, l2i -->
+<div class="definition">
+    <h2>プリミティブ同士の変換</h2>
+    <p>
+        <b>{link:i2l}</b> - <code>0x85</code> (133)<br>
+        <b>{link:i2f}</b> - <code>0x86</code> (134)<br>
+        <b>{link:i2d}</b> - <code>0x87</code> (135)<br>
+        <b>{link:l2i}</b> - <code>0x88</code> (136)<br>
+        <b>{link:l2f}</b> - <code>0x89</code> (137)<br>
+        <b>{link:l2d}</b> - <code>0x8a</code> (138)<br>
+        <b>{link:f2i}</b> - <code>0x8b</code> (139)<br>
+        <b>{link:f2l}</b> - <code>0x8c</code> (140)<br>
+        <b>{link:f2d}</b> - <code>0x8d</code> (141)<br>
+        <b>{link:d2i}</b> - <code>0x8e</code> (142)<br>
+        <b>{link:d2l}</b> - <code>0x8f</code> (143)<br>
+        <b>{link:d2f}</b> - <code>0x90</code> (144)<br>
+        <b>{link:i2b}</b> - <code>0x91</code> (145)<br>
+        <b>{link:i2c}</b> - <code>0x92</code> (146)<br>
+        <b>{link:i2s}</b> - <code>0x93</code> (147)
+    </p>
+
+    <h4>目的</h4>
+    <p>オペランド・スタック先頭の値を，あるプリミティブ型から別のプリミティブ型へ変換します。値はポップされ，変換後の値がプッシュされます。</p>
+
+    <h5><b>変換規則:</b></h5>
+    <ul>
+        <li><b>浮動小数点から整数への変換（<code>f2i</code>, <code>f2l</code>, <code>d2i</code>, <code>d2l</code>）</b>は 0 方向への丸めです。</li>
+        <li>浮動小数点から整数への変換では，<code>NaN</code> は 0 に変換されます。</li>
+        <li>範囲外の浮動小数点値は，変換先型の最小値/最大値に丸め込まれます。</li>
+        <li><code>i2b</code>，<code>i2s</code>，<code>i2c</code> は <code>int</code> からの縮小変換です。<code>i2c</code> は符号なし 16 ビット <code>char</code> へゼロ拡張します。</li>
+        <li><code>f2d</code> は拡大変換です。<code>d2f</code> は精度を失う可能性があり，無限大になる場合があります。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>d2i</code></li>
+        <li><code>i2l</code></li>
+        <li><code>f2d</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value (type1)</code></li>
+        <li>After: <code>..., value (type2)</code></li>
+    </ul>
+
+    <h5><b>カテゴリ/スロットに関する備考:</b></h5>
+    <ul>
+        <li><code>long</code>/<code>double</code> を含む変換は，カテゴリ 2 値（スタックスロット 2 つ）を消費または生成します。</li>
+        <li>それ以外のプリミティブ変換結果はすべて カテゴリ 1 です。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが変換元型の入力と変換先型の出力を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

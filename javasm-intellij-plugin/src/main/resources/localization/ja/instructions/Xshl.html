@@ -1,0 +1,55 @@
+<!-- Instructions: ishl, lshl -->
+<div class="definition">
+    <h2>左シフト</h2>
+    <p>
+        <b>{link:ishl}</b> - <code>0x78</code> (120)<br>
+        <b>{link:lshl}</b> - <code>0x79</code> (121)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        指定ビット数だけ値を論理左シフトします。<br>
+        シフト量はマスクされ，<code>ishl</code> では下位 5 ビット，<code>lshl</code> では下位 6 ビットのみが使用されます。
+    </p>
+    <ul>
+        <li><b>ishl</b>: <code>int</code> を <code>int</code> 量だけ論理左シフト</li>
+        <li><b>lshl</b>: <code>long</code> を <code>int</code> 量だけ論理左シフト</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ishl</code></li>
+        <li><code>lshl</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>ishl</b><br>
+            Before: <code>..., value (int), shift (int)</code>（両方 カテゴリ 1）<br>
+            After: <code>..., result (int)</code>（カテゴリ 1）
+        </li>
+        <li><b>lshl</b><br>
+            Before: <code>..., value (long), shift (int)</code>（value は カテゴリ 2）<br>
+            After: <code>..., result (long)</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらは論理左シフトであり，右側には 0 ビットが挿入されます。符号ビットは特別扱いされません。</li>
+        <li>シフト量は値のビット幅を超えないようにマスクされます。<code>ishl</code> は実質 32 での剰余，<code>lshl</code> は実質 64 での剰余として扱われます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

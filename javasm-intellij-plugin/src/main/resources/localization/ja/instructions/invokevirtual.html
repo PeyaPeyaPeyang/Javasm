@@ -1,0 +1,98 @@
+<!-- Instructions: invokevirtual -->
+<div class="definition">
+    <h2>インスタンス・メソッドの呼び出し</h2>
+    <p>
+        <b>{link:invokevirtual}</b> - <code>0xb6</code> (182)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        指定オブジェクト参照に対してインスタンス（virtual）メソッドを実行します。実際に呼び出されるメソッドは
+        オブジェクトの実行時型に基づいて決定され，多相性を実現する <i>動的ディスパッチ</i> が行われます。
+        クラス階層でオーバーライドされたメソッド呼び出しに一般的に使われます。
+    </p>
+    <p>
+        <code>invokespecial</code>（動的ディスパッチを行わない）とは異なり，<code>invokevirtual</code> は
+        受け手オブジェクトの実行時クラスのメソッド表（vtable）を参照します。
+        これにより，宣言型がスーパークラスやインターフェースでも，最も具体的な実装が選択されます。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>methodref</code>（2 バイト）: <code>CONSTANT_Methodref_info</code> を指す定数プールインデックス。
+            そこにはクラス情報とメソッド名・記述子が含まれます。
+        </li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <code>invokevirtual &lt;methodref&gt;</code>
+
+    <h5><b>Methodref format:</b></h5>
+    <p>シンボリック参照は実行時に解決され，対象メソッドを特定します。</p>
+    <pre>
+&lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
+    </pre>
+    <ul>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式の完全修飾クラス名（例: <code>java/lang/String</code>）</li>
+        <li><b>&lt;methodname&gt;</b>: メソッド名（例: <code>equals</code>, <code>length</code>）</li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM 記述子で表した引数型（例: <code>I</code>, <code>Ljava/lang/Object;</code>）</li>
+        <li><b>&lt;return_descriptor&gt;</b>: 戻り値型記述子（例: <code>V</code> は void, <code>Ljava/lang/String;</code> は String）</li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>invokevirtual java/lang/String-&gt;length()I</code></li>
+        <li><code>invokevirtual java/util/List-&gt;get(I)Ljava/lang/Object;</code></li>
+        <li><code>invokevirtual java/lang/Object-&gt;toString()Ljava/lang/String;</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <p>
+        オペランド・スタックには，オブジェクト参照とメソッド引数が左から右の順で積まれている必要があります。
+    </p>
+    <p>
+        Before: <code>..., objectref, arg1, arg2, ..., argN</code><br>
+        After: <code>..., returnValue?</code>
+    </p>
+    <p>
+        オブジェクト参照と全引数を消費します。メソッドが値を返す場合はその値がプッシュされます。
+        戻り型が <code>void</code> の場合は何もプッシュされません。
+        戻り値カテゴリは記述子規則に従います（<code>long</code>/<code>double</code> は カテゴリ 2）。
+    </p>
+
+    <h5><b>Dispatch Insight:</b></h5>
+    <ul>
+        <li>解決フェーズでシンボリックメソッド参照とアクセス制約を検証します。</li>
+        <li>その後，動的ディスパッチにより受け手クラス階層内の最も具体的な実装が選択されます。</li>
+        <li>この 2 段階モデルは，多相挙動と遅延失敗の理解に重要です。</li>
+    </ul>
+
+    <h5><b>Tutorial Pattern:</b></h5>
+    <ul>
+        <li>安全な典型シーケンスは，<code>instanceof</code> → 分岐 → <code>checkcast</code> → <code>invokevirtual</code> です。</li>
+        <li>バイトコード変換時は，受け手位置と記述子スロット計算を厳密に保持してください。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>解決先は，virtual 呼び出しに適したインスタンスメソッドである必要があります。</li>
+        <li><code>&lt;init&gt;</code> と <code>&lt;clinit&gt;</code> は <code>invokevirtual</code> では呼び出しません。</li>
+        <li>コンストラクタ，private メソッド，明示的 super 呼び出しには <code>invokespecial</code> を使用します。</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>検証では，オペランド・スタックに参照互換なオブジェクトと，メソッド記述子に一致する引数があることを確認します。</li>
+        <li>シンボリック参照を解決できない場合，または解決先メソッドにアクセスできない場合はリンケージエラーとなります。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: オブジェクト参照が null の場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドが static の場合，または解決先クラスがインターフェースの場合。</li>
+        <li><code>AbstractMethodError</code>: 解決先メソッドが abstract で，受け手実クラスに実装がない場合。</li>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>WrongMethodTypeException</code>: 実引数型が実行時にメソッド記述子と一致しない場合。</li>
+    </ul>
+</div>
+

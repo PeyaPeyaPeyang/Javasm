@@ -1,0 +1,55 @@
+<!-- Instructions: iand, land -->
+<div class="definition">
+    <h2>ビット AND</h2>
+    <p>
+        <b>{link:iand}</b> - <code>0x7e</code> (126)<br>
+        <b>{link:land}</b> - <code>0x7f</code> (127)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        オペランド・スタック先頭の 2 値に対してビット単位の AND 演算を行い，
+        結果をスタックへプッシュします。
+    </p>
+    <ul>
+        <li><b>iand</b>: <code>int</code> 値 2 つを対象に演算</li>
+        <li><b>land</b>: <code>long</code> 値 2 つを対象に演算</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iand</code></li>
+        <li><code>land</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>iand</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code>（カテゴリ 1）<br>
+            After: <code>..., result (int)</code>（カテゴリ 1）
+        </li>
+        <li><b>land</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code>（カテゴリ 2）<br>
+            After: <code>..., result (long)</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>これらの命令は，入力値のビット表現に対して AND を適用します。</li>
+        <li>型変換は行われないため，入力値はあらかじめ正しい型（<code>iand</code> は <code>int</code>，<code>land</code> は <code>long</code>）である必要があります。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

@@ -1,0 +1,74 @@
+<!-- Instructions: iaload, laload, faload, daload, aaload, baload, caload, saload -->
+<div class="definition">
+    <h2>配列からの読み出し</h2>
+    <p>
+        <b>{link:iaload}</b> - <code>0x2e</code> (46)<br>
+        <b>{link:laload}</b> - <code>0x2f</code> (47)<br>
+        <b>{link:faload}</b> - <code>0x30</code> (48)<br>
+        <b>{link:daload}</b> - <code>0x31</code> (49)<br>
+        <b>{link:aaload}</b> - <code>0x32</code> (50)<br>
+        <b>{link:baload}</b> - <code>0x33</code> (51)<br>
+        <b>{link:caload}</b> - <code>0x34</code> (52)<br>
+        <b>{link:saload}</b> - <code>0x35</code> (53)
+    </p>
+
+    <h4>目的</h4>
+    <p>配列から値を読み出してオペランド・スタックへロードします。配列参照とインデックスをスタックからポップし，指定した値をプッシュします。</p>
+    <ul>
+        <li><b>{link:iaload}</b>: <code>int[]</code> から <code>int</code> をロード</li>
+        <li><b>{link:laload}</b>: <code>long[]</code> から <code>long</code> をロード</li>
+        <li><b>{link:faload}</b>: <code>float[]</code> から <code>float</code> をロード</li>
+        <li><b>{link:daload}</b>: <code>double[]</code> から <code>double</code> をロード</li>
+        <li><b>{link:aaload}</b>: <code>Object[]</code> から参照をロード</li>
+        <li><b>{link:baload}</b>: <code>byte[]</code>/<code>boolean[]</code> から <code>byte</code> または <code>boolean</code> をロード</li>
+        <li><b>{link:caload}</b>: <code>char[]</code> から <code>char</code> をロード</li>
+        <li><b>{link:saload}</b>: <code>short[]</code> から <code>short</code> をロード</li>
+    </ul>
+
+    <p>
+        <code>baload</code> は <code>byte</code> 値を <code>int</code> へ符号拡張し，<code>boolean</code> 配列からの読み出しでは
+        <code>0</code> または <code>1</code> が得られます。<code>caload</code> は <code>char</code> を <code>int</code> へゼロ拡張し，
+        <code>saload</code> は <code>short</code> を <code>int</code> へ符号拡張します。
+    </p>
+
+    <p>配列参照が <code>null</code> の場合，またはインデックスが範囲外の場合は例外が発生します。</p>
+
+    <h5><b>オペランド:</b> なし</h5>
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>iaload</code></li>
+        <li><code>laload</code></li>
+        <li><code>faload</code></li>
+        <li><code>daload</code></li>
+        <li><code>aaload</code></li>
+        <li><code>baload</code></li>
+        <li><code>caload</code></li>
+        <li><code>saload</code></li>
+    </ul>
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>iaload, faload, aaload, baload, caload, saload</b><br>
+            Before: <code>..., arrayref, index</code><br>
+            After: <code>..., value</code>
+        </li>
+        <li><b>laload, daload</b><br>
+            Before: <code>..., arrayref, index</code><br>
+            After: <code>..., value</code>（カテゴリ 2）<br>
+            （備考: <code>long</code> と <code>double</code> はスタックスロットを 2 つ使用します）
+        </li>
+    </ul>
+
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが配列参照とインデックス用の <code>int</code> 値をそれぞれ受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>実行時例外:</b></h5>
+    <ul>
+        <li><code>NullPointerException</code>: <code>arrayref</code> が <code>null</code> の場合。</li>
+        <li><code>ArrayIndexOutOfBoundsException</code>：<code>index</code> が範囲外の場合。</li>
+    </ul>
+</div>
+

@@ -1,0 +1,58 @@
+<!-- Instructions: ixor, lxor -->
+<div class="definition">
+    <h2>ビット XOR </h2>
+    <p>
+        <b>{link:ixor}</b> - <code>0x82</code> (130)<br>
+        <b>{link:lxor}</b> - <code>0x83</code> (131)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        オペランド・スタック先頭の 2 値に対してビット単位の排他的 OR（XOR）演算を行い，
+        結果をスタックへプッシュします。
+    </p>
+
+    <ul>
+        <li><b>{link:ixor}</b>: <code>int</code> 値 2 つを対象に演算</li>
+        <li><b>{link:lxor}</b>: <code>long</code> 値 2 つを対象に演算</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>ixor</code></li>
+        <li><code>lxor</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>ixor</b><br>
+            Before: <code>..., value1 (int), value2 (int)</code>（カテゴリ 1）<br>
+            After: <code>..., result (int)</code>（カテゴリ 1）<br>
+            Operation: <code>value1 ^ value2</code>
+        </li>
+        <li><b>lxor</b><br>
+            Before: <code>..., value1 (long), value2 (long)</code>（カテゴリ 2）<br>
+            After: <code>..., result (long)</code>（カテゴリ 2）<br>
+            Operation: <code>value1 ^ value2</code>
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>XOR は各ビット位置ごとに独立して実行され，2 つのビットが異なる場合は <code>1</code>，同じ場合は <code>0</code> になります。</li>
+        <li>この演算は値を純粋にビット列として扱うため，符号付き/符号なし解釈には依存しません。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

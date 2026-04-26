@@ -1,0 +1,54 @@
+<!-- Instructions: if_acmpeq, if_acmpne -->
+<div class="definition">
+    <h2>参照の比較</h2>
+    <p>
+        <b>{link:if_acmpeq}</b> - <code>0xa5</code> (165)<br>
+        <b>{link:if_acmpne}</b> - <code>0xa6</code> (166)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        2 つの参照値を <em>参照同一性</em>（同一オブジェクトか，或いは両方 <code>null</code> か）で比較し，
+        条件に応じて分岐します。
+    </p>
+    <ul>
+        <li><b>{link:if_acmpeq}</b>: 2 つの参照が同一であれば分岐。</li>
+        <li><b>{link:if_acmpne}</b>: 2 つの参照が同一でなければ分岐。</li>
+    </ul>
+    <p>
+        これは内容比較ではありません。<code>equals()</code> は呼び出しません。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>label</code>: 現在命令位置を基準とする符号付き 16 ビット相対オフセットで表される分岐先ラベル。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <ul>
+        <li><code>if_acmpeq &lt;label&gt;</code></li>
+        <li><code>if_acmpne &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>if_acmpeq same_ref</code>（同一参照なら真。両方 <code>null</code> も含む）</li>
+        <li><code>if_acmpne different_ref</code>（参照同一性が異なるとき真）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>..., value1 (reference), value2 (reference)</code></li>
+        <li>After: <code>...</code>（カテゴリ 1 の参照値を 2 つ消費）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが カテゴリ 1 の参照値 2 つを受け入れ可能であることが必要です。</li>
+        <li>分岐先妥当性とフレーム型整合性は，クラスのロード/リンク時に検証されます。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。不正な分岐先は検証時に拒否されます。</p>
+</div>
+

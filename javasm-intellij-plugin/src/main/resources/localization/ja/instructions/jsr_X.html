@@ -1,0 +1,68 @@
+<!-- Instructions: jsr, jsr_w -->
+<div class="definition">
+    <h2>サブルーチンへのジャンプ</h2>
+    <p>
+        <b>{link:jsr}</b> - <code>0xa8</code> (168)<br>
+        <b>{link:jsr_w}</b> - <code>0xc9</code> (201)
+    </p>
+
+    <h4>目的</h4>
+    <p>
+        サブルーチンのエントリポイントへ制御を移し，復帰アドレスをオペランド・スタックへプッシュします。
+        歴史的には，古いコンパイラが <code>finally</code> ブロックを実装するために使用していました。
+    </p>
+    <p>
+        <b>{link:jsr}</b> は符号付き 16 ビット分岐オフセットを使用します。
+        <b>{link:jsr_w}</b> は符号付き 32 ビット分岐オフセットを使用します。
+        オフセットは現在命令の命令位置を基準とします。
+    </p>
+
+    <p>
+        これらの命令は Java SE 6 以降で<b>非推奨（DEPRECATED）</b>であり，現代的なバイトコードでは使用すべきではありません。
+        後方互換のために残されていますが，新しい検証戦略では拒否される場合があります。
+        <code>finally</code> 相当の処理には，代わりに構造化例外ハンドラを使用してください。
+    </p>
+
+    <h5><b>オペランド:</b></h5>
+    <ul>
+        <li><code>label</code>: 同一メソッド内のバイトコード分岐オフセットへ解決されるターゲットラベル。</li>
+        <li><b>{link:jsr}</b>: オフセット範囲 <code>-32768..32767</code>。</li>
+        <li><b>{link:jsr_w}</b>: オフセット範囲 <code>-2147483648..2147483647</code>。</li>
+    </ul>
+
+    <h5><b>形式:</b></h5>
+    <ul>
+        <li><code>jsr &lt;label&gt;</code></li>
+        <li><code>jsr_w &lt;label&gt;</code></li>
+    </ul>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>jsr cleanup_subroutine</code>（旧来の <code>finally</code> パターン）</li>
+        <li><code>jsr_w far_cleanup_subroutine</code>（意味は同じでオフセット幅のみ拡張）</li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li>Before: <code>...</code></li>
+        <li>After: <code>..., returnAddress</code>（特殊な <code>returnAddress</code> 型，カテゴリ 1）</li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>これらの命令は現代のクラスファイル運用では廃止扱いであり，現在の Java コンパイラは生成しません。</li>
+        <li>制御フロー整合性と <code>returnAddress</code> 型の利用に関して，厳密な検証整合性が必要です。</li>
+        <li>スタックマップフレーム中心の現代的検証戦略では，旧来サブルーチンパターンが拒否される場合があります。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li>現代的なバイトコードで <code>finally</code> 相当の処理を実装する場合は，構造化例外ハンドラを使用します。</li>
+        <li><code>jsr</code>/<code>jsr_w</code> 自体は定数プール解決を行いません。</li>
+        <li>これらの命令は<b>非推奨</b>であり，新しい検証戦略で拒否される場合があります。</li>
+    </ul>
+
+    <h5><b>実行時例外とエラー:</b></h5>
+    <p>これらの命令固有の実行時例外は発生しません。</p>
+</div>
+

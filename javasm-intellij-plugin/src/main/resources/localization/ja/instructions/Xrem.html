@@ -1,0 +1,55 @@
+<!-- Instructions: irem, lrem, frem, drem -->
+<div class="definition">
+    <h2>剰余</h2>
+    <p>
+        <b>{link:irem}</b> - <code>0x70</code> (112)<br>
+        <b>{link:lrem}</b> - <code>0x71</code> (113)<br>
+        <b>{link:frem}</b> - <code>0x72</code> (114)<br>
+        <b>{link:drem}</b> - <code>0x73</code> (115)
+    </p>
+
+    <h4>目的</h4>
+    <p>2 番目の値を先頭の値で割った剰余を計算してプッシュします。整数型で除数が 0 の場合は <code>ArithmeticException</code> が発生し，浮動小数点型は IEEE 754 の規則に従います。</p>
+    <ul>
+        <li><b>{link:irem}</b>/<b>{link:lrem}</b>: 結果の符号は被除数に従い，0 除算は例外です。</li>
+        <li><b>{link:frem}</b>/<b>{link:drem}</b>: IEEE 754 の剰余規則（NaN 伝播を含む）。</li>
+    </ul>
+
+    <h5><b>オペランド:</b> なし</h5>
+
+    <h5><b>形式:</b> <code>{instruction}</code></h5>
+
+    <h5><b>例:</b></h5>
+    <ul>
+        <li><code>irem</code></li>
+        <li><code>drem</code></li>
+    </ul>
+
+    <h5><b>スタック効果:</b></h5>
+    <ul>
+        <li><b>{link:irem}</b>, <b>{link:frem}</b><br>
+            Before: <code>..., value1, value2</code>（カテゴリ 1，value1 は被除数）<br>
+            After: <code>..., remainder</code>（カテゴリ 1）
+        </li>
+        <li><b>{link:lrem}</b>, <b>{link:drem}</b><br>
+            Before: <code>..., value1, value2</code>（カテゴリ 2 値，value1 は被除数）<br>
+            After: <code>..., remainder</code>（カテゴリ 2）
+        </li>
+    </ul>
+
+    <h5><b>検証:</b></h5>
+    <ul>
+        <li>この命令位置で，オペランド・スタックが命令に対応したカテゴリの値を受け入れ可能であることが必要です。</li>
+    </ul>
+
+    <h5><b>備考:</b></h5>
+    <ul>
+        <li><code>frem</code> と <code>drem</code> は IEEE 754 の規則に従うため，0 除算は例外ではなく特定の値（<code>Infinity</code> または <code>NaN</code>）になります。</li>
+    </ul>
+
+    <h5><b>実行時例外:</b></h5>
+    <ul>
+        <li><code>ArithmeticException</code> は <code>irem</code> または <code>lrem</code> で除数（先頭オペランド）が 0 の場合に発生します。</li>
+    </ul>
+</div>
+
