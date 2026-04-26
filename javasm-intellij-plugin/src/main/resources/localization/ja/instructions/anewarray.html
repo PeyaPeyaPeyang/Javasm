@@ -4,7 +4,8 @@
     <p><b>{link:anewarray}</b> - <code>0xbd</code> (189)</p>
 
     <h4>目的</h4>
-    <p><code>TypeDescriptor</code> で指定された要素型を持つ参照配列を新規作成します。配列長はスタックからポップされます。</p>
+    <p><code>TypeDescriptor</code> で指定された要素型を持つ参照配列を新規作成します。配列長はスタックからポップされます。
+    </p>
     <p>
         シンボリック型参照は実行時定数プールから解決され，参照型の要素型（クラス，インターフェース，配列型）を示している必要があります。
     </p>
@@ -40,8 +41,10 @@
     <ul>
         <li><code>NegativeArraySizeException</code>: 配列長が負の場合。</li>
         <li><code>OutOfMemoryError</code>: JVM がメモリ不足で配列を確保できない場合。</li>
-        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー:
-            シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code>
+            などのリンケージエラー:
+            シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。
+        </li>
     </ul>
 </div>
 

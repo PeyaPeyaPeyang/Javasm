@@ -9,12 +9,10 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALTokens;
 import tokyo.peya.langjal.compiler.JALLexer;
 
-public class JALPairedBraceMatcher implements PairedBraceMatcher
-{
+public class JALPairedBraceMatcher implements PairedBraceMatcher {
     @Override
-    public BracePair @NotNull [] getPairs()
-    {
-        return  new BracePair[] {
+    public BracePair @NotNull [] getPairs() {
+        return new BracePair[]{
                 new BracePair(JALTokens.getToken(JALLexer.LBK), JALTokens.getToken(JALLexer.RBK), false),
                 new BracePair(JALTokens.getToken(JALLexer.LBR), JALTokens.getToken(JALLexer.RBR), true),
                 new BracePair(JALTokens.getToken(JALLexer.LP), JALTokens.getToken(JALLexer.RP), false),
@@ -23,14 +21,12 @@ public class JALPairedBraceMatcher implements PairedBraceMatcher
 
     @Override
     public boolean isPairedBracesAllowedBeforeType(@NotNull IElementType iElementType,
-                                                   @Nullable IElementType iElementType1)
-    {
+                                                   @Nullable IElementType iElementType1) {
         return true;
     }
 
     @Override
-    public int getCodeConstructStart(@NotNull PsiFile psiFile, int braceOffset)
-    {
+    public int getCodeConstructStart(@NotNull PsiFile psiFile, int braceOffset) {
         return braceOffset;
     }
 }

@@ -20,7 +20,9 @@
         <li><b>{link:fastore}</b>: <code>float[]</code> に <code>float</code> を格納</li>
         <li><b>{link:dastore}</b>: <code>double[]</code> に <code>double</code> を格納</li>
         <li><b>{link:aastore}</b>: <code>Object[]</code> に参照を格納</li>
-        <li><b>{link:bastore}</b>: <code>byte[]</code>/<code>boolean[]</code> に <code>byte</code> または <code>boolean</code> を格納</li>
+        <li><b>{link:bastore}</b>: <code>byte[]</code>/<code>boolean[]</code> に <code>byte</code> または
+            <code>boolean</code> を格納
+        </li>
         <li><b>{link:castore}</b>: <code>char[]</code> に <code>char</code> を格納</li>
         <li><b>{link:sastore}</b>: <code>short[]</code> に <code>short</code> を格納</li>
     </ul>
@@ -59,14 +61,18 @@
 
     <h5><b>検証:</b></h5>
     <ul>
-        <li>この命令位置で，オペランド・スタックが配列参照，インデックス，格納値として適切な型を供給できる必要があります。</li>
-        <li><code>{link:aastore}</code> では，格納値が参照型であり，配列参照がその参照型配列と互換であることを検証します。</li>
+        <li>この命令位置で，オペランド・スタックが配列参照，インデックス，格納値として適切な型を供給できる必要があります。
+        </li>
+        <li><code>{link:aastore}</code> では，格納値が参照型であり，配列参照がその参照型配列と互換であることを検証します。
+        </li>
     </ul>
 
     <h5><b>備考:</b></h5>
     <ul>
         <li>これらの命令は定数プールエントリを解決せず，命令固有のリンケージエラーはありません。</li>
-        <li>カテゴリ 2 値型（<code>long</code>, <code>double</code>）では，オペランド・スタックのスロット計算は「値 2 ワード + <code>arrayref</code> 1 + <code>index</code> 1」となります。</li>
+        <li>カテゴリ 2 値型（<code>long</code>, <code>double</code>）では，オペランド・スタックのスロット計算は「値 2 ワード
+            + <code>arrayref</code> 1 + <code>index</code> 1」となります。
+        </li>
     </ul>
 
     <h5><b>実行時例外とエラー:</b></h5>

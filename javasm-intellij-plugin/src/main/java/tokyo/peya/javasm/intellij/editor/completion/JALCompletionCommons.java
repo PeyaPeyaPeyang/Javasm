@@ -14,10 +14,8 @@ import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
-public class JALCompletionCommons
-{
-    public static InsertHandler<LookupElement> insertAndNewLine()
-    {
+public class JALCompletionCommons {
+    public static InsertHandler<LookupElement> insertAndNewLine() {
         return (ctxt, item) -> {
             Editor editor = ctxt.getEditor();
             Document doc = editor.getDocument();
@@ -37,36 +35,32 @@ public class JALCompletionCommons
         };
     }
 
-    public static PatternCondition<PsiElement> emptyLine()
-    {
-        return new PatternCondition<>("emptyLine")
-        {
+    public static PatternCondition<PsiElement> emptyLine() {
+        return new PatternCondition<>("emptyLine") {
+            private static @NotNull String getLineString(@NotNull PsiElement element, int lineNumber, String text) {
+                int lineStart = element.getContainingFile()
+                        .getViewProvider()
+                        .getDocument()
+                        .getLineStartOffset(lineNumber);
+                int lineEnd = element.getContainingFile()
+                        .getViewProvider()
+                        .getDocument()
+                        .getLineEndOffset(lineNumber);
+
+                return text.substring(lineStart, lineEnd);
+            }
+
             @Override
-            public boolean accepts(@NotNull PsiElement element, ProcessingContext context)
-            {
+            public boolean accepts(@NotNull PsiElement element, ProcessingContext context) {
                 String text = element.getContainingFile().getViewProvider().getDocument().getText();
                 int offset = element.getTextOffset();
                 int lineNumber = element.getContainingFile()
-                                        .getViewProvider()
-                                        .getDocument()
-                                        .getLineNumber(offset);
+                        .getViewProvider()
+                        .getDocument()
+                        .getLineNumber(offset);
 
                 String lineText = getLineString(element, lineNumber, text);
                 return lineText.trim().equals("IntellijIdeaRulezzz");
-            }
-
-            private static @NotNull String getLineString(@NotNull PsiElement element, int lineNumber, String text)
-            {
-                int lineStart = element.getContainingFile()
-                                       .getViewProvider()
-                                       .getDocument()
-                                       .getLineStartOffset(lineNumber);
-                int lineEnd = element.getContainingFile()
-                                     .getViewProvider()
-                                     .getDocument()
-                                     .getLineEndOffset(lineNumber);
-
-                return text.substring(lineStart, lineEnd);
             }
         };
     }

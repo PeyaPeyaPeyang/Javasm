@@ -23,27 +23,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessAttributeNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessLevelNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.AccessModifierNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyItemNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassMetaNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.*;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.*;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertyInterfacesNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertyMajorVersionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertyMinorVersionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertySuperClassNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionParseContributor;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.JVMScalarNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.LocalReferenceNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.*;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicArgumentNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InvokeDynamicMethodHandleTypeNode;
@@ -51,49 +37,62 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invoke
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchArgumentNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchCaseNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchArgumentNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.CatchDirectiveNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.FinallyDirectiveNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodBodyNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.TryCatchDirectiveEntryNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.method.TryCatchDirectiveNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.method.*;
 import tokyo.peya.langjal.compiler.JALLexer;
 import tokyo.peya.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class JALParserDefinition implements ParserDefinition
-{
+public final class JALParserDefinition implements ParserDefinition {
     public static final IFileElementType FILE = new IFileElementType(JALLanguage.INSTANCE);
 
     public static TokenIElementType ID;
     public static TokenIElementType NUMBER;
     public static TokenIElementType FULL_QUALIFIED_CLASS_NAME;
 
-    public JALParserDefinition()
-    {
+    public JALParserDefinition() {
         initStatic();
     }
 
+    public static void initStatic() {
+        if (ID != null)
+            return;
+
+        List<String> tokens = new ArrayList<>();
+        Vocabulary vocab = JALParser.VOCABULARY;
+        for (int i = 0; i < vocab.getMaxTokenType() + 1; ++i) {
+            String name = vocab.getLiteralName(i);
+            if (name == null)
+                name = vocab.getSymbolicName(i);
+            if (name == null)
+                name = "<invalid>";
+            tokens.add(name);
+        }
+        PSIElementTypeFactory.defineLanguageIElementTypes(
+                JALLanguage.INSTANCE,
+                tokens.toArray(new String[0]),
+                JALParser.ruleNames
+        );
+        List<TokenIElementType> tokenIElementTypes =
+                PSIElementTypeFactory.getTokenIElementTypes(JALLanguage.INSTANCE);
+        ID = tokenIElementTypes.get(JALLexer.ID);
+        NUMBER = tokenIElementTypes.get(JALLexer.NUMBER);
+        FULL_QUALIFIED_CLASS_NAME = tokenIElementTypes.get(JALLexer.FULL_QUALIFIED_CLASS_NAME);
+
+    }
+
     @Override
-    public @NotNull Lexer createLexer(Project project)
-    {
+    public @NotNull Lexer createLexer(Project project) {
         return new ANTLRLexerAdaptor(JALLanguage.INSTANCE, new JALLexer(null));
     }
 
     @Override
-    public @NotNull PsiParser createParser(Project project)
-    {
+    public @NotNull PsiParser createParser(Project project) {
         JALParser parser = new JALParser(null);
-        return new ANTLRParserAdaptor(JALLanguage.INSTANCE, parser)
-        {
+        return new ANTLRParserAdaptor(JALLanguage.INSTANCE, parser) {
             @Override
-            protected ParseTree parse(Parser parser, IElementType root)
-            {
+            protected ParseTree parse(Parser parser, IElementType root) {
                 if (root instanceof IFileElementType)
                     return ((JALParser) parser).root();
                 else
@@ -103,32 +102,27 @@ public final class JALParserDefinition implements ParserDefinition
     }
 
     @Override
-    public @NotNull IFileElementType getFileNodeType()
-    {
+    public @NotNull IFileElementType getFileNodeType() {
         return FILE;
     }
 
     @Override
-    public @NotNull TokenSet getCommentTokens()
-    {
+    public @NotNull TokenSet getCommentTokens() {
         return JALTokens.COMMENTS;
     }
 
     @Override
-    public @NotNull TokenSet getStringLiteralElements()
-    {
+    public @NotNull TokenSet getStringLiteralElements() {
         return JALTokens.STRING;
     }
 
     @Override
-    public @NotNull TokenSet getWhitespaceTokens()
-    {
+    public @NotNull TokenSet getWhitespaceTokens() {
         return JALTokens.WHITESPACE;
     }
 
     @Override
-    public @NotNull PsiElement createElement(ASTNode node)
-    {
+    public @NotNull PsiElement createElement(ASTNode node) {
         IElementType elementType = node.getElementType();
         if (elementType instanceof RuleIElementType ruleType)
             return this.createRuleElement(node, ruleType);
@@ -136,13 +130,11 @@ public final class JALParserDefinition implements ParserDefinition
     }
 
     @NotNull
-    private PsiElement createRuleElement(ASTNode node, RuleIElementType type)
-    {
+    private PsiElement createRuleElement(ASTNode node, RuleIElementType type) {
         if (InstructionParseContributor.isInstructionRule(type.getRuleIndex()))
             return InstructionParseContributor.createInstructionElement(node, type);
 
-        return switch (type.getRuleIndex())
-        {
+        return switch (type.getRuleIndex()) {
             case JALParser.RULE_classDefinition -> new ClassDefinitionNode(node, FULL_QUALIFIED_CLASS_NAME);
             case JALParser.RULE_className -> new ClassNameNode(node);
 
@@ -197,43 +189,12 @@ public final class JALParserDefinition implements ParserDefinition
     }
 
     @Override
-    public @NotNull SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right)
-    {
+    public @NotNull SpaceRequirements spaceExistenceTypeBetweenTokens(ASTNode left, ASTNode right) {
         return SpaceRequirements.MAY;
     }
 
     @Override
-    public @NotNull PsiFile createFile(@NotNull FileViewProvider fileViewProvider)
-    {
+    public @NotNull PsiFile createFile(@NotNull FileViewProvider fileViewProvider) {
         return new JALFile(fileViewProvider);
-    }
-
-    public static void initStatic()
-    {
-        if (ID != null)
-            return;
-
-        List<String> tokens = new ArrayList<>();
-        Vocabulary vocab = JALParser.VOCABULARY;
-        for(int i = 0; i < vocab.getMaxTokenType() + 1; ++i)
-        {
-            String name = vocab.getLiteralName(i);
-            if (name == null)
-                name = vocab.getSymbolicName(i);
-            if (name == null)
-                name = "<invalid>";
-            tokens.add(name);
-        }
-        PSIElementTypeFactory.defineLanguageIElementTypes(
-                JALLanguage.INSTANCE,
-                tokens.toArray(new String[0]),
-                JALParser.ruleNames
-        );
-        List<TokenIElementType> tokenIElementTypes =
-                PSIElementTypeFactory.getTokenIElementTypes(JALLanguage.INSTANCE);
-        ID = tokenIElementTypes.get(JALLexer.ID);
-        NUMBER = tokenIElementTypes.get(JALLexer.NUMBER);
-        FULL_QUALIFIED_CLASS_NAME = tokenIElementTypes.get(JALLexer.FULL_QUALIFIED_CLASS_NAME);
-
     }
 }

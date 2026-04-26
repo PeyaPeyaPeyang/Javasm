@@ -6,6 +6,5 @@ public record StackUIInstruction(
         @NotNull
         String instruction,
         int bytecodeOffset
-)
-{
+) {
 }

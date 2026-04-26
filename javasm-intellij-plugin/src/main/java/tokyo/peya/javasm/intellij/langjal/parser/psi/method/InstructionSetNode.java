@@ -18,22 +18,18 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode
 import java.util.ArrayList;
 import java.util.List;
 
-public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNode
-{
-    public InstructionSetNode(@NotNull ASTNode node, @NotNull IElementType idElementType)
-    {
+public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNode {
+    public InstructionSetNode(@NotNull ASTNode node, @NotNull IElementType idElementType) {
         super(node, idElementType);
     }
 
     @Nullable
-    public LabelNode getLabel()
-    {
+    public LabelNode getLabel() {
         return PsiTreeUtil.findChildOfType(this, LabelNode.class);
     }
 
     @Override
-    public @Nullable PsiElement getNameIdentifier()
-    {
+    public @Nullable PsiElement getNameIdentifier() {
         LabelNode label = this.getLabel();
         if (label == null)
             return null;
@@ -41,14 +37,12 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
     }
 
     @Nullable
-    public TryCatchDirectiveNode getTryCatchDirective()
-    {
+    public TryCatchDirectiveNode getTryCatchDirective() {
         return PsiTreeUtil.findChildOfType(this, TryCatchDirectiveNode.class);
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         LabelNode labelNode = this.getLabel();
         if (labelNode != null)
             return labelNode.getName();
@@ -56,11 +50,9 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
     }
 
     @NotNull
-    public InstructionNode[] getInstructions()
-    {
+    public InstructionNode[] getInstructions() {
         List<InstructionNode> instructionNodes = new ArrayList<>();
-        for (PsiElement child : this.getChildren())
-        {
+        for (PsiElement child : this.getChildren()) {
             if (child instanceof ANTLRPsiNode instructionNode &&
                     instructionNode.getFirstChild() instanceof InstructionNode insn)
                 instructionNodes.add(insn);
@@ -70,8 +62,7 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
     }
 
     @Override
-    public @Nullable PsiElement resolve(PsiNamedElement element)
-    {
+    public @Nullable PsiElement resolve(PsiNamedElement element) {
         LabelNameNode labelName = null;
         if (element instanceof IdentifierNode identifier)
             labelName = PsiTreeUtil.getParentOfType(identifier, LabelNameNode.class);
@@ -87,8 +78,7 @@ public class InstructionSetNode extends IdentifierDefSubtree implements ScopeNod
         if (methodBody == null)
             return null;
 
-        for (InstructionSetNode instructionSet : methodBody.getInstructionSets())
-        {
+        for (InstructionSetNode instructionSet : methodBody.getInstructionSets()) {
             if (instructionSet.getLabel() == null)
                 continue; // ラベルがない場合はスキップ
             LabelNode labelNode = instructionSet.getLabel();

@@ -15,7 +15,9 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li><code>ClassRef</code>: constant-pool index to <code>CONSTANT_Class_info</code> naming a non-array, non-interface class.</li>
+        <li><code>ClassRef</code>: constant-pool index to <code>CONSTANT_Class_info</code> naming a non-array,
+            non-interface class.
+        </li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -23,7 +25,8 @@
 
     <h5><b>Examples:</b></h5>
     <ul>
-        <li><code>new java/lang/String</code> followed by <code>invokespecial java/lang/String-&gt;&lt;init&gt;()V</code></li>
+        <li><code>new java/lang/String</code> followed by <code>invokespecial
+            java/lang/String-&gt;&lt;init&gt;()V</code></li>
         <li><code>new java/util/ArrayList</code> followed by its constructor invocation</li>
     </ul>
 
@@ -44,7 +47,9 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept a reference value at the point of this
+            instruction.
+        </li>
         <li>Verification tracks uninitialized references to ensure proper constructor invocation patterns.</li>
         <li>If type resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
@@ -57,10 +62,16 @@
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>OutOfMemoryError</code>: if the Java Virtual Machine cannot allocate the object because it is out of memory.</li>
-        <li><code>LinkageError</code>: if the symbolic class reference cannot be resolved or if the resolved class is not accessible.</li>
+        <li><code>OutOfMemoryError</code>: if the Java Virtual Machine cannot allocate the object because it is out of
+            memory.
+        </li>
+        <li><code>LinkageError</code>: if the symbolic class reference cannot be resolved or if the resolved class is
+            not accessible.
+        </li>
         <li><code>InstantiationError</code>: if the resolved class is abstract or an interface.</li>
-        <li><code>IncompatibleClassChangeError</code>: if the resolved class is not a class (e.g., if it's an array or interface) or if it violates other constraints.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved class is not a class (e.g., if it's an array or
+            interface) or if it violates other constraints.
+        </li>
     </ul>
 
 </div>

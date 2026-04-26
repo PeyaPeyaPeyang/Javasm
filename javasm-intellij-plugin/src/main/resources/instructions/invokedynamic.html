@@ -17,8 +17,11 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li>Bytecode operand is a constant-pool index to <code>CONSTANT_InvokeDynamic_info</code>, followed by two zero bytes.</li>
-        <li><code>CONSTANT_InvokeDynamic_info</code> links to a bootstrap method entry and a name-and-type descriptor.</li>
+        <li>Bytecode operand is a constant-pool index to <code>CONSTANT_InvokeDynamic_info</code>, followed by two zero
+            bytes.
+        </li>
+        <li><code>CONSTANT_InvokeDynamic_info</code> links to a bootstrap method entry and a name-and-type descriptor.
+        </li>
         <li>Bootstrap static arguments are encoded in the class-file <code>BootstrapMethods</code> attribute.</li>
     </ul>
 
@@ -31,7 +34,8 @@ invokedynamic &lt;name&gt; &lt;methodDescriptor&gt; [bootstrap = MethodHandle + 
     <ul>
         <li>At first execution, the JVM resolves the call site and invokes the bootstrap method.</li>
         <li>The bootstrap method receives lookup context, call-site name, method type, and static arguments.</li>
-        <li>It must return a non-null <code>CallSite</code> whose target type exactly matches the call-site descriptor.</li>
+        <li>It must return a non-null <code>CallSite</code> whose target type exactly matches the call-site descriptor.
+        </li>
         <li>After successful linkage, subsequent executions reuse the linked call site.</li>
     </ul>
 
@@ -53,7 +57,9 @@ invokedynamic apply (Ljava/lang/Object;)Ljava/lang/Object;
     <ul>
         <li>Verification checks operand-stack compatibility with the call-site descriptor.</li>
         <li>Linkage failures are reported as linkage errors (commonly <code>BootstrapMethodError</code> wrappers).</li>
-        <li>If the linked target cannot be invoked with actual argument types, method-handle invocation type errors may occur.</li>
+        <li>If the linked target cannot be invoked with actual argument types, method-handle invocation type errors may
+            occur.
+        </li>
         <li>No objectref is implicit in this instruction; all arguments are explicit in the descriptor.</li>
     </ul>
 
@@ -65,10 +71,20 @@ invokedynamic apply (Ljava/lang/Object;)Ljava/lang/Object;
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>BootstrapMethodError</code>: if the bootstrap method fails to link the call site (e.g., throws an exception, returns null, or returns a CallSite with an incompatible target type).</li>
-        <li><code>LinkageError</code>: if the symbolic reference cannot be resolved or if the resolved method is not accessible.</li>
-        <li><code>IncompatibleClassChangeError</code>: if the resolved method handle is not a valid method handle or if the resolved call site is not a valid call site.</li>
-        <li><code>NullPointerException</code>: if the operand stack does not contain enough arguments for the call site descriptor.</li>
-        <li><code>WrongMethodTypeException</code>: if the actual argument types do not match the call site descriptor at runtime.</li>
+        <li><code>BootstrapMethodError</code>: if the bootstrap method fails to link the call site (e.g., throws an
+            exception, returns null, or returns a CallSite with an incompatible target type).
+        </li>
+        <li><code>LinkageError</code>: if the symbolic reference cannot be resolved or if the resolved method is not
+            accessible.
+        </li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method handle is not a valid method handle or if
+            the resolved call site is not a valid call site.
+        </li>
+        <li><code>NullPointerException</code>: if the operand stack does not contain enough arguments for the call site
+            descriptor.
+        </li>
+        <li><code>WrongMethodTypeException</code>: if the actual argument types do not match the call site descriptor at
+            runtime.
+        </li>
     </ul>
 </div>

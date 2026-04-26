@@ -12,16 +12,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
-public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
-{
-    public LocalReferenceNode(@NotNull ASTNode node)
-    {
+public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner {
+    public LocalReferenceNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Override
-    public @Nullable PsiElement getNameIdentifier()
-    {
+    public @Nullable PsiElement getNameIdentifier() {
         PsiElement node = this.findChildByType(JALParserDefinition.ID);
         if (node == null)
             node = this.findChildByType(JALParserDefinition.NUMBER);
@@ -29,8 +26,7 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
         return node;
     }
 
-    public boolean isNumberSpecifier()
-    {
+    public boolean isNumberSpecifier() {
         PsiElement node = this.getNameIdentifier();
         if (node == null)
             return false;
@@ -39,14 +35,12 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
     }
 
     @Override
-    public String getName()
-    {
-        return this.getNameIdentifier() == null ? "": this.getNameIdentifier().getText();
+    public String getName() {
+        return this.getNameIdentifier() == null ? "" : this.getNameIdentifier().getText();
     }
 
     @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException
-    {
+    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
         if (s.isEmpty())
             throw new IncorrectOperationException("Name cannot be empty");
 
@@ -56,15 +50,14 @@ public class LocalReferenceNode extends ANTLRPsiNode implements PsiNamedElement,
                 this.getLanguage(),
                 this.getContext(),
                 s,
-                isNumber ? JALParserDefinition.NUMBER: JALParserDefinition.ID
+                isNumber ? JALParserDefinition.NUMBER : JALParserDefinition.ID
         );
 
         PsiElement oldID = this.getNameIdentifier();
         if (oldID == null)
             throw new IncorrectOperationException("InstructionLocalReferenceNode must have an ID or NUMBER child node");
 
-        if (newID != null)
-        {
+        if (newID != null) {
             this.getNode().replaceChild(oldID.getNode(), newID.getNode());
             return newID;
         }

@@ -8,18 +8,13 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
-import java.util.Objects;
-
-public class LabelNameReference extends JALElementReference
-{
-    public LabelNameReference(@NotNull IdentifierNode element)
-    {
+public class LabelNameReference extends JALElementReference {
+    public LabelNameReference(@NotNull IdentifierNode element) {
         super(element);
     }
 
     @Override
-    public boolean isSubtree(PsiElement psiElement)
-    {
+    public boolean isSubtree(PsiElement psiElement) {
         return psiElement instanceof LabelNode || psiElement instanceof LabelNameNode || psiElement instanceof InstructionSetNode;
     }
 }

@@ -4,7 +4,6 @@ import com.intellij.lang.ASTNode;
 import com.intellij.lang.folding.FoldingBuilderEx;
 import com.intellij.lang.folding.FoldingDescriptor;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.util.Key;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiComment;
 import com.intellij.psi.PsiElement;
@@ -13,7 +12,6 @@ import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.inspection.JALPsiElementVisitorRecursive;
-import tokyo.peya.javasm.intellij.langjal.parser.JALTokens;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassBodyNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
@@ -35,8 +33,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JALFoldingBuilder extends FoldingBuilderEx
-{
+public class JALFoldingBuilder extends FoldingBuilderEx {
     private static final Pattern DESC_PATTERN = Pattern.compile("<editor-fold\\s+desc(ription)?\\s*=\\s*\"([^\"]*)\"");
 
     private static String extractDesc(String text) {
@@ -44,48 +41,56 @@ public class JALFoldingBuilder extends FoldingBuilderEx
         return m.find() ? m.group(1) : "...";
     }
 
+    private static FoldingDescriptor visitInstruction(InstructionNode insn) {
+        if (insn instanceof InstructionTableSwitchNode tableSwitch) {
+            InstructionTableSwitchArgumentNode arg = tableSwitch.getTableSwitchArgument();
+            if (arg != null)
+                return new FoldingDescriptor(arg, arg.getTextRange());
+        } else if (insn instanceof InstructionLookupSwitchNode lookupSwitch) {
+            InstructionLookupSwitchArgumentNode arg = lookupSwitch.getTableSwitchArgument();
+            if (arg != null)
+                return new FoldingDescriptor(arg, arg.getTextRange());
+        }
+
+        return null;
+    }
+
     @Override
     public FoldingDescriptor @NotNull [] buildFoldRegions(@NotNull PsiElement root,
                                                           @NotNull Document document,
-                                                          boolean quick)
-    {
+                                                          boolean quick) {
         List<FoldingDescriptor> descriptors = new ArrayList<>();
         List<PsiComment> comments = new ArrayList<>();
 
         root.accept(new JALPsiElementVisitorRecursive() {
             @Override
-            protected void visitClass(@NotNull ClassDefinitionNode node)
-            {
+            protected void visitClass(@NotNull ClassDefinitionNode node) {
                 ClassBodyNode classBody = node.getClassBodyNode();
                 if (classBody != null)
                     descriptors.add(new FoldingDescriptor(classBody.getNode(), classBody.getTextRange()));
             }
 
             @Override
-            protected void visitMethod(@NotNull MethodDefinitionNode node)
-            {
+            protected void visitMethod(@NotNull MethodDefinitionNode node) {
                 MethodBodyNode methodBody = node.getMethodBody();
                 if (methodBody != null)
                     descriptors.add(new FoldingDescriptor(methodBody.getNode(), methodBody.getTextRange()));
             }
 
             @Override
-            protected void visitInstructionSet(@NotNull InstructionSetNode node)
-            {
+            protected void visitInstructionSet(@NotNull InstructionSetNode node) {
                 descriptors.add(new FoldingDescriptor(node, node.getTextRange()));
             }
 
             @Override
-            protected void visitInstruction(@NotNull InstructionNode node)
-            {
+            protected void visitInstruction(@NotNull InstructionNode node) {
                 FoldingDescriptor desc = JALFoldingBuilder.visitInstruction(node);
                 if (desc != null)
                     descriptors.add(desc);
             }
 
             @Override
-            public void visitComment(@NotNull PsiComment comment)
-            {
+            public void visitComment(@NotNull PsiComment comment) {
                 if (!(comment.getTokenType() instanceof TokenIElementType antlrElement))
                     return;
 
@@ -106,8 +111,7 @@ public class JALFoldingBuilder extends FoldingBuilderEx
 
             if (text.contains("<editor-fold")) {
                 stack.push(comment);
-            }
-            else if (text.contains("</editor-fold>")) {
+            } else if (text.contains("</editor-fold>")) {
                 if (stack.isEmpty()) {
                     continue;
                 }
@@ -130,37 +134,14 @@ public class JALFoldingBuilder extends FoldingBuilderEx
         return descriptors.toArray(FoldingDescriptor[]::new);
     }
 
-    private static FoldingDescriptor visitInstruction(InstructionNode insn)
-    {
-        if (insn instanceof InstructionTableSwitchNode tableSwitch)
-        {
-            InstructionTableSwitchArgumentNode arg = tableSwitch.getTableSwitchArgument();
-            if (arg != null)
-                return new FoldingDescriptor(arg, arg.getTextRange());
-        }
-        else if (insn instanceof InstructionLookupSwitchNode lookupSwitch)
-        {
-            InstructionLookupSwitchArgumentNode arg = lookupSwitch.getTableSwitchArgument();
-            if (arg != null)
-                return new FoldingDescriptor(arg, arg.getTextRange());
-        }
-
-        return null;
-    }
-
-
     @Override
-    public @Nullable String getPlaceholderText(@NotNull ASTNode astNode)
-    {
+    public @Nullable String getPlaceholderText(@NotNull ASTNode astNode) {
         PsiElement element = astNode.getPsi();
-        if (element instanceof InstructionSetNode instructionSet)
-        {  // こいつも IdentifierDefSubtree だけど， それだとフォルド時に labelName となってしまうが， labelName: としたい
+        if (element instanceof InstructionSetNode instructionSet) {  // こいつも IdentifierDefSubtree だけど， それだとフォルド時に labelName となってしまうが， labelName: としたい
             LabelNode labelNode = instructionSet.getLabel();
-            if(labelNode != null)
+            if (labelNode != null)
                 return labelNode.getText();
-        }
-        else if (element instanceof IdentifierDefSubtree idDef)
-        {
+        } else if (element instanceof IdentifierDefSubtree idDef) {
             IdentifierNode id = (IdentifierNode) idDef.getNameIdentifier();
             if (id != null)
                 return id.getText();
@@ -170,8 +151,7 @@ public class JALFoldingBuilder extends FoldingBuilderEx
     }
 
     @Override
-    public boolean isCollapsedByDefault(@NotNull ASTNode astNode)
-    {
+    public boolean isCollapsedByDefault(@NotNull ASTNode astNode) {
         return false;
     }
 }

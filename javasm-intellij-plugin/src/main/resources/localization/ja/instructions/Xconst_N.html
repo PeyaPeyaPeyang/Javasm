@@ -23,7 +23,8 @@
     <ul>
         <li><code>iconst_m1</code> 〜 <code>iconst_5</code>: int 定数 -1 〜 5 をプッシュします。</li>
         <li><code>lconst_0</code>, <code>lconst_1</code>: long の 0 と 1 をプッシュします。</li>
-        <li><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code>: float の 0.0, 1.0, 2.0 をプッシュします。</li>
+        <li><code>fconst_0</code>, <code>fconst_1</code>, <code>fconst_2</code>: float の 0.0, 1.0, 2.0 をプッシュします。
+        </li>
         <li><code>dconst_0</code>, <code>dconst_1</code>: double の 0.0 と 1.0 をプッシュします。</li>
     </ul>
 
@@ -53,6 +54,8 @@
     <h5><b>備考:</b></h5>
     <ul>
         <li>これらの命令は，頻繁に使用される定数向けに最適化されており，該当値の定数プール参照を不要にします。</li>
-        <li>byte 範囲の定数には <code>bipush</code>，short 範囲の定数には <code>sipush</code> を使用します。その他の値は <code>ldc</code> などの関連命令で定数プールからロードします。</li>
+        <li>byte 範囲の定数には <code>bipush</code>，short 範囲の定数には <code>sipush</code> を使用します。その他の値は
+            <code>ldc</code> などの関連命令で定数プールからロードします。
+        </li>
     </ul>
 </div>

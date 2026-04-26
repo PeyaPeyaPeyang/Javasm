@@ -12,16 +12,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 
-public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner
-{
-    public LabelNameNode(@NotNull ASTNode node)
-    {
+public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiNameIdentifierOwner {
+    public LabelNameNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException
-    {
+    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
         PsiElement newID = Trees.createLeafFromText(
                 this.getProject(),
                 this.getLanguage(),
@@ -31,18 +28,16 @@ public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiN
         );
 
         PsiElement oldID = this.findChildByType(JALParserDefinition.ID);
-        assert oldID != null: "LabelNameNode must have an ID child node";
+        assert oldID != null : "LabelNameNode must have an ID child node";
 
-        if (newID != null)
-        {
+        if (newID != null) {
             this.getNode().replaceChild(oldID.getNode(), newID.getNode());
             return newID;
         }
         return this;
     }
 
-    public @NotNull String getName()
-    {
+    public @NotNull String getName() {
         PsiElement id = this.findChildByType(JALParserDefinition.ID);
         if (id == null)
             return "<unknown>"; // ID child node must exist
@@ -54,8 +49,7 @@ public class LabelNameNode extends ANTLRPsiNode implements PsiNamedElement, PsiN
     }
 
     @Override
-    public @Nullable IdentifierNode getNameIdentifier()
-    {
+    public @Nullable IdentifierNode getNameIdentifier() {
         return this.findChildByType(JALParserDefinition.ID);
     }
 }

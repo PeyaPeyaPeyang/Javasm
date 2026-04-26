@@ -12,4 +12,5 @@ public record InstructionUIElement(
         List<StackUIElement> stack,
         @NotNull
         List<StackUIElement> locals
-) {}
+) {
+}

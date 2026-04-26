@@ -7,21 +7,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 
-public class ClassBodyItemNode extends ANTLRPsiNode
-{
-    public ClassBodyItemNode(@NotNull ASTNode node)
-    {
+public class ClassBodyItemNode extends ANTLRPsiNode {
+    public ClassBodyItemNode(@NotNull ASTNode node) {
         super(node);
     }
 
-    public boolean isMethod()
-    {
+    public boolean isMethod() {
         return PsiTreeUtil.findChildOfType(this, MethodDefinitionNode.class) != null;
     }
 
     @Nullable
-    public MethodDefinitionNode getMethod()
-    {
+    public MethodDefinitionNode getMethod() {
         return PsiTreeUtil.findChildOfType(this, MethodDefinitionNode.class);
     }
 }

@@ -62,14 +62,21 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can provide the appropriate types for the array reference, index, and value at the point of this instruction.</li>
-        <li>For <code>{link:aastore}</code>, verification checks that the value is a reference type and that the array reference is compatible with an array of that reference type.</li>
+        <li>Verification requires that the operand stack can provide the appropriate types for the array reference,
+            index, and value at the point of this instruction.
+        </li>
+        <li>For <code>{link:aastore}</code>, verification checks that the value is a reference type and that the array
+            reference is compatible with an array of that reference type.
+        </li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>These instructions do not resolve constant-pool entries and have no instruction-specific linkage errors.</li>
-        <li>For category-2 value types (<code>long</code>, <code>double</code>), operand-stack slot accounting is two words for value plus one for <code>arrayref</code> and one for <code>index</code>.</li>
+        <li>These instructions do not resolve constant-pool entries and have no instruction-specific linkage errors.
+        </li>
+        <li>For category-2 value types (<code>long</code>, <code>double</code>), operand-stack slot accounting is two
+            words for value plus one for <code>arrayref</code> and one for <code>index</code>.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>

@@ -11,8 +11,11 @@
     <h4>目的</h4>
     <p>オペランド・スタック先頭の値の符号を反転（-1 倍）し，結果をプッシュします。</p>
     <ul>
-        <li><b>{link:ineg}</b>/<b>{link:lneg}</b>: 2 の補数の符号反転。<code>MIN_VALUE</code> は反転しても同じ値になります。</li>
-        <li><b>{link:fneg}</b>/<b>{link:dneg}</b>: IEEE 754 の符号反転（<code>+0.0</code> から <code>-0.0</code> への変換を含む）。</li>
+        <li><b>{link:ineg}</b>/<b>{link:lneg}</b>: 2 の補数の符号反転。<code>MIN_VALUE</code> は反転しても同じ値になります。
+        </li>
+        <li><b>{link:fneg}</b>/<b>{link:dneg}</b>: IEEE 754 の符号反転（<code>+0.0</code> から <code>-0.0</code>
+            への変換を含む）。
+        </li>
     </ul>
 
     <h5><b>オペランド:</b> なし</h5>
@@ -39,8 +42,12 @@
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li><b>{link:ineg}</b> と <b>{link:lneg}</b> は 2 の補数の符号反転を行うため，最小値（例: <code>Integer.MIN_VALUE</code>）を反転するとオーバーフローにより同じ値になります。</li>
-        <li><b>{link:fneg}</b> と <b>{link:dneg}</b> は IEEE 754 に基づく符号反転です。<code>+0.0</code> は <code>-0.0</code> へ，<code>-0.0</code> は <code>+0.0</code> へ反転します。</li>
+        <li><b>{link:ineg}</b> と <b>{link:lneg}</b> は 2 の補数の符号反転を行うため，最小値（例:
+            <code>Integer.MIN_VALUE</code>）を反転するとオーバーフローにより同じ値になります。
+        </li>
+        <li><b>{link:fneg}</b> と <b>{link:dneg}</b> は IEEE 754 に基づく符号反転です。<code>+0.0</code> は
+            <code>-0.0</code> へ，<code>-0.0</code> は <code>+0.0</code> へ反転します。
+        </li>
         <li>これらの命令は定数プール解決を行わず，命令固有の実行時例外はありません。</li>
     </ul>
 

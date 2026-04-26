@@ -9,7 +9,8 @@
     </p>
 
     <h4>目的</h4>
-    <p>2 番目の値を先頭の値で割った剰余を計算してプッシュします。整数型で除数が 0 の場合は <code>ArithmeticException</code> が発生し，浮動小数点型は IEEE 754 の規則に従います。</p>
+    <p>2 番目の値を先頭の値で割った剰余を計算してプッシュします。整数型で除数が 0 の場合は
+        <code>ArithmeticException</code> が発生し，浮動小数点型は IEEE 754 の規則に従います。</p>
     <ul>
         <li><b>{link:irem}</b>/<b>{link:lrem}</b>: 結果の符号は被除数に従い，0 除算は例外です。</li>
         <li><b>{link:frem}</b>/<b>{link:drem}</b>: IEEE 754 の剰余規則（NaN 伝播を含む）。</li>
@@ -44,12 +45,16 @@
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li><code>frem</code> と <code>drem</code> は IEEE 754 の規則に従うため，0 除算は例外ではなく特定の値（<code>Infinity</code> または <code>NaN</code>）になります。</li>
+        <li><code>frem</code> と <code>drem</code> は IEEE 754 の規則に従うため，0 除算は例外ではなく特定の値（<code>Infinity</code>
+            または <code>NaN</code>）になります。
+        </li>
     </ul>
 
     <h5><b>実行時例外:</b></h5>
     <ul>
-        <li><code>ArithmeticException</code> は <code>irem</code> または <code>lrem</code> で除数（先頭オペランド）が 0 の場合に発生します。</li>
+        <li><code>ArithmeticException</code> は <code>irem</code> または <code>lrem</code> で除数（先頭オペランド）が 0
+            の場合に発生します。
+        </li>
     </ul>
 </div>
 

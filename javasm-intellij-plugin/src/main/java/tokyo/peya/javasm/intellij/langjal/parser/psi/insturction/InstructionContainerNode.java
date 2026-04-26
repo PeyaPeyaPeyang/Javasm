@@ -6,16 +6,13 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class InstructionContainerNode extends ANTLRPsiNode
-{
-    public InstructionContainerNode(@NotNull ASTNode node)
-    {
+public class InstructionContainerNode extends ANTLRPsiNode {
+    public InstructionContainerNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public InstructionNode getInstruction()
-    {
+    public InstructionNode getInstruction() {
         InstructionNode instructionNode = PsiTreeUtil.findChildOfType(this, InstructionNode.class);
         if (instructionNode == null)
             throw new IllegalStateException("InstructionContainerNode must contain an InstructionNode");
@@ -23,8 +20,7 @@ public class InstructionContainerNode extends ANTLRPsiNode
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "InstructionContainer(" + this.getInstruction().getInstructionName() + ")";
     }
 }

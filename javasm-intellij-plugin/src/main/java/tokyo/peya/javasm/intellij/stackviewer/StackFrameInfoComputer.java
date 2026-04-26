@@ -5,17 +5,17 @@ import com.google.common.collect.Multimap;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.MethodNode;
-import tokyo.peya.langjal.analyser.InstructionSetAnalysisResult;
-import tokyo.peya.langjal.compiler.CompileSettings;
-import tokyo.peya.langjal.compiler.JALClassCompiler;
-import tokyo.peya.langjal.compiler.JALFileCompiler;
 import tokyo.peya.langjal.analyser.AnalysedInstruction;
 import tokyo.peya.langjal.analyser.FramePropagation;
+import tokyo.peya.langjal.analyser.InstructionSetAnalysisResult;
 import tokyo.peya.langjal.analyser.MethodAnalysisResult;
 import tokyo.peya.langjal.analyser.stack.LocalStackElement;
 import tokyo.peya.langjal.analyser.stack.ObjectElement;
 import tokyo.peya.langjal.analyser.stack.StackElement;
 import tokyo.peya.langjal.analyser.stack.StackElementType;
+import tokyo.peya.langjal.compiler.CompileSettings;
+import tokyo.peya.langjal.compiler.JALClassCompiler;
+import tokyo.peya.langjal.compiler.JALFileCompiler;
 import tokyo.peya.langjal.compiler.exceptions.CompileErrorException;
 import tokyo.peya.langjal.compiler.exceptions.analyse.ClassAnalyseException;
 import tokyo.peya.langjal.compiler.jvm.EOpcodes;
@@ -24,8 +24,7 @@ import tokyo.peya.langjal.compiler.member.JALMethodCompiler;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StackFrameInfoComputer
-{
+public class StackFrameInfoComputer {
     private final String content;
     private final StackFramePanelFactory.ProgressbarUpdater updater;
     private final List<MethodAnalysisResult> methodAnalysisResults;
@@ -34,21 +33,102 @@ public class StackFrameInfoComputer
     private JALClassCompiler compiler;
 
     public StackFrameInfoComputer(@NotNull String content,
-                                  @NotNull StackFramePanelFactory.ProgressbarUpdater updater)
-    {
+                                  @NotNull StackFramePanelFactory.ProgressbarUpdater updater) {
         this.content = content;
         this.updater = updater;
         this.methodAnalysisResults = new ArrayList<>();
         this.instructions = ArrayListMultimap.create();
     }
 
-    public StackFrameAnalysisResult getAnalysisResult()
-    {
+    private static List<StackUIElement> createStackStackUIElements(
+            @NotNull StackElement[] stack,
+            @NotNull StackElement[] lastStack
+    ) {
+        List<StackUIElement> elements = new ArrayList<>();
+        int lastStackSize = lastStack.length;
+        int currentIndex = 0;
+        int minIndex = Math.min(stack.length, lastStackSize);
+        for (int i = 0; i < minIndex; i++) {
+            StackElement currentElement = stack[i];
+            StackElement lastElement = lastStack[i];
+
+            StackUIElement.DisplayType type;
+            if (currentElement.type() == lastElement.type())
+                type = StackUIElement.DisplayType.UNCHANGING;
+            else if (lastElement.type() == StackElementType.TOP)
+                type = StackUIElement.DisplayType.PUSH;
+            else if (currentElement.type() == StackElementType.TOP)
+                type = StackUIElement.DisplayType.POP;
+            else
+                type = StackUIElement.DisplayType.PUSH;  // CHANGE が妥当だが，ここでは PUSH とする。
+
+            StackUIElement uiElement = createUIElement(type, currentElement);
+            elements.add(uiElement);
+            currentIndex++;
+        }
+        // 現在のスタックの残りの要素を PUSH として追加
+        for (int i = currentIndex; i < stack.length; i++) {
+            StackElement currentElement = stack[i];
+            StackUIElement uiElement = createUIElement(StackUIElement.DisplayType.PUSH, currentElement);
+            elements.add(uiElement);
+        }
+
+        return elements;
+    }
+
+    private static List<StackUIElement> createLocalStackUIElements(
+            @NotNull LocalStackElement[] locals,
+            @NotNull LocalStackElement[] lastLocals
+    ) {
+        List<StackUIElement> elements = new ArrayList<>();
+        for (LocalStackElement element : locals) {
+            StackUIElement.DisplayType type;
+            int localIndex = element.index();
+            if (localIndex >= lastLocals.length)
+                type = StackUIElement.DisplayType.PUSH;
+            else {
+                LocalStackElement lastLocal = lastLocals[localIndex];
+                if (lastLocal.type() == element.type())
+                    type = StackUIElement.DisplayType.UNCHANGING;
+                else if (lastLocal.type() == StackElementType.TOP)
+                    type = StackUIElement.DisplayType.PUSH;
+                else if (element.type() == StackElementType.TOP)
+                    type = StackUIElement.DisplayType.POP;
+                else
+                    type = StackUIElement.DisplayType.PUSH;  // CHANGE が妥当だが，ここでは PUSH とする。
+            }
+
+            StackUIElement uiElement = createUIElement(type, element.stackElement());
+            elements.add(uiElement);
+        }
+        return elements;
+    }
+
+    private static StackUIElement createUIElement(@NotNull StackUIElement.DisplayType type, @NotNull StackElement elm) {
+        if (elm instanceof ObjectElement objectElement) {
+            String objectName = objectElement.content().toString();
+            return StackUIColorPalette.toUIObjectElement(
+                    type,
+                    objectName
+            );  // Object は特別なので static#toUIObjectElement を使う
+        } else {
+            StackUIColorPalette colorPalette = StackUIColorPalette.fromStackElementType(elm.type());
+            return colorPalette.toUIElement(type);
+        }
+    }
+
+    private static StackUIInstruction createStackUIInstruction(@NotNull AnalysedInstruction analysedInstruction) {
+        int opcode = analysedInstruction.instruction().opcode();
+        String instructionName = EOpcodes.getName(opcode);
+        int bytecodeOffset = analysedInstruction.instruction().bytecodeOffset();
+        return new StackUIInstruction(instructionName, bytecodeOffset);
+    }
+
+    public StackFrameAnalysisResult getAnalysisResult() {
         return new StackFrameAnalysisResult(this.instructions);
     }
 
-    public boolean computeStackFrames()
-    {
+    public boolean computeStackFrames() {
         boolean succeed = this.compile();
         if (!succeed)
             return false;
@@ -62,16 +142,12 @@ public class StackFrameInfoComputer
         return true;
     }
 
-    private boolean compile()
-    {
+    private boolean compile() {
         InlineCompileReporter reporter = new InlineCompileReporter(this.updater::updateStatus);
-        try
-        {
+        try {
             this.compiler = JALFileCompiler.compileOnly(this.content, reporter, CompileSettings.NONE);
             return true;
-        }
-        catch (CompileErrorException e)
-        {
+        } catch (CompileErrorException e) {
             this.updater.updateStatus(
                     "CE: " + e.getDetailedMessage() + " at " + e.getLine() + ":" + e.getColumn()
             );
@@ -79,22 +155,17 @@ public class StackFrameInfoComputer
         }
     }
 
-    private boolean analyseMethods()
-    {
+    private boolean analyseMethods() {
         if (this.compiler == null)
             throw new IllegalStateException("ClassNode is not initialized. Call #compile() first.");
 
-        for (JALMethodCompiler methodCompiler : this.compiler.getMethodCompilers())
-        {
+        for (JALMethodCompiler methodCompiler : this.compiler.getMethodCompilers()) {
             MethodNode methodNode = methodCompiler.getMethod();
             this.updater.updateStatus("Analysing method: " + methodNode.name + methodNode.desc);
-            try
-            {
+            try {
                 MethodAnalysisResult analysisResult = methodCompiler.analyseMethod();
                 this.methodAnalysisResults.add(analysisResult);
-            }
-            catch (ClassAnalyseException e)
-            {
+            } catch (ClassAnalyseException e) {
                 this.updater.updateStatus("Analyse failed: " + e.getDetailedMessage());
                 return false;
             }
@@ -103,8 +174,7 @@ public class StackFrameInfoComputer
         return true;
     }
 
-    private void createUICaches()
-    {
+    private void createUICaches() {
         if (this.methodAnalysisResults.isEmpty())
             throw new IllegalStateException("Method analysis results are empty. Call #analyseMethods() first.");
 
@@ -112,8 +182,7 @@ public class StackFrameInfoComputer
             this.createMethodUICache(result);
     }
 
-    private void createMethodUICache(@NotNull MethodAnalysisResult methodAnalysis)
-    {
+    private void createMethodUICache(@NotNull MethodAnalysisResult methodAnalysis) {
         MethodWrapper methodWrapper = new MethodWrapper(methodAnalysis.node());
         FramePropagation[] propagations = methodAnalysis.propagations();
         InstructionSetAnalysisResult[] instructionAnalysisResults = methodAnalysis.instructionAnalysisResults();
@@ -122,20 +191,17 @@ public class StackFrameInfoComputer
         StackElement[] lastStack = null;
         LocalStackElement[] lastLocals = null;
         List<Integer> analysedOffsets = new ArrayList<>();
-        for (int i = 0; i < propagations.length; i++)
-        {
+        for (int i = 0; i < propagations.length; i++) {
             FramePropagation propagation = propagations[i];
             InstructionSetAnalysisResult instructionSetAnalysis = instructionAnalysisResults[i];
-            if (isFirst)
-            {
+            if (isFirst) {
                 isFirst = false;
                 lastStack = propagation.stack();
                 lastLocals = propagation.locals();
             }
 
             AnalysedInstruction[] analysedInstructions = instructionSetAnalysis.analyzedInstructions();
-            for (AnalysedInstruction analysedInstruction : analysedInstructions)
-            {
+            for (AnalysedInstruction analysedInstruction : analysedInstructions) {
                 int instructionOffset = analysedInstruction.instruction().bytecodeOffset();
                 if (analysedOffsets.contains(instructionOffset))
                     continue;  // 既に処理済みのオフセットはスキップ
@@ -161,100 +227,5 @@ public class StackFrameInfoComputer
                 lastLocals = localSnapshot;
             }
         }
-    }
-
-    private static List<StackUIElement> createStackStackUIElements(
-            @NotNull StackElement[] stack,
-            @NotNull StackElement[] lastStack
-    )
-    {
-        List<StackUIElement> elements = new ArrayList<>();
-        int lastStackSize = lastStack.length;
-        int currentIndex = 0;
-        int minIndex = Math.min(stack.length, lastStackSize);
-        for (int i = 0; i < minIndex; i++)
-        {
-            StackElement currentElement = stack[i];
-            StackElement lastElement = lastStack[i];
-
-            StackUIElement.DisplayType type;
-            if (currentElement.type() == lastElement.type())
-                type = StackUIElement.DisplayType.UNCHANGING;
-            else if (lastElement.type() == StackElementType.TOP)
-                type = StackUIElement.DisplayType.PUSH;
-            else if (currentElement.type() == StackElementType.TOP)
-                type = StackUIElement.DisplayType.POP;
-            else
-                type = StackUIElement.DisplayType.PUSH;  // CHANGE が妥当だが，ここでは PUSH とする。
-
-            StackUIElement uiElement = createUIElement(type, currentElement);
-            elements.add(uiElement);
-            currentIndex++;
-        }
-        // 現在のスタックの残りの要素を PUSH として追加
-        for (int i = currentIndex; i < stack.length; i++)
-        {
-            StackElement currentElement = stack[i];
-            StackUIElement uiElement = createUIElement(StackUIElement.DisplayType.PUSH, currentElement);
-            elements.add(uiElement);
-        }
-
-        return elements;
-    }
-
-    private static List<StackUIElement> createLocalStackUIElements(
-            @NotNull LocalStackElement[] locals,
-            @NotNull LocalStackElement[] lastLocals
-    )
-    {
-        List<StackUIElement> elements = new ArrayList<>();
-        for (LocalStackElement element : locals)
-        {
-            StackUIElement.DisplayType type;
-            int localIndex = element.index();
-            if (localIndex >= lastLocals.length)
-                type = StackUIElement.DisplayType.PUSH;
-            else
-            {
-                LocalStackElement lastLocal = lastLocals[localIndex];
-                if (lastLocal.type() == element.type())
-                    type = StackUIElement.DisplayType.UNCHANGING;
-                else if (lastLocal.type() == StackElementType.TOP)
-                    type = StackUIElement.DisplayType.PUSH;
-                else if (element.type() == StackElementType.TOP)
-                    type = StackUIElement.DisplayType.POP;
-                else
-                    type = StackUIElement.DisplayType.PUSH;  // CHANGE が妥当だが，ここでは PUSH とする。
-            }
-
-            StackUIElement uiElement = createUIElement(type, element.stackElement());
-            elements.add(uiElement);
-        }
-        return elements;
-    }
-
-    private static StackUIElement createUIElement(@NotNull StackUIElement.DisplayType type, @NotNull StackElement elm)
-    {
-        if (elm instanceof ObjectElement objectElement)
-        {
-            String objectName = objectElement.content().toString();
-            return StackUIColorPalette.toUIObjectElement(
-                    type,
-                    objectName
-            );  // Object は特別なので static#toUIObjectElement を使う
-        }
-        else
-        {
-            StackUIColorPalette colorPalette = StackUIColorPalette.fromStackElementType(elm.type());
-            return colorPalette.toUIElement(type);
-        }
-    }
-
-    private static StackUIInstruction createStackUIInstruction(@NotNull AnalysedInstruction analysedInstruction)
-    {
-        int opcode = analysedInstruction.instruction().opcode();
-        String instructionName = EOpcodes.getName(opcode);
-        int bytecodeOffset = analysedInstruction.instruction().bytecodeOffset();
-        return new StackUIInstruction(instructionName, bytecodeOffset);
     }
 }

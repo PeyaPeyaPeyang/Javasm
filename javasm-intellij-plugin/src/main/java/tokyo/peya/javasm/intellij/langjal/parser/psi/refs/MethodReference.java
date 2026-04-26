@@ -1,12 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.refs;
 
 import com.intellij.openapi.project.Project;
-import com.intellij.psi.JavaPsiFacade;
-import com.intellij.psi.PsiClass;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiParameterList;
-import com.intellij.psi.PsiType;
+import com.intellij.psi.*;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,25 +14,21 @@ import tokyo.peya.javasm.intellij.utils.TypeDescriptorUtil;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class MethodReference extends JALElementReference
-{
+public class MethodReference extends JALElementReference {
     private final MethodReferenceNode ref;
 
-    public MethodReference(@NotNull MethodReferenceNode element)
-    {
+    public MethodReference(@NotNull MethodReferenceNode element) {
         super(element.getMethodNameNode());
         this.ref = element;
     }
 
     @Override
-    public boolean isSubtree(PsiElement psiElement)
-    {
+    public boolean isSubtree(PsiElement psiElement) {
         return psiElement instanceof FieldReferenceNameNode;
     }
 
     @Override
-    public @Nullable PsiElement resolve()
-    {
+    public @Nullable PsiElement resolve() {
         Project project = getElement().getProject();
         String fieldName = this.ref.getMethodName();
 
@@ -62,10 +53,8 @@ public class MethodReference extends JALElementReference
         }
 
         PsiMethod[] methods = psiClass.findMethodsByName(fieldName, true);
-        for (PsiMethod method : methods)
-        {
-            if (this.isMatched(method, this.ref.getMethodDescriptor()))
-            {
+        for (PsiMethod method : methods) {
+            if (this.isMatched(method, this.ref.getMethodDescriptor())) {
                 return method;
             }
         }

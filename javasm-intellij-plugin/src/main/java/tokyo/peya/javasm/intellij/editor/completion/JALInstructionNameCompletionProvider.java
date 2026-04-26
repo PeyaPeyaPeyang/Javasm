@@ -11,22 +11,17 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class JALInstructionNameCompletionProvider extends CompletionProvider<CompletionParameters>
-{
+public class JALInstructionNameCompletionProvider extends CompletionProvider<CompletionParameters> {
     private static final Map<String, String> INSTRUCTIONS;
     private static final HashSet<String> INSTRUCTIONS_WITH_ARGUMENTS;
 
-    static
-    {
+    static {
         HashMap<String, String> instructions = new LinkedHashMap<>();
         // <editor-fold desc="Instruction Definitions">
         instructions.putAll(Map.ofEntries(
@@ -273,18 +268,17 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
         // Value のほうで昇順にソートする。
 
         INSTRUCTIONS = instructions.entrySet()
-                                   .stream()
-                                   .sorted(Map.Entry.comparingByValue()) // 昇順
-                                   .collect(Collectors.toMap(
-                                                             Map.Entry::getKey,
-                                                             Map.Entry::getValue,
-                                                             (e1, e2) -> e1, // マージ関数は無視
-                                                             LinkedHashMap::new // LinkedHashMap に詰める
-                                                     ));
+                .stream()
+                .sorted(Map.Entry.comparingByValue()) // 昇順
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1, // マージ関数は無視
+                        LinkedHashMap::new // LinkedHashMap に詰める
+                ));
     }
 
-    static
-    {
+    static {
         INSTRUCTIONS_WITH_ARGUMENTS = new HashSet<>();
 
         // <editor-fold desc="Instructions with Arguments">
@@ -348,25 +342,7 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
         // </editor-fold>
     }
 
-    @Override
-    protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
-                                  @NotNull CompletionResultSet result)
-    {
-        for (Map.Entry<String, String> entry : INSTRUCTIONS.entrySet())
-        {
-            String instructionName = entry.getKey();
-            String description = entry.getValue();
-            LookupElementBuilder lookupElement = LookupElementBuilder.create(instructionName)
-                                                                     .withTypeText(description)
-                                                                     .withInsertHandler(createInsertHandler(
-                                                                             instructionName))
-                                                                     .withCaseSensitivity(true);
-            result.addElement(lookupElement);
-        }
-    }
-
-    private static InsertHandler<LookupElement> createInsertHandler(String instructionName)
-    {
+    private static InsertHandler<LookupElement> createInsertHandler(String instructionName) {
 
         if (INSTRUCTIONS_WITH_ARGUMENTS.contains(instructionName))
             return (ctxt, item) -> {
@@ -379,5 +355,20 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
             };
         else
             return JALCompletionCommons.insertAndNewLine();
+    }
+
+    @Override
+    protected void addCompletions(@NotNull CompletionParameters parameters, @NotNull ProcessingContext context,
+                                  @NotNull CompletionResultSet result) {
+        for (Map.Entry<String, String> entry : INSTRUCTIONS.entrySet()) {
+            String instructionName = entry.getKey();
+            String description = entry.getValue();
+            LookupElementBuilder lookupElement = LookupElementBuilder.create(instructionName)
+                    .withTypeText(description)
+                    .withInsertHandler(createInsertHandler(
+                            instructionName))
+                    .withCaseSensitivity(true);
+            result.addElement(lookupElement);
+        }
     }
 }

@@ -6,33 +6,28 @@ import org.jetbrains.jps.builders.BuildTarget;
 
 import java.io.File;
 
-public class JALBuildRootDescriptor extends BuildRootDescriptor
-{
+public class JALBuildRootDescriptor extends BuildRootDescriptor {
 
     private final File rootFile;
     private final JALBuildTarget target;
 
-    public JALBuildRootDescriptor(File rootFile, JALBuildTarget target)
-    {
+    public JALBuildRootDescriptor(File rootFile, JALBuildTarget target) {
         this.rootFile = rootFile;
         this.target = target;
     }
 
     @Override
-    public @NotNull String getRootId()
-    {
+    public @NotNull String getRootId() {
         return this.rootFile.getAbsolutePath();
     }
 
     @Override
-    public @NotNull File getRootFile()
-    {
+    public @NotNull File getRootFile() {
         return this.rootFile;
     }
 
     @Override
-    public @NotNull BuildTarget<?> getTarget()
-    {
+    public @NotNull BuildTarget<?> getTarget() {
         return this.target;
     }
 }

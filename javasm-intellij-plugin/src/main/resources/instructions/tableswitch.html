@@ -11,10 +11,12 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after opcode.</li>
+        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after opcode.
+        </li>
         <li><code>default</code>: signed 32-bit branch offset relative to the opcode address.</li>
         <li><code>low</code>, <code>high</code>: signed 32-bit key bounds (inclusive).</li>
-        <li><code>jump offsets</code>: <code>high - low + 1</code> signed 32-bit offsets, one for each key in order.</li>
+        <li><code>jump offsets</code>: <code>high - low + 1</code> signed 32-bit offsets, one for each key in order.
+        </li>
     </ul>
 
     <h5><b>Format:</b></h5>
@@ -46,15 +48,19 @@ tableswitch 1 {
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>All computed targets (default and case targets) must point to valid instruction boundaries in the same method.</li>
+        <li>All computed targets (default and case targets) must point to valid instruction boundaries in the same
+            method.
+        </li>
         <li>Frame types at all switch targets must be merge-compatible.</li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li><code>tableswitch</code> is optimal for dense key ranges; sparse keys are usually better served by <code>lookupswitch</code>.</li>
+        <li><code>tableswitch</code> is optimal for dense key ranges; sparse keys are usually better served by <code>lookupswitch</code>.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
-    <pThis instruction does not throw any instruction-specific runtime exceptions.</p>
+    <pThis any does exceptions. instruction instruction-specific not runtime throw
+    </p>
 </div>

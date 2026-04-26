@@ -10,34 +10,28 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropert
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertyMinorVersionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.property.ClassPropertySuperClassNode;
 
-public class ClassMetaNode extends ANTLRPsiNode
-{
-    public ClassMetaNode(@NotNull ASTNode node)
-    {
+public class ClassMetaNode extends ANTLRPsiNode {
+    public ClassMetaNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public ClassPropertyMajorVersionNode getMajorVersion()
-    {
+    public ClassPropertyMajorVersionNode getMajorVersion() {
         return PsiTreeUtil.findChildOfType(this, ClassPropertyMajorVersionNode.class);
     }
 
     @Nullable
-    public ClassPropertyMinorVersionNode getMinorVersion()
-    {
+    public ClassPropertyMinorVersionNode getMinorVersion() {
         return PsiTreeUtil.findChildOfType(this, ClassPropertyMinorVersionNode.class);
     }
 
     @Nullable
-    public ClassPropertyInterfacesNode getInterfaces()
-    {
+    public ClassPropertyInterfacesNode getInterfaces() {
         return PsiTreeUtil.findChildOfType(this, ClassPropertyInterfacesNode.class);
     }
 
     @Nullable
-    public ClassPropertySuperClassNode getSuperClass()
-    {
+    public ClassPropertySuperClassNode getSuperClass() {
         return PsiTreeUtil.findChildOfType(this, ClassPropertySuperClassNode.class);
     }
 }

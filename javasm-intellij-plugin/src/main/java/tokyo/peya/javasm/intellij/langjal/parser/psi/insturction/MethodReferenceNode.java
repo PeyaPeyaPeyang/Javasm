@@ -1,6 +1,5 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 
-import com.intellij.ide.navigationToolbar.rider.RiderMainToolbarBorderLayout;
 import com.intellij.lang.ASTNode;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.jetbrains.annotations.NotNull;
@@ -12,31 +11,25 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class MethodReferenceNode extends InstructionNode
-{
-    public MethodReferenceNode(@NotNull ASTNode node)
-    {
+public class MethodReferenceNode extends InstructionNode {
+    public MethodReferenceNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public FullQualifiedNameNode getMethodOwner()
-    {
+    public FullQualifiedNameNode getMethodOwner() {
         return PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
     }
 
     @Nullable
-    public TypeDescriptor getMethodOwnerDescriptor()
-    {
+    public TypeDescriptor getMethodOwnerDescriptor() {
         String ownerName = null;
         FullQualifiedNameNode owner = this.getMethodOwner();
-        if (owner == null)
-        {
+        if (owner == null) {
             IdentifierNode idNode = PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
             if (idNode != null)
                 ownerName = idNode.getText();
-        }
-        else
+        } else
             ownerName = owner.getText();
 
         if (ownerName == null || ownerName.isEmpty())
@@ -46,8 +39,7 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @Nullable
-    public String getMethodName()
-    {
+    public String getMethodName() {
         MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (methodNameNode == null)
             return null;
@@ -56,8 +48,7 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @NotNull
-    public IdentifierNode getMethodNameNode()
-    {
+    public IdentifierNode getMethodNameNode() {
         MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (methodNameNode == null)
             throw new IllegalStateException("Method name node is not found in instruction method reference node");
@@ -70,8 +61,7 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @Nullable
-    public MethodDescriptor getMethodDescriptor()
-    {
+    public MethodDescriptor getMethodDescriptor() {
         MethodDescriptorNode methodDescriptorNode = PsiTreeUtil.findChildOfType(this, MethodDescriptorNode.class);
         if (methodDescriptorNode == null)
             return null;
@@ -84,14 +74,12 @@ public class MethodReferenceNode extends InstructionNode
     }
 
     @Override
-    public String toString()
-    {
-        String owner = this.getMethodOwnerDescriptor() == null ? "": this.getMethodOwnerDescriptor() + "->";
+    public String toString() {
+        String owner = this.getMethodOwnerDescriptor() == null ? "" : this.getMethodOwnerDescriptor() + "->";
         return "MethodReference(" + owner + "this." + this.getMethodName() + this.getMethodDescriptor() + ")";
     }
 
-    public boolean isSpecialMethod()
-    {
+    public boolean isSpecialMethod() {
         return false;
     }
 }

@@ -8,7 +8,8 @@
     <h4>目的</h4>
     <p>
         オペランド・スタック先頭の 2 値を入れ替えます。両方とも category 1 値（スタックワード 1 個）である必要があります。
-        <code>long</code> や <code>double</code> のような category 2 値は使用できず，不正な場合は実行時に <code>VerifyError</code> となります。
+        <code>long</code> や <code>double</code> のような category 2 値は使用できず，不正な場合は実行時に <code>VerifyError</code>
+        となります。
     </p>
 
     <h5><b>オペランド:</b> なし</h5>
@@ -28,8 +29,11 @@
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li><code>value1</code> と <code>value2</code> は，いずれも category 1（<code>int</code>, <code>float</code>, 参照，<code>returnAddress</code>）である必要があります。</li>
-        <li>category 2 値（例: <code>long</code>, <code>double</code>）に <code>swap</code> を適用すると検証失敗となり，通常はロード/リンク時に <code>VerifyError</code> として現れます。</li>
+        <li><code>value1</code> と <code>value2</code> は，いずれも category 1（<code>int</code>, <code>float</code>, 参照，<code>returnAddress</code>）である必要があります。
+        </li>
+        <li>category 2 値（例: <code>long</code>, <code>double</code>）に <code>swap</code> を適用すると検証失敗となり，通常はロード/リンク時に
+            <code>VerifyError</code> として現れます。
+        </li>
     </ul>
 
     <h5><b>検証:</b></h5>

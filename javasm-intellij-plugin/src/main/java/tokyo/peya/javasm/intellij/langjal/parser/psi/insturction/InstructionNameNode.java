@@ -5,33 +5,27 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
-public class InstructionNameNode extends ANTLRPsiLeafNode
-{
-    public InstructionNameNode(IElementType type, CharSequence text)
-    {
+public class InstructionNameNode extends ANTLRPsiLeafNode {
+    public InstructionNameNode(IElementType type, CharSequence text) {
         super(type, text);
     }
 
     @NotNull
-    public String getInstructionName()
-    {
+    public String getInstructionName() {
         return this.getText();
     }
 
-    public int getOpcode()
-    {
+    public int getOpcode() {
         String name = this.getInstructionName();
         return EOpcodes.findOpcode(name);
     }
 
-    public int getInstructionSize()
-    {
+    public int getInstructionSize() {
         return EOpcodes.getOpcodeSize(this.getOpcode());
     }
 
     @NotNull
-    public String toString()
-    {
+    public String toString() {
         return "InstructionName(" + this.getText() + ")";
     }
 }

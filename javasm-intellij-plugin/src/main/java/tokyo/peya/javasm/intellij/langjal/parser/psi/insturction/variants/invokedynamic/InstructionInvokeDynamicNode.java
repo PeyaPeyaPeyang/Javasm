@@ -9,16 +9,13 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 
-public class InstructionInvokeDynamicNode extends InstructionNode
-{
-    public InstructionInvokeDynamicNode(@NotNull ASTNode node)
-    {
+public class InstructionInvokeDynamicNode extends InstructionNode {
+    public InstructionInvokeDynamicNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public String getMethodName()
-    {
+    public String getMethodName() {
         MethodNameNode methodNameNode = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (methodNameNode == null)
             return null;
@@ -27,8 +24,7 @@ public class InstructionInvokeDynamicNode extends InstructionNode
     }
 
     @Nullable
-    public MethodDescriptor getMethodDescriptor()
-    {
+    public MethodDescriptor getMethodDescriptor() {
         MethodDescriptorNode methodDescriptorNode = PsiTreeUtil.findChildOfType(this, MethodDescriptorNode.class);
         if (methodDescriptorNode == null)
             return null;
@@ -37,8 +33,7 @@ public class InstructionInvokeDynamicNode extends InstructionNode
     }
 
     @Nullable
-    public InvokeDynamicMethodHandleNode getBootstrapMethodHandle()
-    {
+    public InvokeDynamicMethodHandleNode getBootstrapMethodHandle() {
         return PsiTreeUtil.findChildOfType(
                 this,
                 InvokeDynamicMethodHandleNode.class
@@ -46,8 +41,7 @@ public class InstructionInvokeDynamicNode extends InstructionNode
     }
 
     @NotNull
-    public InvokeDynamicArgumentNode[] getBootstrapMethodArguments()
-    {
+    public InvokeDynamicArgumentNode[] getBootstrapMethodArguments() {
         return this.findChildrenByClass(InvokeDynamicArgumentNode.class);
     }
 }

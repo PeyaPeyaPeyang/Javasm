@@ -12,10 +12,8 @@ public record StackUIElement(
         JBColor backgroundColor,
         @NotNull
         JBColor textColor
-)
-{
-    public enum DisplayType
-    {
+) {
+    public enum DisplayType {
         PUSH,
         POP,
         UNCHANGING,

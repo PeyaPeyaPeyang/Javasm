@@ -6,33 +6,27 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class MethodDescriptorNode extends ANTLRPsiNode
-{
-    public MethodDescriptorNode(@NotNull ASTNode node)
-    {
+public class MethodDescriptorNode extends ANTLRPsiNode {
+    public MethodDescriptorNode(@NotNull ASTNode node) {
         super(node);
     }
 
-    public @NotNull MethodDescriptor getMethodDescriptor()
-    {
+    public @NotNull MethodDescriptor getMethodDescriptor() {
         return MethodDescriptor.parse(this.getText());
     }
 
     @NotNull
-    public TypeDescriptor getReturnType()
-    {
+    public TypeDescriptor getReturnType() {
         return this.getMethodDescriptor().getReturnType();
     }
 
     @NotNull
-    public TypeDescriptor[] getParameterTypes()
-    {
+    public TypeDescriptor[] getParameterTypes() {
         return this.getMethodDescriptor().getParameterTypes();
     }
 
     @NotNull
-    public String getMethodName()
-    {
+    public String getMethodName() {
         return this.getText();
     }
 }

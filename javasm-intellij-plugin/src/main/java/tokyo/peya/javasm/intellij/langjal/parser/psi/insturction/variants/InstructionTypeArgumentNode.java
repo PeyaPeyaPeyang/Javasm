@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class InstructionTypeArgumentNode extends InstructionNode
-{
-    public InstructionTypeArgumentNode(@NotNull ASTNode node)
-    {
+public class InstructionTypeArgumentNode extends InstructionNode {
+    public InstructionTypeArgumentNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public TypeDescriptorNode getType()
-    {
+    public TypeDescriptorNode getType() {
         TypeDescriptorNode typeDescriptorNode = PsiTreeUtil.findChildOfType(this, TypeDescriptorNode.class);
         if (typeDescriptorNode == null)
             throw new IllegalStateException("TypeDescriptorNode is not found in TypeArgumentInstructionNode");
@@ -24,8 +21,7 @@ public class InstructionTypeArgumentNode extends InstructionNode
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "InstructionNode(" + this.getInstructionName() + " type=" + this.getType() + ")";
     }
 }

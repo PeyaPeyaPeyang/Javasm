@@ -61,17 +61,23 @@
     <h5><b>Notes:</b></h5>
     <ul>
         <li>Comparisons are signed; these opcodes do not provide unsigned comparison semantics.</li>
-        <li>If one of the values being compared is known to be zero, it may be more efficient to use the corresponding <code>{link:ifX}</code> instruction to compare a single <code>int</code> value against zero instead. Choose the appropriate instruction based on the context.</li>
+        <li>If one of the values being compared is known to be zero, it may be more efficient to use the corresponding
+            <code>{link:ifX}</code> instruction to compare a single <code>int</code> value against zero instead. Choose
+            the appropriate instruction based on the context.
+        </li>
     </ul>
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept two category-1 <code>int</code> values at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept two category-1 <code>int</code> values at the point
+            of this instruction.
+        </li>
         <li>No constant-pool resolution is performed by these instructions.</li>
         <li>Branch target and frame-type consistency are verified at class loading/linking time.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
-    <p>These instructions do not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected during verification.</p>
+    <p>These instructions do not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected
+        during verification.</p>
 </div>
 

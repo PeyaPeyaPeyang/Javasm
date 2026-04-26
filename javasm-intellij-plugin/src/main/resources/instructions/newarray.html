@@ -37,7 +37,8 @@
     <h5><b>Type Scope:</b></h5>
     <p>
         <code>newarray</code> is for primitive arrays only.
-        Use <code>anewarray</code> for reference-component arrays and <code>multianewarray</code> for multi-dimensional creation.
+        Use <code>anewarray</code> for reference-component arrays and <code>multianewarray</code> for multi-dimensional
+        creation.
     </p>
 
     <h5><b>Stack Effect:</b></h5>
@@ -52,11 +53,15 @@
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
         <li><code>NegativeArraySizeException</code>: if the length of the array is negative.</li>
-        <li><code>OutOfMemoryError</code>: if the Java Virtual Machine cannot allocate the array because it is out of memory.</li>
+        <li><code>OutOfMemoryError</code>: if the Java Virtual Machine cannot allocate the array because it is out of
+            memory.
+        </li>
     </ul>
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept an <code>int</code> value for the array size and that the <code>atype</code> operand is valid.</li>
+        <li>Verification requires that the operand stack can accept an <code>int</code> value for the array size and
+            that the <code>atype</code> operand is valid.
+        </li>
     </ul>
 </div>

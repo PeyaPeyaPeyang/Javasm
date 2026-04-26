@@ -12,17 +12,14 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFileType;
 import tokyo.peya.javasm.intellij.stackviewer.StackFrameInfoController;
 
-public class JALSaveListener implements FileDocumentManagerListener
-{
+public class JALSaveListener implements FileDocumentManagerListener {
     @Override
-    public void fileContentLoaded(@NotNull VirtualFile file, @NotNull Document document)
-    {
+    public void fileContentLoaded(@NotNull VirtualFile file, @NotNull Document document) {
         this.triggerReanalyse(file, document);
     }
 
     @Override
-    public void afterDocumentSaved(@NotNull Document document)
-    {
+    public void afterDocumentSaved(@NotNull Document document) {
         FileDocumentManager fdm = FileDocumentManager.getInstance();
         VirtualFile file = fdm.getFile(document);
         if (file == null) {

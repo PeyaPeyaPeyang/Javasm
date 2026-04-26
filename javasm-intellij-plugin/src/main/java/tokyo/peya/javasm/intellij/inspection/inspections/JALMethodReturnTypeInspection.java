@@ -13,32 +13,14 @@ import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class JALMethodReturnTypeInspection extends AbstractJALInspection
-{
-    public JALMethodReturnTypeInspection()
-    {
+public class JALMethodReturnTypeInspection extends AbstractJALInspection {
+    public JALMethodReturnTypeInspection() {
         super("JALMethodReturnType");
     }
 
-    @Override
-    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                            @NotNull LocalInspectionToolSession session)
-    {
-        return new JALPsiElementVisitor()
-        {
-            @Override
-            protected void visitInstruction(@NotNull InstructionNode node)
-            {
-                checkInstruction(holder, node);
-            }
-        };
-    }
-
-    private static void checkInstruction(@NotNull ProblemsHolder holder, @NotNull InstructionNode node)
-    {
+    private static void checkInstruction(@NotNull ProblemsHolder holder, @NotNull InstructionNode node) {
         int opcode = node.getOpcode();
-        TypeDescriptor actualReturnType = switch (opcode)
-        {
+        TypeDescriptor actualReturnType = switch (opcode) {
             case EOpcodes.IRETURN -> TypeDescriptor.INTEGER;
             case EOpcodes.LRETURN -> TypeDescriptor.LONG;
             case EOpcodes.FRETURN -> TypeDescriptor.FLOAT;
@@ -70,8 +52,7 @@ public class JALMethodReturnTypeInspection extends AbstractJALInspection
             @NotNull InstructionNode node,
             @NotNull TypeDescriptor expectedType,
             @NotNull TypeDescriptor actualType
-    )
-    {
+    ) {
         String message = String.format(
                 "Expected return type '%s', but found '%s'.",
                 expectedType,
@@ -82,5 +63,16 @@ public class JALMethodReturnTypeInspection extends AbstractJALInspection
                 message,
                 ProblemHighlightType.GENERIC_ERROR_OR_WARNING
         );
+    }
+
+    @Override
+    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
+                                                            @NotNull LocalInspectionToolSession session) {
+        return new JALPsiElementVisitor() {
+            @Override
+            protected void visitInstruction(@NotNull InstructionNode node) {
+                checkInstruction(holder, node);
+            }
+        };
     }
 }

@@ -1,15 +1,20 @@
 # JAL Usage Guide
 
-Welcome to **JAL (Java Assembly Language)** — a powerful and expressive assembly-like language designed specifically for JVM bytecode manipulation and development.  
-This document provides a detailed user-oriented explanation of JAL’s syntax and usage so you can write and understand JAL source files with confidence.
+Welcome to **JAL (Java Assembly Language)** — a powerful and expressive assembly-like language designed specifically for
+JVM bytecode manipulation and development.  
+This document provides a detailed user-oriented explanation of JAL’s syntax and usage so you can write and understand
+JAL source files with confidence.
 
 ---
 
 ## Overview
 
-JAL is an assembly language tailored for the Java Virtual Machine (JVM). It exposes JVM bytecode instructions in a human-readable, structured format while adding several usability improvements to make low-level JVM programming more accessible.
+JAL is an assembly language tailored for the Java Virtual Machine (JVM). It exposes JVM bytecode instructions in a
+human-readable, structured format while adding several usability improvements to make low-level JVM programming more
+accessible.
 
-The language lets you define classes, interfaces, fields, methods, and the instructions inside those methods — all using syntax closely related to JVM bytecode, but enhanced for clarity and ease of use.
+The language lets you define classes, interfaces, fields, methods, and the instructions inside those methods — all using
+syntax closely related to JVM bytecode, but enhanced for clarity and ease of use.
 
 ---
 
@@ -17,7 +22,8 @@ The language lets you define classes, interfaces, fields, methods, and the instr
 
 ### Class and Interface Declaration
 
-A JAL source file may define one or more classes or interfaces. The declaration syntax resembles Java but is simplified and specialized for bytecode-level details:
+A JAL source file may define one or more classes or interfaces. The declaration syntax resembles Java but is simplified
+and specialized for bytecode-level details:
 
 ```
 class MyClass (major_version=55, minor_version=0) {
@@ -31,17 +37,18 @@ class MyClass (major_version=55, minor_version=0) {
 
 ### Class Metadata
 
-JAL allows embedding detailed metadata about classes directly within the class declaration. 
+JAL allows embedding detailed metadata about classes directly within the class declaration.
 These metadata properties control fundamental class attributes relevant to the JVM runtime and class file structure:
 
 - **`major_version`** and **`minor_version`**  
-  Specify the class file version, which determines the minimum JVM version required to load this class. 
+  Specify the class file version, which determines the minimum JVM version required to load this class.
   For example, `major_version=55` targets Java 11.
 - **`super_class`**  
-  Defines the fully qualified superclass that this class extends. If omitted, the default superclass is `java/lang/Object`.  
+  Defines the fully qualified superclass that this class extends. If omitted, the default superclass is
+  `java/lang/Object`.  
   Example: `super_class=java/lang/Number`
 - **`interfaces`**  
-  Lists one or more fully qualified interfaces that the class implements. 
+  Lists one or more fully qualified interfaces that the class implements.
   Multiple interfaces are comma-separated: `interfaces=java/io/Serializable,java/lang/Cloneable`
 
 These metadata are declared inside parentheses immediately after the class name and separated by commas if multiple:
@@ -57,12 +64,13 @@ class MyClass (
 }
 ```
 
-Using class metadata ensures that the generated class files conform to 
+Using class metadata ensures that the generated class files conform to
 desired JVM specifications and inheritances without additional boilerplate code inside the class body.
 
 ### Access Modifiers and Attributes
 
-You can specify JVM access flags such as `public`, `private`, `protected`, `static`, `final`, `abstract`, etc., on classes, methods, and fields:
+You can specify JVM access flags such as `public`, `private`, `protected`, `static`, `final`, `abstract`, etc., on
+classes, methods, and fields:
 
 ```
 public static final class MyClass { ... }
@@ -92,8 +100,10 @@ public static main([Ljava/lang/String;)V {
 }
 ```
 
-- Method names can be normal identifiers or special JVM method names like `<init>` (constructor) and `<clinit>` (static initializer).
-- Method descriptors follow JVM format, e.g., `([Ljava/lang/String;)V` means method takes a String array and returns void.
+- Method names can be normal identifiers or special JVM method names like `<init>` (constructor) and `<clinit>` (static
+  initializer).
+- Method descriptors follow JVM format, e.g., `([Ljava/lang/String;)V` means method takes a String array and returns
+  void.
 
 ---
 
@@ -101,7 +111,8 @@ public static main([Ljava/lang/String;)V {
 
 ### Instructions
 
-Inside method bodies, you write JVM bytecode instructions line by line, each corresponding to a JVM opcode. JAL supports the full set of JVM instructions as tokens.
+Inside method bodies, you write JVM bytecode instructions line by line, each corresponding to a JVM opcode. JAL supports
+the full set of JVM instructions as tokens.
 
 Example:
 
@@ -113,7 +124,8 @@ return
 ```
 
 - Instructions may take arguments: literals, references to fields/methods/classes, labels, or numeric constants.
-- References to members follow the syntax: `<owner_class>/<field_or_method_name>:<type_descriptor>` or `<owner_class>-><method_name><method_descriptor>`.
+- References to members follow the syntax: `<owner_class>/<field_or_method_name>:<type_descriptor>` or
+  `<owner_class>-><method_name><method_descriptor>`.
 - Literal strings and numeric constants can be used as instruction operands (e.g., `ldc "string"` or `bipush 10`).
 
 ### Labels and Control Flow
@@ -180,14 +192,13 @@ Method descriptors specify argument types and return type, enclosed in parenthes
 ([IIDLjava/lang/Object;[Ljava/lang/String;)[Ljava/lang/String;
 ```
 
-
 Means method takes an array of Strings and returns void.
 
 ---
 
 ## Member References
 
-In JAL, when you refer to fields or methods inside instructions, 
+In JAL, when you refer to fields or methods inside instructions,
 you must specify them explicitly to avoid ambiguity and to directly map JVM semantics.
 
 ### General Syntax
@@ -199,6 +210,7 @@ you must specify them explicitly to avoid ambiguity and to directly map JVM sema
 - `type_descriptor` is the JVM type descriptor of the field.
 
 **Example:**
+
 ```
 java/lang/System/out:Ljava/io/PrintStream;
 ```
@@ -212,6 +224,7 @@ This refers to the `out` static field in the `java.lang.System` class, which is 
 - `method_descriptor` follows JVM specification describing argument and return types.
 
 **Example:**
+
 ```
 java/io/PrintStream->println(Ljava/lang/String;)V
 ```
@@ -222,14 +235,16 @@ Refers to the `println` method in `java.io.PrintStream` that takes a `String` an
 
 ### Omitting OwnerClass (When Referring to Current Class)
 
-When the field or method belongs to the **current class** (the one being defined), you **can omit** the `owner_class` part for convenience. This allows writing cleaner and more concise code without losing clarity.
+When the field or method belongs to the **current class** (the one being defined), you **can omit** the `owner_class`
+part for convenience. This allows writing cleaner and more concise code without losing clarity.
 
 - **Field Reference in Current Class:** `fieldName:type_descriptor`  
   Instead of writing `my/package/MyClass/myField:I`, you can just write `myField:I`.
 - **Method Reference in Current Class:** `methodName(method_descriptor)`  
   Instead of `my/package/MyClass->myMethod()V`, you can write `myMethod()V`.
 
-This shorthand is especially useful when invoking or accessing your own class’s members, reducing noise while keeping code straightforward.
+This shorthand is especially useful when invoking or accessing your own class’s members, reducing noise while keeping
+code straightforward.
 
 ---
 
@@ -280,11 +295,13 @@ You can still use numeric slots directly if preferred.
 
 ### StackMapFrame Auto-Calculation
 
-JAL compiler automatically generates StackMapFrames required by JVM verification, eliminating the tedious manual management of stack frames.
+JAL compiler automatically generates StackMapFrames required by JVM verification, eliminating the tedious manual
+management of stack frames.
 
 ### Try-Catch-Finally Directives
 
-Structured try-catch-finally exception handling declarations via labels make writing exception handling straightforward and readable.
+Structured try-catch-finally exception handling declarations via labels make writing exception handling straightforward
+and readable.
 
 ---
 
@@ -381,9 +398,11 @@ You can find more examples in the [JAL example files](examples) directory.
 
 ## Conclusion
 
-JAL brings JVM bytecode development into a clearer, more maintainable syntax that bridges assembly-level control with user-friendly features like named locals and structured exception directives.
+JAL brings JVM bytecode development into a clearer, more maintainable syntax that bridges assembly-level control with
+user-friendly features like named locals and structured exception directives.
 
-This documentation covers core syntax and concepts to get started writing JAL code for JVM-level programming and experimentation.
+This documentation covers core syntax and concepts to get started writing JAL code for JVM-level programming and
+experimentation.
 
 Happy bytecoding!
 

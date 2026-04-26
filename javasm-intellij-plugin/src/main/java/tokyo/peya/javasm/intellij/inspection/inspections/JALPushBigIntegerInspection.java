@@ -10,29 +10,12 @@ import tokyo.peya.javasm.intellij.inspection.quickfixes.JALReplaceInstructionQui
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class JALPushBigIntegerInspection extends AbstractJALInspection
-{
-    public JALPushBigIntegerInspection()
-    {
+public class JALPushBigIntegerInspection extends AbstractJALInspection {
+    public JALPushBigIntegerInspection() {
         super("JALPushBigInteger");
     }
 
-    @Override
-    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                            @NotNull LocalInspectionToolSession session)
-    {
-        return new JALPsiElementVisitor()
-        {
-            @Override
-            protected void visitInstruction(@NotNull InstructionNode node)
-            {
-                checkInstruction(node, holder);
-            }
-        };
-    }
-
-    private static void checkInstruction(@NotNull InstructionNode node, @NotNull ProblemsHolder holder)
-    {
+    private static void checkInstruction(@NotNull InstructionNode node, @NotNull ProblemsHolder holder) {
         String instructionName = node.getInstructionName();
         if (!("bipush".equals(instructionName) || "sipush".equals(instructionName)))
             return;
@@ -42,12 +25,9 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
             return;
 
         Number number;
-        try
-        {
+        try {
             number = argument.toNumber();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             holder.registerProblem(
                     argument,
                     "Invalid number format: " + argument.getText(),
@@ -57,11 +37,9 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
         }
 
         double value = number.doubleValue();
-        if (instructionName.equals("bipush") && (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE))
-        {
+        if (instructionName.equals("bipush") && (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE)) {
             // 値が -128 から 127 の範囲外なら，かつそれが -32,768 から 32,767 の範囲内ならば，sipush を使うように促す
-            if (Short.MIN_VALUE <= value && value <= Short.MAX_VALUE)
-            {
+            if (Short.MIN_VALUE <= value && value <= Short.MAX_VALUE) {
                 holder.registerProblem(
                         node,
                         "bipush can only push values in the range of -128 to 127. " +
@@ -72,8 +50,7 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
             }
         }
         // 値が -32,768 から 32,767 の範囲外ならば, ldc X を使うように促す
-        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE)
-        {
+        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
             holder.registerProblem(
                     node,
                     "bipush/sipush can only push values in the range of -32,768 to 32,767. " +
@@ -82,5 +59,16 @@ public class JALPushBigIntegerInspection extends AbstractJALInspection
                     new JALReplaceInstructionQuickFix("ldc " + argument.getText(), node)
             );
         }
+    }
+
+    @Override
+    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
+                                                            @NotNull LocalInspectionToolSession session) {
+        return new JALPsiElementVisitor() {
+            @Override
+            protected void visitInstruction(@NotNull InstructionNode node) {
+                checkInstruction(node, holder);
+            }
+        };
     }
 }

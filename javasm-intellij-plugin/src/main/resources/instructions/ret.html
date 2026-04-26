@@ -41,14 +41,17 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires local variable <code>index</code> to contain a valid <code>returnAddress</code> value.</li>
+        <li>Verification requires local variable <code>index</code> to contain a valid <code>returnAddress</code> value.
+        </li>
         <li>Control-flow and stack/local type states must remain consistent across all branch targets.</li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
         <li><code>ret</code> is obsolete in modern class-file workflows and is generally considered legacy-only.</li>
-        <li>Use structured exception handlers for <code>finally</code>-style logic in contemporary bytecode instead of legacy <code>jsr</code>/<code>ret</code> patterns.</li>
+        <li>Use structured exception handlers for <code>finally</code>-style logic in contemporary bytecode instead of
+            legacy <code>jsr</code>/<code>ret</code> patterns.
+        </li>
         <li>Modern verification strategies centered on stack-map frames MAY REJECT legacy subroutine patterns.</li>
     </ul>
 

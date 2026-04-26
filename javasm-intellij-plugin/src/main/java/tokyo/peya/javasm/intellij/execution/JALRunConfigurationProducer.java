@@ -12,19 +12,16 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
-public class JALRunConfigurationProducer extends RunConfigurationProducer<ApplicationConfiguration>
-{
+public class JALRunConfigurationProducer extends RunConfigurationProducer<ApplicationConfiguration> {
 
-    public JALRunConfigurationProducer()
-    {
+    public JALRunConfigurationProducer() {
         super(false);
     }
 
     @Override
     protected boolean setupConfigurationFromContext(@NotNull ApplicationConfiguration configuration,
                                                     @NotNull ConfigurationContext context,
-                                                    @NotNull Ref<PsiElement> sourceElement)
-    {
+                                                    @NotNull Ref<PsiElement> sourceElement) {
         PsiElement location = context.getPsiLocation();
         if (location == null || isNonJAL(location.getContainingFile()))
             return false;
@@ -45,8 +42,7 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
     public boolean isConfigurationFromContext(
             @NotNull ApplicationConfiguration configuration,
             @NotNull ConfigurationContext context
-    )
-    {
+    ) {
         PsiElement location = context.getPsiLocation();
         if (location == null || isNonJAL(location.getContainingFile())) return false;
 
@@ -58,13 +54,11 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
         return mainClassName.equals(configuration.getMainClassName());
     }
 
-    private boolean isNonJAL(PsiFile file)
-    {
+    private boolean isNonJAL(PsiFile file) {
         return !(file instanceof JALFile && file.getName().endsWith(".jal"));
     }
 
-    private String findMainClassForJal(JALFile file)
-    {
+    private String findMainClassForJal(JALFile file) {
         if (!file.isValid())
             return null;
 
@@ -76,8 +70,7 @@ public class JALRunConfigurationProducer extends RunConfigurationProducer<Applic
     }
 
     @Override
-    public @NotNull ConfigurationFactory getConfigurationFactory()
-    {
+    public @NotNull ConfigurationFactory getConfigurationFactory() {
         return ApplicationConfigurationType.getInstance().getConfigurationFactories()[0];
     }
 }

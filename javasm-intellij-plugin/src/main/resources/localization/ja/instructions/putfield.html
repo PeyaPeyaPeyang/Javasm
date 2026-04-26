@@ -54,22 +54,28 @@
 
     <h5><b>検証:</b></h5>
     <ul>
-        <li>この命令位置で，オペランド・スタックに参照互換なオブジェクト参照と，フィールド型に適合する値があることが必要です。</li>
+        <li>
+            この命令位置で，オペランド・スタックに参照互換なオブジェクト参照と，フィールド型に適合する値があることが必要です。
+        </li>
         <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
     </ul>
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li>カテゴリ 2 フィールド型（<code>long</code>，<code>double</code>）では，値 2 ワード + <code>objectref</code> 1 ワードのスロット計算になります。</li>
+        <li>カテゴリ 2 フィールド型（<code>long</code>，<code>double</code>）では，値 2 ワード + <code>objectref</code> 1
+            ワードのスロット計算になります。
+        </li>
         <li>検証器は各制御フロー点で，フィールド記述子に対する値型の代入可能性を検査します。</li>
     </ul>
 
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
         <li><code>NullPointerException</code>: オブジェクト参照が null の場合。</li>
-        <li><code>IncompatibleClassChangeError</code>: 解決先フィールドがインスタンス・フィールドでない場合（static など）。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先フィールドがインスタンス・フィールドでない場合（static など）。
+        </li>
         <li><code>NoSuchFieldError</code>: フィールド名または型が解決先クラス内のどのフィールドにも一致しない場合。</li>
-        <li><code>IllegalAccessError</code>: フィールドが現在クラスからアクセス不可の場合（例: 他クラスの private フィールド）。</li>
+        <li><code>IllegalAccessError</code>: フィールドが現在クラスからアクセス不可の場合（例: 他クラスの private フィールド）。
+        </li>
         <li><code>NoClassDefFoundError</code>: フィールドを含むクラスを実行時に見つけられない場合。</li>
     </ul>
 </div>

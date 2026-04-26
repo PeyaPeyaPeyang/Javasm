@@ -49,12 +49,16 @@
     <ul>
         <li>Verification requires a reference-compatible input and guarantees an int result for successor frames.</li>
         <li>If type resolution fails, the corresponding linkage error is thrown.</li>
-        <li>There is no <code>ClassCastException</code> path in <code>instanceof</code>; failed checks return <code>0</code>.</li>
+        <li>There is no <code>ClassCastException</code> path in <code>instanceof</code>; failed checks return
+            <code>0</code>.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
         <li><code>NullPointerException</code>: if the operand stack is empty (i.e., no object reference to check).</li>
-        <li><code>LinkageError</code>: if the symbolic type reference cannot be resolved or if the resolved type is not accessible.</li>
+        <li><code>LinkageError</code>: if the symbolic type reference cannot be resolved or if the resolved type is not
+            accessible.
+        </li>
     </ul>
 </div>

@@ -22,9 +22,13 @@
         <li><code>ConstantIndex</code>: 定数プールのインデックス。定数型に応じて使用可能な命令が異なります:
             <ul>
                 <li><b>{link:ldc}</b>: 8 ビットインデックス。カテゴリ 1 定数（例: <code>int</code>，
-                    <code>float</code>，<code>String</code>，クラスリテラル，メソッド型，メソッドハンドル，または カテゴリ 1 の動的定数）をロードします。</li>
+                    <code>float</code>，<code>String</code>，クラスリテラル，メソッド型，メソッドハンドル，または カテゴリ 1
+                    の動的定数）をロードします。
+                </li>
                 <li><b>{link:ldc_w}</b>: <b>{link:ldc}</b> と同じ種類の定数を，16 ビットインデックスでロードします。</li>
-                <li><b>{link:ldc2_w}</b>: 16 ビットインデックス。カテゴリ 2 定数（<code>long</code>，<code>double</code>，または カテゴリ 2 の動的定数）をロードします。</li>
+                <li><b>{link:ldc2_w}</b>: 16 ビットインデックス。カテゴリ 2 定数（<code>long</code>，<code>double</code>，または
+                    カテゴリ 2 の動的定数）をロードします。
+                </li>
             </ul>
         </li>
     </ul>
@@ -64,7 +68,8 @@
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li><b>{link:ldc}</b> と <b>{link:ldc_w}</b> の違いはインデックス幅のみであり，ロードされる値の意味は同一です。</li>
+        <li><b>{link:ldc}</b> と <b>{link:ldc_w}</b> の違いはインデックス幅のみであり，ロードされる値の意味は同一です。
+        </li>
         <li>定数カテゴリが検証器の挙動を左右するため，例はカテゴリが分かる形で示すことを推奨します。</li>
     </ul>
 </div>

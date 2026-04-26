@@ -9,19 +9,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 
-public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider
-{
+public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSettingsProvider {
     @Override
-    public @Nullable IndentOptionsEditor getIndentOptionsEditor()
-    {
+    public @Nullable IndentOptionsEditor getIndentOptionsEditor() {
         return new SmartIndentOptionsEditor();
     }
 
     @Override
-    public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType)
-    {
-        switch (settingsType)
-        {
+    public void customizeSettings(@NotNull CodeStyleSettingsCustomizable consumer, @NotNull SettingsType settingsType) {
+        switch (settingsType) {
             case SPACING_SETTINGS:
                 break;
             case BLANK_LINES_SETTINGS:
@@ -41,8 +37,7 @@ public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
     }
 
     @Override
-    public @Nullable String getCodeSample(@NotNull SettingsType settingsType)
-    {
+    public @Nullable String getCodeSample(@NotNull SettingsType settingsType) {
         return """
                 public class Main (
                    major_version=65,
@@ -92,8 +87,7 @@ public class JALLanguageCodeStyleSettingsProvider extends LanguageCodeStyleSetti
     }
 
     @Override
-    public @NotNull Language getLanguage()
-    {
+    public @NotNull Language getLanguage() {
         return JALLanguage.INSTANCE;
     }
 }

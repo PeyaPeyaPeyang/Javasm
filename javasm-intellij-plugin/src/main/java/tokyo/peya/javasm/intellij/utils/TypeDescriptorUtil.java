@@ -5,8 +5,7 @@ import tokyo.peya.langjal.compiler.jvm.PrimitiveTypes;
 import tokyo.peya.langjal.compiler.jvm.Type;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class TypeDescriptorUtil
-{
+public class TypeDescriptorUtil {
     public static String toPublicName(TypeDescriptor desc) {
         Type baseType = desc.getBaseType();
         if (baseType instanceof PrimitiveTypes primitive) {

@@ -15,29 +15,12 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.Instru
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWidenableNode;
 import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
-public class JALLocalIndexOverflowInspection extends AbstractJALInspection
-{
-    public JALLocalIndexOverflowInspection()
-    {
+public class JALLocalIndexOverflowInspection extends AbstractJALInspection {
+    public JALLocalIndexOverflowInspection() {
         super("JALLocalIndexOverflow");
     }
 
-    @Override
-    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                            @NotNull LocalInspectionToolSession session)
-    {
-        return new JALPsiElementVisitor()
-        {
-            @Override
-            protected void visitInstruction(@NotNull InstructionNode node)
-            {
-                checkInstruction(holder, node);
-            }
-        };
-    }
-
-    private static void checkInstruction(@NotNull ProblemsHolder holder, @NotNull InstructionNode node)
-    {
+    private static void checkInstruction(@NotNull ProblemsHolder holder, @NotNull InstructionNode node) {
         if (!(node instanceof InstructionWidenableNode widenable))
             return;
 
@@ -49,13 +32,10 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
         assert nameIdentifier != null; // #isNumberSpecifier() でチェック済み
         String localIndexText = nameIdentifier.getText();
         Number localIndex;
-        try
-        {
+        try {
             localIndex = EvaluatorCommons.toNumber(localIndexText);
             assert localIndex != null;
-        }
-        catch (IllegalArgumentException e)
-        {
+        } catch (IllegalArgumentException e) {
             holder.registerProblem(
                     nameIdentifier,
                     "Invalid local index: " + localIndexText,
@@ -65,8 +45,7 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
         }
 
         int localIndexValue = localIndex.intValue();
-        if (localIndexValue < 0)
-        {
+        if (localIndexValue < 0) {
             holder.registerProblem(
                     nameIdentifier,
                     "Local index cannot be negative: " + localIndexText,
@@ -76,8 +55,7 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
         }
 
         boolean isWidened = widenable.isWidened();
-        if (localIndexValue > 0xFFFF)
-        {
+        if (localIndexValue > 0xFFFF) {
             holder.registerProblem(
                     nameIdentifier,
                     "Local index overflow: " + localIndexText +
@@ -87,8 +65,7 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
             return;
         }
 
-        if (localIndexValue > 0xFF)
-        {
+        if (localIndexValue > 0xFF) {
             if (isWidened)
                 return;
             String widenedInstruction = "wide " + node.getText();
@@ -99,9 +76,7 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
                     ProblemHighlightType.GENERIC_ERROR,
                     new JALReplaceInstructionQuickFix(widenedInstruction, node)
             );
-        }
-        else
-        {
+        } else {
             if (!isWidened)
                 return;
             InstructionWideNode wideNode = widenable.getWideNode();
@@ -121,5 +96,16 @@ public class JALLocalIndexOverflowInspection extends AbstractJALInspection
                     new JALReplaceInstructionQuickFix(deWidenedInstruction, node)
             );
         }
+    }
+
+    @Override
+    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
+                                                            @NotNull LocalInspectionToolSession session) {
+        return new JALPsiElementVisitor() {
+            @Override
+            protected void visitInstruction(@NotNull InstructionNode node) {
+                checkInstruction(holder, node);
+            }
+        };
     }
 }

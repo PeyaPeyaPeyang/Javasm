@@ -12,31 +12,22 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.ClassReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.ClassTypeDescriptorReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.FieldReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LabelNameReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.LocalReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.MethodReference;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.*;
 import tokyo.peya.langjal.compiler.JALParser;
 
-public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
-{
-    public IdentifierNode(IElementType type, CharSequence text)
-    {
+public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement {
+    public IdentifierNode(IElementType type, CharSequence text) {
         super(type, text);
     }
 
     @NotNull
     @Override
-    public String getName()
-    {
+    public String getName() {
         return this.getText();
     }
 
     @Override
-    public PsiElement setName(@NotNull String s) throws IncorrectOperationException
-    {
+    public PsiElement setName(@NotNull String s) throws IncorrectOperationException {
         PsiElement newID = Trees.createLeafFromText(
                 this.getProject(),
                 this.getLanguage(),
@@ -52,14 +43,12 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Identifier(" + this.getText() + ")";
     }
 
     @Override
-    public PsiReference getReference()
-    {
+    public PsiReference getReference() {
         PsiElement parent = this.getParent();
         if (parent == null || parent.getNode() == null)
             return null;
@@ -68,11 +57,9 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
         if (!(type instanceof RuleIElementType rule))
             return null;
 
-        return switch (rule.getRuleIndex())
-        {
+        return switch (rule.getRuleIndex()) {
             case JALParser.RULE_label,
-                 JALParser.RULE_labelName ->
-                    new LabelNameReference(this);
+                 JALParser.RULE_labelName -> new LabelNameReference(this);
 
             case JALParser.RULE_jvmInsArgFieldRefType, JALParser.RULE_jvmInsArgMethodRefOwnerType ->
                     new ClassReference(this);
@@ -89,11 +76,9 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement
                     yield new MethodReference(method);
                 yield null;
             }
-            case JALParser.RULE_typeDescriptor ->
-                    new ClassTypeDescriptorReference(this);
+            case JALParser.RULE_typeDescriptor -> new ClassTypeDescriptorReference(this);
 
-            case JALParser.RULE_jvmInsArgLocalRef ->
-                    new LocalReference(this);
+            case JALParser.RULE_jvmInsArgLocalRef -> new LocalReference(this);
 
             default -> null;
         };

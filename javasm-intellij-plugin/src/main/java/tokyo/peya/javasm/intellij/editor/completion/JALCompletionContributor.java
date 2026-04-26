@@ -5,11 +5,9 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.patterns.PlatformPatterns;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
-public class JALCompletionContributor extends CompletionContributor
-{
+public class JALCompletionContributor extends CompletionContributor {
     private static final String[] LABEL_INSTRUCTION_NAMES = {
             "goto",
             "goto_w",
@@ -34,25 +32,24 @@ public class JALCompletionContributor extends CompletionContributor
             "ret"
     };
 
-    public JALCompletionContributor()
-    {
+    public JALCompletionContributor() {
         this.extend(
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement()
-                                .withLanguage(JALLanguage.INSTANCE)
-                                .inside(InstructionSetNode.class)
-                                .with(JALCompletionCommons.emptyLine())
-                                .andNot(PlatformPatterns.psiElement().afterSibling(PlatformPatterns.psiElement(InstructionNameNode.class))),
+                        .withLanguage(JALLanguage.INSTANCE)
+                        .inside(InstructionSetNode.class)
+                        .with(JALCompletionCommons.emptyLine())
+                        .andNot(PlatformPatterns.psiElement().afterSibling(PlatformPatterns.psiElement(InstructionNameNode.class))),
                 new JALInstructionNameCompletionProvider()
         );
         this.extend(
                 CompletionType.BASIC,
                 PlatformPatterns.psiElement()
-                                .withLanguage(JALLanguage.INSTANCE)
-                                .afterLeaf(PlatformPatterns.psiElement(InstructionNameNode.class)
-                                                           .withText(PlatformPatterns.string()
-                                                                                     .oneOf(LABEL_INSTRUCTION_NAMES))
-                                ),
+                        .withLanguage(JALLanguage.INSTANCE)
+                        .afterLeaf(PlatformPatterns.psiElement(InstructionNameNode.class)
+                                .withText(PlatformPatterns.string()
+                                        .oneOf(LABEL_INSTRUCTION_NAMES))
+                        ),
                 new JALLabelNameCompletionProvider()
         );
     }

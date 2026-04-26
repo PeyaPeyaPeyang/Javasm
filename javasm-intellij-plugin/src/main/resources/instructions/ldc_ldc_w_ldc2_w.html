@@ -22,9 +22,13 @@
         <li><code>ConstantIndex</code>: constant-pool index. The constant type determines which opcode is valid:
             <ul>
                 <li><b>{link:ldc}</b>: 8-bit index; loads category-1 constants (for example <code>int</code>,
-                    <code>float</code>, <code>String</code>, class literal, method type, method handle, or category-1 dynamic constant).</li>
+                    <code>float</code>, <code>String</code>, class literal, method type, method handle, or category-1
+                    dynamic constant).
+                </li>
                 <li><b>{link:ldc_w}</b>: same constant kinds as <b>{link:ldc}</b>, but with 16-bit index.</li>
-                <li><b>{link:ldc2_w}</b>: 16-bit index; loads category-2 constants (<code>long</code>, <code>double</code>, or category-2 dynamic constant).</li>
+                <li><b>{link:ldc2_w}</b>: 16-bit index; loads category-2 constants (<code>long</code>,
+                    <code>double</code>, or category-2 dynamic constant).
+                </li>
             </ul>
         </li>
     </ul>

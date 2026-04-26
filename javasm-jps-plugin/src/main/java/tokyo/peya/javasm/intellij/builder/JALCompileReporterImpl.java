@@ -17,16 +17,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @AllArgsConstructor
-public class JALCompileReporterImpl implements CompileReporter
-{
+public class JALCompileReporterImpl implements CompileReporter {
     public static final String COMPILER_NAME = "JavaSM JAL Compiler";
 
     private final CompileContext compileContext;
 
+    private static long getOffset(String text, long line, long column) {
+        String[] lines = text.split("\n", -1);  // 最後の空行も含める
+        long offset = 0;
+        for (int i = 0; i < line - 1 && i < lines.length; i++)
+            offset += lines[i].length() + 1; // +1 -> 改行
+
+        offset += column - 1; // column は 1始まりだから -1
+        return offset;
+    }
+
     @Override
-    public void postError(@NotNull String message, @Nullable Path sourcePath)
-    {
-        assert sourcePath != null: "Source path must not be null for error messages";
+    public void postError(@NotNull String message, @Nullable Path sourcePath) {
+        assert sourcePath != null : "Source path must not be null for error messages";
 
         this.compileContext.processMessage(
                 new CompilerMessage(
@@ -39,9 +47,8 @@ public class JALCompileReporterImpl implements CompileReporter
     }
 
     @Override
-    public void postWarning(@NotNull String message, @Nullable Path sourcePath)
-    {
-        assert sourcePath != null: "Source path must not be null for error messages";
+    public void postWarning(@NotNull String message, @Nullable Path sourcePath) {
+        assert sourcePath != null : "Source path must not be null for error messages";
 
         this.compileContext.processMessage(
                 new CompilerMessage(
@@ -54,9 +61,8 @@ public class JALCompileReporterImpl implements CompileReporter
     }
 
     @Override
-    public void postInfo(@NotNull String message, @Nullable Path sourcePath)
-    {
-        assert sourcePath != null: "Source path must not be null for error messages";
+    public void postInfo(@NotNull String message, @Nullable Path sourcePath) {
+        assert sourcePath != null : "Source path must not be null for error messages";
 
         this.compileContext.processMessage(
                 new CompilerMessage(
@@ -68,11 +74,9 @@ public class JALCompileReporterImpl implements CompileReporter
         );
     }
 
-
     @Override
-    public void postError(@NotNull String message, @NotNull CompileErrorException e, @Nullable Path sourcePath)
-    {
-        assert sourcePath != null: "Source path must not be null for error messages";
+    public void postError(@NotNull String message, @NotNull CompileErrorException e, @Nullable Path sourcePath) {
+        assert sourcePath != null : "Source path must not be null for error messages";
 
         long line = e.getLine();
         long column = e.getColumn();
@@ -93,16 +97,14 @@ public class JALCompileReporterImpl implements CompileReporter
     }
 
     @Override
-    public void postWarning(@NotNull String message, @Nullable Path sourcePath, long line, long column, long length)
-    {
-        assert sourcePath != null: "Source path must not be null for error messages";
+    public void postWarning(@NotNull String message, @Nullable Path sourcePath, long line, long column, long length) {
+        assert sourcePath != null : "Source path must not be null for error messages";
 
         this.postOnLine(message, sourcePath, BuildMessage.Kind.WARNING, line, column, length);
     }
 
     @Override
-    public void postWarning(@NotNull String message, @NotNull Path sourcePath, @NotNull ParserRuleContext ctxt)
-    {
+    public void postWarning(@NotNull String message, @NotNull Path sourcePath, @NotNull ParserRuleContext ctxt) {
         long line = ctxt.getStart().getLine();
         long column = ctxt.getStart().getCharPositionInLine() + 1; // ANTLRは0始まりなので+1
         long length = ctxt.getStop().getStopIndex() - ctxt.getStart().getStartIndex() + 1;
@@ -116,21 +118,17 @@ public class JALCompileReporterImpl implements CompileReporter
             long line,
             long column,
             long length
-    )
-    {
+    ) {
         long problemBeginOffset = -1;
         long problemEndOffset = -1;
         long problemLocationOffset = -1;
-        try
-        {
+        try {
             String content = Files.readString(sourcePath);
             long offset = getOffset(content, line, column);
             problemBeginOffset = offset;
             problemEndOffset = offset + length;
             problemLocationOffset = offset + 1;
-        }
-        catch (IOException ignored)
-        {
+        } catch (IOException ignored) {
 
         }
 
@@ -147,16 +145,5 @@ public class JALCompileReporterImpl implements CompileReporter
                         column
                 )
         );
-    }
-
-    private static long getOffset(String text, long line, long column)
-    {
-        String[] lines = text.split("\n", -1);  // 最後の空行も含める
-        long offset = 0;
-        for (int i = 0; i < line - 1 && i < lines.length; i++)
-            offset += lines[i].length() + 1; // +1 -> 改行
-
-        offset += column - 1; // column は 1始まりだから -1
-        return offset;
     }
 }

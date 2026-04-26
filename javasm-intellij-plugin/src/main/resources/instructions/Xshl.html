@@ -41,16 +41,21 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of
+            this instruction.
+        </li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
         <li>These instructions perform a logical left shift, meaning that zero bits are shifted in on the right.
-            The sign bit is not treated specially.</li>
+            The sign bit is not treated specially.
+        </li>
         <li>The shift amount is masked to prevent shifts greater than the bit width of the value.
-            For <code>ishl</code>, only the lowest 5 bits of the shift amount are used (i.e., shift amounts are effectively modulo 32).
-            For <code>lshl</code>, only the lowest 6 bits are used (i.e., shift amounts are effectively modulo 64).</li>
+            For <code>ishl</code>, only the lowest 5 bits of the shift amount are used (i.e., shift amounts are
+            effectively modulo 32).
+            For <code>lshl</code>, only the lowest 6 bits are used (i.e., shift amounts are effectively modulo 64).
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>

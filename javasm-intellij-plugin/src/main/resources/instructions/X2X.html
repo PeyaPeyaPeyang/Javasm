@@ -25,10 +25,14 @@
 
     <h5><b>Conversion Semantics:</b></h5>
     <ul>
-        <li><b>Floating to integer (<code>f2i</code>, <code>f2l</code>, <code>d2i</code>, <code>d2l</code>)</b> rounds toward zero.</li>
+        <li><b>Floating to integer (<code>f2i</code>, <code>f2l</code>, <code>d2i</code>, <code>d2l</code>)</b> rounds
+            toward zero.
+        </li>
         <li>For floating-to-integer conversion, <code>NaN</code> maps to zero.</li>
         <li>For out-of-range floating values, the result is clamped to the target type min/max.</li>
-        <li><code>i2b</code>, <code>i2s</code>, and <code>i2c</code> perform narrowing conversion from int; <code>i2c</code> zero-extends to unsigned 16-bit char.</li>
+        <li><code>i2b</code>, <code>i2s</code>, and <code>i2c</code> perform narrowing conversion from int;
+            <code>i2c</code> zero-extends to unsigned 16-bit char.
+        </li>
         <li><code>f2d</code> is widening; <code>d2f</code> may lose precision and may produce infinities.</li>
     </ul>
 
@@ -51,13 +55,17 @@
 
     <h5><b>Category/Slot Notes:</b></h5>
     <ul>
-        <li>Conversions involving <code>long</code>/<code>double</code> consume or produce category-2 values (two stack slots).</li>
+        <li>Conversions involving <code>long</code>/<code>double</code> consume or produce category-2 values (two stack
+            slots).
+        </li>
         <li>All other primitive conversion results are category-1.</li>
     </ul>
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept the input type and output type at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept the input type and output type at the point of this
+            instruction.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>

@@ -3,8 +3,7 @@ package tokyo.peya.javasm.intellij.utils;
 import com.intellij.DynamicBundle;
 import org.jetbrains.annotations.PropertyKey;
 
-public class JALMessages extends DynamicBundle
-{
+public class JALMessages extends DynamicBundle {
     private static final JALMessages INSTANCE = new JALMessages();
 
     private JALMessages() {

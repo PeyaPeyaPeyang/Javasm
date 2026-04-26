@@ -6,16 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassPropertyNode;
 
-public class ClassPropertyMajorVersionNode extends ClassPropertyNode
-{
-    public ClassPropertyMajorVersionNode(@NotNull ASTNode node)
-    {
+public class ClassPropertyMajorVersionNode extends ClassPropertyNode {
+    public ClassPropertyMajorVersionNode(@NotNull ASTNode node) {
         super(node);
     }
 
-    public int getMajorVersion()
-    {
+    public int getMajorVersion() {
         NumberNode numberNode = PsiTreeUtil.findChildOfType(this, NumberNode.class);
-        return numberNode != null ? numberNode.toNumber().intValue(): 0;
+        return numberNode != null ? numberNode.toNumber().intValue() : 0;
     }
 }

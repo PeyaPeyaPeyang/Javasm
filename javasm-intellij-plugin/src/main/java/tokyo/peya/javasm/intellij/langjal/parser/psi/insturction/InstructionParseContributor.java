@@ -7,31 +7,19 @@ import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.RuleIElementType;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionFieldAccessNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionIntIncrementNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionJumpNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionLocalAccessNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionMultiANewArrayNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNoArgumentNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionNumericArgumentNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionScalarNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionTypeArgumentNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.InstructionWideNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.*;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.invokedynamic.InstructionInvokeDynamicNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionLookupSwitchNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.variants.xswitch.InstructionTableSwitchNode;
 import tokyo.peya.langjal.compiler.JALLexer;
 import tokyo.peya.langjal.compiler.JALParser;
 
-public class InstructionParseContributor
-{
+public class InstructionParseContributor {
     @NotNull
-    public static PsiElement createInstructionElement(ASTNode node, RuleIElementType type)
-    {
+    public static PsiElement createInstructionElement(ASTNode node, RuleIElementType type) {
         if (!isInstructionRule(type.getRuleIndex()))
             throw new IllegalArgumentException("Not an instruction rule: " + type.getRuleIndex());
-        return switch (type.getRuleIndex())
-        {
+        return switch (type.getRuleIndex()) {
             case JALParser.RULE_jvmInsAaload,
                  JALParser.RULE_jvmInsAastore,
                  JALParser.RULE_jvmInsAconstNull,
@@ -178,27 +166,23 @@ public class InstructionParseContributor
         };
     }
 
-    public static boolean isInstructionRule(int ruleType)
-    {
+    public static boolean isInstructionRule(int ruleType) {
         // WIDE ではない理由は，WIDE は通常の命令ではなく，ある命令の前に置くいわば修飾子のようなものであるから。
         return JALParser.RULE_jvmInsAaload <= ruleType && ruleType <= JALParser.RULE_jvmInsTableswitch;
     }
 
     @NotNull
-    public static LeafElement createInstructionNameLeaf(@NotNull IElementType type, @NotNull CharSequence text)
-    {
+    public static LeafElement createInstructionNameLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
         if (!(type instanceof TokenIElementType token))
             throw new IllegalArgumentException("Not a token type: " + type);
 
-        return switch (token.getANTLRTokenType())
-        {
+        return switch (token.getANTLRTokenType()) {
             case JALLexer.INSN_WIDE -> new InstructionWideNode(type);
             default -> new InstructionNameNode(type, text);
         };
     }
 
-    public static boolean isInstructionNameToken(int tokenType)
-    {
+    public static boolean isInstructionNameToken(int tokenType) {
         return JALLexer.INSN_AALOAD <= tokenType && tokenType <= JALLexer.INSN_WIDE;
     }
 }

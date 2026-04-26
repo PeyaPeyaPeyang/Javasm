@@ -19,42 +19,35 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
-public class JALFile extends PsiFileBase
-{
-    public JALFile(@NotNull FileViewProvider viewProvider)
-    {
+public class JALFile extends PsiFileBase {
+    public JALFile(@NotNull FileViewProvider viewProvider) {
         super(viewProvider, JALLanguage.INSTANCE);
     }
 
-    @Nullable
-    public ClassDefinitionNode getClassDefinition()
-    {
-        return PsiTreeUtil.findChildOfType(this, ClassDefinitionNode.class);
-    }
-
-    @Override
-    public @NotNull FileType getFileType()
-    {
-        return JALFileType.INSTANCE;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "Java Assembly Language File";
-    }
-
-    public static JALFile getJALFile(@NotNull Project project, @NotNull VirtualFile file)
-    {
+    public static JALFile getJALFile(@NotNull Project project, @NotNull VirtualFile file) {
         PsiFile psiFile = ApplicationManager.getApplication().runReadAction((Computable<? extends PsiFile>) () ->
                 PsiManager.getInstance(project).findFile(file)
         );
 
-        return psiFile instanceof JALFile ? (JALFile) psiFile: null;
+        return psiFile instanceof JALFile ? (JALFile) psiFile : null;
     }
 
-    public @Nullable PsiElement findInstructionRelatedElement(int line)
-    {
+    @Nullable
+    public ClassDefinitionNode getClassDefinition() {
+        return PsiTreeUtil.findChildOfType(this, ClassDefinitionNode.class);
+    }
+
+    @Override
+    public @NotNull FileType getFileType() {
+        return JALFileType.INSTANCE;
+    }
+
+    @Override
+    public String toString() {
+        return "Java Assembly Language File";
+    }
+
+    public @Nullable PsiElement findInstructionRelatedElement(int line) {
         Document doc = this.getViewProvider().getDocument();
         if (doc == null || line < 0 || line >= doc.getLineCount())
             return null;
@@ -65,8 +58,7 @@ public class JALFile extends PsiFileBase
             return null;
 
         // element は InstructionNode または InstructionSetNode のどちらか。
-        while (element != null && !(element instanceof InstructionNode || element instanceof InstructionSetNode))
-        {
+        while (element != null && !(element instanceof InstructionNode || element instanceof InstructionSetNode)) {
             if (element instanceof ANTLRPsiNode)
                 element = element.getFirstChild();
             else
@@ -75,11 +67,9 @@ public class JALFile extends PsiFileBase
 
         if (element == null)
             return null;
-        else if (element instanceof InstructionSetNode node)
-        {
+        else if (element instanceof InstructionSetNode node) {
             PsiElement firstChild = node.getFirstChild();
-            if (firstChild instanceof ANTLRPsiNode antlrNode)
-            {
+            if (firstChild instanceof ANTLRPsiNode antlrNode) {
                 firstChild = antlrNode.getFirstChild();
                 if (firstChild instanceof InstructionNode instructionNode)
                     element = instructionNode;
@@ -87,6 +77,6 @@ public class JALFile extends PsiFileBase
         }
 
         int elementLine = doc.getLineNumber(element.getTextRange().getStartOffset());
-        return elementLine == line ? element: null;
+        return elementLine == line ? element : null;
     }
 }

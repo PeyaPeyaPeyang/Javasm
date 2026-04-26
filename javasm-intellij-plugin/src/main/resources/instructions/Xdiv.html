@@ -14,8 +14,12 @@
         <code>Infinity</code> or <code>NaN</code> per IEEE 754.</p>
     <ul>
         <li><b>{link:idiv}</b>/<b>{link:ldiv}</b>: integer division truncates toward zero.</li>
-        <li><b>{link:fdiv}</b>/<b>{link:ddiv}</b>: IEEE 754 arithmetic (including NaN propagation and signed infinities/zeros).</li>
-        <li>The integer overflow corner case <code>MIN_VALUE / -1</code> yields <code>MIN_VALUE</code> (wraparound semantics).</li>
+        <li><b>{link:fdiv}</b>/<b>{link:ddiv}</b>: IEEE 754 arithmetic (including NaN propagation and signed
+            infinities/zeros).
+        </li>
+        <li>The integer overflow corner case <code>MIN_VALUE / -1</code> yields <code>MIN_VALUE</code> (wraparound
+            semantics).
+        </li>
     </ul>
 
     <h5><b>Operands:</b> None</h5>
@@ -36,17 +40,23 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept the appropriate category of values for the instruction type at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept the appropriate category of values for the
+            instruction type at the point of this instruction.
+        </li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li><code>fdiv</code> and <code>ddiv</code> follow IEEE 754 rules, so division by zero is not an exception but results in specific values (<code>Infinity</code> or <code>NaN</code>).</li>
+        <li><code>fdiv</code> and <code>ddiv</code> follow IEEE 754 rules, so division by zero is not an exception but
+            results in specific values (<code>Infinity</code> or <code>NaN</code>).
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions:</b></h5>
     <ul>
-        <li><code>ArithmeticException</code>: thrown by <code>idiv</code> or <code>ldiv</code> if the divisor (top operand) is zero.</li>
+        <li><code>ArithmeticException</code>: thrown by <code>idiv</code> or <code>ldiv</code> if the divisor (top
+            operand) is zero.
+        </li>
     </ul>
 
 </div>

@@ -6,15 +6,12 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.langjal.compiler.jvm.ClassProperty;
 
-public class ClassPropertyNode extends ANTLRPsiNode
-{
-    public ClassPropertyNode(@NotNull ASTNode node)
-    {
+public class ClassPropertyNode extends ANTLRPsiNode {
+    public ClassPropertyNode(@NotNull ASTNode node) {
         super(node);
     }
 
-    public ClassProperty getPropertyType()
-    {
+    public ClassProperty getPropertyType() {
         ClassPropertyNameNode name = PsiTreeUtil.findChildOfType(this, ClassPropertyNameNode.class);
         if (name == null)
             return ClassProperty.UNKNOWN;

@@ -1,13 +1,6 @@
 package tokyo.peya.javasm.intellij.formatting;
 
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.Block;
-import com.intellij.formatting.ChildAttributes;
-import com.intellij.formatting.Indent;
-import com.intellij.formatting.Spacing;
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
+import com.intellij.formatting.*;
 import com.intellij.lang.ASTNode;
 import com.intellij.openapi.editor.Document;
 import com.intellij.psi.PsiDocumentManager;
@@ -27,46 +20,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class JALBlock extends AbstractBlock
-{
-    private final SpacingBuilder spacingBuilder;
-
+public class JALBlock extends AbstractBlock {
     private static final Map<Integer, Integer> FIXED_COLUMN_BY_THIS_RULE = Map.of(
             JALParser.RULE_classBody, 0,
             JALParser.RULE_jvmInsArgTableSwitchCaseList, 0,
             JALParser.RULE_jvmInsArgLookupSwitchCaseList, 0
     );
-
     private static final Map<Integer, Integer> FIXED_COLUMN_BY_PREV_RULE = Map.of(
             JALParser.RULE_instruction, 2
     );
-
     private static final Set<Integer> FIXED_COLUMN_TOKENS = Set.of(
             JALParser.LINE_COMMENT,
             JALParser.BLOCK_COMMENT,
             JALParser.LBR
     );
+    private final SpacingBuilder spacingBuilder;
 
     protected JALBlock(
             @NotNull ASTNode node,
             @Nullable Wrap wrap,
             @Nullable Alignment alignment,
             SpacingBuilder spacingBuilder
-    )
-    {
+    ) {
         super(node, wrap, alignment);
         this.spacingBuilder = spacingBuilder;
     }
 
     @Override
-    protected List<Block> buildChildren()
-    {
+    protected List<Block> buildChildren() {
         List<Block> blocks = new ArrayList<>();
         ASTNode child = this.myNode.getFirstChildNode();
-        while (child != null)
-        {
-            if (child.getTextRange().getLength() == 0 || child.getElementType() == TokenType.WHITE_SPACE)
-            {
+        while (child != null) {
+            if (child.getTextRange().getLength() == 0 || child.getElementType() == TokenType.WHITE_SPACE) {
                 child = child.getTreeNext();
                 continue;
             }
@@ -78,8 +63,7 @@ public class JALBlock extends AbstractBlock
     }
 
     @Override
-    public Indent getIndent()
-    {
+    public Indent getIndent() {
         IElementType type = this.myNode.getElementType();
         if (!(type instanceof RuleIElementType rule))
             return Indent.getNoneIndent();
@@ -101,28 +85,23 @@ public class JALBlock extends AbstractBlock
     }
 
     @Override
-    public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2)
-    {
+    public Spacing getSpacing(@Nullable Block child1, @NotNull Block child2) {
         return this.spacingBuilder.getSpacing(this, child1, child2);
     }
 
     @Override
-    public @NotNull ChildAttributes getChildAttributes(int newChildIndex)
-    {
+    public @NotNull ChildAttributes getChildAttributes(int newChildIndex) {
         IElementType type = this.myNode.getElementType();
 
-        if (type instanceof RuleIElementType rule)
-        {
+        if (type instanceof RuleIElementType rule) {
             int ruleIndex = rule.getRuleIndex();
 
             if (ruleIndex == JALParser.RULE_methodBody
-                    || ruleIndex == JALParser.RULE_classBody)
-            {
+                    || ruleIndex == JALParser.RULE_classBody) {
                 return new ChildAttributes(Indent.getNormalIndent(), null);
             }
 
-            if (ruleIndex == JALParser.RULE_instructionSet)
-            {
+            if (ruleIndex == JALParser.RULE_instructionSet) {
                 return new ChildAttributes(Indent.getNormalIndent(), null);
             }
         }
@@ -130,29 +109,25 @@ public class JALBlock extends AbstractBlock
         return new ChildAttributes(Indent.getNoneIndent(), null);
     }
 
-    private int calcColumn(Block prevBlock)
-    {
+    private int calcColumn(Block prevBlock) {
         ASTNode prevNode = ((JALBlock) prevBlock).getNode();
         IElementType prevType = prevNode.getElementType();
 
         // 現在のノード（this）のタイプ
         IElementType thisType = this.myNode.getElementType();
-        if (thisType instanceof RuleIElementType rule)
-        {
+        if (thisType instanceof RuleIElementType rule) {
             Integer col = FIXED_COLUMN_BY_THIS_RULE.get(rule.getRuleIndex());
             if (col != null)
                 return col;
         }
 
-        if (prevType instanceof RuleIElementType rule)
-        {
+        if (prevType instanceof RuleIElementType rule) {
             Integer col = FIXED_COLUMN_BY_PREV_RULE.get(rule.getRuleIndex());
             if (col != null)
                 return col;
         }
 
-        if (prevType instanceof TokenIElementType token)
-        {
+        if (prevType instanceof TokenIElementType token) {
             if (FIXED_COLUMN_TOKENS.contains(token.getANTLRTokenType()))
                 return 2;
         }
@@ -160,8 +135,7 @@ public class JALBlock extends AbstractBlock
         return computeDocumentColumn(prevNode);
     }
 
-    private int computeDocumentColumn(ASTNode node)
-    {
+    private int computeDocumentColumn(ASTNode node) {
         PsiElement psi = node.getPsi();
         if (psi == null) return 4;
 
@@ -175,8 +149,7 @@ public class JALBlock extends AbstractBlock
     }
 
     @Override
-    public boolean isLeaf()
-    {
+    public boolean isLeaf() {
         return this.myNode.getFirstChildNode() == null;
     }
 }

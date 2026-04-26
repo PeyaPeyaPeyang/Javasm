@@ -4,38 +4,32 @@ import com.intellij.openapi.project.Project;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiClass;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiField;
 import com.intellij.psi.search.GlobalSearchScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.JALElementReference;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
 import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 
-public class FieldReference extends JALElementReference
-{
+public class FieldReference extends JALElementReference {
     private final FieldReferenceNode ref;
 
-    public FieldReference(@NotNull FieldReferenceNode element)
-    {
+    public FieldReference(@NotNull FieldReferenceNode element) {
         super(element.getFieldNameNode());
         this.ref = element;
     }
 
     @Override
-    public boolean isSubtree(PsiElement psiElement)
-    {
+    public boolean isSubtree(PsiElement psiElement) {
         return psiElement instanceof FieldReferenceNameNode;
     }
 
     @Override
-    public @Nullable PsiElement resolve()
-    {
-        Project project = getElement().getProject();;
+    public @Nullable PsiElement resolve() {
+        Project project = getElement().getProject();
+        ;
         String fieldName = this.ref.getFieldName();
 
         FullQualifiedNameNode fieldOwner = this.ref.getFieldOwner();

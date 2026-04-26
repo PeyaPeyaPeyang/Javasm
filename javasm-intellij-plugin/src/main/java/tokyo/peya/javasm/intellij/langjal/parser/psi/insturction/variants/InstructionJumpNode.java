@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class InstructionJumpNode extends InstructionNode
-{
-    public InstructionJumpNode(@NotNull ASTNode node)
-    {
+public class InstructionJumpNode extends InstructionNode {
+    public InstructionJumpNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public LabelNameNode getJumpLabel()
-    {
+    public LabelNameNode getJumpLabel() {
         LabelNameNode labelNode = PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
         if (labelNode == null)
             throw new IllegalStateException("LabelNode is not found in JumpArgumentInstructionNode");
@@ -24,8 +21,7 @@ public class InstructionJumpNode extends InstructionNode
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "InstructionNode(" + this.getInstructionName() + " jump=" + this.getJumpLabel() + ")";
     }
 }

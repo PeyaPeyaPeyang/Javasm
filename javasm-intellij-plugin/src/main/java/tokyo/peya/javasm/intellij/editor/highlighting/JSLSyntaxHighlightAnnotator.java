@@ -18,16 +18,8 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.langjal.compiler.jvm.DescriptorReader;
 
-public class JSLSyntaxHighlightAnnotator implements Annotator
-{
-    @Override
-    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
-    {
-        highlightIdentifiers(element, holder);
-    }
-
-    private static void highlightIdentifiers(@NotNull PsiElement element, @NotNull AnnotationHolder holder)
-    {
+public class JSLSyntaxHighlightAnnotator implements Annotator {
+    private static void highlightIdentifiers(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         // クラス名, メソッド名
         if (element instanceof ClassNameNode className)
             highlight(element, holder, JALSyntaxHighlighter.CLASS_NAME);
@@ -53,18 +45,13 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
             highlightMethodDescriptor(method, holder);
     }
 
-
-    private static void highlightMethodDescriptor(@NotNull MethodDescriptorNode node, @NotNull AnnotationHolder holder)
-    {
-        try
-        {
+    private static void highlightMethodDescriptor(@NotNull MethodDescriptorNode node, @NotNull AnnotationHolder holder) {
+        try {
             DescriptorReader reader = DescriptorReader.fromString(node.getText());
             reader.expect('(');
-            while (reader.peek() != ')')
-            {
+            while (reader.peek() != ')') {
                 char c = reader.read();
-                if (c == 'L')
-                {
+                if (c == 'L') {
                     int start = reader.getPos() /* 'L'.length(): */ - 1;
                     // クラス型の引数
                     while (c != ';')
@@ -72,12 +59,9 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
                     int end = reader.getPos();
 
                     highlight(node, TextRange.create(start, end), holder, JALSyntaxHighlighter.CLASS_NAME);
-                }
-                else if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z')
-                {
+                } else if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z') {
                     // プリミティブ型の引数
-                    TextAttributesKey highlight = switch (c)
-                    {
+                    TextAttributesKey highlight = switch (c) {
                         case 'B' -> JALSyntaxHighlighter.DESC_BYTE;
                         case 'C' -> JALSyntaxHighlighter.DESC_CHAR;
                         case 'D' -> JALSyntaxHighlighter.DESC_DOUBLE;
@@ -92,27 +76,28 @@ public class JSLSyntaxHighlightAnnotator implements Annotator
                     highlight(node, TextRange.create(reader.getPos() - 1, reader.getPos()), holder, highlight);
                 }
             }
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
         }
     }
 
     private static void highlight(@NotNull PsiElement element, @NotNull AnnotationHolder holder,
-                                  @NotNull TextAttributesKey textAttributesKey)
-    {
+                                  @NotNull TextAttributesKey textAttributesKey) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-              .range(element)
-              .textAttributes(textAttributesKey)
-              .create();
+                .range(element)
+                .textAttributes(textAttributesKey)
+                .create();
     }
 
     private static void highlight(@NotNull PsiElement element, TextRange range, @NotNull AnnotationHolder holder,
-                                  @NotNull TextAttributesKey textAttributesKey)
-    {
+                                  @NotNull TextAttributesKey textAttributesKey) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
-              .range(element.getTextRange().cutOut(range))
-              .textAttributes(textAttributesKey)
-              .create();
+                .range(element.getTextRange().cutOut(range))
+                .textAttributes(textAttributesKey)
+                .create();
+    }
+
+    @Override
+    public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+        highlightIdentifiers(element, holder);
     }
 }

@@ -40,7 +40,8 @@ JAL Implementation: 1.2.1
 
 This release includes a minor bug fix to improve the stability of the application.
 
-- fix: Fixed a bug related to the legacy configurable id calculation mode for the JALCodeStyleSettingsProvider class, which caused a PluginException in IntelliJ IDEA.
+- fix: Fixed a bug related to the legacy configurable id calculation mode for the JALCodeStyleSettingsProvider class,
+  which caused a PluginException in IntelliJ IDEA.
 
 ## [1.1.0] - 2025/08/26
 
@@ -51,7 +52,8 @@ This release introduces several new features and improvements to enhance the use
 - feat: Instruction names are now sorted by category in the code completion list.
 - chore: Changing stack viewer icon to a more suitable one.
 - fix: Fixed a bug on cumulative offset calculation when a label is declared at the first line of a method.
-- fix: Fixed a bug on cumulative offset calculation when the default label of tableswitch instruction is not considered as a target label.
+- fix: Fixed a bug on cumulative offset calculation when the default label of tableswitch instruction is not considered
+  as a target label.
 
 ## [1.0.0] - 2025/07/23
 
@@ -64,7 +66,6 @@ The first stable release.
 - feat: Class-name omitting when each JAL file declares a valid class structure.
 - feat: Braces paring for better visualization.
 - fix: Broken label name renaming.
-
 
 ## [0.0.1] - 2025/07/19
 

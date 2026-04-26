@@ -62,13 +62,18 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires a reference-compatible input and guarantees a reference result for successor frames.</li>
+        <li>Verification requires a reference-compatible input and guarantees a reference result for successor frames.
+        </li>
         <li>If type resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>ClassCastException</code>: if the object reference is not null and is not assignment-compatible with the target type.</li>
-        <li>Linkage errors (such as <code>NoClassDefFoundError</code>, <code>IllegalAccessError</code>, or <code>IncompatibleClassChangeError</code>): if the symbolic reference cannot be resolved or if the resolved type is not accessible.</li>
+        <li><code>ClassCastException</code>: if the object reference is not null and is not assignment-compatible with
+            the target type.
+        </li>
+        <li>Linkage errors (such as <code>NoClassDefFoundError</code>, <code>IllegalAccessError</code>, or <code>IncompatibleClassChangeError</code>):
+            if the symbolic reference cannot be resolved or if the resolved type is not accessible.
+        </li>
     </ul>
 </div>

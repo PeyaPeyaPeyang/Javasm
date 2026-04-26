@@ -48,7 +48,9 @@
     <h5><b>スタック効果:</b></h5>
     <ul>
         <li>Before: <code>..., objectref</code></li>
-        <li>After: <code>..., value</code>（フィールド値。多くの型は カテゴリ 1，<code>long</code>/<code>double</code> は カテゴリ 2）</li>
+        <li>After: <code>..., value</code>（フィールド値。多くの型は カテゴリ 1，<code>long</code>/<code>double</code> は
+            カテゴリ 2）
+        </li>
     </ul>
 
     <h5><b>検証:</b></h5>
@@ -61,7 +63,8 @@
         <li><code>NullPointerException</code>: オブジェクト参照が <code>null</code> の場合。</li>
         <li><code>IncompatibleClassChangeError</code>: 解決先フィールドが <code>static</code> の場合。</li>
         <li><code>NoSuchFieldError</code>，<code>IllegalAccessError</code>，<code>NoClassDefFoundError</code> などのリンケージエラー:
-            シンボリックフィールド参照を解決できない場合，または解決先フィールドにアクセスできない場合。</li>
+            シンボリックフィールド参照を解決できない場合，または解決先フィールドにアクセスできない場合。
+        </li>
     </ul>
 </div>
 

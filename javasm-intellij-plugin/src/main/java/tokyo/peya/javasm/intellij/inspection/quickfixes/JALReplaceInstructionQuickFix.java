@@ -11,27 +11,23 @@ import com.intellij.psi.SmartPointerManager;
 import com.intellij.psi.SmartPsiElementPointer;
 import org.jetbrains.annotations.NotNull;
 
-public class JALReplaceInstructionQuickFix implements LocalQuickFix
-{
+public class JALReplaceInstructionQuickFix implements LocalQuickFix {
     private final String replacementInstruction;
     @SafeFieldForPreview
     private final SmartPsiElementPointer<PsiElement> target;
 
-    public JALReplaceInstructionQuickFix(@NotNull String replacementInstruction, @NotNull PsiElement target)
-    {
+    public JALReplaceInstructionQuickFix(@NotNull String replacementInstruction, @NotNull PsiElement target) {
         this.replacementInstruction = replacementInstruction;
         this.target = SmartPointerManager.createPointer(target);
     }
 
     @Override
-    public @IntentionFamilyName @NotNull String getFamilyName()
-    {
+    public @IntentionFamilyName @NotNull String getFamilyName() {
         return "Replace with '" + this.replacementInstruction + "'";
     }
 
     @Override
-    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor)
-    {
+    public void applyFix(@NotNull Project project, @NotNull ProblemDescriptor descriptor) {
         PsiElement targetElement = this.target.getElement();
         if (targetElement == null)
             return; // なにもしない

@@ -1,13 +1,13 @@
 package tokyo.peya.javasm.intellij.langjal;
 
 import com.intellij.openapi.fileTypes.LanguageFileType;
-import javax.swing.Icon;
 import lombok.Getter;
 import tokyo.peya.javasm.intellij.Assets;
 
+import javax.swing.*;
+
 @Getter
-public class JALFileType extends LanguageFileType
-{
+public class JALFileType extends LanguageFileType {
     public static final JALFileType INSTANCE = new JALFileType();
 
     private final String name = "Java Assembly Language File";
@@ -15,8 +15,7 @@ public class JALFileType extends LanguageFileType
     private final String defaultExtension = "assets";
     private final Icon icon = Assets.JAL;
 
-    protected JALFileType()
-    {
+    protected JALFileType() {
         super(JALLanguage.INSTANCE);
     }
 }

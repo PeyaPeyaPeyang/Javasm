@@ -17,8 +17,11 @@
 
     <h5><b>オペランド:</b></h5>
     <ul>
-        <li>バイトコードオペランドは <code>CONSTANT_InvokeDynamic_info</code> を指す定数プールインデックスで，後続に 0 バイトが 2 つ続きます。</li>
-        <li><code>CONSTANT_InvokeDynamic_info</code> は，ブートストラップメソッド項目と name-and-type 記述子へリンクします。</li>
+        <li>バイトコードオペランドは <code>CONSTANT_InvokeDynamic_info</code> を指す定数プールインデックスで，後続に 0
+            バイトが 2 つ続きます。
+        </li>
+        <li><code>CONSTANT_InvokeDynamic_info</code> は，ブートストラップメソッド項目と name-and-type 記述子へリンクします。
+        </li>
         <li>ブートストラップ静的引数は，クラスファイルの <code>BootstrapMethods</code> 属性にエンコードされます。</li>
     </ul>
 
@@ -31,7 +34,8 @@ invokedynamic &lt;name&gt; &lt;methodDescriptor&gt; [bootstrap = MethodHandle + 
     <ul>
         <li>初回実行時に JVM はコールサイトを解決し，ブートストラップメソッドを呼び出します。</li>
         <li>ブートストラップメソッドには，lookup 文脈，コールサイト名，メソッド型，静的引数が渡されます。</li>
-        <li>戻り値は null でない <code>CallSite</code> であり，その target 型はコールサイト記述子と完全一致する必要があります。</li>
+        <li>戻り値は null でない <code>CallSite</code> であり，その target 型はコールサイト記述子と完全一致する必要があります。
+        </li>
         <li>リンク成功後の実行では，リンク済みコールサイトが再利用されます。</li>
     </ul>
 
@@ -53,21 +57,27 @@ invokedynamic apply (Ljava/lang/Object;)Ljava/lang/Object;
     <ul>
         <li>検証では，コールサイト記述子に対するオペランド・スタック互換性を確認します。</li>
         <li>リンケージ失敗はリンケージエラー（一般に <code>BootstrapMethodError</code> ラッパー）として報告されます。</li>
-        <li>リンク済みターゲットを実引数型で呼び出せない場合，メソッドハンドル呼び出し型エラーが発生することがあります。</li>
+        <li>リンク済みターゲットを実引数型で呼び出せない場合，メソッドハンドル呼び出し型エラーが発生することがあります。
+        </li>
         <li>この命令に暗黙の objectref はありません。すべての引数は記述子で明示されます。</li>
     </ul>
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li>呼び出し挙動をブートストラップロジックへ意図的に遅延させる場合に <code>invokedynamic</code> を使用します。</li>
+        <li>呼び出し挙動をブートストラップロジックへ意図的に遅延させる場合に <code>invokedynamic</code> を使用します。
+        </li>
         <li>Java コンパイルでは，ラムダ式と文字列連結がこの命令の代表的生成元です。</li>
     </ul>
 
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
-        <li><code>BootstrapMethodError</code>: ブートストラップメソッドがコールサイトリンクに失敗した場合（例: 例外スロー，null 返却，不整合な target 型を持つ CallSite の返却）。</li>
-        <li><code>LinkageError</code>: シンボリック参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
-        <li><code>IncompatibleClassChangeError</code>: 解決されたメソッドハンドルが不正，または解決されたコールサイトが不正な場合。</li>
+        <li><code>BootstrapMethodError</code>: ブートストラップメソッドがコールサイトリンクに失敗した場合（例: 例外スロー，null
+            返却，不整合な target 型を持つ CallSite の返却）。
+        </li>
+        <li><code>LinkageError</code>: シンボリック参照を解決できない場合，または解決先メソッドにアクセスできない場合。
+        </li>
+        <li><code>IncompatibleClassChangeError</code>: 解決されたメソッドハンドルが不正，または解決されたコールサイトが不正な場合。
+        </li>
         <li><code>WrongMethodTypeException</code>: 実引数型が実行時にコールサイト記述子と一致しない場合。</li>
     </ul>
 </div>

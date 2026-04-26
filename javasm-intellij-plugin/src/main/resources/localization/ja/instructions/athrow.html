@@ -4,9 +4,11 @@
     <p><b>{link:athrow}</b> - <code>0xbf</code> (191)</p>
 
     <h4>目的</h4>
-    <p>オペランド・スタック先頭の例外オブジェクトをスローします。オブジェクトは <code>java.lang.Throwable</code> のサブクラス参照である必要があります。</p>
+    <p>オペランド・スタック先頭の例外オブジェクトをスローします。オブジェクトは <code>java.lang.Throwable</code>
+        のサブクラス参照である必要があります。</p>
     <p>
-        <code>athrow</code> 実行後，現在命令列の通常実行は継続しません。JVM は現在フレームで例外ハンドラ探索を開始し，必要に応じてフレームをアンロードして呼び出し元に伝播します。例外がキャッチされない場合は，スレッドが終了します。
+        <code>athrow</code> 実行後，現在命令列の通常実行は継続しません。JVM
+        は現在フレームで例外ハンドラ探索を開始し，必要に応じてフレームをアンロードして呼び出し元に伝播します。例外がキャッチされない場合は，スレッドが終了します。
     </p>
 
     <h5><b>オペランド:</b> なし</h5>
@@ -32,9 +34,12 @@
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
         <li><code>NullPointerException</code>: スタック先頭参照が <code>null</code> の場合。</li>
-        <li><code>ClassCastException</code>: スタック先頭参照が <code>java.lang.Throwable</code> のインスタンスでない場合。</li>
+        <li><code>ClassCastException</code>: スタック先頭参照が <code>java.lang.Throwable</code> のインスタンスでない場合。
+        </li>
         <li><code>NoClassDefFoundError</code>: スタック先頭参照のクラスが見つからない場合。</li>
-        <li><code>IncompatibleClassChangeError</code>: スタック先頭参照のクラスが <code>java.lang.Throwable</code> でない場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: スタック先頭参照のクラスが <code>java.lang.Throwable</code>
+            でない場合。
+        </li>
     </ul>
 </div>
 

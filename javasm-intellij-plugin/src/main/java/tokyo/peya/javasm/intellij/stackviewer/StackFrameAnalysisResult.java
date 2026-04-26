@@ -11,19 +11,15 @@ import java.util.Collections;
 public record StackFrameAnalysisResult(
         @NotNull
         Multimap<MethodWrapper, InstructionUIElement> instructions
-)
-{
-    public Collection<MethodWrapper> getMethods()
-    {
+) {
+    public Collection<MethodWrapper> getMethods() {
         return this.instructions.keySet();
     }
 
     @NotNull
     public Collection<InstructionUIElement> getInstructions(@NotNull String methodName,
-                                                            @NotNull String methodDescriptor)
-    {
-        for (MethodWrapper wrapper : this.instructions.keySet())
-        {
+                                                            @NotNull String methodDescriptor) {
+        for (MethodWrapper wrapper : this.instructions.keySet()) {
             MethodNode methodNode = wrapper.method();
             if (methodNode.name.equals(methodName) && methodNode.desc.equals(methodDescriptor))
                 return this.instructions.get(wrapper);
@@ -32,8 +28,7 @@ public record StackFrameAnalysisResult(
         return Collections.emptyList();
     }
 
-    public Collection<InstructionUIElement> getInstructions(@NotNull MethodWrapper method)
-    {
+    public Collection<InstructionUIElement> getInstructions(@NotNull MethodWrapper method) {
         if (this.instructions.containsKey(method))
             return this.instructions.get(method);
 
@@ -42,13 +37,11 @@ public record StackFrameAnalysisResult(
 
     @Nullable
     public InstructionUIElement getInstructionAt(@NotNull String methodName, @NotNull String methodDescriptor,
-                                                 int instructionOffset)
-    {
+                                                 int instructionOffset) {
         Collection<InstructionUIElement> instructionElements = this.getInstructions(methodName, methodDescriptor);
         if (instructionElements.isEmpty())
             return null;
-        for (InstructionUIElement element : instructionElements)
-        {
+        for (InstructionUIElement element : instructionElements) {
             if (element.instructionOffset() == instructionOffset)
                 return element;
         }

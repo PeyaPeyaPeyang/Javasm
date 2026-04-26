@@ -10,16 +10,13 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.BooleanNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.StringNode;
 
-public class JVMScalarNode extends ANTLRPsiNode
-{
-    public JVMScalarNode(@NotNull ASTNode node)
-    {
+public class JVMScalarNode extends ANTLRPsiNode {
+    public JVMScalarNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public PsiElement getScalarNode()
-    {
+    public PsiElement getScalarNode() {
         PsiElement node = PsiTreeUtil.findChildOfType(this, StringNode.class);
         if (node == null)
             node = PsiTreeUtil.findChildOfType(this, NumberNode.class);
@@ -30,13 +27,11 @@ public class JVMScalarNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public Object getScalarValue()
-    {
+    public Object getScalarValue() {
         PsiElement scalarNode = this.getScalarNode();
         if (scalarNode == null)
             return null;
-        return switch (scalarNode)
-        {
+        return switch (scalarNode) {
             case StringNode stringNode -> stringNode.toStringValue();
             case NumberNode numberNode -> numberNode.toNumber();
             case BooleanNode booleanNode -> booleanNode.toBoolean();

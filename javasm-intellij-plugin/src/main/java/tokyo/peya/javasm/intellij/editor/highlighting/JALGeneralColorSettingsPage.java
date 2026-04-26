@@ -6,17 +6,16 @@ import com.intellij.openapi.options.colors.AttributesDescriptor;
 import com.intellij.openapi.options.colors.ColorDescriptor;
 import com.intellij.openapi.options.colors.ColorSettingsPage;
 import com.intellij.openapi.util.NlsContexts;
-import javax.swing.Icon;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.Assets;
 import tokyo.peya.javasm.intellij.utils.JALMessages;
 
+import javax.swing.*;
 import java.util.Map;
 
-public class JALGeneralColorSettingsPage implements ColorSettingsPage
-{
+public class JALGeneralColorSettingsPage implements ColorSettingsPage {
     private static final AttributesDescriptor[] DESCRIPTORS = {
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.comment.block"), JALSyntaxHighlighter.BLOCK_COMMENT),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.comment.line"), JALSyntaxHighlighter.COMMENT),
@@ -70,20 +69,17 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
     };
 
     @Override
-    public @Nullable Icon getIcon()
-    {
+    public @Nullable Icon getIcon() {
         return Assets.JAL;
     }
 
     @Override
-    public @NotNull SyntaxHighlighter getHighlighter()
-    {
+    public @NotNull SyntaxHighlighter getHighlighter() {
         return new JALSyntaxHighlighter();
     }
 
     @Override
-    public @NonNls @NotNull String getDemoText()
-    {
+    public @NonNls @NotNull String getDemoText() {
         return """
                 public class TestClas (
                   major_version=65,
@@ -199,26 +195,22 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage
     }
 
     @Override
-    public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap()
-    {
+    public @Nullable Map<String, TextAttributesKey> getAdditionalHighlightingTagToDescriptorMap() {
         return null;
     }
 
     @Override
-    public AttributesDescriptor @NotNull [] getAttributeDescriptors()
-    {
+    public AttributesDescriptor @NotNull [] getAttributeDescriptors() {
         return DESCRIPTORS;
     }
 
     @Override
-    public ColorDescriptor @NotNull [] getColorDescriptors()
-    {
+    public ColorDescriptor @NotNull [] getColorDescriptors() {
         return ColorDescriptor.EMPTY_ARRAY;
     }
 
     @Override
-    public @NotNull @NlsContexts.ConfigurableName String getDisplayName()
-    {
+    public @NotNull @NlsContexts.ConfigurableName String getDisplayName() {
         return JALMessages.message("jal.editor.highlight.settings.title");
     }
 }

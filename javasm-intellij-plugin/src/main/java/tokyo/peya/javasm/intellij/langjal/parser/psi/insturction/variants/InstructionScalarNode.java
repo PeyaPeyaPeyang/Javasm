@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.JVMScalarNode;
 
-public class InstructionScalarNode extends InstructionNode
-{
-    public InstructionScalarNode(@NotNull ASTNode node)
-    {
+public class InstructionScalarNode extends InstructionNode {
+    public InstructionScalarNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @NotNull
-    public JVMScalarNode getScalarNode()
-    {
+    public JVMScalarNode getScalarNode() {
         JVMScalarNode scalarNode = PsiTreeUtil.findChildOfType(this, JVMScalarNode.class);
         if (scalarNode == null)
             throw new IllegalStateException("InstructionScalarNode must have a JVMScalarNode child");
@@ -24,8 +21,7 @@ public class InstructionScalarNode extends InstructionNode
     }
 
     @Nullable
-    public Object getScalarValue()
-    {
+    public Object getScalarValue() {
         return this.getScalarNode().getScalarValue();
     }
 }

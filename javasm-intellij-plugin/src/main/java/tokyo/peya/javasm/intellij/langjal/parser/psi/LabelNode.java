@@ -6,16 +6,13 @@ import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.IdentifierDefSubtree;
 import org.jetbrains.annotations.NotNull;
 
-public class LabelNode extends IdentifierDefSubtree
-{
-    public LabelNode(@NotNull ASTNode node, @NotNull IElementType idElementType)
-    {
+public class LabelNode extends IdentifierDefSubtree {
+    public LabelNode(@NotNull ASTNode node, @NotNull IElementType idElementType) {
         super(node, idElementType);
     }
 
     @NotNull
-    public LabelNameNode getLabelNameNode()
-    {
+    public LabelNameNode getLabelNameNode() {
         LabelNameNode labelNameNode = PsiTreeUtil.getChildOfType(this, LabelNameNode.class);
         if (labelNameNode == null)
             throw new IllegalStateException("LabelNameNode is not found in " + this);
@@ -23,14 +20,12 @@ public class LabelNode extends IdentifierDefSubtree
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return this.getLabelNameNode().getText();
     }
 
     @NotNull
-    public String getLabelName()
-    {
+    public String getLabelName() {
         return this.getLabelNameNode().getText();
     }
 }

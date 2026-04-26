@@ -7,12 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 
 @Getter
-public class AccessLevelNode extends ANTLRPsiNode
-{
+public class AccessLevelNode extends ANTLRPsiNode {
     private final AccessLevel accessLevel;
 
-    public AccessLevelNode(@NotNull ASTNode node)
-    {
+    public AccessLevelNode(@NotNull ASTNode node) {
         super(node);
 
         String text = node.getText();

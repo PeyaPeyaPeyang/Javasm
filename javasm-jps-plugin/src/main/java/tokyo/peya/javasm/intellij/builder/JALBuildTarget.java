@@ -20,38 +20,32 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor>
-{
+public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor> {
     private final JpsModule module;
 
-    protected JALBuildTarget(@NotNull JpsModule module)
-    {
+    protected JALBuildTarget(@NotNull JpsModule module) {
         super(JALBuildTargetType.getInstance());
         this.module = module;
     }
 
     @Override
-    public @NotNull String getPresentableName()
-    {
+    public @NotNull String getPresentableName() {
         return "JAL Build Target for " + this.module.getName();
     }
 
     @Override
-    public @NotNull @Unmodifiable Collection<File> getOutputRoots(@NotNull CompileContext context)
-    {
+    public @NotNull @Unmodifiable Collection<File> getOutputRoots(@NotNull CompileContext context) {
         return super.getOutputRoots(context);
     }
 
     @Override
-    public @NotNull String getId()
-    {
+    public @NotNull String getId() {
         return "JALBuildTarget:" + this.module.getName();
     }
 
     @Override
     public @NotNull Collection<BuildTarget<?>> computeDependencies(@NotNull BuildTargetRegistry buildTargetRegistry,
-                                                                   @NotNull TargetOutputIndex targetOutputIndex)
-    {
+                                                                   @NotNull TargetOutputIndex targetOutputIndex) {
         return List.of();
     }
 
@@ -59,14 +53,11 @@ public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor>
     public @NotNull @Unmodifiable List<JALBuildRootDescriptor> computeRootDescriptors(@NotNull JpsModel jpsModel,
                                                                                       @NotNull ModuleExcludeIndex moduleExcludeIndex,
                                                                                       @NotNull IgnoredFileIndex ignoredFileIndex,
-                                                                                      @NotNull BuildDataPaths buildDataPaths)
-    {
+                                                                                      @NotNull BuildDataPaths buildDataPaths) {
         List<JALBuildRootDescriptor> rootDescriptors = new ArrayList<>();
-        for (JpsModuleSourceRoot roots : this.module.getSourceRoots())
-        {
+        for (JpsModuleSourceRoot roots : this.module.getSourceRoots()) {
             File rootFile = JpsPathUtil.urlToFile(roots.getUrl());
-            if (rootFile.isDirectory())
-            {
+            if (rootFile.isDirectory()) {
                 JALBuildRootDescriptor rootDescriptor = new JALBuildRootDescriptor(rootFile, this);
                 rootDescriptors.add(rootDescriptor);
             }
@@ -77,8 +68,7 @@ public class JALBuildTarget extends BuildTarget<JALBuildRootDescriptor>
 
     @Override
     public JALBuildRootDescriptor findRootDescriptor(@NotNull String id,
-                                                     @NotNull BuildRootIndex rootIndex)
-    {
+                                                     @NotNull BuildRootIndex rootIndex) {
         Collection<JALBuildRootDescriptor> descriptors = rootIndex.getTargetRoots(this, null);
 
         for (JALBuildRootDescriptor descriptor : descriptors)

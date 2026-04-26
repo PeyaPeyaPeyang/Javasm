@@ -22,10 +22,8 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 
 @UtilityClass
-public class PSIExecutorUtil
-{
-    public static boolean hasMainMethod(@NotNull JALFile jalFile)
-    {
+public class PSIExecutorUtil {
+    public static boolean hasMainMethod(@NotNull JALFile jalFile) {
         ClassDefinitionNode classDefinition = PsiTreeUtil.findChildOfType(jalFile, ClassDefinitionNode.class);
         if (classDefinition == null)
             return false; // クラス定義が見つからない場合はメインメソッドがない
@@ -33,10 +31,8 @@ public class PSIExecutorUtil
         return hasMainMethod(classDefinition);
     }
 
-    public static boolean hasMainMethod(@NotNull ClassDefinitionNode classDefinition)
-    {
-        for (MethodDefinitionNode method : classDefinition.getMethods())
-        {
+    public static boolean hasMainMethod(@NotNull ClassDefinitionNode classDefinition) {
+        for (MethodDefinitionNode method : classDefinition.getMethods()) {
             if (isMainMethod(method))
                 return true; // メインメソッドが見つかった
         }
@@ -44,16 +40,14 @@ public class PSIExecutorUtil
         return false; // メインメソッドが見つからなかった
     }
 
-    public static boolean isAccessibleClass(@NotNull ClassDefinitionNode clazz)
-    {
+    public static boolean isAccessibleClass(@NotNull ClassDefinitionNode clazz) {
         AccessLevel accessLevel = clazz.getAccessLevel();
         AccessAttributeSet attributes = clazz.getAccessAttributes();
 
         return accessLevel == AccessLevel.PUBLIC && attributes.isNormalClass();
     }
 
-    public static boolean isMainMethod(@NotNull MethodDefinitionNode method)
-    {
+    public static boolean isMainMethod(@NotNull MethodDefinitionNode method) {
         AccessLevel accessLevel = method.getAccessLevel();
         AccessAttributeSet attributes = method.getAccessAttributes();
         String name = method.getMethodName();
@@ -66,18 +60,14 @@ public class PSIExecutorUtil
         else if (!attributes.has(AccessAttribute.STATIC))
             return false; // メインメソッドはstaticでなければならない
 
-        try
-        {
+        try {
             return method.getMethodDescriptor().equals("([Ljava/lang/String;)V");
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return false; // メソッドのシグネチャが無効な場合はメインメソッドではない
         }
     }
 
-    public static boolean isInSourceRoot(@NotNull PsiElement element)
-    {
+    public static boolean isInSourceRoot(@NotNull PsiElement element) {
         Module module = ModuleUtilCore.findModuleForPsiElement(element);
         if (module == null)
             return false; // モジュールが見つからない場合はソースルートではない
@@ -95,8 +85,7 @@ public class PSIExecutorUtil
     }
 
     @Nullable
-    public static ClassNameValidationResult validateClassName(@NotNull ClassDefinitionNode clazz)
-    {
+    public static ClassNameValidationResult validateClassName(@NotNull ClassDefinitionNode clazz) {
         JALFile file = (JALFile) clazz.getContainingFile();
         Project project = file.getProject();
         ProjectFileIndex fileIndex = ProjectFileIndex.getInstance(project);
@@ -112,12 +101,9 @@ public class PSIExecutorUtil
         // 一致しなかったらエラーを出す。
         Path sourceRootPath = sourceRoot.toNioPath();
         Path expectedPath;
-        try
-        {
+        try {
             expectedPath = sourceRootPath.resolve(packageName).resolve(className + ".jal");
-        }
-        catch (InvalidPathException e)
-        {
+        } catch (InvalidPathException e) {
             return new ClassNameValidationResult(
                     true,
                     sourceRootPath.resolve(className + ".jal"),
@@ -140,5 +126,6 @@ public class PSIExecutorUtil
             Path expectedPath,
             @NotNull
             Path relativePathFromSourceRoot
-    ) {}
+    ) {
+    }
 }

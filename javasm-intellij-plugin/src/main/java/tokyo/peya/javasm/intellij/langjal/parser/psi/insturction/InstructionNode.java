@@ -9,16 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.editor.linenumber.InstructionOffsetCalculator;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodBodyNode;
 
-public class InstructionNode extends ANTLRPsiNode
-{
-    public InstructionNode(@NotNull ASTNode node)
-    {
+public class InstructionNode extends ANTLRPsiNode {
+    public InstructionNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public String getInstructionName()
-    {
+    public String getInstructionName() {
         InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
         if (instructionNameNode == null)
             return null;
@@ -26,8 +23,7 @@ public class InstructionNode extends ANTLRPsiNode
         return instructionNameNode.getInstructionName();
     }
 
-    public int getOpcode()
-    {
+    public int getOpcode() {
         InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
         if (instructionNameNode == null)
             return -1;
@@ -37,22 +33,19 @@ public class InstructionNode extends ANTLRPsiNode
 
 
     @Nullable
-    public <T extends PsiElement> T getInstructionArgument(@NotNull Class<T> clazz)
-    {
+    public <T extends PsiElement> T getInstructionArgument(@NotNull Class<T> clazz) {
         return PsiTreeUtil.findChildOfType(this, clazz);
     }
 
     @Nullable
-    public <T extends PsiElement> T getInstructionArgument(@NotNull Class<T> clazz, int index)
-    {
+    public <T extends PsiElement> T getInstructionArgument(@NotNull Class<T> clazz, int index) {
         PsiElement[] elements = PsiTreeUtil.getChildrenOfType(this, clazz);
         if (elements == null || index < 0 || index >= elements.length)
             return null;
         return clazz.cast(elements[index]);
     }
 
-    public int getInstructionSize()
-    {
+    public int getInstructionSize() {
         InstructionNameNode instructionNameNode = PsiTreeUtil.findChildOfType(this, InstructionNameNode.class);
         if (instructionNameNode == null)
             throw new IllegalStateException();
@@ -60,8 +53,7 @@ public class InstructionNode extends ANTLRPsiNode
         return instructionNameNode.getInstructionSize();
     }
 
-    public final int getStartInstructionOffset() throws IllegalStateException
-    {
+    public final int getStartInstructionOffset() throws IllegalStateException {
         MethodBodyNode methodBody = PsiTreeUtil.getParentOfType(this, MethodBodyNode.class);
         if (methodBody == null)
             throw new IllegalStateException();
@@ -74,8 +66,7 @@ public class InstructionNode extends ANTLRPsiNode
         return offset;
     }
 
-    public final int getCumulativeOffset()
-    {
+    public final int getCumulativeOffset() {
         int startOffset = this.getStartInstructionOffset();
         int instructionSize = this.getInstructionSize();
         if (instructionSize <= 0)

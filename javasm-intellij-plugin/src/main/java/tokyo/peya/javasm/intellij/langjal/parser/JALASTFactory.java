@@ -16,21 +16,16 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionParseContributor;
 import tokyo.peya.langjal.compiler.JALLexer;
 
-public class JALASTFactory extends DefaultASTFactoryImpl
-{
+public class JALASTFactory extends DefaultASTFactoryImpl {
     @Override
-    public @NotNull CompositeElement createComposite(@NotNull IElementType type)
-    {
+    public @NotNull CompositeElement createComposite(@NotNull IElementType type) {
         return super.createComposite(type);
     }
 
     @Override
-    public @NotNull LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text)
-    {
-        if (type instanceof TokenIElementType token)
-        {
-            switch (token.getANTLRTokenType())
-            {
+    public @NotNull LeafElement createLeaf(@NotNull IElementType type, @NotNull CharSequence text) {
+        if (type instanceof TokenIElementType token) {
+            switch (token.getANTLRTokenType()) {
                 case JALLexer.ID:
                     return new IdentifierNode(type, text);
                 case JALLexer.NUMBER:

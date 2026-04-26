@@ -4,7 +4,8 @@
     <p><b>{link:instanceof}</b> - <code>0xc1</code> (193)</p>
 
     <h4>目的</h4>
-    <p>オペランド・スタック先頭のオブジェクト参照が，指定された参照型のインスタンスかどうかを判定します。真なら <code>1</code>，偽なら <code>0</code> をプッシュします。</p>
+    <p>オペランド・スタック先頭のオブジェクト参照が，指定された参照型のインスタンスかどうかを判定します。真なら
+        <code>1</code>，偽なら <code>0</code> をプッシュします。</p>
     <p>
         対象型は，実行時定数プールのシンボリッククラス参照を解決して取得されます。
     </p>
@@ -48,12 +49,15 @@
     <ul>
         <li>検証では，参照互換の入力が必要であり，後続フレームに対して <code>int</code> 結果が保証されます。</li>
         <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
-        <li><code>instanceof</code> には <code>ClassCastException</code> 経路はなく，判定失敗時は <code>0</code> を返します。</li>
+        <li><code>instanceof</code> には <code>ClassCastException</code> 経路はなく，判定失敗時は <code>0</code> を返します。
+        </li>
     </ul>
 
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
-        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー: シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code>
+            などのリンケージエラー: シンボリック型参照を解決できない場合，または解決後の型にアクセスできない場合。
+        </li>
     </ul>
 </div>
 

@@ -8,8 +8,7 @@ import tokyo.peya.langjal.analyser.stack.StackElementType;
 
 @Getter
 @AllArgsConstructor
-public enum StackUIColorPalette
-{
+public enum StackUIColorPalette {
     TOP(
             "TOP",
             new JBColor(0x333333, 0xCCCCCC),
@@ -66,15 +65,8 @@ public enum StackUIColorPalette
     private final JBColor color;
     private final JBColor backgroundColor;
 
-    public StackUIElement toUIElement(@NotNull StackUIElement.DisplayType displayType)
-    {
-        return new StackUIElement(this.displayName, displayType, this.backgroundColor, this.color);
-    }
-
-    public static StackUIColorPalette fromStackElementType(@NotNull StackElementType type)
-    {
-        return switch (type)
-        {
+    public static StackUIColorPalette fromStackElementType(@NotNull StackElementType type) {
+        return switch (type) {
             case INTEGER -> INTEGER;
             case FLOAT -> FLOAT;
             case LONG -> LONG;
@@ -88,13 +80,16 @@ public enum StackUIColorPalette
     }
 
     public static StackUIElement toUIObjectElement(@NotNull StackUIElement.DisplayType displayType,
-                                                   @NotNull String objectName)
-    {
+                                                   @NotNull String objectName) {
         return new StackUIElement(
                 "Object: " + objectName,
                 displayType,
                 OBJECT.backgroundColor,
                 OBJECT.color
         );
+    }
+
+    public StackUIElement toUIElement(@NotNull StackUIElement.DisplayType displayType) {
+        return new StackUIElement(this.displayName, displayType, this.backgroundColor, this.color);
     }
 }

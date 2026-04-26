@@ -14,11 +14,9 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionName
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.utils.JALMessages;
 
-public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
-{
+public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider {
     @Override
-    public @Nullable LineMarkerInfo<?> getLineMarkerInfo(@NotNull PsiElement element)
-    {
+    public @Nullable LineMarkerInfo<?> getLineMarkerInfo(@NotNull PsiElement element) {
         if (!(element instanceof InstructionNameNode))
             return null;
 
@@ -27,12 +25,9 @@ public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
             return null;
 
         int cumulative;
-        try
-        {
+        try {
             cumulative = instr.getStartInstructionOffset();
-        }
-        catch (IllegalStateException e)
-        {
+        } catch (IllegalStateException e) {
             // コードが不完全だったり構文エラーのときにおきる。
             return null;
         }
@@ -51,11 +46,9 @@ public class JALCumulativeOffsetLineMarkerProvider implements LineMarkerProvider
                 GutterIconRenderer.Alignment.RIGHT,
                 () -> tooltip
 
-        )
-        {
+        ) {
             @Override
-            public GutterIconRenderer createGutterRenderer()
-            {
+            public GutterIconRenderer createGutterRenderer() {
                 return new CumulativeOffsetGutterRenderer(this, editor, cumulative);
             }
         };

@@ -16,18 +16,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class JALInstructionDocumentProvider extends AbstractDocumentationProvider
-{
+public class JALInstructionDocumentProvider extends AbstractDocumentationProvider {
     private static final String DOCUMENTATION_PATH = "instructions";
     private static final String LOCALISED_DOCUMENTATION_PATH = "localization/%s/instructions";
     private static final Pattern INSTRUCTION_NAME_PATTERN =
@@ -37,15 +32,96 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
 
     private static final Map<String, String> DOCUMENTS = new HashMap<>();
 
-    public JALInstructionDocumentProvider()
-    {
+    public JALInstructionDocumentProvider() {
         if (DOCUMENTS.isEmpty())
             loadHTMLFiles();
     }
 
+    public static List<String> loadHTMLFiles() {
+        List<String> htmlContents = new ArrayList<>();
+        try {
+            ClassLoader classLoader = JALInstructionDocumentProvider.class.getClassLoader();
+
+            String lang = JALMessages.getLocale().getLanguage();
+            String localizedPath = String.format(LOCALISED_DOCUMENTATION_PATH, lang);
+
+            // 1. ローカライズ優先
+            loadFromPath(classLoader, localizedPath, true);
+
+            // 2. デフォルト（未登録のみ）
+            loadFromPath(classLoader, DOCUMENTATION_PATH, false);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load HTML files from JAR", e);
+        }
+
+        return htmlContents;
+    }
+
+    private static void loadFromPath(ClassLoader classLoader, String path, boolean overwrite) throws IOException {
+        Enumeration<URL> resources = classLoader.getResources(path);
+
+        while (resources.hasMoreElements()) {
+            URL url = resources.nextElement();
+
+            if (!"jar".equals(url.getProtocol()))
+                throw new RuntimeException("This method supports JAR protocol only!");
+
+            String urlPath = url.getPath();
+            String jarPath = urlPath.substring("file:".length(), urlPath.indexOf("!"));
+            jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
+
+            try (ZipFile jarFile = new ZipFile(jarPath)) {
+                Enumeration<? extends ZipEntry> entries = jarFile.entries();
+
+                while (entries.hasMoreElements()) {
+                    ZipEntry entry = entries.nextElement();
+
+                    if (!entry.isDirectory()
+                            && entry.getName().startsWith(path + "/")
+                            && entry.getName().endsWith(".html")) {
+                        String content = new String(
+                                jarFile.getInputStream(entry).readAllBytes(),
+                                StandardCharsets.UTF_8
+                        );
+
+                        content = replaceContents(content);
+                        String[] instructionNames = extractInstructionNames(content);
+
+                        for (String instructionName : instructionNames) {
+                            if (overwrite || !DOCUMENTS.containsKey(instructionName)) {
+                                DOCUMENTS.put(instructionName, content);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @NotNull
+    private static String[] extractInstructionNames(@NotNull String content) {
+        Matcher matcher = INSTRUCTION_NAME_PATTERN.matcher(content);
+        if (!matcher.find())
+            return new String[0];
+        String instructionNames = matcher.group(1);
+        return instructionNames.split(",\\s*");
+    }
+
+    @NotNull
+    private static String replaceContents(@NotNull String content) {
+        Matcher matcher = INSTRUCTION_LINK_PATTERN.matcher(content);
+        StringBuilder sb = new StringBuilder();
+        while (matcher.find()) {
+            String instructionName = matcher.group(1);
+            String link = JVMDocumentationLinkProvider.getDocumentationLink(instructionName);
+            matcher.appendReplacement(sb, "<a href=\"" + link + "\">" + instructionName + "</a>");
+        }
+        matcher.appendTail(sb);
+        return sb.toString();
+    }
+
     @Override
-    public @Nullable @Nls String generateDoc(PsiElement element, @Nullable PsiElement originalElement)
-    {
+    public @Nullable @Nls String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
         if (!(originalElement instanceof InstructionNameNode instructionNameNode))
             return null;
         String instructionName = instructionNameNode.getInstructionName();
@@ -58,8 +134,7 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
 
     @Override
     public @Nullable PsiElement getDocumentationElementForLookupItem(PsiManager psiManager, Object object,
-                                                                     PsiElement element)
-    {
+                                                                     PsiElement element) {
         if (element instanceof InstructionNameNode instructionNameNode)
             return instructionNameNode;
         else if (object instanceof InstructionNode instruction)
@@ -70,8 +145,7 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
 
     @Override
     public @Nullable PsiElement getCustomDocumentationElement(@NotNull Editor editor, @NotNull PsiFile file,
-                                                              @Nullable PsiElement contextElement, int targetOffset)
-    {
+                                                              @Nullable PsiElement contextElement, int targetOffset) {
         PsiElement element = file.findElementAt(targetOffset);
         if (element instanceof InstructionNameNode instructionNameNode)
             return instructionNameNode;
@@ -79,101 +153,5 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
             return instructionNode;
 
         return null;
-    }
-    public static List<String> loadHTMLFiles()
-    {
-        List<String> htmlContents = new ArrayList<>();
-        try
-        {
-            ClassLoader classLoader = JALInstructionDocumentProvider.class.getClassLoader();
-
-            String lang = JALMessages.getLocale().getLanguage();
-            String localizedPath = String.format(LOCALISED_DOCUMENTATION_PATH, lang);
-
-            // 1. ローカライズ優先
-            loadFromPath(classLoader, localizedPath, true);
-
-            // 2. デフォルト（未登録のみ）
-            loadFromPath(classLoader, DOCUMENTATION_PATH, false);
-        }
-        catch (IOException e)
-        {
-            throw new RuntimeException("Failed to load HTML files from JAR", e);
-        }
-
-        return htmlContents;
-    }
-
-    private static void loadFromPath(ClassLoader classLoader, String path, boolean overwrite) throws IOException
-    {
-        Enumeration<URL> resources = classLoader.getResources(path);
-
-        while (resources.hasMoreElements())
-        {
-            URL url = resources.nextElement();
-
-            if (!"jar".equals(url.getProtocol()))
-                throw new RuntimeException("This method supports JAR protocol only!");
-
-            String urlPath = url.getPath();
-            String jarPath = urlPath.substring("file:".length(), urlPath.indexOf("!"));
-            jarPath = URLDecoder.decode(jarPath, StandardCharsets.UTF_8);
-
-            try (ZipFile jarFile = new ZipFile(jarPath))
-            {
-                Enumeration<? extends ZipEntry> entries = jarFile.entries();
-
-                while (entries.hasMoreElements())
-                {
-                    ZipEntry entry = entries.nextElement();
-
-                    if (!entry.isDirectory()
-                            && entry.getName().startsWith(path + "/")
-                            && entry.getName().endsWith(".html"))
-                    {
-                        String content = new String(
-                                jarFile.getInputStream(entry).readAllBytes(),
-                                StandardCharsets.UTF_8
-                        );
-
-                        content = replaceContents(content);
-                        String[] instructionNames = extractInstructionNames(content);
-
-                        for (String instructionName : instructionNames)
-                        {
-                            if (overwrite || !DOCUMENTS.containsKey(instructionName))
-                            {
-                                DOCUMENTS.put(instructionName, content);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @NotNull
-    private static String[] extractInstructionNames(@NotNull String content)
-    {
-        Matcher matcher = INSTRUCTION_NAME_PATTERN.matcher(content);
-        if (!matcher.find())
-            return new String[0];
-        String instructionNames = matcher.group(1);
-        return instructionNames.split(",\\s*");
-    }
-
-    @NotNull
-    private static String replaceContents(@NotNull String content)
-    {
-        Matcher matcher = INSTRUCTION_LINK_PATTERN.matcher(content);
-        StringBuilder sb = new StringBuilder();
-        while (matcher.find())
-        {
-            String instructionName = matcher.group(1);
-            String link = JVMDocumentationLinkProvider.getDocumentationLink(instructionName);
-            matcher.appendReplacement(sb, "<a href=\"" + link + "\">" + instructionName + "</a>");
-        }
-        matcher.appendTail(sb);
-        return sb.toString();
     }
 }

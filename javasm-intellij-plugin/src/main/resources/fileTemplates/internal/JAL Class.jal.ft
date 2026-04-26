@@ -1,23 +1,23 @@
 #if($PACKAGE_NAME && !$PACKAGE_NAME.isEmpty())
-  #set($pathParts = $PACKAGE_NAME.split("\\."))
-  #set($path = "")
-  #foreach($part in $pathParts)
-    #if($foreach.index == 0)
-      #set($path = $part)
-    #else
-      #set($path = "${path}/${part}")
+    #set($pathParts = $PACKAGE_NAME.split("\\."))
+    #set($path = "")
+    #foreach($part in $pathParts)
+        #if($foreach.index == 0)
+            #set($path = $part)
+        #else
+            #set($path = "${path}/${part}")
+        #end
     #end
-  #end
-  #set($fullPath = "${path}/${NAME}")
+    #set($fullPath = "${path}/${NAME}")
 #else
-  #set($fullPath = $NAME)
+    #set($fullPath = $NAME)
 #end
 #set($ref = "->")
 #set($init = "<init>")
 public class $fullPath (
 major_version=65,
-minor_version=0) {
-public $init()V {
+minor_version=0){
+public $init()V{
 aload_0
 invokespecial java/lang/Object$ref$init()V
 return

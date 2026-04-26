@@ -6,16 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.langjal.compiler.jvm.InvocationType;
 
-public class InvokeDynamicMethodHandleTypeNode extends ANTLRPsiNode
-{
-    public InvokeDynamicMethodHandleTypeNode(@NotNull ASTNode node)
-    {
+public class InvokeDynamicMethodHandleTypeNode extends ANTLRPsiNode {
+    public InvokeDynamicMethodHandleTypeNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public InvocationType getMethodHandleType()
-    {
+    public InvocationType getMethodHandleType() {
         return InvocationType.fromName(getText());
     }
 }

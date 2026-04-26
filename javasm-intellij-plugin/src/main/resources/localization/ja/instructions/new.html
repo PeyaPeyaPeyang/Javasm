@@ -9,12 +9,14 @@
         コンストラクタは <code>invokespecial</code> 命令で明示的に呼び出す必要があります。
     </p>
     <p>
-       プッシュされる値は <em>未初期化</em> オブジェクト参照であり，対応するコンストラクタ呼び出しが完了するまで検証器が追跡します。
+        プッシュされる値は <em>未初期化</em> オブジェクト参照であり，対応するコンストラクタ呼び出しが完了するまで検証器が追跡します。
     </p>
 
     <h5><b>オペランド:</b></h5>
     <ul>
-        <li><code>ClassRef</code>: 非配列・非インターフェースクラスを示す <code>CONSTANT_Class_info</code> への定数プールインデックス。</li>
+        <li><code>ClassRef</code>: 非配列・非インターフェースクラスを示す <code>CONSTANT_Class_info</code>
+            への定数プールインデックス。
+        </li>
     </ul>
 
     <h5><b>形式:</b></h5>
@@ -22,7 +24,8 @@
 
     <h5><b>例:</b></h5>
     <ul>
-        <li><code>new java/lang/String</code> の後に <code>invokespecial java/lang/String-&gt;&lt;init&gt;()V</code></li>
+        <li><code>new java/lang/String</code> の後に <code>invokespecial java/lang/String-&gt;&lt;init&gt;()V</code>
+        </li>
         <li><code>new java/util/ArrayList</code> の後に対応コンストラクタを呼び出し</li>
     </ul>
 
@@ -57,9 +60,11 @@
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
         <li><code>OutOfMemoryError</code>: JVM がメモリ不足でオブジェクトを確保できない場合。</li>
-        <li><code>LinkageError</code>: シンボリッククラス参照を解決できない場合，または解決先クラスにアクセスできない場合。</li>
+        <li><code>LinkageError</code>: シンボリッククラス参照を解決できない場合，または解決先クラスにアクセスできない場合。
+        </li>
         <li><code>InstantiationError</code>: 解決先クラスが抽象クラスまたはインターフェースである場合。</li>
-        <li><code>IncompatibleClassChangeError</code>: 解決先がクラスでない場合（配列型やインターフェースなど），またはその他の制約違反がある場合。</li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先がクラスでない場合（配列型やインターフェースなど），またはその他の制約違反がある場合。
+        </li>
     </ul>
 
 </div>

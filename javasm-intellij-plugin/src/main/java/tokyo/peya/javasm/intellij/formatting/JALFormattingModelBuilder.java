@@ -1,13 +1,6 @@
 package tokyo.peya.javasm.intellij.formatting;
 
-import com.intellij.formatting.Alignment;
-import com.intellij.formatting.FormattingContext;
-import com.intellij.formatting.FormattingModel;
-import com.intellij.formatting.FormattingModelBuilder;
-import com.intellij.formatting.FormattingModelProvider;
-import com.intellij.formatting.SpacingBuilder;
-import com.intellij.formatting.Wrap;
-import com.intellij.formatting.WrapType;
+import com.intellij.formatting.*;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
 import com.intellij.psi.codeStyle.CommonCodeStyleSettings;
@@ -15,14 +8,12 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.JALTokens;
 
-public class JALFormattingModelBuilder implements FormattingModelBuilder
-{
+public class JALFormattingModelBuilder implements FormattingModelBuilder {
 
     @Override
     public @NotNull FormattingModel createModel(
             FormattingContext formattingContext
-    )
-    {
+    ) {
         PsiElement element = formattingContext.getPsiElement();
         CodeStyleSettings settings = formattingContext.getCodeStyleSettings();
 
@@ -39,8 +30,7 @@ public class JALFormattingModelBuilder implements FormattingModelBuilder
         );
     }
 
-    private SpacingBuilder createSpacingBuilder(CodeStyleSettings settings)
-    {
+    private SpacingBuilder createSpacingBuilder(CodeStyleSettings settings) {
         CommonCodeStyleSettings jalSettings = settings.getCommonSettings("JAL"); // 言語ID
 
         return new SpacingBuilder(settings, JALLanguage.INSTANCE)

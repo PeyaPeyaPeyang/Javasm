@@ -25,7 +25,8 @@
         この場合，オペランドは 2 バイトへ拡張されます。
     </p>
     <ul>
-        <li><code>wide iinc</code> では，<code>index</code> は符号なし 16 ビット，<code>const</code> は符号付き 16 ビットです。</li>
+        <li><code>wide iinc</code> では，<code>index</code> は符号なし 16 ビット，<code>const</code> は符号付き 16 ビットです。
+        </li>
         <li>加算は 32 ビット 2 の補数 <code>int</code> の算術規則に従います。</li>
     </ul>
 
@@ -61,14 +62,18 @@ local_variables[index] = local_variables[index] + const;
     <h5><b>備考:</b></h5>
     <ul>
         <li><code>int</code> 型のローカル変数にのみ適用できます。<code>long</code> など他の型に使うことはできません。</li>
-        <li><code>iinc</code> は他の算術命令と異なり，スタックへの push/pop を介さずローカル変数スロットを直接更新するため，単純なカウンタ更新では効率的です。</li>
+        <li><code>iinc</code> は他の算術命令と異なり，スタックへの push/pop を介さずローカル変数スロットを直接更新するため，単純なカウンタ更新では効率的です。
+        </li>
         <li>コンパイラは <code>i++</code> や <code>i += constant</code> のような構文でよくこの命令を生成します。</li>
-        <li>すべての算術処理がスタック経由だと仮定するバイトコード計測ツールでは，期待どおり動作しない場合があります。</li>
+        <li>すべての算術処理がスタック経由だと仮定するバイトコード計測ツールでは，期待どおり動作しない場合があります。
+        </li>
     </ul>
 
     <h5><b>検証:</b></h5>
     <ul>
-        <li>検証では，指定インデックスのローカル変数が <code>int</code> 型であり，増分定数が有効な符号付き byte（<code>wide</code> 使用時は short）であることが必要です。</li>
+        <li>検証では，指定インデックスのローカル変数が <code>int</code> 型であり，増分定数が有効な符号付き
+            byte（<code>wide</code> 使用時は short）であることが必要です。
+        </li>
     </ul>
 
     <h5><b>実行時例外とエラー:</b></h5>

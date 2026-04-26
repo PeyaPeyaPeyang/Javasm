@@ -11,16 +11,13 @@ import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class AccessModifierNode extends ANTLRPsiNode
-{
-    public AccessModifierNode(@NotNull ASTNode node)
-    {
+public class AccessModifierNode extends ANTLRPsiNode {
+    public AccessModifierNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @NotNull
-    public AccessLevel getAccessLevel()
-    {
+    public AccessLevel getAccessLevel() {
         AccessLevelNode accessLevelElement = PsiTreeUtil.findChildOfType(this, AccessLevelNode.class);
         if (accessLevelElement == null)
             return AccessLevel.PACKAGE_PRIVATE;
@@ -29,17 +26,16 @@ public class AccessModifierNode extends ANTLRPsiNode
     }
 
     @NotNull
-    public AccessAttributeSet getAccessAttributes()
-    {
+    public AccessAttributeSet getAccessAttributes() {
         PsiElement[] accessAttributeElements = PsiTreeUtil.getChildrenOfType(this, AccessAttributeNode.class);
         if (accessAttributeElements == null || accessAttributeElements.length == 0)
             return AccessAttributeSet.EMPTY;
 
         return new AccessAttributeSet(
                 Arrays.stream(accessAttributeElements)
-                      .map(element -> (AccessAttributeNode) element)
-                      .map(AccessAttributeNode::getAccessAttribute)
-                      .collect(Collectors.toSet())
+                        .map(element -> (AccessAttributeNode) element)
+                        .map(AccessAttributeNode::getAccessAttribute)
+                        .collect(Collectors.toSet())
         );
     }
 }

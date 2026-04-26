@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class InstructionFieldAccessNode extends InstructionNode
-{
-    public InstructionFieldAccessNode(@NotNull ASTNode node)
-    {
+public class InstructionFieldAccessNode extends InstructionNode {
+    public InstructionFieldAccessNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public FieldReferenceNode getFieldReference()
-    {
+    public FieldReferenceNode getFieldReference() {
         FieldReferenceNode fieldReferenceNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNode.class);
         if (fieldReferenceNode == null)
             throw new IllegalStateException("FieldReferenceNode is not found in FieldReferenceArgumentInstructionNode");

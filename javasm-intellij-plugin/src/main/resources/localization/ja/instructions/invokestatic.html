@@ -25,10 +25,14 @@
 &lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
     </pre>
     <ul>
-        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス名。例: <code>java/lang/Math</code></li>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス名。例: <code>java/lang/Math</code>
+        </li>
         <li><b>&lt;methodname&gt;</b>: メソッド名。例: <code>max</code>, <code>abs</code></li>
-        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例: <code>I</code>（int），<code>Ljava/lang/String;</code>（String）</li>
-        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>（void），<code>I</code>（int），<code>Ljava/lang/Object;</code>（Object）</li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例:
+            <code>I</code>（int），<code>Ljava/lang/String;</code>（String）
+        </li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>（void），<code>I</code>（int），<code>Ljava/lang/Object;</code>（Object）
+        </li>
     </ul>
 
     <h5><b>例:</b></h5>
@@ -61,8 +65,10 @@
 
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
-        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
-        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドが static でない場合，または呼び出し型に対して無効なメソッドハンドルである場合。</li>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。
+        </li>
+        <li><code>IncompatibleClassChangeError</code>: 解決先メソッドが static でない場合，または呼び出し型に対して無効なメソッドハンドルである場合。
+        </li>
         <li><code>IllegalAccessError</code>: 現在クラスから解決先メソッドにアクセスできない場合。</li>
         <li><code>WrongMethodTypeException</code>: 実引数型が実行時にメソッド記述子と一致しない場合。</li>
     </ul>

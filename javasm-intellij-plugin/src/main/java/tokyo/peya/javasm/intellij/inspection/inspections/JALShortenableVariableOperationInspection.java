@@ -11,29 +11,12 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
-public class JALShortenableVariableOperationInspection extends AbstractJALInspection
-{
-    public JALShortenableVariableOperationInspection()
-    {
+public class JALShortenableVariableOperationInspection extends AbstractJALInspection {
+    public JALShortenableVariableOperationInspection() {
         super("JALShortenableVariableOperation");
     }
 
-    @Override
-    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                            @NotNull LocalInspectionToolSession session)
-    {
-        return new JALPsiElementVisitor()
-        {
-            @Override
-            protected void visitInstruction(@NotNull InstructionNode node)
-            {
-                checkInstruction(node, holder);
-            }
-        };
-    }
-
-    private static void checkInstruction(@NotNull InstructionNode node, @NotNull ProblemsHolder holder)
-    {
+    private static void checkInstruction(@NotNull InstructionNode node, @NotNull ProblemsHolder holder) {
         int opcode = node.getOpcode();
         // EPpcodes.ILOAD ~ EOpcodes.ALOAD,  または EOpcodes.ISTORE ~ EOpcodes.ASTORE のいずれかでなければならない
         if (!((EOpcodes.ILOAD <= opcode && opcode <= EOpcodes.ALOAD) || (EOpcodes.ISTORE <= opcode && opcode <= EOpcodes.ASTORE)))
@@ -44,12 +27,9 @@ public class JALShortenableVariableOperationInspection extends AbstractJALInspec
             return;
 
         Number number;
-        try
-        {
+        try {
             number = argument.toNumber();
-        }
-        catch (Exception ignored)
-        {
+        } catch (Exception ignored) {
             return;
         }
         int value = number.intValue();
@@ -64,5 +44,16 @@ public class JALShortenableVariableOperationInspection extends AbstractJALInspec
                 ProblemHighlightType.WEAK_WARNING,
                 new JALReplaceInstructionQuickFix(newInstructionName, node)
         );
+    }
+
+    @Override
+    protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
+                                                            @NotNull LocalInspectionToolSession session) {
+        return new JALPsiElementVisitor() {
+            @Override
+            protected void visitInstruction(@NotNull InstructionNode node) {
+                checkInstruction(node, holder);
+            }
+        };
     }
 }

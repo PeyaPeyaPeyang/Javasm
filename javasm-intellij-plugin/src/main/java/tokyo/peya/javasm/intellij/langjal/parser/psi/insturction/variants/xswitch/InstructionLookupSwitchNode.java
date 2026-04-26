@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class InstructionLookupSwitchNode extends InstructionNode
-{
-    public InstructionLookupSwitchNode(@NotNull ASTNode node)
-    {
+public class InstructionLookupSwitchNode extends InstructionNode {
+    public InstructionLookupSwitchNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public InstructionLookupSwitchArgumentNode getTableSwitchArgument()
-    {
+    public InstructionLookupSwitchArgumentNode getTableSwitchArgument() {
         return PsiTreeUtil.findChildOfType(
                 this,
                 InstructionLookupSwitchArgumentNode.class
@@ -24,8 +21,7 @@ public class InstructionLookupSwitchNode extends InstructionNode
     }
 
     @Nullable
-    public LabelNameNode getDefaultBranchLabelName()
-    {
+    public LabelNameNode getDefaultBranchLabelName() {
         InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
         if (argumentNode == null)
             return null;
@@ -37,8 +33,7 @@ public class InstructionLookupSwitchNode extends InstructionNode
     }
 
     @NotNull
-    public InstructionLookupSwitchCaseNode[] getCaseBranches()
-    {
+    public InstructionLookupSwitchCaseNode[] getCaseBranches() {
         InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
         if (argumentNode == null)
             return null;
@@ -46,8 +41,7 @@ public class InstructionLookupSwitchNode extends InstructionNode
     }
 
     @Override
-    public int getInstructionSize()
-    {
+    public int getInstructionSize() {
         InstructionLookupSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
         if (argumentNode == null)
             throw new IllegalStateException();

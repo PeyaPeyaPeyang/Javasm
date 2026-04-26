@@ -12,23 +12,19 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNam
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 
-public class ClassReference extends JALElementReference
-{
-    public ClassReference(@NotNull IdentifierNode element)
-    {
+public class ClassReference extends JALElementReference {
+    public ClassReference(@NotNull IdentifierNode element) {
         super(element);
     }
 
     @Override
-    public boolean isSubtree(PsiElement psiElement)
-    {
+    public boolean isSubtree(PsiElement psiElement) {
         return psiElement instanceof ClassNameNode
                 || psiElement instanceof FullQualifiedNameNode;
     }
 
     @Override
-    public @Nullable PsiElement resolve()
-    {
+    public @Nullable PsiElement resolve() {
         Project project = this.myElement.getProject();
 
         String className = getQualifiedName(this.myElement);
@@ -38,8 +34,7 @@ public class ClassReference extends JALElementReference
         return ClassResolutionUtil.resolve(facade, scope, className);
     }
 
-    protected String getQualifiedName(IdentifierNode node)
-    {
+    protected String getQualifiedName(IdentifierNode node) {
         if (node instanceof FullQualifiedNameNode)
             return ((FullQualifiedNameNode) node).getDotName();
         else

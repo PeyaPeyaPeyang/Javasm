@@ -20,14 +20,19 @@
     </p>
 
     <h4>目的</h4>
-    <p>オペランド・スタック先頭の値を，あるプリミティブ型から別のプリミティブ型へ変換します。値はポップされ，変換後の値がプッシュされます。</p>
+    <p>
+        オペランド・スタック先頭の値を，あるプリミティブ型から別のプリミティブ型へ変換します。値はポップされ，変換後の値がプッシュされます。</p>
 
     <h5><b>変換規則:</b></h5>
     <ul>
-        <li><b>浮動小数点から整数への変換（<code>f2i</code>, <code>f2l</code>, <code>d2i</code>, <code>d2l</code>）</b>は 0 方向への丸めです。</li>
+        <li><b>浮動小数点から整数への変換（<code>f2i</code>, <code>f2l</code>, <code>d2i</code>, <code>d2l</code>）</b>は
+            0 方向への丸めです。
+        </li>
         <li>浮動小数点から整数への変換では，<code>NaN</code> は 0 に変換されます。</li>
         <li>範囲外の浮動小数点値は，変換先型の最小値/最大値に丸め込まれます。</li>
-        <li><code>i2b</code>，<code>i2s</code>，<code>i2c</code> は <code>int</code> からの縮小変換です。<code>i2c</code> は符号なし 16 ビット <code>char</code> へゼロ拡張します。</li>
+        <li><code>i2b</code>，<code>i2s</code>，<code>i2c</code> は <code>int</code> からの縮小変換です。<code>i2c</code>
+            は符号なし 16 ビット <code>char</code> へゼロ拡張します。
+        </li>
         <li><code>f2d</code> は拡大変換です。<code>d2f</code> は精度を失う可能性があり，無限大になる場合があります。</li>
     </ul>
 
@@ -50,7 +55,8 @@
 
     <h5><b>カテゴリ/スロットに関する備考:</b></h5>
     <ul>
-        <li><code>long</code>/<code>double</code> を含む変換は，カテゴリ 2 値（スタックスロット 2 つ）を消費または生成します。</li>
+        <li><code>long</code>/<code>double</code> を含む変換は，カテゴリ 2 値（スタックスロット 2 つ）を消費または生成します。
+        </li>
         <li>それ以外のプリミティブ変換結果はすべて カテゴリ 1 です。</li>
     </ul>
 

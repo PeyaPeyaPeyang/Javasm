@@ -8,16 +8,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.MethodReferenceNode;
 import tokyo.peya.langjal.compiler.jvm.InvocationType;
 
-public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode
-{
-    public InvokeDynamicMethodHandleNode(@NotNull ASTNode node)
-    {
+public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode {
+    public InvokeDynamicMethodHandleNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public InvocationType getHandleType()
-    {
+    public InvocationType getHandleType() {
         InvokeDynamicMethodHandleTypeNode handleTypeNode = PsiTreeUtil.findChildOfType(
                 this,
                 InvokeDynamicMethodHandleTypeNode.class
@@ -29,8 +26,7 @@ public class InvokeDynamicMethodHandleNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public MethodReferenceNode getMethodReference()
-    {
+    public MethodReferenceNode getMethodReference() {
         MethodReferenceNode methodReferenceNode = PsiTreeUtil.findChildOfType(this, MethodReferenceNode.class);
 
         return methodReferenceNode;

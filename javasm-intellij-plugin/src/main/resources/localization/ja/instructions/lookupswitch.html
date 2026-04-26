@@ -4,7 +4,8 @@
     <p><b>{link:lookupswitch}</b> - <code>0xab</code> (171)</p>
 
     <h4>目的</h4>
-    <p>オペランド・スタック先頭の <code>int</code> 値に基づき switch 形式の分岐を行います。キーを match-offset の組と照合し，一致したラベルへ分岐します。一致しない場合は <code>default</code> ラベルへ分岐します。</p>
+    <p>オペランド・スタック先頭の <code>int</code> 値に基づき switch 形式の分岐を行います。キーを match-offset
+        の組と照合し，一致したラベルへ分岐します。一致しない場合は <code>default</code> ラベルへ分岐します。</p>
 
     <h5><b>オペランド:</b></h5>
     <ul>
@@ -51,7 +52,8 @@ lookupswitch {
 
     <h5><b>備考:</b></h5>
     <ul>
-        <li>キー集合が疎な場合には <code>lookupswitch</code> を使用します。密なキーは <code>tableswitch</code> で表現されます。</li>
+        <li>キー集合が疎な場合には <code>lookupswitch</code> を使用します。密なキーは <code>tableswitch</code> で表現されます。
+        </li>
         <li>キーは<b>必ず昇順</b>でなければなりません。さもなければ，クラスのロード/リンク時に検証エラーになります。</li>
     </ul>
 

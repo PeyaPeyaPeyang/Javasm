@@ -7,16 +7,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 
-public class CatchDirectiveNode extends ANTLRPsiNode
-{
-    public CatchDirectiveNode(@NotNull ASTNode node)
-    {
+public class CatchDirectiveNode extends ANTLRPsiNode {
+    public CatchDirectiveNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @NotNull
-    public FullQualifiedNameNode getExceptionType()
-    {
+    public FullQualifiedNameNode getExceptionType() {
         FullQualifiedNameNode exceptionTypeNode = this.findChildByClass(FullQualifiedNameNode.class);
         if (exceptionTypeNode == null)
             throw new IllegalStateException("Catch directive must have an exception type");
@@ -25,8 +22,7 @@ public class CatchDirectiveNode extends ANTLRPsiNode
     }
 
     @NotNull
-    public LabelNode getCatchBlockLabel()
-    {
+    public LabelNode getCatchBlockLabel() {
         LabelNode labelNode = this.findChildByClass(LabelNode.class);
         if (labelNode == null)
             throw new IllegalStateException("Catch directive must have a label");
@@ -35,8 +31,7 @@ public class CatchDirectiveNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public FinallyDirectiveNode getFinallyDirective()
-    {
+    public FinallyDirectiveNode getFinallyDirective() {
         return this.findChildByClass(FinallyDirectiveNode.class);
     }
 }

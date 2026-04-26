@@ -26,8 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
-public class JALDirtyCompiler
-{
+public class JALDirtyCompiler {
     public static final String JAL_COMPILER_ID = "JALCompiler";
 
     private final CompileContext compileContext;
@@ -38,20 +37,17 @@ public class JALDirtyCompiler
     public JALDirtyCompiler(CompileContext compileContext,
                             ModuleChunk moduleChunk,
                             DirtyFilesHolder<JavaSourceRootDescriptor, ModuleBuildTarget> dirtyFilesHolder,
-                            ModuleLevelBuilder.OutputConsumer outputConsumer)
-    {
+                            ModuleLevelBuilder.OutputConsumer outputConsumer) {
         this.compileContext = compileContext;
         this.moduleChunk = moduleChunk;
         this.dirtyFilesHolder = dirtyFilesHolder;
         this.outputConsumer = outputConsumer;
     }
 
-    public ExitCode run() throws ProjectBuildException, IOException
-    {
+    public ExitCode run() throws ProjectBuildException, IOException {
         Iterator<ModuleBuildTarget> targets = this.moduleChunk.getTargets().iterator();
         ExitCode exitCode = ExitCode.OK;
-        while (targets.hasNext())
-        {
+        while (targets.hasNext()) {
             ModuleBuildTarget target = targets.next();
 
             exitCode = buildTarget(target);
@@ -62,11 +58,9 @@ public class JALDirtyCompiler
         return exitCode;
     }
 
-    private ExitCode buildTarget(@NotNull ModuleBuildTarget target) throws ProjectBuildException, IOException
-    {
+    private ExitCode buildTarget(@NotNull ModuleBuildTarget target) throws ProjectBuildException, IOException {
         File outputDirFile = target.getOutputDir();
-        if (outputDirFile == null)
-        {
+        if (outputDirFile == null) {
             this.compileContext.processMessage(new CompilerMessage(
                     JAL_COMPILER_ID,
                     CompilerMessage.Kind.ERROR,
@@ -90,8 +84,7 @@ public class JALDirtyCompiler
         });
         this.deleteRemovedFiles(this.dirtyFilesHolder.getRemoved(target));
 
-        if (files.isEmpty())
-        {
+        if (files.isEmpty()) {
             this.compileContext.processMessage(new CompilerMessage(
                     JAL_COMPILER_ID,
                     CompilerMessage.Kind.INFO,
@@ -103,8 +96,7 @@ public class JALDirtyCompiler
         return this.compileJALFiles(files, outputDir);
     }
 
-    private void deleteRemovedFiles(Collection<? extends Path> removedFiles) throws IOException
-    {
+    private void deleteRemovedFiles(Collection<? extends Path> removedFiles) throws IOException {
         for (Path file : removedFiles)
             if (Files.exists(file))
                 Files.delete(file);
@@ -113,23 +105,18 @@ public class JALDirtyCompiler
     private ExitCode compileJALFiles(
             ListMultimap<ModuleBuildTarget, Path> files,
             Path outputDir
-    ) throws IOException
-    {
+    ) throws IOException {
         ExitCode exitCode = ExitCode.OK;
         CompileReporter reporter = new JALCompileReporterImpl(this.compileContext);
         JALFileCompiler compiler = new JALFileCompiler(reporter, outputDir, CompileSettings.FULL);
 
-        for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries())
-        {
+        for (Map.Entry<ModuleBuildTarget, Path> entry : files.entries()) {
             ModuleBuildTarget target = entry.getKey();
             Path jalFile = entry.getValue();
 
-            try
-            {
+            try {
                 compiler.compile(jalFile);
-            }
-            catch (CompileErrorException e)
-            {
+            } catch (CompileErrorException e) {
                 reporter.postError(
                         "Failed to compile JAL file: " + jalFile.toAbsolutePath(),
                         e,

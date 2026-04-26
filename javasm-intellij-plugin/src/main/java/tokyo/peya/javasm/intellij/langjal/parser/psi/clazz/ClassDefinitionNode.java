@@ -20,34 +20,28 @@ import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 import java.util.List;
 import java.util.Objects;
 
-public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNode
-{
-    public ClassDefinitionNode(@NotNull ASTNode node, @NotNull IElementType idElementType)
-    {
+public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNode {
+    public ClassDefinitionNode(@NotNull ASTNode node, @NotNull IElementType idElementType) {
         super(node, idElementType);
     }
 
     @Override
-    public @Nullable PsiElement resolve(PsiNamedElement element)
-    {
+    public @Nullable PsiElement resolve(PsiNamedElement element) {
         return SymtabUtils.resolve(this, JALLanguage.INSTANCE, element, "/root/classDefinition/className");
     }
 
     @Nullable
-    public ClassNameNode getClassNameNode()
-    {
+    public ClassNameNode getClassNameNode() {
         return PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
     }
 
     @Nullable
-    public ClassBodyNode getClassBodyNode()
-    {
+    public ClassBodyNode getClassBodyNode() {
         return PsiTreeUtil.findChildOfType(this, ClassBodyNode.class);
     }
 
     @NotNull
-    public String getFullQualifiedClassName()
-    {
+    public String getFullQualifiedClassName() {
         ClassNameNode classNameNode = PsiTreeUtil.findChildOfType(this, ClassNameNode.class);
         if (classNameNode == null)
             return "<unknown>";
@@ -56,8 +50,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public String getClassName()
-    {
+    public String getClassName() {
         String fullQualifiedClassName = getFullQualifiedClassName();
         int lastSlashIndex = fullQualifiedClassName.lastIndexOf('/');
         if (lastSlashIndex == -1)
@@ -67,8 +60,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public String getPackageName()
-    {
+    public String getPackageName() {
         String fullQualifiedClassName = getFullQualifiedClassName();
         int lastSlashIndex = fullQualifiedClassName.lastIndexOf('/');
         if (lastSlashIndex == -1)
@@ -78,8 +70,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public AccessLevel getAccessLevel()
-    {
+    public AccessLevel getAccessLevel() {
         AccessModifierNode accessLevelNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
         if (accessLevelNode == null)
             return AccessLevel.PACKAGE_PRIVATE;
@@ -88,8 +79,7 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @NotNull
-    public AccessAttributeSet getAccessAttributes()
-    {
+    public AccessAttributeSet getAccessAttributes() {
         AccessModifierNode accessModifierNode = PsiTreeUtil.findChildOfType(this, AccessModifierNode.class);
         if (accessModifierNode == null)
             return AccessAttributeSet.EMPTY;
@@ -98,23 +88,21 @@ public class ClassDefinitionNode extends IdentifierDefSubtree implements ScopeNo
     }
 
     @Override
-    public @Nullable PsiElement getNameIdentifier()
-    {
+    public @Nullable PsiElement getNameIdentifier() {
         return PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
     }
 
     @NotNull
-    public MethodDefinitionNode[] getMethods()
-    {
+    public MethodDefinitionNode[] getMethods() {
         ClassBodyNode classBodyNode = PsiTreeUtil.findChildOfType(this, ClassBodyNode.class);
         if (classBodyNode == null)
             return new MethodDefinitionNode[0];
 
         List<ClassBodyItemNode> bodyItems = PsiTreeUtil.getChildrenOfTypeAsList(classBodyNode, ClassBodyItemNode.class);
         return bodyItems.stream()
-                        .filter(ClassBodyItemNode::isMethod)
-                        .map(ClassBodyItemNode::getMethod)
-                        .filter(Objects::nonNull)
-                        .toArray(MethodDefinitionNode[]::new);
+                .filter(ClassBodyItemNode::isMethod)
+                .map(ClassBodyItemNode::getMethod)
+                .filter(Objects::nonNull)
+                .toArray(MethodDefinitionNode[]::new);
     }
 }

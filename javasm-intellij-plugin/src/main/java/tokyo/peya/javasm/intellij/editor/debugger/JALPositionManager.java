@@ -25,31 +25,25 @@ import tokyo.peya.javasm.intellij.langjal.JALFileType;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
 import java.util.List;
-import java.util.Set;
 
-public class JALPositionManager implements PositionManager
-{
+public class JALPositionManager implements PositionManager {
     private final DebugProcess debug;
 
-    public JALPositionManager(@NotNull DebugProcess debug)
-    {
+    public JALPositionManager(@NotNull DebugProcess debug) {
         this.debug = debug;
     }
 
     @Override
-    public boolean isAcceptedFileType(@NotNull FileType fileType)
-    {
+    public boolean isAcceptedFileType(@NotNull FileType fileType) {
         return fileType == JALFileType.INSTANCE;
     }
 
     @Override
-    public @Nullable SourcePosition getSourcePosition(@Nullable Location loc) throws NoDataException
-    {
+    public @Nullable SourcePosition getSourcePosition(@Nullable Location loc) throws NoDataException {
         if (loc == null)
             throw NoDataException.INSTANCE;
 
-        try
-        {
+        try {
             int line = loc.lineNumber() - 1; // JVM は 1 ベースの行番号を使用するため、1 を減算
             String sourceName = loc.sourceName();
 
@@ -62,15 +56,12 @@ public class JALPositionManager implements PositionManager
                 throw NoDataException.INSTANCE;
 
             return SourcePosition.createFromLine(jalFile, line);
-        }
-        catch (AbsentInformationException e)
-        {
+        } catch (AbsentInformationException e) {
             throw NoDataException.INSTANCE;
         }
     }
 
-    private VirtualFile findSourceFile(@NotNull String sourceName) throws NoDataException
-    {
+    private VirtualFile findSourceFile(@NotNull String sourceName) throws NoDataException {
         VirtualFile found = ApplicationManager.getApplication().runReadAction((Computable<? extends VirtualFile>) () ->
                 FilenameIndex.getVirtualFilesByName(
                         sourceName,
@@ -83,8 +74,7 @@ public class JALPositionManager implements PositionManager
         return found;
     }
 
-    private JALFile findJALFile(@NotNull String sourceName) throws NoDataException
-    {
+    private JALFile findJALFile(@NotNull String sourceName) throws NoDataException {
         VirtualFile file = this.findSourceFile(sourceName);
         JALFile jalFile = JALFile.getJALFile(this.debug.getProject(), file);
         if (jalFile == null)
@@ -93,16 +83,14 @@ public class JALPositionManager implements PositionManager
     }
 
     @Override
-    public @NotNull @Unmodifiable List<ReferenceType> getAllClasses(@NotNull SourcePosition pos) throws NoDataException
-    {
+    public @NotNull @Unmodifiable List<ReferenceType> getAllClasses(@NotNull SourcePosition pos) throws NoDataException {
         String fileName = pos.getFile().getName();
         String className = getClassNameFromJALFile(fileName);
 
         return this.debug.getVirtualMachineProxy().classesByName(className);
     }
 
-    private String getClassNameFromJALFile(@NotNull String fileName) throws NoDataException
-    {
+    private String getClassNameFromJALFile(@NotNull String fileName) throws NoDataException {
         if (!fileName.endsWith(".jal"))
             throw new IllegalArgumentException("File name must end with .jal: " + fileName);
 
@@ -121,23 +109,18 @@ public class JALPositionManager implements PositionManager
 
     @Override
     public @NotNull List<Location> locationsOfLine(@NotNull ReferenceType refType,
-                                                   @NotNull SourcePosition pos) throws NoDataException
-    {
-        try
-        {
+                                                   @NotNull SourcePosition pos) throws NoDataException {
+        try {
             int line = pos.getLine() + 1; // JVM は 1 ベースの行番号を使用するため、1 を加算
             return refType.locationsOfLine(line);
-        }
-        catch (AbsentInformationException e)
-        {
+        } catch (AbsentInformationException e) {
             throw NoDataException.INSTANCE;
         }
     }
 
     @Override
     public @Nullable ClassPrepareRequest createPrepareRequest(@NotNull ClassPrepareRequestor requester,
-                                                              @NotNull SourcePosition pos) throws NoDataException
-    {
+                                                              @NotNull SourcePosition pos) throws NoDataException {
         String className = getClassNameFromJALFile(pos.getFile().getName());
         RequestManager requestManager = this.debug.getRequestsManager();
 

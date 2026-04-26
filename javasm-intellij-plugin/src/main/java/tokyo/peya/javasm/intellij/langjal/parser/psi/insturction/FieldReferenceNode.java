@@ -6,21 +6,17 @@ import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.TypeDescriptorNode;
-import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.langjal.compiler.jvm.TypeDescriptor;
 
-public class FieldReferenceNode extends ANTLRPsiNode
-{
-    public FieldReferenceNode(@NotNull ASTNode node)
-    {
+public class FieldReferenceNode extends ANTLRPsiNode {
+    public FieldReferenceNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public FullQualifiedNameNode getFieldOwner()
-    {
+    public FullQualifiedNameNode getFieldOwner() {
         FullQualifiedNameNode fullQualifiedNameNode = PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
         if (fullQualifiedNameNode == null)
             throw new IllegalStateException("Field owner not found in instruction field reference node");
@@ -29,8 +25,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public String getFieldName()
-    {
+    public String getFieldName() {
         FieldReferenceNameNode fieldNameNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNameNode.class);
         if (fieldNameNode == null)
             throw new IllegalStateException("Field name not found in instruction field reference node");
@@ -39,8 +34,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
     }
 
     @NotNull
-    public IdentifierNode getFieldNameNode()
-    {
+    public IdentifierNode getFieldNameNode() {
         FieldReferenceNameNode fieldNameNode = PsiTreeUtil.findChildOfType(this, FieldReferenceNameNode.class);
         if (fieldNameNode == null)
             throw new IllegalStateException("Field name not found in instruction field reference node");
@@ -53,8 +47,7 @@ public class FieldReferenceNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public TypeDescriptor getType()
-    {
+    public TypeDescriptor getType() {
         TypeDescriptorNode typeDescriptorNode = PsiTreeUtil.findChildOfType(this, TypeDescriptorNode.class);
         if (typeDescriptorNode == null)
             throw new IllegalStateException("TypeDescriptorNode is not found in InstructionFieldReferenceNode");

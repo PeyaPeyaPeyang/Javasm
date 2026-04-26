@@ -57,7 +57,8 @@
     <ul>
         <li>同期化メソッドから戻る場合，メソッドモニタは暗黙に解放されます。</li>
         <li>例外伝播中は return 命令は実行されず，例外処理側へ制御が移ります。</li>
-        <li><code>areturn</code> はユーザー定義オブジェクトだけでなく配列（例: <code>String[]</code>，<code>int[]</code>）にも使用されます。</li>
+        <li><code>areturn</code> はユーザー定義オブジェクトだけでなく配列（例: <code>String[]</code>，<code>int[]</code>）にも使用されます。
+        </li>
         <li>通常復帰は現在フレームを終了し，呼び出し元継続点へ制御を戻します。</li>
     </ul>
 
@@ -69,7 +70,9 @@
 
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
-        <li><code>IllegalMonitorStateException</code>: 同期化メソッドで，現在スレッドが対象モニタを保持していない状態で return が実行された場合。</li>
+        <li><code>IllegalMonitorStateException</code>: 同期化メソッドで，現在スレッドが対象モニタを保持していない状態で
+            return が実行された場合。
+        </li>
     </ul>
 </div>
 

@@ -61,7 +61,7 @@
                 level="ERROR"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.classfile.name" />
+                key="jal.inspection.classfile.name"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushIntegerInspection"
                 language="JAL"
@@ -69,7 +69,7 @@
                 level="WARNING"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.integer.small.name" />
+                key="jal.inspection.integer.small.name"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALPushBigIntegerInspection"
                 language="JAL"
@@ -77,7 +77,7 @@
                 level="ERROR"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.integer.big.name" />
+                key="jal.inspection.integer.big.name"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALUnreachableCodeInspection"
                 language="JAL"
@@ -85,7 +85,7 @@
                 level="WARNING"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.unreachable.name" />
+                key="jal.inspection.unreachable.name"/>
         <psi.treeChangeListener
                 implementation="tokyo.peya.javasm.intellij.editor.linenumber.InstructionPsiChangeListener"/>
         <codeInsight.lineMarkerProvider language="JAL"
@@ -104,7 +104,7 @@
                 language="JAL"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.localOverflow.name" />
+                key="jal.inspection.localOverflow.name"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALMethodReturnTypeInspection"
                 enabledByDefault="true"
@@ -112,7 +112,7 @@
                 language="JAL"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.returnType.name" />
+                key="jal.inspection.returnType.name"/>
         <localInspection
                 implementationClass="tokyo.peya.javasm.intellij.inspection.inspections.JALShortenableVariableOperationInspection"
                 enabledByDefault="true"
@@ -120,7 +120,7 @@
                 language="JAL"
                 bundle="messages.JALMessages"
                 groupKey="jal.inspection"
-                key="jal.inspection.shortenableVariable.name" />
+                key="jal.inspection.shortenableVariable.name"/>
         <debugger.positionManagerFactory
                 implementation="tokyo.peya.javasm.intellij.editor.debugger.JALPositionManagerFactory" order="first"/>
         <xdebugger.breakpointType implementation="tokyo.peya.javasm.intellij.editor.debugger.JALLineBreakpointType"/>
@@ -135,7 +135,8 @@
         />
         <lang.foldingBuilder language="JAL" implementationClass="tokyo.peya.javasm.intellij.editor.JALFoldingBuilder"/>
         <projectViewNodeDecorator implementation="tokyo.peya.javasm.intellij.editor.JALProjectViewDecorator"/>
-        <braceMatcher filetype="Java Assembly Language File" implementationClass="tokyo.peya.javasm.intellij.editor.JALPairedBraceMatcherAdapter"/>
+        <braceMatcher filetype="Java Assembly Language File"
+                      implementationClass="tokyo.peya.javasm.intellij.editor.JALPairedBraceMatcherAdapter"/>
         <fileDocumentManagerListener implementation="tokyo.peya.javasm.intellij.editor.document.JALSaveListener"/>
     </extensions>
     <actions>

@@ -20,28 +20,23 @@ import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 
-public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeNode
-{
-    public MethodDefinitionNode(@NotNull ASTNode node, @NotNull IElementType idElementType)
-    {
+public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeNode {
+    public MethodDefinitionNode(@NotNull ASTNode node, @NotNull IElementType idElementType) {
         super(node, idElementType);
     }
 
     @Nullable
-    public MethodBodyNode getMethodBody()
-    {
+    public MethodBodyNode getMethodBody() {
         return PsiTreeUtil.findChildOfType(this, MethodBodyNode.class);
     }
 
     @Override
-    public @Nullable PsiElement getNameIdentifier()
-    {
+    public @Nullable PsiElement getNameIdentifier() {
         return PsiTreeUtil.findChildOfType(this, IdentifierNode.class);
     }
 
     @Override
-    public @Nullable PsiElement resolve(PsiNamedElement element)
-    {
+    public @Nullable PsiElement resolve(PsiNamedElement element) {
         return SymtabUtils.resolve(
                 this,
                 JALLanguage.INSTANCE,
@@ -51,8 +46,7 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     }
 
     @Nullable
-    public ClassDefinitionNode getContainingClass()
-    {
+    public ClassDefinitionNode getContainingClass() {
         if (!(this.getParent() instanceof ClassBodyItemNode classBodyItem))
             return null;
         if (!(classBodyItem.getParent() instanceof ClassBodyNode classBody))
@@ -64,8 +58,7 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     }
 
     @NotNull
-    public InstructionSetNode[] getInstructionSets()
-    {
+    public InstructionSetNode[] getInstructionSets() {
         MethodBodyNode methodBody = PsiTreeUtil.findChildOfType(this, MethodBodyNode.class);
         if (methodBody == null)
             return new InstructionSetNode[0];
@@ -77,8 +70,7 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     }
 
     @NotNull
-    public String getMethodName()
-    {
+    public String getMethodName() {
         PsiElement nameElement = PsiTreeUtil.findChildOfType(this, MethodNameNode.class);
         if (nameElement == null)
             return "<unknown>";
@@ -87,22 +79,19 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     }
 
     @NotNull
-    public MethodDescriptor getMethodDescriptor()
-    {
+    public MethodDescriptor getMethodDescriptor() {
         PsiElement descriptorElement = PsiTreeUtil.findChildOfType(this, MethodDescriptorNode.class);
         if (descriptorElement == null)
             throw new IllegalStateException("Method descriptor not found in method definition node");
         return MethodDescriptor.parse(descriptorElement.getText());
     }
 
-    public @Nullable AccessModifierNode getAccessModifier()
-    {
+    public @Nullable AccessModifierNode getAccessModifier() {
         return this.findNotNullChildByClass(AccessModifierNode.class);
     }
 
     @NotNull
-    public AccessLevel getAccessLevel()
-    {
+    public AccessLevel getAccessLevel() {
         AccessModifierNode accessModifier = this.getAccessModifier();
         if (accessModifier != null)
             return accessModifier.getAccessLevel();
@@ -110,8 +99,7 @@ public class MethodDefinitionNode extends IdentifierDefSubtree implements ScopeN
     }
 
     @NotNull
-    public AccessAttributeSet getAccessAttributes()
-    {
+    public AccessAttributeSet getAccessAttributes() {
         AccessModifierNode accessModifier = this.getAccessModifier();
         if (accessModifier == null)
             return AccessAttributeSet.EMPTY;

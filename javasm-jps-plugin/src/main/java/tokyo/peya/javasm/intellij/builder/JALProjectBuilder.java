@@ -5,19 +5,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.jps.ModuleChunk;
 import org.jetbrains.jps.builders.DirtyFilesHolder;
 import org.jetbrains.jps.builders.java.JavaSourceRootDescriptor;
-import org.jetbrains.jps.incremental.BuilderCategory;
-import org.jetbrains.jps.incremental.CompileContext;
-import org.jetbrains.jps.incremental.ModuleBuildTarget;
-import org.jetbrains.jps.incremental.ModuleLevelBuilder;
-import org.jetbrains.jps.incremental.ProjectBuildException;
+import org.jetbrains.jps.incremental.*;
 
 import java.io.IOException;
 import java.util.List;
 
-public class JALProjectBuilder extends ModuleLevelBuilder
-{
-    public JALProjectBuilder()
-    {
+public class JALProjectBuilder extends ModuleLevelBuilder {
+    public JALProjectBuilder() {
         super(BuilderCategory.TRANSLATOR);
     }
 
@@ -25,21 +19,18 @@ public class JALProjectBuilder extends ModuleLevelBuilder
     public ExitCode build(CompileContext compileContext,
                           ModuleChunk moduleChunk,
                           DirtyFilesHolder<JavaSourceRootDescriptor, ModuleBuildTarget> dirtyFilesHolder,
-                          OutputConsumer outputConsumer) throws ProjectBuildException, IOException
-    {
+                          OutputConsumer outputConsumer) throws ProjectBuildException, IOException {
         JALDirtyCompiler compiler = new JALDirtyCompiler(compileContext, moduleChunk, dirtyFilesHolder, outputConsumer);
         return compiler.run();
     }
 
     @Override
-    public @NotNull List<String> getCompilableFileExtensions()
-    {
+    public @NotNull List<String> getCompilableFileExtensions() {
         return List.of("jal");
     }
 
     @Override
-    public @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String getPresentableName()
-    {
+    public @NotNull @Nls(capitalization = Nls.Capitalization.Sentence) String getPresentableName() {
         return "Java assembly language builder";
     }
 }

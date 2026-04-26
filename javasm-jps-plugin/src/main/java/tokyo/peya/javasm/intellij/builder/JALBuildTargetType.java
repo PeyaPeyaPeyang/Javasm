@@ -10,20 +10,21 @@ import org.jetbrains.jps.model.module.JpsModule;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
-{
+public class JALBuildTargetType extends BuildTargetType<JALBuildTarget> {
 
     public static final String TYPE_ID = "JAL";
     private static final JALBuildTargetType INSTANCE = new JALBuildTargetType();
 
-    private JALBuildTargetType()
-    {
+    private JALBuildTargetType() {
         super(TYPE_ID);
     }
 
+    public static JALBuildTargetType getInstance() {
+        return INSTANCE;
+    }
+
     @Override
-    public @NotNull List<JALBuildTarget> computeAllTargets(@NotNull JpsModel model)
-    {
+    public @NotNull List<JALBuildTarget> computeAllTargets(@NotNull JpsModel model) {
         List<JALBuildTarget> result = new ArrayList<>();
 
         for (JpsModule module : model.getProject().getModules())
@@ -33,25 +34,16 @@ public class JALBuildTargetType extends BuildTargetType<JALBuildTarget>
     }
 
     @Override
-    public @NotNull BuildTargetLoader<JALBuildTarget> createLoader(@NotNull JpsModel model)
-    {
-        return new BuildTargetLoader<>()
-        {
+    public @NotNull BuildTargetLoader<JALBuildTarget> createLoader(@NotNull JpsModel model) {
+        return new BuildTargetLoader<>() {
             @Override
-            public @Nullable JALBuildTarget createTarget(@NotNull String targetId)
-            {
-                for (JpsModule module : model.getProject().getModules())
-                {
+            public @Nullable JALBuildTarget createTarget(@NotNull String targetId) {
+                for (JpsModule module : model.getProject().getModules()) {
                     if (module.getName().equals(targetId))
                         return new JALBuildTarget(module);
                 }
                 return null;
             }
         };
-    }
-
-    public static JALBuildTargetType getInstance()
-    {
-        return INSTANCE;
     }
 }

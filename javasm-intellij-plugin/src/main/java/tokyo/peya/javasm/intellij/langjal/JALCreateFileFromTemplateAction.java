@@ -10,25 +10,21 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.Assets;
 
-public class JALCreateFileFromTemplateAction extends CreateFileFromTemplateAction
-{
-    public JALCreateFileFromTemplateAction()
-    {
+public class JALCreateFileFromTemplateAction extends CreateFileFromTemplateAction {
+    public JALCreateFileFromTemplateAction() {
         super("JAL Class", "Create a new JAL class file", Assets.JAL);
     }
 
     @Override
     protected void buildDialog(@NotNull Project project, @NotNull PsiDirectory directory,
-                               CreateFileFromTemplateDialog.@NotNull Builder builder)
-    {
+                               CreateFileFromTemplateDialog.@NotNull Builder builder) {
         builder.setTitle("New JAL File")
-               .addKind("JAL class", PlatformIcons.CLASS_ICON, "JAL Class");
+                .addKind("JAL class", PlatformIcons.CLASS_ICON, "JAL Class");
     }
 
     @Override
     protected @NlsContexts.Command String getActionName(PsiDirectory directory, @NonNls @NotNull String newName,
-                                                        @NonNls String templateName)
-    {
+                                                        @NonNls String templateName) {
         return "Create JAL Class '" + newName + "'";
     }
 }

@@ -7,25 +7,21 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 
-public class InstructionTableSwitchNode extends InstructionNode
-{
-    public InstructionTableSwitchNode(@NotNull ASTNode node)
-    {
+public class InstructionTableSwitchNode extends InstructionNode {
+    public InstructionTableSwitchNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public InstructionTableSwitchArgumentNode getTableSwitchArgument()
-    {
+    public InstructionTableSwitchArgumentNode getTableSwitchArgument() {
         return PsiTreeUtil.findChildOfType(
                 this,
                 InstructionTableSwitchArgumentNode.class
         );
     }
 
-    public int getLowIndex()
-    {
-        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+    public int getLowIndex() {
+        InstructionTableSwitchArgumentNode arg = this.getTableSwitchArgument();
         if (arg == null)
             return 0;
         Number lowIndex = arg.getLowIndex();
@@ -35,28 +31,25 @@ public class InstructionTableSwitchNode extends InstructionNode
     }
 
     @Nullable
-    public LabelNameNode getDefaultBranchLabelName()
-    {
-        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+    public LabelNameNode getDefaultBranchLabelName() {
+        InstructionTableSwitchArgumentNode arg = this.getTableSwitchArgument();
         if (arg == null)
             return null;
         return arg.getDefaultBranchLabelName();
     }
 
     @Nullable
-    public LabelNameNode[] getBranchLabels()
-    {
-        InstructionTableSwitchArgumentNode arg =  this.getTableSwitchArgument();
+    public LabelNameNode[] getBranchLabels() {
+        InstructionTableSwitchArgumentNode arg = this.getTableSwitchArgument();
         if (arg == null)
             return null;
         return arg.getBranchLabels();
     }
 
     @Override
-    public int getInstructionSize()
-    {
+    public int getInstructionSize() {
         InstructionTableSwitchArgumentNode argumentNode = this.getTableSwitchArgument();
-        if  (argumentNode == null)
+        if (argumentNode == null)
             throw new IllegalStateException();
         LabelNameNode branches = argumentNode.getDefaultBranchLabelName();
         if (branches == null)
@@ -72,8 +65,7 @@ public class InstructionTableSwitchNode extends InstructionNode
         return calcActualSize(lowIndex, branchLabels);
     }
 
-    private int calcActualSize(int lowIndex, LabelNameNode[] branchLabels)
-    {
+    private int calcActualSize(int lowIndex, LabelNameNode[] branchLabels) {
         int highIndex = lowIndex + branchLabels.length - 1;
         int nPairs = highIndex - lowIndex + 1;
 

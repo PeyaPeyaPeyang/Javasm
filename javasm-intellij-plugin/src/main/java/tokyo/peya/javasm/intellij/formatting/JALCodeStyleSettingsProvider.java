@@ -13,44 +13,35 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 
-public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider
-{
+public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
     @Override
-    public @Nullable CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings)
-    {
+    public @Nullable CustomCodeStyleSettings createCustomSettings(@NotNull CodeStyleSettings settings) {
         return new JALCodeStyleSettings(settings);
     }
 
     @Override
     public @NotNull CodeStyleConfigurable createConfigurable(@NotNull CodeStyleSettings settings,
-                                                             @NotNull CodeStyleSettings modelSettings)
-    {
-        return new CodeStyleAbstractConfigurable(settings, modelSettings, this.getConfigurableDisplayName())
-        {
+                                                             @NotNull CodeStyleSettings modelSettings) {
+        return new CodeStyleAbstractConfigurable(settings, modelSettings, this.getConfigurableDisplayName()) {
             @Override
-            protected @NotNull CodeStyleAbstractPanel createPanel(@NotNull CodeStyleSettings settings)
-            {
+            protected @NotNull CodeStyleAbstractPanel createPanel(@NotNull CodeStyleSettings settings) {
                 return new JALCodeStyleMainPanel(this.getCurrentSettings(), settings);
             }
         };
     }
 
     @Override
-    public @Nullable @NlsContexts.ConfigurableName String getConfigurableDisplayName()
-    {
+    public @Nullable @NlsContexts.ConfigurableName String getConfigurableDisplayName() {
         return "Java Assembly Language";
     }
 
     @Override
-    public @Nullable Language getLanguage()
-    {
+    public @Nullable Language getLanguage() {
         return JALLanguage.INSTANCE;
     }
 
-    private static class JALCodeStyleMainPanel extends TabbedLanguageCodeStylePanel
-    {
-        public JALCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings)
-        {
+    private static class JALCodeStyleMainPanel extends TabbedLanguageCodeStylePanel {
+        public JALCodeStyleMainPanel(CodeStyleSettings currentSettings, CodeStyleSettings settings) {
             super(JALLanguage.INSTANCE, currentSettings, settings);
         }
 

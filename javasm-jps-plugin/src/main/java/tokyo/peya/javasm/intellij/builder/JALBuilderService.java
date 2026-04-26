@@ -10,22 +10,18 @@ import org.jetbrains.jps.incremental.resources.ResourcesBuilder;
 
 import java.util.List;
 
-public class JALBuilderService extends BuilderService
-{
+public class JALBuilderService extends BuilderService {
     @Override
-    public @NotNull List<? extends BuildTargetType<?>> getTargetTypes()
-    {
+    public @NotNull List<? extends BuildTargetType<?>> getTargetTypes() {
         return List.of(JALBuildTargetType.getInstance());
     }
 
     @Override
-    public @NotNull List<? extends ModuleLevelBuilder> createModuleLevelBuilders()
-    {
+    public @NotNull List<? extends ModuleLevelBuilder> createModuleLevelBuilders() {
         return List.of(new JALProjectBuilder());
     }
 
-    public @NotNull List<? extends TargetBuilder<?, ?>> createBuilders()
-    {
+    public @NotNull List<? extends TargetBuilder<?, ?>> createBuilders() {
         return List.of(new ResourcesBuilder(), new ProjectDependenciesResolver());
     }
 }

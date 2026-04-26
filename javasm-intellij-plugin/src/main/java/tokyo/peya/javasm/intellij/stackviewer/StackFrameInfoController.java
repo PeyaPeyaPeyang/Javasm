@@ -1,21 +1,12 @@
 package tokyo.peya.javasm.intellij.stackviewer;
 
 import com.intellij.openapi.Disposable;
-import com.intellij.openapi.application.Application;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.components.Service;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.event.CaretEvent;
-import com.intellij.openapi.editor.event.CaretListener;
-import com.intellij.openapi.editor.event.DocumentEvent;
-import com.intellij.openapi.editor.event.DocumentListener;
-import com.intellij.openapi.editor.event.EditorFactoryListener;
-import com.intellij.openapi.fileEditor.FileEditor;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.FileEditorManagerEvent;
-import com.intellij.openapi.fileEditor.FileEditorManagerListener;
-import com.intellij.openapi.fileEditor.TextEditor;
+import com.intellij.openapi.editor.event.*;
+import com.intellij.openapi.fileEditor.*;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
@@ -24,19 +15,18 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.util.PsiTreeUtil;
-import javax.swing.JPanel;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 
+import javax.swing.*;
 import java.util.Collection;
 
 @Service(Service.Level.PROJECT)
 public final class StackFrameInfoController
         implements FileEditorManagerListener, DocumentListener, EditorFactoryListener,
-        CaretListener, Disposable
-{
+        CaretListener, Disposable {
     public static final Key<StackFrameAnalysisResult> ANALYSIS_RESULT_KEY =
             Key.create(StackFrameInfoController.class.getName() + ".analysisResult");
     public static final Key<Object> EVENT_LISTENER_CONNECTED_KEY =
@@ -48,8 +38,7 @@ public final class StackFrameInfoController
     private final Project project;
     private final StackFramePanelFactory uiFactory;
 
-    public StackFrameInfoController(@NotNull Project project)
-    {
+    public StackFrameInfoController(@NotNull Project project) {
         this.project = project;
         this.uiFactory = new StackFramePanelFactory(this::analyseStackFrame);
 
@@ -57,18 +46,18 @@ public final class StackFrameInfoController
         this.project.getMessageBus().connect().subscribe(FileEditorManagerListener.FILE_EDITOR_MANAGER, this);
     }
 
-    public void analyseStackFrame()
-    {
-        new Task.Backgroundable(null, "Analyzing stack frame", true)
-        {
+    public static StackFrameInfoController getInstance(Project project) {
+        return project.getService(StackFrameInfoController.class);
+    }
+
+    public void analyseStackFrame() {
+        new Task.Backgroundable(null, "Analyzing stack frame", true) {
             @Override
-            public void run(@NotNull ProgressIndicator indicator)
-            {
+            public void run(@NotNull ProgressIndicator indicator) {
                 // 現在のエディタを取得し， スタックフレームの解析を行う。
                 Editor currentEditor = FileEditorManager.getInstance(StackFrameInfoController.this.project)
-                                                        .getSelectedTextEditor();
-                if (currentEditor == null)
-                {
+                        .getSelectedTextEditor();
+                if (currentEditor == null) {
                     this.onCancel();
                     return;
                 }
@@ -81,22 +70,19 @@ public final class StackFrameInfoController
             }
 
             @Override
-            public void onCancel()
-            {
+            public void onCancel() {
                 ApplicationManager.getApplication()
-                                  .invokeLater(StackFrameInfoController.this.uiFactory::onUpdateCancelled);
+                        .invokeLater(StackFrameInfoController.this.uiFactory::onUpdateCancelled);
             }
         }.queue();
     }
 
-    private void onAnalyseFinished(@NotNull StackFrameAnalysisResult result)
-    {
+    private void onAnalyseFinished(@NotNull StackFrameAnalysisResult result) {
         ApplicationManager.getApplication().invokeLater(this.uiFactory::onUpdateFinished);
 
         // 最初の結果 = 0 番地のスタックフレームを表示する。
         Collection<MethodWrapper> methods = result.getMethods();
-        if (methods.isEmpty())
-        {
+        if (methods.isEmpty()) {
             ApplicationManager.getApplication().invokeLater(this.uiFactory::onUpdateCancelled);
             return;
         }
@@ -104,8 +90,7 @@ public final class StackFrameInfoController
         MethodWrapper firstMethod = methods.iterator().next();
         Collection<InstructionUIElement> instructions =
                 result.getInstructions(firstMethod.method().name, firstMethod.method().desc);
-        if (instructions.isEmpty())
-        {
+        if (instructions.isEmpty()) {
             ApplicationManager.getApplication().invokeLater(this.uiFactory::onUpdateCancelled);
             return;
         }
@@ -114,8 +99,7 @@ public final class StackFrameInfoController
         this.showStackFrameInfo(false, firstInstruction);
     }
 
-    private void showStackFrameInfo(boolean isAfterChanged, @NotNull InstructionUIElement instruction)
-    {
+    private void showStackFrameInfo(boolean isAfterChanged, @NotNull InstructionUIElement instruction) {
         StackUIInstruction stackInstruction = instruction.instruction();
         StackUIElement[] stackElements = instruction.stack().toArray(new StackUIElement[0]);
         StackUIElement[] localVariables = instruction.locals().toArray(new StackUIElement[0]);
@@ -126,8 +110,7 @@ public final class StackFrameInfoController
         ));
     }
 
-    private StackFrameAnalysisResult computeStackAndFrame(@NotNull Editor currentEditor)
-    {
+    private StackFrameAnalysisResult computeStackAndFrame(@NotNull Editor currentEditor) {
         Document document = currentEditor.getDocument();
         PsiFile file = PsiDocumentManager.getInstance(this.project).getPsiFile(document);
         if (!(file instanceof JALFile))
@@ -148,14 +131,12 @@ public final class StackFrameInfoController
         return result;
     }
 
-    private StackFramePanelFactory.ProgressbarUpdater getUpdater()
-    {
+    private StackFramePanelFactory.ProgressbarUpdater getUpdater() {
         return this.uiFactory.getUpdater();
     }
 
     @Override
-    public void caretPositionChanged(@NotNull CaretEvent event)
-    {
+    public void caretPositionChanged(@NotNull CaretEvent event) {
         // キャレットの位置が変更されたときに， スタックフレームの情報を更新する。
         Editor editor = event.getEditor();
         StackFrameAnalysisResult result = editor.getUserData(ANALYSIS_RESULT_KEY);
@@ -166,8 +147,7 @@ public final class StackFrameInfoController
         ApplicationManager.getApplication().runReadAction(() -> this.showCurrentLineStackFrame(editor));
     }
 
-    private void showCurrentLineStackFrame(@NotNull Editor editor)
-    {
+    private void showCurrentLineStackFrame(@NotNull Editor editor) {
         int currentLine = editor.getCaretModel().getLogicalPosition().line;
         StackFrameAnalysisResult result = editor.getUserData(ANALYSIS_RESULT_KEY);
         if (result == null)
@@ -187,12 +167,9 @@ public final class StackFrameInfoController
         String methodName = methodNode.getMethodName();
         String methodDesc = methodNode.getMethodDescriptor().getDescriptorString();
         int offset;
-        try
-        {
+        try {
             offset = node.getStartInstructionOffset();
-        }
-        catch (IllegalStateException e)
-        {
+        } catch (IllegalStateException e) {
             // コードが不完全だったり構文エラーのときにおきる。
             return;
         }
@@ -208,17 +185,14 @@ public final class StackFrameInfoController
         this.showStackFrameInfo(isAfterChanged, instruction);
     }
 
-    private void connectEventListener(@NotNull Editor editor)
-    {
+    private void connectEventListener(@NotNull Editor editor) {
         if (editor.getUserData(EVENT_LISTENER_CONNECTED_KEY) != null)
             return;
 
         try {
             editor.getDocument().addDocumentListener(this, this);
             editor.getCaretModel().addCaretListener(this, this);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             // 何らかの理由でリスナーの登録に失敗した場合は， 以降のイベントを受け取れないが， 仕方ないので無視する。
             return;
         }
@@ -226,14 +200,12 @@ public final class StackFrameInfoController
     }
 
     @Override
-    public void selectionChanged(@NotNull FileEditorManagerEvent event)
-    {
+    public void selectionChanged(@NotNull FileEditorManagerEvent event) {
         // エディタの選択が変更されたときに， スタックフレームの情報を更新する。
         this.uiFactory.onEditorSelectionChanged();
 
         FileEditor newEditor = event.getNewEditor();
-        if (!(newEditor instanceof TextEditor texteditor))
-        {
+        if (!(newEditor instanceof TextEditor texteditor)) {
             StackFrameInfoToolWindowFactory.closeAuto(this.project);
             return;
         }
@@ -241,9 +213,8 @@ public final class StackFrameInfoController
         this.connectEventListener(editor);
 
         PsiFile file = PsiDocumentManager.getInstance(this.project)
-                                         .getPsiFile(editor.getDocument());
-        if (!(file instanceof JALFile))
-        {
+                .getPsiFile(editor.getDocument());
+        if (!(file instanceof JALFile)) {
             StackFrameInfoToolWindowFactory.closeAuto(this.project);
             return;
         }
@@ -259,8 +230,7 @@ public final class StackFrameInfoController
     }
 
     @Override
-    public void documentChanged(@NotNull DocumentEvent event)
-    {
+    public void documentChanged(@NotNull DocumentEvent event) {
         // ドキュメントが変更されたときに， スタックフレームの再解析を要求する
         Editor editor = FileEditorManager.getInstance(this.project).getSelectedTextEditor();
         if (editor == null)
@@ -274,18 +244,11 @@ public final class StackFrameInfoController
         this.uiFactory.onEditorContentChanged();
     }
 
-    public JPanel getMainPanel()
-    {
+    public JPanel getMainPanel() {
         return this.uiFactory.getMainPanel();
     }
 
     @Override
-    public void dispose()
-    {
-    }
-
-    public static StackFrameInfoController getInstance(Project project)
-    {
-        return project.getService(StackFrameInfoController.class);
+    public void dispose() {
     }
 }

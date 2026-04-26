@@ -34,14 +34,18 @@
 
     <h5><b>意味論:</b></h5>
     <ul>
-        <li><code>objectref == null</code> の場合，キャストは常に成功します（<code>null</code> は任意の参照型に代入可能）。</li>
-        <li><code>objectref</code> が null でなく，かつ対象型に代入可能でない場合，<code>ClassCastException</code> がスローされます。</li>
+        <li><code>objectref == null</code> の場合，キャストは常に成功します（<code>null</code> は任意の参照型に代入可能）。
+        </li>
+        <li><code>objectref</code> が null でなく，かつ対象型に代入可能でない場合，<code>ClassCastException</code>
+            がスローされます。
+        </li>
         <li>オブジェクト参照そのものは変更されず，検査のみが行われます。</li>
     </ul>
 
     <h5><b>例:</b></h5>
     <ul>
-        <li><code>checkcast Ljava/lang/String;</code> - オブジェクトが <code>String</code> またはそのサブクラスかを検査</li>
+        <li><code>checkcast Ljava/lang/String;</code> - オブジェクトが <code>String</code> またはそのサブクラスかを検査
+        </li>
         <li><code>checkcast Ljava/util/List;</code> - <code>List</code> 互換性を検査</li>
         <li><code>checkcast [Ljava/lang/String;</code> - オブジェクトが <code>String[]</code> かを検査</li>
     </ul>
@@ -51,7 +55,9 @@
         <li>この命令は純粋な型検査であり，オブジェクトの変換や複製は行いません。</li>
         <li>参照型間のキャストで，Java コンパイラがよく挿入します。</li>
         <li>多相的な処理を実装する際，<code>instanceof</code> と組み合わせて使われます。</li>
-        <li>対象型であることが既に分かっている場合（例: <code>instanceof</code> の直後）は，<code>checkcast</code> を安全に利用できます。</li>
+        <li>対象型であることが既に分かっている場合（例: <code>instanceof</code> の直後）は，<code>checkcast</code>
+            を安全に利用できます。
+        </li>
     </ul>
 
     <h5><b>検証:</b></h5>
@@ -63,7 +69,9 @@
     <h5><b>実行時例外とエラー:</b></h5>
     <ul>
         <li><code>ClassCastException</code>: オブジェクト参照が null ではなく，対象型と代入互換でない場合。</li>
-        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code> などのリンケージエラー: シンボリック参照を解決できない場合，または解決後の型にアクセスできない場合。</li>
+        <li><code>NoClassDefFoundError</code>，<code>IllegalAccessError</code>，<code>IncompatibleClassChangeError</code>
+            などのリンケージエラー: シンボリック参照を解決できない場合，または解決後の型にアクセスできない場合。
+        </li>
     </ul>
 </div>
 

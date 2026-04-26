@@ -41,18 +41,24 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept the appropriate category of values at the point of
+            this instruction.
+        </li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
         <li>These instructions perform an arithmetic right shift, which means that the sign bit (most significant bit)
-            is replicated to fill the vacated bits on the left. This preserves the sign of the value for signed types.</li>
+            is replicated to fill the vacated bits on the left. This preserves the sign of the value for signed types.
+        </li>
         <li>The shift amount is masked to prevent shifts greater than the bit width of the value.
-            For <code>ishr</code>, only the lowest 5 bits of the shift amount are used (i.e., shift amounts are effectively modulo 32).
-            For <code>lshr</code>, only the lowest 6 bits are used (i.e., shift amounts are effectively modulo 64).</li>
+            For <code>ishr</code>, only the lowest 5 bits of the shift amount are used (i.e., shift amounts are
+            effectively modulo 32).
+            For <code>lshr</code>, only the lowest 6 bits are used (i.e., shift amounts are effectively modulo 64).
+        </li>
         <li>Using a shift amount that is greater than or equal to the bit width of the value will not cause an error but
-            will result in a shift of zero due to the masking behaviour.</li>
+            will result in a shift of zero due to the masking behaviour.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>

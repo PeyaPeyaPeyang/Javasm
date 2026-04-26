@@ -14,21 +14,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class JALBuildTargetScopeProvider extends BuildTargetScopeProvider
-{
+public class JALBuildTargetScopeProvider extends BuildTargetScopeProvider {
     @Override
     public @NotNull List<TargetTypeBuildScope> getBuildTargetScopes(
             @NotNull CompileScope baseScope,
             @NotNull Project project,
-            boolean forceBuild)
-    {
+            boolean forceBuild) {
         List<TargetTypeBuildScope> scopes = new ArrayList<>();
         scopes.add(
                 CmdlineProtoUtil.createTargetsScope(
                         JALBuildTargetType.TYPE_ID,
                         Arrays.stream(ModuleManager.getInstance(project).getModules())
-                              .map(Module::getName)
-                              .toList(),
+                                .map(Module::getName)
+                                .toList(),
                         forceBuild
                 )
         );

@@ -54,23 +54,38 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires a reference-compatible object reference and a value compatible with the field type on the operand stack at the point of this instruction.</li>
+        <li>Verification requires a reference-compatible object reference and a value compatible with the field type on
+            the operand stack at the point of this instruction.
+        </li>
         <li>If type resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>For category-2 field types (<code>long</code>, <code>double</code>), operand-stack slot accounting is two words for value plus one for <code>objectref</code>.</li>
-        <li>Verifier checks value-type assignment compatibility with the field descriptor at each control-flow point.</li>
+        <li>For category-2 field types (<code>long</code>, <code>double</code>), operand-stack slot accounting is two
+            words for value plus one for <code>objectref</code>.
+        </li>
+        <li>Verifier checks value-type assignment compatibility with the field descriptor at each control-flow point.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>NullPointerException</code> may also be thrown if the operand stack does not contain enough values for the field type (e.g., missing value or object reference).</li>
-        <li><code>IncompatibleClassChangeError</code> may also be thrown if the resolved field is not an instance field (e.g., static field).</li>
-        <li><code>NoSuchFieldError</code> may also be thrown if the field name or type does not match any field in the resolved class.</li>
-        <li><code>IllegalAccessError</code> may also be thrown if the field is not accessible from the current class (e.g., private field in another class).</li>
-        <li><code>NoClassDefFoundError</code> may also be thrown if the class containing the field cannot be found at runtime.</li>
+        <li><code>NullPointerException</code> may also be thrown if the operand stack does not contain enough values for
+            the field type (e.g., missing value or object reference).
+        </li>
+        <li><code>IncompatibleClassChangeError</code> may also be thrown if the resolved field is not an instance field
+            (e.g., static field).
+        </li>
+        <li><code>NoSuchFieldError</code> may also be thrown if the field name or type does not match any field in the
+            resolved class.
+        </li>
+        <li><code>IllegalAccessError</code> may also be thrown if the field is not accessible from the current class
+            (e.g., private field in another class).
+        </li>
+        <li><code>NoClassDefFoundError</code> may also be thrown if the class containing the field cannot be found at
+            runtime.
+        </li>
     </ul>
 </div>
 

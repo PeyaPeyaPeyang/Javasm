@@ -6,23 +6,16 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.lexer.ANTLRLexerAdaptor;
-import org.antlr.intellij.adaptor.lexer.PSIElementTypeFactory;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
-import org.antlr.v4.runtime.Vocabulary;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.langjal.compiler.JALLexer;
-import tokyo.peya.langjal.compiler.JALParser;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
-public class JALSyntaxHighlighter extends SyntaxHighlighterBase
-{
+public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey ID =
             createTextAttributesKey("JAL_ID", DefaultLanguageHighlighterColors.IDENTIFIER);
     public static final TextAttributesKey NUMBER =
@@ -113,22 +106,18 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
             createTextAttributesKey("JAL_INSN_WIDE", DefaultLanguageHighlighterColors.KEYWORD);
     private static final TextAttributesKey[] EMPTY = new TextAttributesKey[0];
 
-    static
-    {
+    static {
         JALParserDefinition.initStatic();
     }
 
     @Override
-    public @NotNull Lexer getHighlightingLexer()
-    {
+    public @NotNull Lexer getHighlightingLexer() {
         return new ANTLRLexerAdaptor(JALLanguage.INSTANCE, new JALLexer(null));
     }
 
     @Nullable
-    private TextAttributesKey highlightsToken(TokenIElementType token)
-    {
-        return switch (token.getANTLRTokenType())
-        {
+    private TextAttributesKey highlightsToken(TokenIElementType token) {
+        return switch (token.getANTLRTokenType()) {
             case JALLexer.ID -> ID;
             case JALLexer.NUMBER -> NUMBER;
             case JALLexer.STRING -> STRING;
@@ -387,8 +376,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase
     }
 
     @Override
-    public TextAttributesKey @NotNull [] getTokenHighlights(IElementType elementType)
-    {
+    public TextAttributesKey @NotNull [] getTokenHighlights(IElementType elementType) {
         TextAttributesKey key = null;
         if (elementType instanceof TokenIElementType tokenType)
             key = highlightsToken(tokenType);

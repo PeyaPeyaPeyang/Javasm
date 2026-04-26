@@ -11,17 +11,14 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 
-public class JALRunLineMarkerProvider extends RunLineMarkerContributor
-{
+public class JALRunLineMarkerProvider extends RunLineMarkerContributor {
     @Override
-    public boolean isDumbAware()
-    {
+    public boolean isDumbAware() {
         return this.getClass().isAssignableFrom(JALRunLineMarkerProvider.class);
     }
 
     @Override
-    public @Nullable Info getInfo(@NotNull PsiElement psiElement)
-    {
+    public @Nullable Info getInfo(@NotNull PsiElement psiElement) {
         // ソース・ルート内にある必要がある
         if (!PSIExecutorUtil.isInSourceRoot(psiElement.getContainingFile()))
             return null;

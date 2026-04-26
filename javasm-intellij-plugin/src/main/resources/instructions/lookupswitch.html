@@ -10,7 +10,9 @@
 
     <h5><b>Operands:</b></h5>
     <ul>
-        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after the opcode.</li>
+        <li>Padding bytes (<code>0x00</code>) so that the first 32-bit field starts at a 4-byte boundary after the
+            opcode.
+        </li>
         <li><code>default</code>: signed 32-bit branch offset relative to the opcode address.</li>
         <li><code>npairs</code>: signed 32-bit count of match-offset pairs (must be non-negative).</li>
         <li><code>match_i</code>/<code>offset_i</code>: signed 32-bit key and branch offset pairs.</li>
@@ -56,10 +58,12 @@ lookupswitch {
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>Use <code>lookupswitch</code> for sparse key sets; dense key intervals are usually encoded as <code>tableswitch</code>.</li>
+        <li>Use <code>lookupswitch</code> for sparse key sets; dense key intervals are usually encoded as <code>tableswitch</code>.
+        </li>
         <li>Bytecode tooling must preserve required padding and key sort order.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
-    <p>This instruction does not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected during verification.</p>
+    <p>This instruction does not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected
+        during verification.</p>
 </div>

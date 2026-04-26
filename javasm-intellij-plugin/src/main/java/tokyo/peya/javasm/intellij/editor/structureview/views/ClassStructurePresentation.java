@@ -1,7 +1,6 @@
 package tokyo.peya.javasm.intellij.editor.structureview.views;
 
 import com.intellij.util.PlatformIcons;
-import javax.swing.Icon;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.editor.structureview.JALStructureViewItemPresentationBase;
@@ -9,22 +8,20 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.langjal.compiler.jvm.AccessAttribute;
 import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 
-public class ClassStructurePresentation extends JALStructureViewItemPresentationBase
-{
-    public ClassStructurePresentation(@NotNull ClassDefinitionNode element)
-    {
+import javax.swing.*;
+
+public class ClassStructurePresentation extends JALStructureViewItemPresentationBase {
+    public ClassStructurePresentation(@NotNull ClassDefinitionNode element) {
         super(element);
     }
 
     @Override
-    public @Nullable String getPresentableText()
-    {
+    public @Nullable String getPresentableText() {
         return ((ClassDefinitionNode) this.psiElement).getFullQualifiedClassName();
     }
 
     @Override
-    public @Nullable Icon getIcon(boolean b)
-    {
+    public @Nullable Icon getIcon(boolean b) {
         ClassDefinitionNode classNode = (ClassDefinitionNode) this.psiElement;
         AccessAttributeSet attributes = classNode.getAccessAttributes();
 

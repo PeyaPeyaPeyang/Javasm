@@ -36,7 +36,8 @@
     </p>
     <ul>
         <li><code>[</code>: Indicates an array dimension</li>
-        <li>Primitive types: <code>I</code>, <code>J</code>, <code>F</code>, <code>D</code>, <code>Z</code>, <code>B</code>, <code>C</code>, <code>S</code></li>
+        <li>Primitive types: <code>I</code>, <code>J</code>, <code>F</code>, <code>D</code>, <code>Z</code>,
+            <code>B</code>, <code>C</code>, <code>S</code></li>
         <li><code>L&lt;classname&gt;;</code>: Reference type</li>
     </ul>
 
@@ -60,7 +61,8 @@
             array type descriptor.
         </li>
         <li>
-            Only the first <code>dimensions</code> dimensions are allocated. Remaining dimensions are left uninitialized,
+            Only the first <code>dimensions</code> dimensions are allocated. Remaining dimensions are left
+            uninitialized,
             meaning their elements are <code>null</code> references.
         </li>
         <li>
@@ -71,7 +73,9 @@
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
         <li><code>NegativeArraySizeException</code>: If any dimension size is negative.</li>
-        <li><code>ClassNotFoundException</code> (wrapped in <code>NoClassDefFoundError</code>): If the array type cannot be resolved.</li>
+        <li><code>ClassNotFoundException</code> (wrapped in <code>NoClassDefFoundError</code>): If the array type cannot
+            be resolved.
+        </li>
         <li><code>IllegalAccessError</code>: If the referenced class or interface is not accessible.</li>
     </ul>
 </div>

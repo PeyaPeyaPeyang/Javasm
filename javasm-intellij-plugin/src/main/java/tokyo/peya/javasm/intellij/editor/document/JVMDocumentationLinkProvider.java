@@ -2,22 +2,18 @@ package tokyo.peya.javasm.intellij.editor.document;
 
 import org.jetbrains.annotations.NotNull;
 
-public class JVMDocumentationLinkProvider
-{
+public class JVMDocumentationLinkProvider {
     private static final String JVM_DOCUMENT_URL = "https://docs.oracle.com/javase/specs/jvms/se26/html/jvms-6.html";
 
-    public static String getDocumentationLink(String instructionName)
-    {
+    public static String getDocumentationLink(String instructionName) {
         if (instructionName == null || instructionName.isEmpty())
             return JVM_DOCUMENT_URL;
 
         return JVM_DOCUMENT_URL + "#jvms-6.5." + normalizeInstructionName(instructionName);
     }
 
-    private static String normalizeInstructionName(@NotNull String instructionName)
-    {
-        return switch (instructionName)
-        {
+    private static String normalizeInstructionName(@NotNull String instructionName) {
+        return switch (instructionName) {
             case "aload_0", "aload_1", "aload_2", "aload_3" -> "aload_n";
             case "astore_0", "astore_1", "astore_2", "astore_3" -> "astore_n";
             case "dcmpg", "dcmpl" -> "dcmp_op";

@@ -6,16 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.langjal.compiler.jvm.MethodDescriptor;
 
-public class InvokeDynamicMethodTypeNode extends ANTLRPsiNode
-{
-    public InvokeDynamicMethodTypeNode(@NotNull ASTNode node)
-    {
+public class InvokeDynamicMethodTypeNode extends ANTLRPsiNode {
+    public InvokeDynamicMethodTypeNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public MethodDescriptor getMethodType()
-    {
+    public MethodDescriptor getMethodType() {
         return MethodDescriptor.parse(this.getText());
     }
 }

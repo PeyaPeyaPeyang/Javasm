@@ -10,15 +10,12 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 import tokyo.peya.langjal.compiler.utils.EvaluatorCommons;
 
-public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
-{
-    public InstructionLookupSwitchCaseNode(@NotNull ASTNode node)
-    {
+public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode {
+    public InstructionLookupSwitchCaseNode(@NotNull ASTNode node) {
         super(node);
     }
 
-    public boolean isDefaultCase()
-    {
+    public boolean isDefaultCase() {
         LeafPsiElement defaultKeyword = PsiTreeUtil.findChildOfType(this, LeafPsiElement.class);
         if (defaultKeyword == null)
             return false;
@@ -26,8 +23,7 @@ public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public Number getCaseNumber()
-    {
+    public Number getCaseNumber() {
         NumberNode numberNode = PsiTreeUtil.findChildOfType(this, NumberNode.class);
         if (numberNode == null)
             return null;
@@ -36,14 +32,12 @@ public class InstructionLookupSwitchCaseNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public LabelNameNode getBranchLabel()
-    {
+    public LabelNameNode getBranchLabel() {
         return PsiTreeUtil.findChildOfType(this, LabelNameNode.class);
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         if (this.isDefaultCase())
             return "InstructionLookupSwitchCaseNode(default -> " + this.getBranchLabel() + ")";
         else

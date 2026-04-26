@@ -15,7 +15,8 @@
     <ul>
         <li><code>methodref</code>（2 バイト）: <code>InterfaceMethodref</code> を指す定数プールインデックス</li>
         <li><code>count</code>（1 バイト）: 受け手 <code>this</code> を含む引数スロット数。
-            カテゴリ 2 引数（<code>long</code>/<code>double</code>）は 2 スロットとして数えます</li>
+            カテゴリ 2 引数（<code>long</code>/<code>double</code>）は 2 スロットとして数えます
+        </li>
         <li><code>zero</code>（1 バイト）: 0 固定（将来拡張用予約）</li>
     </ul>
 
@@ -28,10 +29,13 @@
 &lt;classname&gt;-&gt;&lt;methodname&gt;(&lt;argument_descriptor&gt;)&lt;return_descriptor&gt;
     </pre>
     <ul>
-        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス/インターフェース名。例: <code>java/lang/String</code></li>
+        <li><b>&lt;classname&gt;</b>: JVM 内部形式（スラッシュ区切り）の完全修飾クラス/インターフェース名。例: <code>java/lang/String</code>
+        </li>
         <li><b>&lt;methodname&gt;</b>: メソッド名。例: <code>substring</code>, <code>size</code></li>
-        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例: <code>I</code>，<code>Ljava/lang/String;</code></li>
-        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>，<code>I</code>，<code>Ljava/lang/Object;</code></li>
+        <li><b>&lt;argument_descriptor&gt;</b>: JVM メソッド引数記述子。例:
+            <code>I</code>，<code>Ljava/lang/String;</code></li>
+        <li><b>&lt;return_descriptor&gt;</b>: JVM 戻り値型記述子。例: <code>V</code>，<code>I</code>，<code>Ljava/lang/Object;</code>
+        </li>
     </ul>
 
     <h5><b>例:</b></h5>
@@ -60,7 +64,9 @@
 
     <h5><b>検証:</b></h5>
     <ul>
-        <li>検証では，メソッド参照の妥当性，互換な受け手参照，十分な引数スロット，および解決先がインターフェースメソッドであることを確認します。</li>
+        <li>
+            検証では，メソッド参照の妥当性，互換な受け手参照，十分な引数スロット，および解決先がインターフェースメソッドであることを確認します。
+        </li>
         <li>型解決に失敗した場合は，対応するリンケージエラーが発生します。</li>
         <li>実行時には，受け手実クラスに基づき JVM のインターフェース解決・選択規則でディスパッチされます。</li>
     </ul>
@@ -70,7 +76,8 @@
         <li><code>NullPointerException</code>: 受け手オブジェクト参照が null の場合。</li>
         <li><code>IncompatibleClassChangeError</code>: 解決先メソッドがインターフェースメソッドでない場合。</li>
         <li><code>AbstractMethodError</code>: 解決先メソッドが abstract で，受け手実クラスが実装を提供しない場合。</li>
-        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。</li>
+        <li><code>LinkageError</code>: シンボリックメソッド参照を解決できない場合，または解決先メソッドにアクセスできない場合。
+        </li>
         <li><code>WrongMethodTypeException</code>: 実引数型が実行時にメソッド記述子と一致しない場合。</li>
     </ul>
 </div>

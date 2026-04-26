@@ -11,22 +11,17 @@ import tokyo.peya.javasm.intellij.inspection.quickfixes.JALClassfileNameQuickFix
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 
-public class JALClassfileNameInspection extends AbstractJALInspection
-{
-    public JALClassfileNameInspection()
-    {
+public class JALClassfileNameInspection extends AbstractJALInspection {
+    public JALClassfileNameInspection() {
         super("JALClassfileName");
     }
 
     @Override
     protected @NotNull JALPsiElementVisitor buildJALVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                            @NotNull LocalInspectionToolSession session)
-    {
-        return new JALPsiElementVisitor()
-        {
+                                                            @NotNull LocalInspectionToolSession session) {
+        return new JALPsiElementVisitor() {
             @Override
-            protected void visitClass(@NotNull ClassDefinitionNode node)
-            {
+            protected void visitClass(@NotNull ClassDefinitionNode node) {
                 PSIExecutorUtil.ClassNameValidationResult validationResult = PSIExecutorUtil.validateClassName(node);
                 if (validationResult == null || validationResult.isValid())
                     return;

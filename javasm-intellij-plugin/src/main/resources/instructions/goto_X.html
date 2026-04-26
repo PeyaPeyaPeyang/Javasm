@@ -52,7 +52,9 @@
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li>Malformed branch structure is typically rejected during verification (for example as <code>VerifyError</code>).</li>
+        <li>Malformed branch structure is typically rejected during verification (for example as
+            <code>VerifyError</code>).
+        </li>
         <li>Prefer <b>{link:goto}</b> unless distance requires <b>{link:goto_w}</b>.</li>
     </ul>
 
@@ -60,10 +62,13 @@
     <ul>
         <li>Verification ensures that all branch targets are valid instruction offsets within the same method.</li>
         <li>Verification ensures that control-flow merges have consistent stack and local variable types.</li>
-        <li>Verification ensures that constructor-initialisation rules are satisfied for control flow involving uninitialized objects.</li>
+        <li>Verification ensures that constructor-initialisation rules are satisfied for control flow involving
+            uninitialized objects.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
-    <p>These instructions do not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected during verification.</p>
+    <p>These instructions do not throw any instruction-specific runtime exceptions. Invalid branch targets are rejected
+        during verification.</p>
 </div>
 

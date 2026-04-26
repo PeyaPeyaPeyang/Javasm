@@ -7,19 +7,16 @@ import com.intellij.psi.PsiElementVisitor;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 
-public abstract class AbstractJALInspection extends LocalInspectionTool
-{
+public abstract class AbstractJALInspection extends LocalInspectionTool {
     private final String id;
 
-    public AbstractJALInspection(@NotNull String id)
-    {
+    public AbstractJALInspection(@NotNull String id) {
         this.id = id;
     }
 
     @Override
     public @NotNull PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly,
-                                                   @NotNull LocalInspectionToolSession session)
-    {
+                                                   @NotNull LocalInspectionToolSession session) {
         return this.buildJALVisitor(holder, isOnTheFly, session);
     }
 
@@ -28,8 +25,7 @@ public abstract class AbstractJALInspection extends LocalInspectionTool
                                                             @NotNull LocalInspectionToolSession session);
 
     @Override
-    public @NonNls @NotNull String getID()
-    {
+    public @NonNls @NotNull String getID() {
         return this.id;
     }
 }

@@ -56,20 +56,31 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification enforces constructor rules for uninitialized objects and legal <code>&lt;init&gt;</code> usage.</li>
+        <li>Verification enforces constructor rules for uninitialized objects and legal <code>&lt;init&gt;</code> usage.
+        </li>
     </ul>
 
     <h5><b>Notes:</b></h5>
     <ul>
-        <li><code>&lt;clinit&gt;</code> is not invoked by bytecode call instructions; class initialization is triggered implicitly.</li>
+        <li><code>&lt;clinit&gt;</code> is not invoked by bytecode call instructions; class initialization is triggered
+            implicitly.
+        </li>
         <li>Use <code>invokespecial</code> when semantic intent requires non-virtual selection.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>NullPointerException</code>: if the operand stack is empty (i.e., no object reference to invoke on).</li>
-        <li><code>LinkageError</code>: if the symbolic method reference cannot be resolved or if the resolved method is not accessible.</li>
-        <li><code>IncompatibleClassChangeError</code>: if the resolved method is static, if an instance method is resolved for a constructor reference, or if the resolved method is not a valid method handle for the invocation type.</li>
-        <li><code>IllegalAccessError</code>: if the resolved method is an instance method that is not accessible from the current class.</li>
+        <li><code>NullPointerException</code>: if the operand stack is empty (i.e., no object reference to invoke on).
+        </li>
+        <li><code>LinkageError</code>: if the symbolic method reference cannot be resolved or if the resolved method is
+            not accessible.
+        </li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved method is static, if an instance method is
+            resolved for a constructor reference, or if the resolved method is not a valid method handle for the
+            invocation type.
+        </li>
+        <li><code>IllegalAccessError</code>: if the resolved method is an instance method that is not accessible from
+            the current class.
+        </li>
     </ul>
 </div>

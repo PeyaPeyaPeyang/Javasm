@@ -11,21 +11,19 @@ import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassDefinitionNode;
 
-public class JALProjectViewDecorator implements ProjectViewNodeDecorator
-{
+public class JALProjectViewDecorator implements ProjectViewNodeDecorator {
     @Override
-    public void decorate(@NotNull ProjectViewNode<?> node, @NotNull PresentationData data)
-    {
+    public void decorate(@NotNull ProjectViewNode<?> node, @NotNull PresentationData data) {
         Project project = node.getProject();
         VirtualFile file = node.getVirtualFile();
         if (project == null || file == null || file.isDirectory())
             return;
 
-        PsiFile  psiFile = PsiManager.getInstance(project).findFile(file);
+        PsiFile psiFile = PsiManager.getInstance(project).findFile(file);
         if (!(psiFile instanceof JALFile jal))
             return;
 
-        ClassDefinitionNode clazz= jal.getClassDefinition();
+        ClassDefinitionNode clazz = jal.getClassDefinition();
         if (clazz == null)
             return;
 

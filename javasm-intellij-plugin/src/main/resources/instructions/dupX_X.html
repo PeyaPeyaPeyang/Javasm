@@ -18,9 +18,19 @@
 
     <h5><b>スタック効果:</b></h5>
     <style>
-        .base { color: #666; }
-        .new  { color: #2e7d32; font-weight: bold; }
-        .move { color: #f57c00; font-weight: bold; }
+        .base {
+            color: #666;
+        }
+
+        .new {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+
+        .move {
+            color: #f57c00;
+            font-weight: bold;
+        }
     </style>
 
     <ul>
@@ -30,23 +40,28 @@
         </li>
 
         <li><b>{link:dup_x1}</b><br>
-            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are category 1）<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are
+            category 1）<br>
             After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
         </li>
 
         <li><b>{link:dup_x2}</b><br>
             Form 1（すべて category 1）:<br>
             Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
-            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="new">value1</span></code><br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>,
+                <span class="new">value1</span></code><br>
             Form 2:<br>
-            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 is category 1, value1 is category 2）<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 is
+            category 1, value1 is category 2）<br>
             After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
         </li>
 
         <li><b>{link:dup2}</b><br>
             Form 1:<br>
-            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are category 1）<br>
-            After: <code>..., <span class="base">value2</span>, <span class="base">value1</span>, <span class="new">value2</span>, <span class="new">value1</span></code><br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are
+            category 1）<br>
+            After: <code>..., <span class="base">value2</span>, <span class="base">value1</span>, <span class="new">value2</span>,
+                <span class="new">value1</span></code><br>
             Form 2:<br>
             Before: <code>..., <span class="base">value1</span></code>（category 2）<br>
             After: <code>..., <span class="base">value1</span>, <span class="new">value1</span></code>
@@ -55,24 +70,34 @@
         <li><b>{link:dup2_x1}</b><br>
             Form 1（すべて category 1）:<br>
             Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
-            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>,
+                <span class="base">value2</span>, <span class="base">value1</span></code><br>
             Form 2:<br>
-            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 is category 1, value1 is category 2）<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（value2 is
+            category 1, value1 is category 2）<br>
             After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
         </li>
 
         <li><b>{link:dup2_x2}</b><br>
             Form 1（すべて category 1）:<br>
-            Before: <code>..., <span class="base">value4</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
-            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value4</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            Before: <code>..., <span class="base">value4</span>, <span class="base">value3</span>, <span class="base">value2</span>,
+                <span class="base">value1</span></code><br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value4</span>,
+                <span class="base">value3</span>, <span class="base">value2</span>, <span
+                        class="base">value1</span></code><br>
             Form 2:<br>
-            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3 is category 2, value2 and value1 are category 1）<br>
-            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="new">value1</span></code><br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3
+            is category 2, value2 and value1 are category 1）<br>
+            After: <code>..., <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>,
+                <span class="new">value1</span></code><br>
             Form 3:<br>
-            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3 is category 2, value2 and value1 are category 1）<br>
-            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code><br>
+            Before: <code>..., <span class="base">value3</span>, <span class="base">value2</span>, <span class="base">value1</span></code>（value3
+            is category 2, value2 and value1 are category 1）<br>
+            After: <code>..., <span class="move">value2</span>, <span class="move">value1</span>, <span class="base">value3</span>,
+                <span class="base">value2</span>, <span class="base">value1</span></code><br>
             Form 4:<br>
-            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are category 2）<br>
+            Before: <code>..., <span class="base">value2</span>, <span class="base">value1</span></code>（both are
+            category 2）<br>
             After: <code>..., <span class="move">value1</span>, <span class="base">value2</span>, <span class="new">value1</span></code>
         </li>
     </ul>
@@ -86,11 +111,15 @@
 
     <h5><b>Verification:</b></h5>
     <ul>
-        <li>Verification requires that the operand stack can accept the required values and resulting duplicates at the point of this instruction.</li>
+        <li>Verification requires that the operand stack can accept the required values and resulting duplicates at the
+            point of this instruction.
+        </li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>VerifyError</code>: if the operand stack shape or category does not match any valid form for the instruction.</li>
+        <li><code>VerifyError</code>: if the operand stack shape or category does not match any valid form for the
+            instruction.
+        </li>
     </ul>
 </div>

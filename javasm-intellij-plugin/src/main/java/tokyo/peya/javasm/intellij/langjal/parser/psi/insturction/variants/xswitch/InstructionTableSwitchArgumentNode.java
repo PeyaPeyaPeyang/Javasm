@@ -9,16 +9,13 @@ import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.NumberNode;
 
-public class InstructionTableSwitchArgumentNode extends ANTLRPsiNode
-{
-    public InstructionTableSwitchArgumentNode(@NotNull ASTNode node)
-    {
+public class InstructionTableSwitchArgumentNode extends ANTLRPsiNode {
+    public InstructionTableSwitchArgumentNode(@NotNull ASTNode node) {
         super(node);
     }
 
     @Nullable
-    public LabelNameNode getDefaultBranchLabelName()
-    {
+    public LabelNameNode getDefaultBranchLabelName() {
         PsiElement firstChild = this.getLastChild();  // tableswitch N { ... } default LabelNameNode という構文だから。
         if (!(firstChild instanceof LabelNameNode))
             return null;
@@ -26,8 +23,7 @@ public class InstructionTableSwitchArgumentNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public Number getLowIndex()
-    {
+    public Number getLowIndex() {
         NumberNode lowValueNode = PsiTreeUtil.findChildOfType(this, NumberNode.class);
         if (lowValueNode == null)
             return 0;
@@ -36,8 +32,7 @@ public class InstructionTableSwitchArgumentNode extends ANTLRPsiNode
     }
 
     @Nullable
-    public LabelNameNode[] getBranchLabels()
-    {
+    public LabelNameNode[] getBranchLabels() {
         LabelNameNode[] branchLabelsIncludeDefault = this.findChildrenByClass(LabelNameNode.class);
         if (branchLabelsIncludeDefault.length < 1)
             return null;
