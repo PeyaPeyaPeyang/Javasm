@@ -5,6 +5,7 @@ import com.intellij.codeInsight.completion.CompletionType;
 import com.intellij.patterns.PlatformPatterns;
 import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.InstructionSetNode;
 
 public class JALCompletionContributor extends CompletionContributor
@@ -41,9 +42,7 @@ public class JALCompletionContributor extends CompletionContributor
                                 .withLanguage(JALLanguage.INSTANCE)
                                 .inside(InstructionSetNode.class)
                                 .with(JALCompletionCommons.emptyLine())
-                                .andNot(PlatformPatterns.psiElement().afterLeaf(
-                                        PlatformPatterns.psiElement(InstructionNameNode.class))
-                                ),
+                                .andNot(PlatformPatterns.psiElement().afterSibling(PlatformPatterns.psiElement(InstructionNameNode.class))),
                 new JALInstructionNameCompletionProvider()
         );
         this.extend(
