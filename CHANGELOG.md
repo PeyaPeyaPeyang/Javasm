@@ -1,5 +1,17 @@
 # Changelog
 
+### [1.3.0] - 2026/4/26
+
+JAL Implementation: 1.2.2
+
+Javasm now supports Japanese language in the user interface. This release includes new features and improvements.
+Javasm はユーザーインターフェースで日本語をサポートするようになりました。このリリースには新機能と改善が含まれています。
+
+- **feat**: Added Japanese language support for the user interface.
+- **chore**: Enhance documentations of JVM instructions for better understanding.
+- feat: Enhance code-folding feature with comment "<editor-fold desc="...">" for better code organisation.
+- fix: Code completion now correctly handles instructions at the middle of a method.
+
 ### [1.2.1] - 2026/04/25
 
 JAL Implementation: 1.2.2

@@ -31,7 +31,7 @@
         <compiler.buildTargetScopeProvider
                 implementation="tokyo.peya.javasm.intellij.execution.JALBuildTargetScopeProvider"/>
         <compileServer.plugin
-                classpath="javasm-jps-plugin-1.2.1.jar;langjal-1.2.2.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.9.1.jar;asm-commons-9.9.1.jar;asm-util-9.9.1.jar;asm-tree-9.9.1.jar;asm-analysis-9.9.1.jar;guava-33.4.8-jre.jar"/>
+                classpath="javasm-jps-plugin-1.3.0.jar;langjal-1.2.2.jar;antlr4-runtime-4.13.2.jar;icu4j-72.1.jar;org.abego.treelayout.core-1.0.3.jar;ST4-4.3.4.jar;asm-9.9.1.jar;asm-commons-9.9.1.jar;asm-util-9.9.1.jar;asm-tree-9.9.1.jar;asm-analysis-9.9.1.jar;guava-33.4.8-jre.jar"/>
         <lang.ast.factory language="JAL" implementationClass="tokyo.peya.javasm.intellij.langjal.parser.JALASTFactory"/>
         <lang.psiStructureViewFactory language="JAL"
                                       implementationClass="tokyo.peya.javasm.intellij.editor.structureview.JALStructureViewFactory"/>
