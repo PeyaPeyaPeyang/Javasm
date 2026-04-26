@@ -62,7 +62,8 @@ intellijPlatform {
         }
 
         description.set(providers.fileContents(layout.projectDirectory.file("../README.md")).asText.map {
-            markdownToHTML(it)
+            val prefix = "An IntelliJ IDEA plugin for JAL, a modern JVM assembly language that makes writing and exploring Java bytecode easy and smart, with rich IDE support."
+            prefix + "<br>" + markdownToHTML(it)
         })
         changeNotes.set(extractLatestChangeNotes())
     }
