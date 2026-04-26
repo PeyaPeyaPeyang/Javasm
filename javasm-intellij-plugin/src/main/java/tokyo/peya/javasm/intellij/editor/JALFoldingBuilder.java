@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 public class JALFoldingBuilder extends FoldingBuilderEx
 {
-    private static final Pattern DESC_PATTERN = Pattern.compile("<editor-fold\\s+description\\s*=\\s*\"([^\"]*)\"");
+    private static final Pattern DESC_PATTERN = Pattern.compile("<editor-fold\\s+desc(ription)?\\s*=\\s*\"([^\"]*)\"");
 
     private static String extractDesc(String text) {
         Matcher m = DESC_PATTERN.matcher(text);
