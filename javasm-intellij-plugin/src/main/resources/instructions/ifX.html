@@ -63,6 +63,12 @@
         <li>Branch target and frame-type consistency are verified at class loading/linking time.</li>
     </ul>
 
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li>Comparisons are signed; these opcodes do not provide unsigned comparison semantics.</li>
+        <li>The <code>{link:if_icmpX}</code> instructions compare two <code>int</code> values on the stack, while these instructions compare a single <code>int</code> value against zero. Choose the appropriate instruction based on the context.</li>
+    </ul>
+
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <p>These instructions do not throw any instruction-specific runtime exceptions.</p>
 </div>

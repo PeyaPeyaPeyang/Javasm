@@ -55,13 +55,12 @@
     <h5><b>Verification:</b></h5>
     <ul>
         <li>Verification requires a reference-compatible input and guarantees a value of the field type for successor frames.</li>
-        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>NullpointerException</code>: if the object reference is null.</li>
-        <li><code>IncompatibleClassChangeError</code>: if the resolved field is static.</li>
+        <li><code>NullpointerException</code>: if the object reference is <code>null</code>.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved field is <code>static</code>.</li>
         <li>Linkage errors (such as <code>NoSuchFieldError</code>,
             <code>IllegalAccessError</code>,
             or <code>NoClassDefFoundError</code>):

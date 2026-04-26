@@ -56,12 +56,11 @@
     <h5><b>Verification:</b></h5>
     <ul>
         <li>Verification requires that the operand stack can accept a value of the field type at the point of this instruction.</li>
-        <li>If type resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
 
     <h5><b>Runtime Exceptions and Errors:</b></h5>
     <ul>
-        <li><code>IncompatibleClassChangeError</code>: if the resolved field is not static.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the resolved field is not <code>static</code>.</li>
         <li>Linkage errors (such as <code>NoSuchFieldError</code>,
             <code>IllegalAccessError</code>,
             or <code>NoClassDefFoundError</code>):

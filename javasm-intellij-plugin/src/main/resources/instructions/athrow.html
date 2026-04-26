@@ -29,7 +29,6 @@
     <h5><b>Verification:</b></h5>
     <ul>
         <li>Verification requires that the operand stack can accept a reference value at the point of this instruction.</li>
-        <li>At runtime, the reference on top of the stack is resolved to a class. If resolution fails, the corresponding linkage error is thrown.</li>
     </ul>
 
 
@@ -37,5 +36,7 @@
     <ul>
         <li><code>NullPointerException</code>: if the reference on top of the stack is <code>null</code>.</li>
         <li><code>ClassCastException</code>: if the reference on top of the stack is not an instance of <code>java.lang.Throwable</code>.</li>
+        <li><code>NoClassDefFoundError</code>: if the class of the reference on top of the stack cannot be found.</li>
+        <li><code>IncompatibleClassChangeError</code>: if the class of the reference on top of the stack is not a <code>java.lang.Throwable</code>.</li>
     </ul>
 </div>

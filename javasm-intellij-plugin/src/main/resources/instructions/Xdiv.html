@@ -39,8 +39,14 @@
         <li>Verification requires that the operand stack can accept the appropriate category of values for the instruction type at the point of this instruction.</li>
     </ul>
 
+    <h5><b>Notes:</b></h5>
+    <ul>
+        <li><code>fdiv</code> and <code>ddiv</code> follow IEEE 754 rules, so division by zero is not an exception but results in specific values (<code>Infinity</code> or <code>NaN</code>).</li>
+    </ul>
+
     <h5><b>Runtime Exceptions:</b></h5>
     <ul>
-        <li><code>ArithmeticException</code>: if an integer division by zero occurs.</li>
+        <li><code>ArithmeticException</code>: thrown by <code>idiv</code> or <code>ldiv</code> if the divisor (top operand) is zero.</li>
     </ul>
+
 </div>
