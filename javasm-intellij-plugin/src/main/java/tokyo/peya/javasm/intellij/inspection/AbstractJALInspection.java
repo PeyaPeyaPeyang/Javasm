@@ -4,8 +4,10 @@ import com.intellij.codeInspection.LocalInspectionTool;
 import com.intellij.codeInspection.LocalInspectionToolSession;
 import com.intellij.codeInspection.ProblemsHolder;
 import com.intellij.psi.PsiElementVisitor;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 
 public abstract class AbstractJALInspection extends LocalInspectionTool {
     private final String id;
@@ -27,5 +29,8 @@ public abstract class AbstractJALInspection extends LocalInspectionTool {
     @Override
     public @NonNls @NotNull String getID() {
         return this.id;
+    }
+    public boolean isAvailableForFile(@NotNull PsiFile file) {
+        return file.getLanguage() instanceof JALLanguage;
     }
 }
