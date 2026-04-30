@@ -17,11 +17,7 @@ public class FieldReferenceNode extends ANTLRPsiNode {
 
     @Nullable
     public FullQualifiedNameNode getFieldOwner() {
-        FullQualifiedNameNode fullQualifiedNameNode = PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
-        if (fullQualifiedNameNode == null)
-            throw new IllegalStateException("Field owner not found in instruction field reference node");
-
-        return fullQualifiedNameNode;
+        return PsiTreeUtil.findChildOfType(this, FullQualifiedNameNode.class);
     }
 
     @Nullable
