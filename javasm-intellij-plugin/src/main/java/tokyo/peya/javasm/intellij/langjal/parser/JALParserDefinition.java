@@ -167,17 +167,15 @@ public final class JALParserDefinition implements ParserDefinition {
             case JALParser.RULE_tryCatchDirectiveEntry -> new TryCatchDirectiveEntryNode(node);
             case JALParser.RULE_catchDirective -> new CatchDirectiveNode(node);
             case JALParser.RULE_finallyDirective -> new FinallyDirectiveNode(node);
+            case JALParser.RULE_fieldName -> new FieldReferenceNameNode(node);
 
             case JALParser.RULE_jvmInsArgLocalRef -> new LocalReferenceNode(node);
             case JALParser.RULE_jvmInsArgFieldRef -> new FieldReferenceNode(node);
-            case JALParser.RULE_jvmInsArgFieldRefName -> new FieldReferenceNameNode(node);
-
-
             case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
             case JALParser.RULE_jvmInsArgScalarType -> new JVMScalarNode(node);
 
             case JALParser.RULE_jvmInsArgInvokeDynamicMethodHandleType -> new InvokeDynamicMethodHandleTypeNode(node);
-            case JALParser.RULE_jvmInsArgInvokeDynamicMethodTypeMethodHandle -> new InvokeDynamicMethodHandleNode(node);
+            case JALParser.RULE_jvmInsArgInvokeDynamicMethodHandle -> new InvokeDynamicMethodHandleNode(node);
             case JALParser.RULE_jvmInsArgInvokeDynamicMethodType -> new InvokeDynamicMethodTypeNode(node);
             case JALParser.RULE_jvmInsArgInvokeDynamicRef -> new InvokeDynamicArgumentNode(node);
 

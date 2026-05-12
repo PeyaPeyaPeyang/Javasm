@@ -5,11 +5,11 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.util.PsiTreeUtil;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiNode;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.langjal.compiler.jvm.AccessAttribute;
 import tokyo.peya.langjal.compiler.jvm.AccessAttributeSet;
 import tokyo.peya.langjal.compiler.jvm.AccessLevel;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 public class AccessModifierNode extends ANTLRPsiNode {
     public AccessModifierNode(@NotNull ASTNode node) {
@@ -35,7 +35,7 @@ public class AccessModifierNode extends ANTLRPsiNode {
                 Arrays.stream(accessAttributeElements)
                         .map(element -> (AccessAttributeNode) element)
                         .map(AccessAttributeNode::getAccessAttribute)
-                        .collect(Collectors.toSet())
+                        .toArray(AccessAttribute[]::new)
         );
     }
 }

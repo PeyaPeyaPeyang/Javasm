@@ -61,10 +61,9 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement 
             case JALParser.RULE_label,
                  JALParser.RULE_labelName -> new LabelNameReference(this);
 
-            case JALParser.RULE_jvmInsArgFieldRefType, JALParser.RULE_jvmInsArgMethodRefOwnerType ->
-                    new ClassReference(this);
+            case JALParser.RULE_fullQualifiedClassName -> new ClassReference(this);
 
-            case JALParser.RULE_jvmInsArgFieldRefName -> {
+            case JALParser.RULE_fieldName -> {
                 PsiElement g = parent.getParent();
                 if (g instanceof FieldReferenceNode field)
                     yield new FieldReference(field);
@@ -76,7 +75,7 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement 
                     yield new MethodReference(method);
                 yield null;
             }
-            case JALParser.RULE_typeDescriptor -> new ClassTypeDescriptorReference(this);
+            case JALParser.RULE_typeDescriptor, JALParser.RULE_nonArrayTypeDescriptor -> new ClassTypeDescriptorReference(this);
 
             case JALParser.RULE_jvmInsArgLocalRef -> new LocalReference(this);
 
