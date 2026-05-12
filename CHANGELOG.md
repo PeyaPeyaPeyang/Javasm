@@ -2,9 +2,9 @@
 
 ### [1.3.1] - 2026/5/12
 
-JAL Implementation: 1.2.6
+JAL Implementation: 1.2.7
 
-- **chore**: Bump JAL implementation to 1.2.6 for better stability and performance.
+- **chore**: Bump JAL implementation to 1.2.7 for better stability and performance.
 
 ### [1.3.0] - 2026/4/26
 

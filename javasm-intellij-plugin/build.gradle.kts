@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "tokyo.peya.plugin"
-version = "1.3.0"
+version = "1.3.1"
 
 repositories {
     mavenCentral()
@@ -39,7 +39,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.9.1")
 
     implementation(project(":javasm-jps-plugin"))
-    implementation("tokyo.peya:langjal:1.2.6")
+    implementation("tokyo.peya:langjal:1.2.7")
     implementation("org.antlr:antlr4-intellij-adaptor:0.1")
 }
 
