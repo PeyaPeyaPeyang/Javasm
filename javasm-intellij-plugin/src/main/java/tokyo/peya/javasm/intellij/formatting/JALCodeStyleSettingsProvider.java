@@ -32,7 +32,7 @@ public class JALCodeStyleSettingsProvider extends CodeStyleSettingsProvider {
 
     @Override
     public @Nullable @NlsContexts.ConfigurableName String getConfigurableDisplayName() {
-        return "Java Assembly Language";
+        return "JVM Assembly Language";
     }
 
     @Override

@@ -22,7 +22,7 @@ public class JALFileType extends LanguageFileType {
 
     @Override
     public @Nls @NotNull String getDescription() {
-        return "A file type for Java Assembly Language (JAL) files.";
+        return "A file type for JVM Assembly Language (JAL) files.";
     }
 
     @Override

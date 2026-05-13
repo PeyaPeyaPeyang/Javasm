@@ -44,7 +44,7 @@ public class JALFile extends PsiFileBase {
 
     @Override
     public String toString() {
-        return "Java Assembly Language File";
+        return "JVM Assembly Language File";
     }
 
     public @Nullable PsiElement findInstructionRelatedElement(int line) {

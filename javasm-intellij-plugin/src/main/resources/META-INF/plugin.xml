@@ -19,7 +19,7 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <fileType implementationClass="tokyo.peya.javasm.intellij.langjal.JALFileType"
-                  name="Java Assembly Language File"
+                  name="JVM Assembly Language File"
                   extensions="jal"
                   fieldName="INSTANCE"
                   language="JAL"/>
@@ -133,16 +133,22 @@
                     secondary="true"
                     canCloseContents="false"
         />
-        <toolWindow factoryClass="tokyo.peya.javasm.intellij.dependencyviewer.InstructionDependencyToolWindowFactory"
-                    id="Instruction Dependencies"
+        <toolWindow factoryClass="tokyo.peya.javasm.intellij.instructiondiagram.InstructionDiagramToolWindowFactory"
+                    id="Instruction Diagram"
                     icon="/assets/icons/stackViewer.svg"
                     anchor="right"
                     secondary="true"
                     canCloseContents="false"
         />
+        <applicationConfigurable
+                parentId="tools"
+                groupWeight="200"
+                instance="tokyo.peya.javasm.intellij.instructiondiagram.InstructionDiagramConfigurable"
+                id="tokyo.peya.javasm.intellij.instructiondiagram.settings"
+                displayName="Instruction Diagram"/>
         <lang.foldingBuilder language="JAL" implementationClass="tokyo.peya.javasm.intellij.editor.JALFoldingBuilder"/>
         <projectViewNodeDecorator implementation="tokyo.peya.javasm.intellij.editor.JALProjectViewDecorator"/>
-        <braceMatcher filetype="Java Assembly Language File"
+        <braceMatcher filetype="JVM Assembly Language File"
                       implementationClass="tokyo.peya.javasm.intellij.editor.JALPairedBraceMatcherAdapter"/>
         <fileDocumentManagerListener implementation="tokyo.peya.javasm.intellij.editor.document.JALSaveListener"/>
     </extensions>

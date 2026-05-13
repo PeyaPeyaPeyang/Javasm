@@ -1,6 +1,6 @@
 # JAL Usage Guide
 
-Welcome to **JAL (Java Assembly Language)** — a powerful and expressive assembly-like language designed specifically for
+Welcome to **JAL (JVM Assembly Language)** — a powerful and expressive assembly-like language designed specifically for
 JVM bytecode manipulation and development.  
 This document provides a detailed user-oriented explanation of JAL’s syntax and usage so you can write and understand
 JAL source files with confidence.
