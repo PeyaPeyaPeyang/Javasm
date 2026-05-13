@@ -13,6 +13,11 @@ import tokyo.peya.javasm.intellij.langjal.JALLanguage;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.langjal.compiler.JALLexer;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import static com.intellij.openapi.editor.colors.TextAttributesKey.createTextAttributesKey;
 
 public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
@@ -105,6 +110,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
     public static final TextAttributesKey INSN_WIDE =
             createTextAttributesKey("JAL_INSN_WIDE", DefaultLanguageHighlighterColors.KEYWORD);
     private static final TextAttributesKey[] EMPTY = new TextAttributesKey[0];
+    private static final Map<String, Integer> INSTRUCTION_TOKEN_TYPES = createInstructionTokenTypes();
 
     static {
         JALParserDefinition.initStatic();
@@ -116,8 +122,16 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
     }
 
     @Nullable
-    private TextAttributesKey highlightsToken(TokenIElementType token) {
-        return switch (token.getANTLRTokenType()) {
+    public static TextAttributesKey getInstructionHighlightKey(@NotNull String instructionName) {
+        Integer tokenType = INSTRUCTION_TOKEN_TYPES.get(normalizeInstructionName(instructionName));
+        if (tokenType == null)
+            return null;
+        return highlightsInstructionTokenType(tokenType);
+    }
+
+    @Nullable
+    private static TextAttributesKey highlightsInstructionTokenType(int tokenType) {
+        return switch (tokenType) {
             case JALLexer.ID -> ID;
             case JALLexer.NUMBER -> NUMBER;
             case JALLexer.STRING -> STRING;
@@ -373,6 +387,39 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
             case JALLexer.INSN_WIDE -> INSN_WIDE;
             default -> null;
         };
+    }
+
+    @Nullable
+    private TextAttributesKey highlightsToken(TokenIElementType token) {
+        return highlightsInstructionTokenType(token.getANTLRTokenType());
+    }
+
+    private static @NotNull Map<String, Integer> createInstructionTokenTypes() {
+        Map<String, Integer> tokenTypes = new HashMap<>();
+        for (Field field : JALLexer.class.getFields()) {
+            if (!field.getName().startsWith("INSN_"))
+                continue;
+            if (field.getType() != int.class)
+                continue;
+
+            try {
+                tokenTypes.put(field.getName().substring("INSN_".length()).toLowerCase(Locale.ROOT), field.getInt(null));
+            } catch (IllegalAccessException ignored) {
+            }
+        }
+        return tokenTypes;
+    }
+
+    private static @NotNull String normalizeInstructionName(@NotNull String instructionName) {
+        String normalized = instructionName.strip().toLowerCase(Locale.ROOT);
+        int whitespaceIndex = -1;
+        for (int i = 0; i < normalized.length(); i++) {
+            if (Character.isWhitespace(normalized.charAt(i))) {
+                whitespaceIndex = i;
+                break;
+            }
+        }
+        return whitespaceIndex >= 0 ? normalized.substring(0, whitespaceIndex) : normalized;
     }
 
     @Override
