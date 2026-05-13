@@ -164,8 +164,10 @@ public final class InstructionDiagramPanel extends JPanel {
 
         this.paintMethodBoxes(g2);
         this.paintInstructionSetBoxes(g2);
-        this.paintEdges(g2);
-        this.paintJumpEdges(g2);
+        Map<DiagramNode, Integer> outgoingTotals = this.outgoingTotals();
+        Map<DiagramNode, Integer> outgoingRenderedCounts = new HashMap<>();
+        this.paintEdges(g2, outgoingTotals, outgoingRenderedCounts);
+        this.paintJumpEdges(g2, outgoingTotals, outgoingRenderedCounts);
         this.paintNodes(g2);
 
         g2.setTransform(oldTransform);
@@ -262,17 +264,28 @@ public final class InstructionDiagramPanel extends JPanel {
         }
     }
 
-    private void paintEdges(@NotNull Graphics2D g2) {
-        g2.setStroke(new BasicStroke(2f));
-
+    private void paintEdges(@NotNull Graphics2D g2,
+                            @NotNull Map<DiagramNode, Integer> outgoingTotals,
+                            @NotNull Map<DiagramNode, Integer> outgoingRenderedCounts) {
         List<DiagramEdge> orderedEdges = new ArrayList<>(this.edges);
         orderedEdges.sort(Comparator.comparing(DiagramEdge::kind).reversed());
         for (DiagramEdge edge : orderedEdges) {
+            g2.setStroke(new BasicStroke(2f));
             g2.setColor(this.edgeColor(edge.kind()));
             Rectangle2D.Float from = edge.from().bounds();
             Rectangle2D.Float to = edge.to().bounds();
-            this.paintRoute(g2, this.routeOrthogonal(from, to));
+            OrthogonalRoute route = this.routeForEdge(edge, from, to);
+            float spreadOffset = this.nextSourceSpreadOffset(edge.from(), outgoingTotals, outgoingRenderedCounts);
+            this.paintRoute(g2, this.offsetRouteNearSource(route, spreadOffset));
         }
+    }
+
+    private @NotNull OrthogonalRoute routeForEdge(@NotNull DiagramEdge edge,
+                                                  @NotNull Rectangle2D.Float from,
+                                                  @NotNull Rectangle2D.Float to) {
+        if (edge.kind() == InstructionDependencyEdgeKind.CONTROL && this.isIfInstruction(edge.from().entry()))
+            return this.routeFromBottom(from, to);
+        return this.routeOrthogonal(from, to);
     }
 
     private @NotNull Color edgeColor(@NotNull InstructionDependencyEdgeKind kind) {
@@ -282,17 +295,69 @@ public final class InstructionDiagramPanel extends JPanel {
         };
     }
 
-    private void paintJumpEdges(@NotNull Graphics2D g2) {
+    private void paintJumpEdges(@NotNull Graphics2D g2,
+                                @NotNull Map<DiagramNode, Integer> outgoingTotals,
+                                @NotNull Map<DiagramNode, Integer> outgoingRenderedCounts) {
         g2.setStroke(new BasicStroke(2f));
 
         Map<JumpLaneKey, Map<InstructionSetBox, Integer>> laneByTarget = new HashMap<>();
         for (DiagramJumpEdge edge : this.jumpEdges) {
             Rectangle2D.Float from = edge.from().bounds();
             int lane = this.jumpLane(edge.to(), laneByTarget);
-            OrthogonalRoute route = this.routeJumpFromBottom(from, edge.to(), lane);
+            boolean leftSideJump = this.isIfInstruction(edge.from().entry()) || this.isGotoInstruction(edge.from().entry());
+            OrthogonalRoute route = leftSideJump
+                    ? this.routeJumpFromSide(from, edge.to(), lane)
+                    : this.routeJumpFromBottom(from, edge.to(), lane);
+            float spreadOffset = this.nextSourceSpreadOffset(edge.from(), outgoingTotals, outgoingRenderedCounts);
             g2.setColor(this.jumpEdgeColor(lane));
-            this.paintRoute(g2, route);
+            this.paintRoute(g2, this.offsetRouteNearSource(route, spreadOffset));
         }
+    }
+
+    private @NotNull Map<DiagramNode, Integer> outgoingTotals() {
+        Map<DiagramNode, Integer> totals = new HashMap<>();
+        for (DiagramEdge edge : this.edges)
+            totals.merge(edge.from(), 1, Integer::sum);
+        for (DiagramJumpEdge jump : this.jumpEdges)
+            totals.merge(jump.from(), 1, Integer::sum);
+        return totals;
+    }
+
+    private float nextSourceSpreadOffset(@NotNull DiagramNode source,
+                                         @NotNull Map<DiagramNode, Integer> outgoingTotals,
+                                         @NotNull Map<DiagramNode, Integer> outgoingRenderedCounts) {
+        int total = outgoingTotals.getOrDefault(source, 1);
+        if (total <= 1)
+            return 0f;
+        int index = outgoingRenderedCounts.getOrDefault(source, 0);
+        outgoingRenderedCounts.put(source, index + 1);
+        float center = (total - 1) / 2f;
+        return (index - center) * 5f;
+    }
+
+    private @NotNull OrthogonalRoute offsetRouteNearSource(@NotNull OrthogonalRoute route, float spreadOffset) {
+        if (Math.abs(spreadOffset) < 0.1f)
+            return route;
+
+        List<Point2D.Float> points = route.points();
+        if (points.size() < 2)
+            return route;
+
+        Point2D.Float start = points.get(0);
+        Point2D.Float next = points.get(1);
+        List<Point2D.Float> shifted = new ArrayList<>(points.size());
+        for (Point2D.Float point : points)
+            shifted.add(new Point2D.Float(point.x, point.y));
+
+        if (Math.abs(next.x - start.x) < 0.5f) {
+            shifted.get(0).x += spreadOffset;
+            shifted.get(1).x += spreadOffset;
+        } else if (Math.abs(next.y - start.y) < 0.5f) {
+            shifted.get(0).y += spreadOffset;
+            shifted.get(1).y += spreadOffset;
+        }
+
+        return this.createRoute(shifted);
     }
 
     private @NotNull Color jumpEdgeColor(int lane) {
@@ -341,6 +406,47 @@ public final class InstructionDiagramPanel extends JPanel {
                 new Point2D.Float(outsideX, exitY),
                 new Point2D.Float(outsideX, targetY),
                 new Point2D.Float(end.x, targetY),
+                end
+        ));
+    }
+
+    private @NotNull OrthogonalRoute routeJumpFromSide(@NotNull Rectangle2D.Float from,
+                                                       @NotNull InstructionSetBox toBox,
+                                                       int lane) {
+        Rectangle2D.Float to = toBox.bounds();
+        Point2D.Float start = ConnectionSide.LEFT.anchor(from);
+        Point2D.Float end = ConnectionSide.LEFT.anchor(to);
+        float outsideX = Math.min(start.x, end.x) - SELF_JUMP_MARGIN - lane * JUMP_OVERLAP_OFFSET;
+
+        return this.createRoute(List.of(
+                start,
+                new Point2D.Float(outsideX, start.y),
+                new Point2D.Float(outsideX, end.y),
+                end
+        ));
+    }
+
+    private @NotNull OrthogonalRoute routeFromBottom(@NotNull Rectangle2D.Float from,
+                                                     @NotNull Rectangle2D.Float to) {
+        Point2D.Float start = ConnectionSide.BOTTOM.anchor(from);
+        Point2D.Float end = ConnectionSide.TOP.anchor(to);
+
+        if (to.y + to.height <= from.y) {
+            end = ConnectionSide.BOTTOM.anchor(to);
+            float viaY = Math.max(from.y + from.height, to.y + to.height) + LEVEL_GAP / 2f;
+            return this.createRoute(List.of(
+                    start,
+                    new Point2D.Float(start.x, viaY),
+                    new Point2D.Float(end.x, viaY),
+                    end
+            ));
+        }
+
+        float viaY = Math.max(start.y, to.y) + LEVEL_GAP / 2f;
+        return this.createRoute(List.of(
+                start,
+                new Point2D.Float(start.x, viaY),
+                new Point2D.Float(end.x, viaY),
                 end
         ));
     }
@@ -575,6 +681,10 @@ public final class InstructionDiagramPanel extends JPanel {
 
     private boolean isIfInstruction(@NotNull InstructionDependencyEntry entry) {
         return entry.instructionName().startsWith("if");
+    }
+
+    private boolean isGotoInstruction(@NotNull InstructionDependencyEntry entry) {
+        return entry.instructionName().startsWith("goto");
     }
 
     private @NotNull Shape createIfDiamond(@NotNull Rectangle2D.Float bounds) {
