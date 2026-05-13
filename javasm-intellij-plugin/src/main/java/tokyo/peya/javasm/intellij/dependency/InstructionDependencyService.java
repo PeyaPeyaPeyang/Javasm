@@ -27,10 +27,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Service(Service.Level.PROJECT)
 public final class InstructionDependencyService {
@@ -69,11 +67,13 @@ public final class InstructionDependencyService {
                 input.content(),
                 new StackFramePanelFactory.ProgressbarUpdater(new JProgressBar(), new JButton(), new JBTextArea())
         );
-        if (!computer.computeStackFrames())
-            return null;
-
-        StackFrameAnalysisResult frameResult = computer.getAnalysisResult();
-        InstructionDependencyAnalysisResult result = InstructionDependencyComputer.compute(frameResult);
+        InstructionDependencyAnalysisResult result;
+        if (computer.computeStackFrames()) {
+            StackFrameAnalysisResult frameResult = computer.getAnalysisResult();
+            result = InstructionDependencyComputer.compute(frameResult);
+        } else {
+            result = InstructionDependencyAnalysisResult.empty();
+        }
         InstructionDependencyAnalysisResult finalResult = result;
         return ApplicationManager.getApplication().runReadAction((Computable<InstructionDependencyAnalysisResult>) () -> {
             if (!input.file().isValid())
@@ -106,14 +106,11 @@ public final class InstructionDependencyService {
         }
 
         List<InstructionDependencyEdge> edges = new ArrayList<>(result.edges());
-        Set<EdgeKey> edgeKeys = new HashSet<>();
-        for (InstructionDependencyEdge edge : edges)
-            edgeKeys.add(new EdgeKey(edge.from(), edge.to()));
 
         for (MethodDefinitionNode methodNode : PsiTreeUtil.findChildrenOfType(file, MethodDefinitionNode.class)) {
             String methodName = methodNode.getMethodName();
             String methodDescriptor = methodNode.getMethodDescriptor().getDescriptorString();
-            List<InstructionDependencyEntry> methodEntries = new ArrayList<>();
+            List<InstructionWithEntry> methodEntries = new ArrayList<>();
 
             for (InstructionNode instruction : PsiTreeUtil.findChildrenOfType(methodNode, InstructionNode.class)) {
                 Integer offset = this.tryGetInstructionOffset(instruction);
@@ -135,16 +132,20 @@ public final class InstructionDependencyService {
                     entries.get(InstructionDependencyKind.NEUTRAL).add(entry);
                     entryByInstruction.put(key, entry);
                 }
-                methodEntries.add(entry);
+                methodEntries.add(new InstructionWithEntry(instruction, entry));
             }
 
-            methodEntries.sort(Comparator.comparingInt(InstructionDependencyEntry::instructionOffset));
+            methodEntries.sort(Comparator.comparingInt(it -> it.entry().instructionOffset()));
             for (int i = 1; i < methodEntries.size(); i++) {
-                InstructionDependencyEntry from = methodEntries.get(i - 1);
-                InstructionDependencyEntry to = methodEntries.get(i);
-                EdgeKey key = new EdgeKey(from, to);
-                if (edgeKeys.add(key))
-                    edges.add(new InstructionDependencyEdge(from, to, InstructionDependencyEdgeKind.CONTROL));
+                InstructionWithEntry previous = methodEntries.get(i - 1);
+                InstructionWithEntry current = methodEntries.get(i);
+                if (!this.fallsThrough(previous.instruction()))
+                    continue;
+                edges.add(new InstructionDependencyEdge(
+                        previous.entry(),
+                        current.entry(),
+                        InstructionDependencyEdgeKind.CONTROL
+                ));
             }
         }
 
@@ -163,6 +164,20 @@ public final class InstructionDependencyService {
 
         String instructionName = instruction.getInstructionName();
         return instructionName == null ? "<instruction>" : instructionName;
+    }
+
+    private boolean fallsThrough(@NotNull InstructionNode instruction) {
+        String name = instruction.getInstructionName();
+        if (name == null)
+            return true;
+        return switch (name) {
+            case "goto", "goto_w",
+                 "ret",
+                 "ireturn", "lreturn", "freturn", "dreturn", "areturn", "return",
+                 "athrow",
+                 "tableswitch", "lookupswitch" -> false;
+            default -> true;
+        };
     }
 
     private @NotNull InstructionDependencyAnalysisResult attachInstructionSetInfo(
@@ -276,9 +291,10 @@ public final class InstructionDependencyService {
     private record InstructionKey(@NotNull String methodName, @NotNull String methodDescriptor, int instructionOffset) {
     }
 
-    private record EdgeKey(@NotNull InstructionDependencyEntry from, @NotNull InstructionDependencyEntry to) {
+    private record AnalysisInput(@NotNull String content, @NotNull JALFile file) {
     }
 
-    private record AnalysisInput(@NotNull String content, @NotNull JALFile file) {
+    private record InstructionWithEntry(@NotNull InstructionNode instruction,
+                                        @NotNull InstructionDependencyEntry entry) {
     }
 }

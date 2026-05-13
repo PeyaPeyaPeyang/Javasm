@@ -9,10 +9,8 @@ import tokyo.peya.javasm.intellij.stackviewer.StackUIElement;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public final class InstructionDependencyComputer {
     private InstructionDependencyComputer() {
@@ -29,8 +27,6 @@ public final class InstructionDependencyComputer {
             List<InstructionUIElement> instructions = new ArrayList<>(frameAnalysis.getInstructions(method));
             instructions.sort(Comparator.comparingInt(InstructionUIElement::instructionOffset));
             List<InstructionDependencyEntry> stackProducers = new ArrayList<>();
-            Set<EdgeEndpoint> dataEdgeEndpoints = new HashSet<>();
-            InstructionDependencyEntry previousEntry = null;
             int previousStackSize = 0;
 
             for (InstructionUIElement instruction : instructions) {
@@ -64,17 +60,11 @@ public final class InstructionDependencyComputer {
                     stackProducers.subList(consumeFrom, available).clear();
                     for (InstructionDependencyEntry producer : consumedEntries) {
                         edges.add(new InstructionDependencyEdge(producer, entry, InstructionDependencyEdgeKind.DATA));
-                        dataEdgeEndpoints.add(new EdgeEndpoint(producer, entry));
                     }
                 }
 
-                if (previousEntry != null && !dataEdgeEndpoints.contains(new EdgeEndpoint(previousEntry, entry)))
-                    edges.add(new InstructionDependencyEdge(previousEntry, entry, InstructionDependencyEdgeKind.CONTROL));
-
                 for (int i = 0; i < producedCount; i++)
                     stackProducers.add(entry);
-
-                previousEntry = entry;
             }
         }
 
@@ -83,8 +73,5 @@ public final class InstructionDependencyComputer {
 
     private static int countStack(@NotNull InstructionUIElement instruction, @NotNull StackUIElement.DisplayType type) {
         return (int) instruction.stack().stream().filter(it -> it.displayType() == type).count();
-    }
-
-    private record EdgeEndpoint(@NotNull InstructionDependencyEntry from, @NotNull InstructionDependencyEntry to) {
     }
 }
