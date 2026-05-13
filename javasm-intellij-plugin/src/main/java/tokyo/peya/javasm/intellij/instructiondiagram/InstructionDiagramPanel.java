@@ -544,16 +544,25 @@ public final class InstructionDiagramPanel extends JPanel {
         for (DiagramNode node : this.nodes) {
             Rectangle2D.Float bounds = node.bounds();
             boolean selected = node == this.selectedNode;
+            boolean ifInstruction = this.isIfInstruction(node.entry());
             Color fill = this.settings.nodeFillColor();
             Color border = this.borderColor(node.entry(), selected);
             Color text = this.settings.nodeTextColor();
 
             g2.setColor(fill);
-            g2.fillRoundRect(Math.round(bounds.x), Math.round(bounds.y), Math.round(bounds.width), Math.round(bounds.height), 12, 12);
+            if (ifInstruction) {
+                g2.fill(this.createIfDiamond(bounds));
+            } else {
+                g2.fillRoundRect(Math.round(bounds.x), Math.round(bounds.y), Math.round(bounds.width), Math.round(bounds.height), 12, 12);
+            }
 
             g2.setColor(border);
             g2.setStroke(new BasicStroke(selected ? 2.2f : 1.2f));
-            g2.drawRoundRect(Math.round(bounds.x), Math.round(bounds.y), Math.round(bounds.width), Math.round(bounds.height), 12, 12);
+            if (ifInstruction) {
+                g2.draw(this.createIfDiamond(bounds));
+            } else {
+                g2.drawRoundRect(Math.round(bounds.x), Math.round(bounds.y), Math.round(bounds.width), Math.round(bounds.height), 12, 12);
+            }
 
             String textValue = node.entry().instructionName();
             int textWidth = metrics.stringWidth(textValue);
@@ -562,6 +571,20 @@ public final class InstructionDiagramPanel extends JPanel {
             g2.setColor(text);
             g2.drawString(textValue, textX, textY);
         }
+    }
+
+    private boolean isIfInstruction(@NotNull InstructionDependencyEntry entry) {
+        return entry.instructionName().startsWith("if");
+    }
+
+    private @NotNull Shape createIfDiamond(@NotNull Rectangle2D.Float bounds) {
+        Path2D.Float diamond = new Path2D.Float();
+        diamond.moveTo(bounds.x + bounds.width / 2f, bounds.y);
+        diamond.lineTo(bounds.x + bounds.width, bounds.y + bounds.height / 2f);
+        diamond.lineTo(bounds.x + bounds.width / 2f, bounds.y + bounds.height);
+        diamond.lineTo(bounds.x, bounds.y + bounds.height / 2f);
+        diamond.closePath();
+        return diamond;
     }
 
     private Color instructionHighlightColor(@NotNull InstructionDependencyEntry entry) {
