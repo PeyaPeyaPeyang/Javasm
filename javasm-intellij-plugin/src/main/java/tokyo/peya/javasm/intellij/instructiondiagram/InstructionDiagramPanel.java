@@ -6,6 +6,7 @@ import com.intellij.openapi.editor.markup.TextAttributes;
 import com.intellij.ui.JBColor;
 import com.intellij.util.ui.JBUI;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.dependency.*;
 import tokyo.peya.javasm.intellij.editor.highlighting.JALSyntaxHighlighter;
 import tokyo.peya.javasm.intellij.utils.JALMessages;
@@ -709,9 +710,10 @@ public final class InstructionDiagramPanel extends JPanel {
             methods.sort(Map.Entry.comparingByKey());
 
             List<DiagramNode> nodes = new ArrayList<>();
-            List<PlacedEntry> placedEntries = new ArrayList<>();
             Map<InstructionDependencyEntry, NodePlacement> placements = new HashMap<>();
-            Map<Integer, Float> widthByLane = new HashMap<>();
+            Map<MethodKey, List<DiagramNode>> nodesByMethod = new HashMap<>();
+            Map<InstructionDependencyEntry, DiagramNode> nodeByEntry = new HashMap<>();
+            Map<InstructionKey, DiagramNode> nodeByInstruction = new HashMap<>();
             float methodY = 0f;
 
             for (Map.Entry<MethodKey, List<InstructionDependencyEntry>> methodEntry : methods) {
@@ -720,9 +722,18 @@ public final class InstructionDiagramPanel extends JPanel {
                 ordered.sort(Comparator.comparingInt(InstructionDependencyEntry::instructionOffset));
 
                 MethodLayoutState state = new MethodLayoutState();
+                List<PlacedEntry> placedEntries = new ArrayList<>();
+                Map<Integer, Float> widthByLane = new HashMap<>();
+                NodePlacement previousPlacement = null;
                 for (InstructionDependencyEntry entry : ordered) {
-                    NodePlacement placement = state.place(entry, incomingEdges.getOrDefault(entry, List.of()), placements);
+                    NodePlacement placement = state.place(
+                            entry,
+                            incomingEdges.getOrDefault(entry, List.of()),
+                            previousPlacement,
+                            placements
+                    );
                     placements.put(entry, placement);
+                    previousPlacement = placement;
 
                     float width = Math.max(NODE_MIN_WIDTH, metrics.stringWidth(entry.instructionName()) + NODE_PADDING_X * 2);
                     PlacedEntry placedEntry = new PlacedEntry(entry, methodKey, placement, width, methodY + placement.level() * LEVEL_GAP);
@@ -730,29 +741,26 @@ public final class InstructionDiagramPanel extends JPanel {
                     widthByLane.merge(placement.lane(), width, Math::max);
                 }
 
-                methodY += state.height() + METHOD_SPACING;
-            }
+                Map<Integer, Float> xByLane = computeXByLane(widthByLane);
+                for (PlacedEntry placedEntry : placedEntries) {
+                    Rectangle2D.Float bounds = new Rectangle2D.Float(
+                            xByLane.getOrDefault(placedEntry.placement().lane(), 0f),
+                            placedEntry.y(),
+                            placedEntry.width(),
+                            NODE_HEIGHT
+                    );
+                    DiagramNode node = new DiagramNode(placedEntry.entry(), bounds);
+                    nodes.add(node);
+                    nodeByEntry.put(placedEntry.entry(), node);
+                    nodeByInstruction.put(new InstructionKey(
+                            placedEntry.entry().methodName(),
+                            placedEntry.entry().methodDescriptor(),
+                            placedEntry.entry().instructionOffset()
+                    ), node);
+                    nodesByMethod.computeIfAbsent(placedEntry.methodKey(), ignored -> new ArrayList<>()).add(node);
+                }
 
-            Map<Integer, Float> xByLane = computeXByLane(widthByLane);
-            Map<MethodKey, List<DiagramNode>> nodesByMethod = new HashMap<>();
-            Map<InstructionDependencyEntry, DiagramNode> nodeByEntry = new HashMap<>();
-            Map<InstructionKey, DiagramNode> nodeByInstruction = new HashMap<>();
-            for (PlacedEntry placedEntry : placedEntries) {
-                Rectangle2D.Float bounds = new Rectangle2D.Float(
-                        xByLane.getOrDefault(placedEntry.placement().lane(), 0f),
-                        placedEntry.y(),
-                        placedEntry.width(),
-                        NODE_HEIGHT
-                );
-                DiagramNode node = new DiagramNode(placedEntry.entry(), bounds);
-                nodes.add(node);
-                nodeByEntry.put(placedEntry.entry(), node);
-                nodeByInstruction.put(new InstructionKey(
-                        placedEntry.entry().methodName(),
-                        placedEntry.entry().methodDescriptor(),
-                        placedEntry.entry().instructionOffset()
-                ), node);
-                nodesByMethod.computeIfAbsent(placedEntry.methodKey(), ignored -> new ArrayList<>()).add(node);
+                methodY += state.height() + METHOD_SPACING;
             }
 
             List<InstructionSetBox> instructionSetBoxes = createInstructionSetBoxes(result, nodeByInstruction);
@@ -991,18 +999,19 @@ public final class InstructionDiagramPanel extends JPanel {
     }
 
     private static final class MethodLayoutState {
-        private final Set<Integer> activeLanes;
+        private final Map<Integer, Integer> liveCountByLane;
         private final Map<Integer, Integer> lastLevelByLane;
         private int lastLevel;
 
         private MethodLayoutState() {
-            this.activeLanes = new HashSet<>();
+            this.liveCountByLane = new HashMap<>();
             this.lastLevelByLane = new HashMap<>();
             this.lastLevel = -1;
         }
 
         private @NotNull NodePlacement place(@NotNull InstructionDependencyEntry entry,
                                              @NotNull List<InstructionDependencyEdge> incomingEdges,
+                                             @Nullable NodePlacement previousPlacement,
                                              @NotNull Map<InstructionDependencyEntry, NodePlacement> placements) {
             List<NodePlacement> incomingPlacements = new ArrayList<>();
             for (InstructionDependencyEdge edge : incomingEdges) {
@@ -1012,9 +1021,12 @@ public final class InstructionDiagramPanel extends JPanel {
             }
 
             incomingPlacements.sort(Comparator.comparingInt(NodePlacement::lane));
-            int lane = incomingPlacements.isEmpty()
-                    ? this.firstFreeLane()
-                    : incomingPlacements.get((incomingPlacements.size() - 1) / 2).lane();
+            int preferredLane = !incomingPlacements.isEmpty()
+                    ? incomingPlacements.get((incomingPlacements.size() - 1) / 2).lane()
+                    : previousPlacement != null ? previousPlacement.lane() : 0;
+            int lane = !incomingPlacements.isEmpty()
+                    ? preferredLane
+                    : entry.producedCount() > 0 ? this.closestFreeLane(preferredLane) : preferredLane;
             int dependencyLevel = 0;
             for (NodePlacement incomingPlacement : incomingPlacements)
                 dependencyLevel = Math.max(dependencyLevel, incomingPlacement.level() + 1);
@@ -1024,21 +1036,56 @@ public final class InstructionDiagramPanel extends JPanel {
             this.lastLevelByLane.put(lane, level);
             this.lastLevel = Math.max(this.lastLevel, level);
 
+            Map<Integer, Integer> consumedCountByLane = new HashMap<>();
             for (NodePlacement incomingPlacement : incomingPlacements)
-                this.activeLanes.remove(incomingPlacement.lane());
-            if (entry.producedCount() > 0)
-                this.activeLanes.add(lane);
-            else
-                this.activeLanes.remove(lane);
+                consumedCountByLane.merge(incomingPlacement.lane(), 1, Integer::sum);
+            for (Map.Entry<Integer, Integer> consumed : consumedCountByLane.entrySet())
+                this.decreaseLaneCount(consumed.getKey(), consumed.getValue());
+
+            if (entry.producedCount() > 0) {
+                this.increaseLaneCount(lane, 1);
+                for (int i = 1; i < entry.producedCount(); i++) {
+                    int extraLane = this.closestFreeLane(preferredLane);
+                    this.increaseLaneCount(extraLane, 1);
+                    this.lastLevelByLane.put(extraLane, level);
+                }
+            }
 
             return new NodePlacement(level, lane);
         }
 
-        private int firstFreeLane() {
-            int lane = 0;
-            while (this.activeLanes.contains(lane))
-                lane++;
-            return lane;
+        private int closestFreeLane(int preferredLane) {
+            if (!this.isLaneActive(preferredLane))
+                return preferredLane;
+            for (int distance = 1; distance < 256; distance++) {
+                int leftLane = preferredLane - distance;
+                if (leftLane >= 0 && !this.isLaneActive(leftLane))
+                    return leftLane;
+                int rightLane = preferredLane + distance;
+                if (!this.isLaneActive(rightLane))
+                    return rightLane;
+            }
+            return preferredLane + this.liveCountByLane.size() + 1;
+        }
+
+        private boolean isLaneActive(int lane) {
+            return this.liveCountByLane.getOrDefault(lane, 0) > 0;
+        }
+
+        private void increaseLaneCount(int lane, int count) {
+            if (count <= 0)
+                return;
+            this.liveCountByLane.merge(lane, count, Integer::sum);
+        }
+
+        private void decreaseLaneCount(int lane, int count) {
+            if (count <= 0)
+                return;
+            int remaining = this.liveCountByLane.getOrDefault(lane, 0) - count;
+            if (remaining > 0)
+                this.liveCountByLane.put(lane, remaining);
+            else
+                this.liveCountByLane.remove(lane);
         }
 
         private float height() {
