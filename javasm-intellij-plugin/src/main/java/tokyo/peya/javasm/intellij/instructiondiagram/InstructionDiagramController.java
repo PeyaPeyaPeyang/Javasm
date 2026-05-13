@@ -71,9 +71,11 @@ public final class InstructionDiagramController implements FileEditorManagerList
         }
         this.analysisRunning = true;
         this.uiFactory.onAnalysisStarted();
+        // 解析処理は重い可能性があるため，バックグラウンドで実行する
         new Task.Backgroundable(this.project, JALMessages.message("jal.instructionDiagram.analysis.progress"), true) {
             @Override
             public void run(@NotNull ProgressIndicator indicator) {
+                // 開いているエディタを取得
                 Editor editor = FileEditorManager.getInstance(InstructionDiagramController.this.project)
                         .getSelectedTextEditor();
                 if (editor == null) {
@@ -84,6 +86,7 @@ public final class InstructionDiagramController implements FileEditorManagerList
                     return;
                 }
 
+                // エディタからJALファイルを取得し，依存関係を解析する
                 InstructionDependencyAnalysisResult result =
                         InstructionDiagramController.this.computeDependencies(editor);
                 if (result == null) {
@@ -94,6 +97,7 @@ public final class InstructionDiagramController implements FileEditorManagerList
                     return;
                 }
 
+                // 解析結果をUIに反映する
                 InstructionDiagramController.this.uiFactory.onAnalysisFinished(
                         result,
                         InstructionDiagramController.this.settingsService.getSettings().resetViewOnRefresh()

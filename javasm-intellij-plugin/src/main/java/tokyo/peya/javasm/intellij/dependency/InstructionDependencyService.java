@@ -91,11 +91,13 @@ public final class InstructionDependencyService {
             @NotNull JALFile file,
             @NotNull InstructionDependencyAnalysisResult result
     ) {
+        // PSI 上の命令に対応するエントリがない場合は，NEUTRAL なエントリを追加する
         Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries =
                 new EnumMap<>(InstructionDependencyKind.class);
         for (InstructionDependencyKind kind : InstructionDependencyKind.values())
             entries.put(kind, new ArrayList<>(result.getEntries(kind)));
 
+        // 命令をキーにエントリを検索できるようにするためのマップ
         Map<InstructionKey, InstructionDependencyEntry> entryByInstruction = new HashMap<>();
         for (InstructionDependencyEntry entry : result.getAllEntries()) {
             entryByInstruction.put(new InstructionKey(
@@ -105,8 +107,8 @@ public final class InstructionDependencyService {
             ), entry);
         }
 
+        // PSI 上の命令を順番に見ていき，対応するエントリがない場合は NEUTRAL なエントリを追加する
         List<InstructionDependencyEdge> edges = new ArrayList<>(result.edges());
-
         for (MethodDefinitionNode methodNode : PsiTreeUtil.findChildrenOfType(file, MethodDefinitionNode.class)) {
             String methodName = methodNode.getMethodName();
             String methodDescriptor = methodNode.getMethodDescriptor().getDescriptorString();
@@ -139,6 +141,7 @@ public final class InstructionDependencyService {
             for (int i = 1; i < methodEntries.size(); i++) {
                 InstructionWithEntry previous = methodEntries.get(i - 1);
                 InstructionWithEntry current = methodEntries.get(i);
+                // 命令が fall-through しない場合は，灰色の CONTROL エッジを張る
                 if (!this.fallsThrough(previous.instruction()))
                     continue;
                 edges.add(new InstructionDependencyEdge(
@@ -261,28 +264,34 @@ public final class InstructionDependencyService {
 
     private @NotNull List<LabelNameNode> getJumpLabels(@NotNull InstructionNode instruction) {
         List<LabelNameNode> labels = new ArrayList<>();
-        if (instruction instanceof InstructionJumpNode jumpNode) {
-            LabelNameNode label = jumpNode.getJumpLabel();
-            if (label != null)
-                labels.add(label);
-        } else if (instruction instanceof InstructionTableSwitchNode tableSwitchNode) {
-            LabelNameNode defaultLabel = tableSwitchNode.getDefaultBranchLabelName();
-            if (defaultLabel != null)
-                labels.add(defaultLabel);
-            LabelNameNode[] branchLabels = tableSwitchNode.getBranchLabels();
-            if (branchLabels != null)
-                labels.addAll(List.of(branchLabels));
-        } else if (instruction instanceof InstructionLookupSwitchNode lookupSwitchNode) {
-            LabelNameNode defaultLabel = lookupSwitchNode.getDefaultBranchLabelName();
-            if (defaultLabel != null)
-                labels.add(defaultLabel);
-            InstructionLookupSwitchCaseNode[] branches = lookupSwitchNode.getCaseBranches();
-            if (branches != null) {
-                for (InstructionLookupSwitchCaseNode branch : branches) {
-                    LabelNameNode label = branch.getBranchLabel();
-                    if (label != null)
-                        labels.add(label);
+        switch (instruction) {
+            case InstructionJumpNode jumpNode -> {
+                LabelNameNode label = jumpNode.getJumpLabel();
+                if (label != null)
+                    labels.add(label);
+            }
+            case InstructionTableSwitchNode tableSwitchNode -> {
+                LabelNameNode defaultLabel = tableSwitchNode.getDefaultBranchLabelName();
+                if (defaultLabel != null)
+                    labels.add(defaultLabel);
+                LabelNameNode[] branchLabels = tableSwitchNode.getBranchLabels();
+                if (branchLabels != null)
+                    labels.addAll(List.of(branchLabels));
+            }
+            case InstructionLookupSwitchNode lookupSwitchNode -> {
+                LabelNameNode defaultLabel = lookupSwitchNode.getDefaultBranchLabelName();
+                if (defaultLabel != null)
+                    labels.add(defaultLabel);
+                InstructionLookupSwitchCaseNode[] branches = lookupSwitchNode.getCaseBranches();
+                if (branches != null) {
+                    for (InstructionLookupSwitchCaseNode branch : branches) {
+                        LabelNameNode label = branch.getBranchLabel();
+                        if (label != null)
+                            labels.add(label);
+                    }
                 }
+            }
+            default -> {
             }
         }
         return labels;

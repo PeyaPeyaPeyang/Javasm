@@ -17,15 +17,13 @@ public final class InstructionDependencyComputer {
     }
 
     public static @NotNull InstructionDependencyAnalysisResult compute(@NotNull StackFrameAnalysisResult frameAnalysis) {
-        Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries =
-                new EnumMap<>(InstructionDependencyKind.class);
+        Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries = createEntryMap();
         List<InstructionDependencyEdge> edges = new ArrayList<>();
-        for (InstructionDependencyKind kind : InstructionDependencyKind.values())
-            entries.put(kind, new ArrayList<>());
 
         for (MethodWrapper method : frameAnalysis.getMethods()) {
             List<InstructionUIElement> instructions = new ArrayList<>(frameAnalysis.getInstructions(method));
             instructions.sort(Comparator.comparingInt(InstructionUIElement::instructionOffset));
+
             List<InstructionDependencyEntry> stackProducers = new ArrayList<>();
             int previousStackSize = 0;
 
@@ -37,10 +35,7 @@ public final class InstructionDependencyComputer {
                 int consumedCount = Math.max(displayedConsumedCount, inferredConsumedCount);
                 previousStackSize = currentStackSize;
 
-                InstructionDependencyKind kind =
-                        producedCount > 0 && consumedCount > 0 ? InstructionDependencyKind.BOTH :
-                                producedCount > 0 ? InstructionDependencyKind.PRODUCER :
-                                        consumedCount > 0 ? InstructionDependencyKind.CONSUMER : InstructionDependencyKind.NEUTRAL;
+                InstructionDependencyKind kind = detectKind(producedCount, consumedCount);
                 InstructionDependencyEntry entry = new InstructionDependencyEntry(
                         method.method().name,
                         method.method().desc,
@@ -53,22 +48,62 @@ public final class InstructionDependencyComputer {
                 entries.get(kind).add(entry);
 
                 if (consumedCount > 0) {
-                    int available = stackProducers.size();
-                    int consumeFrom = Math.max(0, available - consumedCount);
-                    List<InstructionDependencyEntry> consumedEntries =
-                            new ArrayList<>(stackProducers.subList(consumeFrom, available));
-                    stackProducers.subList(consumeFrom, available).clear();
-                    for (InstructionDependencyEntry producer : consumedEntries) {
-                        edges.add(new InstructionDependencyEdge(producer, entry, InstructionDependencyEdgeKind.DATA));
-                    }
+                    consumeFromStack(stackProducers, entry, consumedCount, edges);
                 }
 
-                for (int i = 0; i < producedCount; i++)
-                    stackProducers.add(entry);
+                pushProducedEntries(stackProducers, entry, producedCount);
             }
         }
 
         return new InstructionDependencyAnalysisResult(entries, edges);
+    }
+
+    private static @NotNull Map<InstructionDependencyKind, List<InstructionDependencyEntry>> createEntryMap() {
+        Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries =
+                new EnumMap<>(InstructionDependencyKind.class);
+        for (InstructionDependencyKind kind : InstructionDependencyKind.values()) {
+            entries.put(kind, new ArrayList<>());
+        }
+        return entries;
+    }
+
+    private static @NotNull InstructionDependencyKind detectKind(int producedCount, int consumedCount) {
+        if (producedCount > 0 && consumedCount > 0) {
+            return InstructionDependencyKind.BOTH;
+        }
+        if (producedCount > 0) {
+            return InstructionDependencyKind.PRODUCER;
+        }
+        if (consumedCount > 0) {
+            return InstructionDependencyKind.CONSUMER;
+        }
+        return InstructionDependencyKind.NEUTRAL;
+    }
+
+    private static void consumeFromStack(
+            @NotNull List<InstructionDependencyEntry> stackProducers,
+            @NotNull InstructionDependencyEntry consumer,
+            int consumedCount,
+            @NotNull List<InstructionDependencyEdge> edges
+    ) {
+        int available = stackProducers.size();
+        int consumeFrom = Math.max(0, available - consumedCount);
+        List<InstructionDependencyEntry> consumedEntries =
+                new ArrayList<>(stackProducers.subList(consumeFrom, available));
+        stackProducers.subList(consumeFrom, available).clear();
+        for (InstructionDependencyEntry producer : consumedEntries) {
+            edges.add(new InstructionDependencyEdge(producer, consumer, InstructionDependencyEdgeKind.DATA));
+        }
+    }
+
+    private static void pushProducedEntries(
+            @NotNull List<InstructionDependencyEntry> stackProducers,
+            @NotNull InstructionDependencyEntry producer,
+            int producedCount
+    ) {
+        for (int i = 0; i < producedCount; i++) {
+            stackProducers.add(producer);
+        }
     }
 
     private static int countStack(@NotNull InstructionUIElement instruction, @NotNull StackUIElement.DisplayType type) {

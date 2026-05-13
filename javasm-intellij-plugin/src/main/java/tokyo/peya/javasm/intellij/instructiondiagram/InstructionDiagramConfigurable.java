@@ -5,7 +5,7 @@ import com.intellij.openapi.options.Configurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import org.jetbrains.annotations.Nls;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 import javax.swing.*;
@@ -26,7 +26,7 @@ public final class InstructionDiagramConfigurable implements Configurable {
     }
 
     @Override
-    public @Nullable JComponent createComponent() {
+    public @NotNull JComponent createComponent() {
         this.settings = this.settingsService.getSettings();
         this.panel = new InstructionDiagramSettingsPanel(this.settings, updated -> this.settings = updated);
         return this.panel.getComponent();

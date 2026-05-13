@@ -25,6 +25,8 @@ import java.util.List;
 
 public final class InstructionDiagramPanel extends JPanel {
     private static final int GRID_SIZE = 48;
+    private static final float INITIAL_SCALE = 1f;
+    private static final float INITIAL_TRANSLATE = 120f;
     private static final float MIN_SCALE = 0.35f;
     private static final float MAX_SCALE = 2.5f;
     private static final float ZOOM_STEP = 1.1f;
@@ -68,9 +70,7 @@ public final class InstructionDiagramPanel extends JPanel {
         this.nodes = new ArrayList<>();
         this.edges = new ArrayList<>();
         this.jumpEdges = new ArrayList<>();
-        this.scale = 1f;
-        this.translateX = 120f;
-        this.translateY = 120f;
+        this.resetViewTransform();
 
         this.setOpaque(true);
         this.setBackground(this.settings.backgroundColor());
@@ -86,57 +86,85 @@ public final class InstructionDiagramPanel extends JPanel {
     }
 
     public void resetView() {
-        this.scale = 1f;
-        this.translateX = 120f;
-        this.translateY = 120f;
+        this.resetViewTransform();
         this.repaint();
     }
 
     public void clear() {
-        this.methodBoxes.clear();
-        this.instructionSetBoxes.clear();
-        this.nodes.clear();
-        this.edges.clear();
-        this.jumpEdges.clear();
-        this.selectedNode = null;
+        this.clearDiagramData();
         this.repaint();
     }
 
     public void setAnalysisResult(@NotNull InstructionDependencyAnalysisResult result) {
-        this.methodBoxes.clear();
-        this.instructionSetBoxes.clear();
-        this.nodes.clear();
-        this.edges.clear();
-        this.jumpEdges.clear();
-        this.selectedNode = null;
+        this.clearDiagramData();
 
-        Map<InstructionDependencyEntry, DiagramNode> nodeMap = new HashMap<>();
-        Map<InstructionSetDependencyGroup, InstructionSetBox> instructionSetBoxMap = new HashMap<>();
         FontMetrics metrics = this.getFontMetrics(this.getFont().deriveFont(Font.PLAIN, 18f));
         DiagramLayout layout = DiagramLayout.compute(result, metrics);
         this.methodBoxes.addAll(layout.methodBoxes());
         this.instructionSetBoxes.addAll(layout.instructionSetBoxes());
         this.nodes.addAll(layout.nodes());
-        for (DiagramNode node : this.nodes)
-            nodeMap.put(node.entry(), node);
-        for (InstructionSetBox box : this.instructionSetBoxes)
-            instructionSetBoxMap.put(box.group(), box);
 
-        for (InstructionDependencyEdge edge : result.edges()) {
-            DiagramNode from = nodeMap.get(edge.from());
-            DiagramNode to = nodeMap.get(edge.to());
-            if (from != null && to != null)
-                this.edges.add(new DiagramEdge(from, to, edge.kind()));
-        }
-        for (InstructionSetJumpEdge jump : result.instructionSetJumps()) {
-            DiagramNode from = nodeMap.get(jump.from());
-            InstructionSetBox to = instructionSetBoxMap.get(jump.to());
-            if (from != null && to != null)
-                this.jumpEdges.add(new DiagramJumpEdge(from, to));
-        }
+        Map<InstructionDependencyEntry, DiagramNode> nodeMap = this.buildNodeMap();
+        Map<InstructionSetDependencyGroup, InstructionSetBox> instructionSetBoxMap = this.buildInstructionSetBoxMap();
+        this.populateDependencyEdges(result, nodeMap);
+        this.populateJumpEdges(result, nodeMap, instructionSetBoxMap);
 
         this.revalidate();
         this.repaint();
+    }
+
+    private void resetViewTransform() {
+        this.scale = INITIAL_SCALE;
+        this.translateX = INITIAL_TRANSLATE;
+        this.translateY = INITIAL_TRANSLATE;
+    }
+
+    private void clearDiagramData() {
+        this.methodBoxes.clear();
+        this.instructionSetBoxes.clear();
+        this.nodes.clear();
+        this.edges.clear();
+        this.jumpEdges.clear();
+        this.selectedNode = null;
+    }
+
+    private @NotNull Map<InstructionDependencyEntry, DiagramNode> buildNodeMap() {
+        Map<InstructionDependencyEntry, DiagramNode> nodeMap = new HashMap<>();
+        for (DiagramNode node : this.nodes) {
+            nodeMap.put(node.entry(), node);
+        }
+        return nodeMap;
+    }
+
+    private @NotNull Map<InstructionSetDependencyGroup, InstructionSetBox> buildInstructionSetBoxMap() {
+        Map<InstructionSetDependencyGroup, InstructionSetBox> instructionSetBoxMap = new HashMap<>();
+        for (InstructionSetBox box : this.instructionSetBoxes) {
+            instructionSetBoxMap.put(box.group(), box);
+        }
+        return instructionSetBoxMap;
+    }
+
+    private void populateDependencyEdges(@NotNull InstructionDependencyAnalysisResult result,
+                                         @NotNull Map<InstructionDependencyEntry, DiagramNode> nodeMap) {
+        for (InstructionDependencyEdge edge : result.edges()) {
+            DiagramNode from = nodeMap.get(edge.from());
+            DiagramNode to = nodeMap.get(edge.to());
+            if (from != null && to != null) {
+                this.edges.add(new DiagramEdge(from, to, edge.kind()));
+            }
+        }
+    }
+
+    private void populateJumpEdges(@NotNull InstructionDependencyAnalysisResult result,
+                                   @NotNull Map<InstructionDependencyEntry, DiagramNode> nodeMap,
+                                   @NotNull Map<InstructionSetDependencyGroup, InstructionSetBox> instructionSetBoxMap) {
+        for (InstructionSetJumpEdge jump : result.instructionSetJumps()) {
+            DiagramNode from = nodeMap.get(jump.from());
+            InstructionSetBox to = instructionSetBoxMap.get(jump.to());
+            if (from != null && to != null) {
+                this.jumpEdges.add(new DiagramJumpEdge(from, to));
+            }
+        }
     }
 
     @Override
@@ -740,60 +768,82 @@ public final class InstructionDiagramPanel extends JPanel {
         MouseAdapter adapter = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                InstructionDiagramPanel.this.dragStart = e.getPoint();
-                InstructionDiagramPanel.this.selectedNode = findNode(e.getPoint());
-                repaint();
+                InstructionDiagramPanel.this.handleMousePressed(e);
             }
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                if (!InstructionDiagramPanel.this.settings.enablePan())
-                    return;
-                if (InstructionDiagramPanel.this.dragStart == null)
-                    return;
-                Point current = e.getPoint();
-                InstructionDiagramPanel.this.translateX += current.x - InstructionDiagramPanel.this.dragStart.x;
-                InstructionDiagramPanel.this.translateY += current.y - InstructionDiagramPanel.this.dragStart.y;
-                InstructionDiagramPanel.this.dragStart = current;
-                repaint();
+                InstructionDiagramPanel.this.handleMouseDragged(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                InstructionDiagramPanel.this.dragStart = null;
+                InstructionDiagramPanel.this.handleMouseReleased();
             }
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!InstructionDiagramPanel.this.settings.enableNodeNavigation())
-                    return;
-                if (e.getClickCount() != 2)
-                    return;
-                DiagramNode node = findNode(e.getPoint());
-                if (node != null)
-                    InstructionDiagramPanel.this.onNavigate.accept(node.entry());
+                InstructionDiagramPanel.this.handleMouseClicked(e);
             }
 
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) {
-                if (!InstructionDiagramPanel.this.settings.enableZoom())
-                    return;
-                float oldScale = InstructionDiagramPanel.this.scale;
-                float newScale = e.getWheelRotation() < 0 ? InstructionDiagramPanel.this.scale * ZOOM_STEP : InstructionDiagramPanel.this.scale / ZOOM_STEP;
-                InstructionDiagramPanel.this.scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, newScale));
-                if (oldScale == InstructionDiagramPanel.this.scale)
-                    return;
-
-                Point2D.Float worldBefore = toWorld(e.getPoint(), oldScale);
-                InstructionDiagramPanel.this.translateX = e.getPoint().x - worldBefore.x * InstructionDiagramPanel.this.scale;
-                InstructionDiagramPanel.this.translateY = e.getPoint().y - worldBefore.y * InstructionDiagramPanel.this.scale;
-                repaint();
+                InstructionDiagramPanel.this.handleMouseWheelMoved(e);
             }
         };
 
         this.addMouseListener(adapter);
         this.addMouseMotionListener(adapter);
         this.addMouseWheelListener(adapter);
+    }
+
+    private void handleMousePressed(@NotNull MouseEvent event) {
+        this.dragStart = event.getPoint();
+        this.selectedNode = this.findNode(event.getPoint());
+        this.repaint();
+    }
+
+    private void handleMouseDragged(@NotNull MouseEvent event) {
+        if (!this.settings.enablePan() || this.dragStart == null) {
+            return;
+        }
+        Point current = event.getPoint();
+        this.translateX += current.x - this.dragStart.x;
+        this.translateY += current.y - this.dragStart.y;
+        this.dragStart = current;
+        this.repaint();
+    }
+
+    private void handleMouseReleased() {
+        this.dragStart = null;
+    }
+
+    private void handleMouseClicked(@NotNull MouseEvent event) {
+        if (!this.settings.enableNodeNavigation() || event.getClickCount() != 2) {
+            return;
+        }
+        DiagramNode node = this.findNode(event.getPoint());
+        if (node != null) {
+            this.onNavigate.accept(node.entry());
+        }
+    }
+
+    private void handleMouseWheelMoved(@NotNull MouseWheelEvent event) {
+        if (!this.settings.enableZoom()) {
+            return;
+        }
+
+        float oldScale = this.scale;
+        float candidateScale = event.getWheelRotation() < 0 ? this.scale * ZOOM_STEP : this.scale / ZOOM_STEP;
+        this.scale = Math.max(MIN_SCALE, Math.min(MAX_SCALE, candidateScale));
+        if (oldScale == this.scale) {
+            return;
+        }
+
+        Point2D.Float worldBefore = this.toWorld(event.getPoint(), oldScale);
+        this.translateX = event.getPoint().x - worldBefore.x * this.scale;
+        this.translateY = event.getPoint().y - worldBefore.y * this.scale;
+        this.repaint();
     }
 
     private DiagramNode findNode(@NotNull Point point) {
