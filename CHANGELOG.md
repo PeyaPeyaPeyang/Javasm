@@ -1,5 +1,11 @@
 # Changelog
 
+### [1.4.0] - 2026/5/14
+
+JAL Implementation: 1.2.7
+
+- **feat**: Added a new view for visualising instructions in a method, allowing users to see the structure and data flow of the method more clearly.
+
 ### [1.3.1] - 2026/5/12
 
 JAL Implementation: 1.2.7
