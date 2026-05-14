@@ -67,7 +67,7 @@ public final class InstructionDiagramSettingsService
         this.state.enableZoom = settings.enableZoom();
         this.state.enableNodeNavigation = settings.enableNodeNavigation();
         this.state.autoRefreshEnabled = settings.autoRefreshEnabled();
-        this.state.autoRefreshDelayMs = Math.max(250, settings.autoRefreshDelayMs());
+        this.state.autoRefreshDelayMs = Math.max(1500, settings.autoRefreshDelayMs());
         this.state.resetViewOnRefresh = settings.resetViewOnRefresh();
         this.state.backgroundColorRgb = this.toRgb(settings.backgroundColor());
         this.state.gridColorRgb = this.toRgb(settings.gridColor());
