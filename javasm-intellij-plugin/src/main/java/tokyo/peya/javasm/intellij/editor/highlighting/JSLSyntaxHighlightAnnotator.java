@@ -48,19 +48,18 @@ public class JSLSyntaxHighlightAnnotator implements Annotator {
     private static void highlightMethodDescriptor(@NotNull MethodDescriptorNode node, @NotNull AnnotationHolder holder) {
         try {
             DescriptorReader reader = DescriptorReader.fromString(node.getText());
-            reader.expect('(');
-            while (reader.peek() != ')') {
+            while (reader.getPos() < node.getText().length()) {
                 char c = reader.read();
                 if (c == 'L') {
                     int start = reader.getPos() /* 'L'.length(): */ - 1;
-                    // クラス型の引数
+                    // クラス型
                     while (c != ';')
                         c = reader.read();
                     int end = reader.getPos();
 
                     highlight(node, TextRange.create(start, end), holder, JALSyntaxHighlighter.CLASS_NAME);
-                } else if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z') {
-                    // プリミティブ型の引数
+                } else if (c == 'B' || c == 'C' || c == 'D' || c == 'F' || c == 'I' || c == 'J' || c == 'S' || c == 'Z' || c == 'V') {
+                    // プリミティブ型
                     TextAttributesKey highlight = switch (c) {
                         case 'B' -> JALSyntaxHighlighter.DESC_BYTE;
                         case 'C' -> JALSyntaxHighlighter.DESC_CHAR;
@@ -70,6 +69,7 @@ public class JSLSyntaxHighlightAnnotator implements Annotator {
                         case 'J' -> JALSyntaxHighlighter.DESC_LONG;
                         case 'S' -> JALSyntaxHighlighter.DESC_SHORT;
                         case 'Z' -> JALSyntaxHighlighter.DESC_BOOLEAN;
+                        case 'V' -> JALSyntaxHighlighter.DESC_VOID;
                         default -> throw new IllegalArgumentException("Unknown primitive type: " + c);
                     };
 
