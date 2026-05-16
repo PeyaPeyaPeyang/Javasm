@@ -1,5 +1,11 @@
 # Changelog
 
+### [1.4.1] - 2026/5/16
+
+JAL Implementation: 1.2.8
+
+- **chore*:: Bump JAL implementation to 1.2.8 for better stability and performance.
+
 ### [1.4.0] - 2026/5/14
 
 JAL Implementation: 1.2.7
