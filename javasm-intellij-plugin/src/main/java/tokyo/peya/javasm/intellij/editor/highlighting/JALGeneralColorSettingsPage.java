@@ -31,6 +31,7 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage {
 
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.method.name"), JALSyntaxHighlighter.METHOD_NAME),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.method.call"), JALSyntaxHighlighter.METHOD_CALL),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.field.name"), JALSyntaxHighlighter.FIELD_NAME),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.class.name"), JALSyntaxHighlighter.CLASS_NAME),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.parameter"), JALSyntaxHighlighter.PARAMETER),
 

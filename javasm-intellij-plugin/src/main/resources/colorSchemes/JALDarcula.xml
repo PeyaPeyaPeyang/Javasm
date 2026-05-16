@@ -6,6 +6,11 @@
             <option name="EFFECT_TYPE" value="1"/>
         </value>
     </option>
+    <option name="JAL_FIELD_NAME">
+        <value>
+            <option name="FOREGROUND" value="e6a15a"/>
+        </value>
+    </option>
     <option name="JAL_INSN_ARRAY_ACCESS">
         <value>
             <option name="FOREGROUND" value="4aafde"/>
@@ -38,6 +43,33 @@
             <option name="FOREGROUND" value="cd6ddc"/>
         </value>
     </option>
+    <option name="JAL_INSN_METHOD_INVOCATIONS">
+        <value>
+            <option name="FOREGROUND" value="d078de"/>
+            <option name="EFFECT_COLOR" value="5f6670"/>
+            <option name="EFFECT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_MONITORING">
+        <value>
+            <option name="FOREGROUND" value="c5887d"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_NOP">
+        <value>
+            <option name="FOREGROUND" value="c69696"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_STACK_CONTROLS">
+        <value>
+            <option name="FOREGROUND" value="dc8b47"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_SWITCH">
+        <value>
+            <option name="FOREGROUND" value="dc6c6c"/>
+        </value>
+    </option>
     <option name="JAL_INSN_VALUE_CALCULATIONS">
         <value>
             <option name="FOREGROUND" value="55d0b2"/>
@@ -58,9 +90,51 @@
             <option name="FOREGROUND" value="69cc5d"/>
         </value>
     </option>
+    <option name="JAL_INSN_VALUE_LOGICAL_CALCULATIONS">
+        <value>
+            <option name="FOREGROUND" value="4da3d9"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_VARIABLES_ACCESS">
+        <value>
+            <option name="FOREGROUND" value="4da3d9"/>
+        </value>
+    </option>
+    <option name="JAL_INSN_WIDE">
+        <value>
+            <option name="FOREGROUND" value="9fa7b2"/>
+        </value>
+    </option>
     <option name="JAL_LABEL">
         <value>
             <option name="FOREGROUND" value="b5c76f"/>
+        </value>
+    </option>
+    <option name="JAL_METHOD_CALL">
+        <value>
+            <option name="FOREGROUND" value="d789ff"/>
+        </value>
+    </option>
+    <option name="JAL_METHOD_NAME">
+        <value>
+            <option name="FOREGROUND" value="c59bff"/>
+            <option name="EFFECT_COLOR" value="5f6670"/>
+            <option name="EFFECT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="JAL_NUMBER">
+        <value>
+            <option name="FOREGROUND" value="6fb2ff"/>
+        </value>
+    </option>
+    <option name="JAL_PARAMETER">
+        <value>
+            <option name="FOREGROUND" value="66c7d9"/>
+        </value>
+    </option>
+    <option name="JAL_STRING">
+        <value>
+            <option name="FOREGROUND" value="74d98c"/>
         </value>
     </option>
 </list>
