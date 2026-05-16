@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.refs;
 
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.JavaPsiFacade;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.search.GlobalSearchScope;
@@ -15,6 +16,10 @@ import tokyo.peya.javasm.intellij.utils.ClassResolutionUtil;
 public class ClassReference extends JALElementReference {
     public ClassReference(@NotNull IdentifierNode element) {
         super(element);
+    }
+
+    public ClassReference(@NotNull IdentifierNode element, @NotNull TextRange rangeInElement) {
+        super(element, rangeInElement);
     }
 
     @Override

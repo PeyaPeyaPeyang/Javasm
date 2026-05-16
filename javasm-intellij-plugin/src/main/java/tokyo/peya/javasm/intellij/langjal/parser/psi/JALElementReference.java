@@ -15,6 +15,10 @@ public abstract class JALElementReference extends PsiReferenceBase<IdentifierNod
         super(element, new TextRange(0, element.getTextLength()));
     }
 
+    public JALElementReference(@NotNull IdentifierNode element, @NotNull TextRange rangeInElement) {
+        super(element, rangeInElement);
+    }
+
     @Override
     public PsiElement handleElementRename(@NotNull String newElementName) throws IncorrectOperationException {
         return this.getElement().setName(newElementName);
