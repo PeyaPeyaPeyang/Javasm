@@ -7,5 +7,5 @@ import javax.swing.*;
 public interface Assets {
     Icon JAL = IconLoader.getIcon("/assets/icons/jal.svg", Assets.class);
     Icon STACK_VIEWER = IconLoader.getIcon("/assets/icons/stackViewer.svg", Assets.class);
-    Icon DEPENDENCY_VIEWER = IconLoader.getIcon("/assets/icons/stackViewer.svg", Assets.class);
+    Icon DEPENDENCY_VIEWER = IconLoader.getIcon("/assets/icons/diagram.svg", Assets.class);
 }

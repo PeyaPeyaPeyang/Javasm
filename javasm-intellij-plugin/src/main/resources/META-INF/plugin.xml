@@ -135,7 +135,7 @@
         />
         <toolWindow factoryClass="tokyo.peya.javasm.intellij.instructiondiagram.InstructionDiagramToolWindowFactory"
                     id="Instruction Diagram"
-                    icon="/assets/icons/stackViewer.svg"
+                    icon="/assets/icons/diagram.svg"
                     anchor="right"
                     secondary="true"
                     canCloseContents="false"
