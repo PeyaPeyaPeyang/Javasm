@@ -2,7 +2,6 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi;
 
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiNameIdentifierOwner;
 import com.intellij.psi.PsiReferenceBase;
 import com.intellij.util.IncorrectOperationException;
 import org.antlr.intellij.adaptor.psi.ScopeNode;
@@ -35,25 +34,13 @@ public abstract class JALElementReference extends PsiReferenceBase<IdentifierNod
 
     @Override
     public boolean isReferenceTo(@NotNull PsiElement element) {
-        String refName = this.getElement().getName();
-
         PsiElement target = element;
-
         if (element instanceof IdentifierNode && this.isSubtree(element.getParent())) {
             target = element.getParent();
         }
 
-        if (!(target instanceof PsiNameIdentifierOwner owner)) {
-            return false;
-        }
-
-        PsiElement identifier = owner.getNameIdentifier();
-        if (identifier == null) {
-            return false;
-        }
-
-        String name = identifier.getText();
-        return refName.equals(name);
+        PsiElement resolved = this.resolve();
+        return resolved != null && this.getElement().getManager().areElementsEquivalent(resolved, target);
     }
 
     public abstract boolean isSubtree(PsiElement psiElement);

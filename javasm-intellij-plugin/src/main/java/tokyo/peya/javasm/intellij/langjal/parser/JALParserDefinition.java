@@ -170,6 +170,7 @@ public final class JALParserDefinition implements ParserDefinition {
             case JALParser.RULE_fieldName -> new FieldReferenceNameNode(node);
 
             case JALParser.RULE_jvmInsArgLocalRef -> new LocalReferenceNode(node);
+            case JALParser.RULE_localDeclaration -> new LocalDeclarationNode(node);
             case JALParser.RULE_jvmInsArgFieldRef -> new FieldReferenceNode(node);
             case JALParser.RULE_jvmInsArgMethodRef -> new MethodReferenceNode(node);
             case JALParser.RULE_jvmInsArgScalarType -> new JVMScalarNode(node);
