@@ -10,6 +10,7 @@ import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.util.ProcessingContext;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,247 +22,251 @@ public class JALInstructionNameCompletionProvider extends CompletionProvider<Com
     private static final Map<String, String> INSTRUCTIONS;
     private static final HashSet<String> INSTRUCTIONS_WITH_ARGUMENTS;
 
+    private static Map.Entry<String, String> instruction(String instructionName) {
+        return Map.entry(instructionName, JALMessages.message("jal.completion.instruction." + instructionName));
+    }
+
     static {
         HashMap<String, String> instructions = new LinkedHashMap<>();
         // <editor-fold desc="Instruction Definitions">
         instructions.putAll(Map.ofEntries(
-                Map.entry("aaload", "Reference: Array Load"),
-                Map.entry("aastore", "Reference: Array Store"),
-                Map.entry("aconst_null", "Reference: Constant Null"),
-                Map.entry("aload", "Reference: Load local variable"),
-                Map.entry("aload_0", "Reference: Load local 0"),
-                Map.entry("aload_1", "Reference: Load local 1"),
-                Map.entry("aload_2", "Reference: Load local 2"),
-                Map.entry("aload_3", "Reference: Load local 3"),
-                Map.entry("anewarray", "Reference: Create new array"),
-                Map.entry("areturn", "Reference: Return reference"),
-                Map.entry("arraylength", "Reference: Get array length"),
-                Map.entry("athrow", "Reference: Throw exception"),
-                Map.entry("checkcast", "Reference: Check cast"),
-                Map.entry("instanceof", "Reference: Check if instance of class")
+                instruction("aaload"),
+                instruction("aastore"),
+                instruction("aconst_null"),
+                instruction("aload"),
+                instruction("aload_0"),
+                instruction("aload_1"),
+                instruction("aload_2"),
+                instruction("aload_3"),
+                instruction("anewarray"),
+                instruction("areturn"),
+                instruction("arraylength"),
+                instruction("athrow"),
+                instruction("checkcast"),
+                instruction("instanceof")
         ));
         instructions.putAll(Map.ofEntries(
-                Map.entry("baload", "Byte: Array Load"),
-                Map.entry("bastore", "Byte: Array Store"),
-                Map.entry("bipush", "Byte: Push byte constant")
+                instruction("baload"),
+                instruction("bastore"),
+                instruction("bipush")
         ));
         instructions.putAll(Map.ofEntries(
-                Map.entry("caload", "Char: Array Load"),
-                Map.entry("castore", "Char: Array Store")
+                instruction("caload"),
+                instruction("castore")
         ));
         instructions.putAll(Map.ofEntries(
-                Map.entry("d2f", "Double: Convert to float"),
-                Map.entry("d2i", "Double: Convert to int"),
-                Map.entry("d2l", "Double: Convert to long"),
-                Map.entry("dadd", "Double: Add"),
-                Map.entry("daload", "Double: Array Load"),
-                Map.entry("dastore", "Double: Array Store"),
-                Map.entry("dcmpg", "Double: Compare greater"),
-                Map.entry("dcmpl", "Double: Compare less"),
-                Map.entry("dconst_0", "Double: Constant 0.0"),
-                Map.entry("dconst_1", "Double: Constant 1.0"),
-                Map.entry("ddiv", "Double: Divide"),
-                Map.entry("dload", "Double: Load local variable"),
-                Map.entry("dload_0", "Double: Load local 0"),
-                Map.entry("dload_1", "Double: Load local 1"),
-                Map.entry("dload_2", "Double: Load local 2"),
-                Map.entry("dload_3", "Double: Load local 3"),
-                Map.entry("dmul", "Double: Multiply"),
-                Map.entry("dneg", "Double: Negate"),
-                Map.entry("drem", "Double: Remainder"),
-                Map.entry("dreturn", "Double: Return"),
-                Map.entry("dstore", "Double: Store local variable"),
-                Map.entry("dstore_0", "Double: Store local 0"),
-                Map.entry("dstore_1", "Double: Store local 1"),
-                Map.entry("dstore_2", "Double: Store local 2"),
-                Map.entry("dstore_3", "Double: Store local 3"),
-                Map.entry("dsub", "Double: Subtract")
+                instruction("d2f"),
+                instruction("d2i"),
+                instruction("d2l"),
+                instruction("dadd"),
+                instruction("daload"),
+                instruction("dastore"),
+                instruction("dcmpg"),
+                instruction("dcmpl"),
+                instruction("dconst_0"),
+                instruction("dconst_1"),
+                instruction("ddiv"),
+                instruction("dload"),
+                instruction("dload_0"),
+                instruction("dload_1"),
+                instruction("dload_2"),
+                instruction("dload_3"),
+                instruction("dmul"),
+                instruction("dneg"),
+                instruction("drem"),
+                instruction("dreturn"),
+                instruction("dstore"),
+                instruction("dstore_0"),
+                instruction("dstore_1"),
+                instruction("dstore_2"),
+                instruction("dstore_3"),
+                instruction("dsub")
         ));
         instructions.putAll(Map.ofEntries(
-                Map.entry("dup", "Stack: Duplicate top value"),
-                Map.entry("dup_x1", "Stack: Duplicate top value and insert below second"),
-                Map.entry("dup_x2", "Stack: Duplicate top value and insert below third"),
-                Map.entry("dup2", "Stack: Duplicate top two values"),
-                Map.entry("dup2_x1", "Stack: Duplicate top two values and insert below third"),
-                Map.entry("dup2_x2", "Stack: Duplicate top two values and insert below fourth"),
-                Map.entry("pop", "Stack: Pop top value"),
-                Map.entry("pop2", "Stack: Pop top two values"),
-                Map.entry("swap", "Stack: Swap top two values")
+                instruction("dup"),
+                instruction("dup_x1"),
+                instruction("dup_x2"),
+                instruction("dup2"),
+                instruction("dup2_x1"),
+                instruction("dup2_x2"),
+                instruction("pop"),
+                instruction("pop2"),
+                instruction("swap")
         ));
         instructions.putAll(Map.ofEntries(
-                Map.entry("f2d", "Float: Convert to double"),
-                Map.entry("f2i", "Float: Convert to int"),
-                Map.entry("f2l", "Float: Convert to long"),
-                Map.entry("fadd", "Float: Add"),
-                Map.entry("faload", "Float: Array Load"),
-                Map.entry("fastore", "Float: Array Store"),
-                Map.entry("fcmpg", "Float: Compare greater"),
-                Map.entry("fcmpl", "Float: Compare less"),
-                Map.entry("fconst_0", "Float: Constant 0.0"),
-                Map.entry("fconst_1", "Float: Constant 1.0"),
-                Map.entry("fconst_2", "Float: Constant 2.0"),
-                Map.entry("fdiv", "Float: Divide"),
-                Map.entry("fload", "Float: Load local variable"),
-                Map.entry("fload_0", "Float: Load local 0"),
-                Map.entry("fload_1", "Float: Load local 1"),
-                Map.entry("fload_2", "Float: Load local 2"),
-                Map.entry("fload_3", "Float: Load local 3"),
-                Map.entry("fmul", "Float: Multiply"),
-                Map.entry("fneg", "Float: Negate"),
-                Map.entry("frem", "Float: Remainder"),
-                Map.entry("freturn", "Float: Return"),
-                Map.entry("fstore", "Float: Store local variable"),
-                Map.entry("fstore_0", "Float: Store local 0"),
-                Map.entry("fstore_1", "Float: Store local 1"),
-                Map.entry("fstore_2", "Float: Store local 2"),
-                Map.entry("fstore_3", "Float: Store local 3"),
-                Map.entry("fsub", "Float: Subtract")
-        ));
-
-        instructions.putAll(Map.ofEntries(
-                Map.entry("i2b", "Integer: Convert to byte"),
-                Map.entry("i2c", "Integer: Convert to char"),
-                Map.entry("i2d", "Integer: Convert to double"),
-                Map.entry("i2f", "Integer: Convert to float"),
-                Map.entry("i2l", "Integer: Convert to long"),
-                Map.entry("i2s", "Integer: Convert to short"),
-                Map.entry("iadd", "Integer: Add"),
-                Map.entry("iaload", "Integer: Array Load"),
-                Map.entry("iand", "Integer: Bitwise AND"),
-                Map.entry("iastore", "Integer: Array Store"),
-                Map.entry("iconst_m1", "Integer: Constant -1"),
-                Map.entry("iconst_0", "Integer: Constant 0"),
-                Map.entry("iconst_1", "Integer: Constant 1"),
-                Map.entry("iconst_2", "Integer: Constant 2"),
-                Map.entry("iconst_3", "Integer: Constant 3"),
-                Map.entry("iconst_4", "Integer: Constant 4"),
-                Map.entry("iconst_5", "Integer: Constant 5"),
-                Map.entry("idiv", "Integer: Divide"),
-                Map.entry("iinc", "Integer: Increment local variable"),
-                Map.entry("iload", "Integer: Load local variable"),
-                Map.entry("iload_0", "Integer: Load local 0"),
-                Map.entry("iload_1", "Integer: Load local 1"),
-                Map.entry("iload_2", "Integer: Load local 2"),
-                Map.entry("iload_3", "Integer: Load local 3"),
-                Map.entry("imul", "Integer: Multiply"),
-                Map.entry("ineg", "Integer: Negate"),
-                Map.entry("ior", "Integer: Bitwise OR"),
-                Map.entry("irem", "Integer: Remainder"),
-                Map.entry("ireturn", "Integer: Return integer"),
-                Map.entry("ishl", "Integer: Shift left"),
-                Map.entry("ishr", "Integer: Shift right"),
-                Map.entry("istore", "Integer: Store local variable"),
-                Map.entry("istore_0", "Integer: Store local 0"),
-                Map.entry("istore_1", "Integer: Store local 1"),
-                Map.entry("istore_2", "Integer: Store local 2"),
-                Map.entry("istore_3", "Integer: Store local 3"),
-                Map.entry("isub", "Integer: Subtract"),
-                Map.entry("iushr", "Integer: Unsigned shift right"),
-                Map.entry("ixor", "Integer: Bitwise XOR")
+                instruction("f2d"),
+                instruction("f2i"),
+                instruction("f2l"),
+                instruction("fadd"),
+                instruction("faload"),
+                instruction("fastore"),
+                instruction("fcmpg"),
+                instruction("fcmpl"),
+                instruction("fconst_0"),
+                instruction("fconst_1"),
+                instruction("fconst_2"),
+                instruction("fdiv"),
+                instruction("fload"),
+                instruction("fload_0"),
+                instruction("fload_1"),
+                instruction("fload_2"),
+                instruction("fload_3"),
+                instruction("fmul"),
+                instruction("fneg"),
+                instruction("frem"),
+                instruction("freturn"),
+                instruction("fstore"),
+                instruction("fstore_0"),
+                instruction("fstore_1"),
+                instruction("fstore_2"),
+                instruction("fstore_3"),
+                instruction("fsub")
         ));
 
         instructions.putAll(Map.ofEntries(
-                Map.entry("goto", "Control Flow: Unconditional jump"),
-                Map.entry("goto_w", "Control Flow: Unconditional jump (wide)"),
-                Map.entry("if_acmpeq", "Control Flow: If reference equals"),
-                Map.entry("if_acmpne", "Control Flow: If reference not equals"),
-                Map.entry("if_icmpeq", "Control Flow: If integer equals"),
-                Map.entry("if_icmpne", "Control Flow: If integer not equals"),
-                Map.entry("if_icmplt", "Control Flow: If integer less than"),
-                Map.entry("if_icmpge", "Control Flow: If integer greater than or equal"),
-                Map.entry("if_icmpgt", "Control Flow: If integer greater than"),
-                Map.entry("if_icmple", "Control Flow: If integer less than or equal"),
-                Map.entry("ifeq", "Control Flow: If equal to zero"),
-                Map.entry("ifne", "Control Flow: If not equal to zero"),
-                Map.entry("iflt", "Control Flow: If less than zero"),
-                Map.entry("ifge", "Control Flow: If greater than or equal to zero"),
-                Map.entry("ifgt", "Control Flow: If greater than zero"),
-                Map.entry("ifle", "Control Flow: If less than or equal to zero"),
-                Map.entry("ifnonnull", "Control Flow: If not null"),
-                Map.entry("ifnull", "Control Flow: If null"),
-                Map.entry("jsr", "Control Flow: Jump to subroutine"),
-                Map.entry("jsr_w", "Control Flow: Jump to subroutine (wide)"),
-                Map.entry("lookupswitch", "Control Flow: Lookup switch"),
-                Map.entry("ret", "Control Flow: Return from subroutine"),
-                Map.entry("return", "Control Flow: Return from method"),
-                Map.entry("tableswitch", "Control Flow: Table switch")
-        ));
-        instructions.putAll(Map.ofEntries(
-                Map.entry("getfield", "Field: Get field from object"),
-                Map.entry("getstatic", "Field: Get static field"),
-                Map.entry("putfield", "Field: Set field in object"),
-                Map.entry("putstatic", "Field: Set static field")
-        ));
-
-        instructions.putAll(Map.ofEntries(
-                Map.entry("invokedynamic", "Method: Invoke dynamic method"),
-                Map.entry("invokeinterface", "Method: Invoke interface method"),
-                Map.entry("invokespecial", "Method: Invoke special method"),
-                Map.entry("invokestatic", "Method: Invoke static method"),
-                Map.entry("invokevirtual", "Method: Invoke virtual method")
-        ));
-
-        instructions.putAll(Map.ofEntries(
-                Map.entry("l2d", "Long: Convert to double"),
-                Map.entry("l2f", "Long: Convert to float"),
-                Map.entry("l2i", "Long: Convert to int"),
-                Map.entry("ladd", "Long: Add"),
-                Map.entry("laload", "Long: Array Load"),
-                Map.entry("land", "Long: Bitwise AND"),
-                Map.entry("lastore", "Long: Array Store"),
-                Map.entry("lcmp", "Long: Compare"),
-                Map.entry("lconst_0", "Long: Constant 0"),
-                Map.entry("lconst_1", "Long: Constant 1"),
-                Map.entry("ldiv", "Long: Divide"),
-                Map.entry("lload", "Long: Load local variable"),
-                Map.entry("lload_0", "Long: Load local 0"),
-                Map.entry("lload_1", "Long: Load local 1"),
-                Map.entry("lload_2", "Long: Load local 2"),
-                Map.entry("lload_3", "Long: Load local 3"),
-                Map.entry("lmul", "Long: Multiply"),
-                Map.entry("lneg", "Long: Negate"),
-                Map.entry("lor", "Long: Bitwise OR"),
-                Map.entry("lrem", "Long: Remainder"),
-                Map.entry("lreturn", "Long: Return long"),
-                Map.entry("lshl", "Long: Shift left"),
-                Map.entry("lshr", "Long: Shift right"),
-                Map.entry("lstore", "Long: Store local variable"),
-                Map.entry("lstore_0", "Long: Store local 0"),
-                Map.entry("lstore_1", "Long: Store local 1"),
-                Map.entry("lstore_2", "Long: Store local 2"),
-                Map.entry("lstore_3", "Long: Store local 3"),
-                Map.entry("lsub", "Long: Subtract"),
-                Map.entry("lushr", "Long: Unsigned shift right"),
-                Map.entry("lxor", "Long: Bitwise XOR")
+                instruction("i2b"),
+                instruction("i2c"),
+                instruction("i2d"),
+                instruction("i2f"),
+                instruction("i2l"),
+                instruction("i2s"),
+                instruction("iadd"),
+                instruction("iaload"),
+                instruction("iand"),
+                instruction("iastore"),
+                instruction("iconst_m1"),
+                instruction("iconst_0"),
+                instruction("iconst_1"),
+                instruction("iconst_2"),
+                instruction("iconst_3"),
+                instruction("iconst_4"),
+                instruction("iconst_5"),
+                instruction("idiv"),
+                instruction("iinc"),
+                instruction("iload"),
+                instruction("iload_0"),
+                instruction("iload_1"),
+                instruction("iload_2"),
+                instruction("iload_3"),
+                instruction("imul"),
+                instruction("ineg"),
+                instruction("ior"),
+                instruction("irem"),
+                instruction("ireturn"),
+                instruction("ishl"),
+                instruction("ishr"),
+                instruction("istore"),
+                instruction("istore_0"),
+                instruction("istore_1"),
+                instruction("istore_2"),
+                instruction("istore_3"),
+                instruction("isub"),
+                instruction("iushr"),
+                instruction("ixor")
         ));
 
         instructions.putAll(Map.ofEntries(
-                Map.entry("ldc", "Constant: Load constant"),
-                Map.entry("ldc_w", "Constant: Load constant (wide)"),
-                Map.entry("ldc2_w", "Constant: Load double/long constant (wide)")
+                instruction("goto"),
+                instruction("goto_w"),
+                instruction("if_acmpeq"),
+                instruction("if_acmpne"),
+                instruction("if_icmpeq"),
+                instruction("if_icmpne"),
+                instruction("if_icmplt"),
+                instruction("if_icmpge"),
+                instruction("if_icmpgt"),
+                instruction("if_icmple"),
+                instruction("ifeq"),
+                instruction("ifne"),
+                instruction("iflt"),
+                instruction("ifge"),
+                instruction("ifgt"),
+                instruction("ifle"),
+                instruction("ifnonnull"),
+                instruction("ifnull"),
+                instruction("jsr"),
+                instruction("jsr_w"),
+                instruction("lookupswitch"),
+                instruction("ret"),
+                instruction("return"),
+                instruction("tableswitch")
+        ));
+        instructions.putAll(Map.ofEntries(
+                instruction("getfield"),
+                instruction("getstatic"),
+                instruction("putfield"),
+                instruction("putstatic")
         ));
 
         instructions.putAll(Map.ofEntries(
-                Map.entry("monitorenter", "Synchronization: Enter monitor"),
-                Map.entry("monitorexit", "Synchronization: Exit monitor")
+                instruction("invokedynamic"),
+                instruction("invokeinterface"),
+                instruction("invokespecial"),
+                instruction("invokestatic"),
+                instruction("invokevirtual")
         ));
 
         instructions.putAll(Map.ofEntries(
-                Map.entry("multianewarray", "Array: Create multi-dimensional array"),
-                Map.entry("newarray", "Array: Create new array")
+                instruction("l2d"),
+                instruction("l2f"),
+                instruction("l2i"),
+                instruction("ladd"),
+                instruction("laload"),
+                instruction("land"),
+                instruction("lastore"),
+                instruction("lcmp"),
+                instruction("lconst_0"),
+                instruction("lconst_1"),
+                instruction("ldiv"),
+                instruction("lload"),
+                instruction("lload_0"),
+                instruction("lload_1"),
+                instruction("lload_2"),
+                instruction("lload_3"),
+                instruction("lmul"),
+                instruction("lneg"),
+                instruction("lor"),
+                instruction("lrem"),
+                instruction("lreturn"),
+                instruction("lshl"),
+                instruction("lshr"),
+                instruction("lstore"),
+                instruction("lstore_0"),
+                instruction("lstore_1"),
+                instruction("lstore_2"),
+                instruction("lstore_3"),
+                instruction("lsub"),
+                instruction("lushr"),
+                instruction("lxor")
         ));
 
         instructions.putAll(Map.ofEntries(
-                Map.entry("saload", "Short: Array Load"),
-                Map.entry("sastore", "Short: Array Store"),
-                Map.entry("sipush", "Short: Push short constant")
+                instruction("ldc"),
+                instruction("ldc_w"),
+                instruction("ldc2_w")
+        ));
+
+        instructions.putAll(Map.ofEntries(
+                instruction("monitorenter"),
+                instruction("monitorexit")
+        ));
+
+        instructions.putAll(Map.ofEntries(
+                instruction("multianewarray"),
+                instruction("newarray")
+        ));
+
+        instructions.putAll(Map.ofEntries(
+                instruction("saload"),
+                instruction("sastore"),
+                instruction("sipush")
         ));
 
         instructions.putAll(
                 Map.ofEntries(
-                        Map.entry("new", "Misc: Create new instance"),
-                        Map.entry("nop", "Misc: Do nothing"),
-                        Map.entry("wide", "Misc: Use 2-byte index for local vars")
+                        instruction("new"),
+                        instruction("nop"),
+                        instruction("wide")
                 )
         );
         // </editor-fold>
