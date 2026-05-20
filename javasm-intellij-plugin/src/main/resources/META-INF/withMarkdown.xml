@@ -1,0 +1,13 @@
+<idea-plugin>
+    <extensions defaultExtensionNs="com.intellij">
+        <lang.parserDefinition
+                language="JAL Snippet"
+                implementationClass="tokyo.peya.javasm.intellij.langjal.snippet.JALSnippetParserDefinition"/>
+        <lang.syntaxHighlighterFactory
+                language="JAL Snippet"
+                implementationClass="tokyo.peya.javasm.intellij.editor.highlighting.JALSnippetSyntaxHighlighterFactory"/>
+    </extensions>
+    <extensions defaultExtensionNs="org.intellij.markdown">
+        <fenceLanguageProvider implementation="tokyo.peya.javasm.intellij.editor.markdown.JALMarkdownCodeFenceLanguageProvider"/>
+    </extensions>
+</idea-plugin>
