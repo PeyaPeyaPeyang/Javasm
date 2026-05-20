@@ -1,10 +1,19 @@
 # Changelog
 
+### [1.4.2] - 2026/5/18
+
+JAL Implementation: 1.3.1
+
+- **feat**: Add a class resolution for class references in method descriptors.
+- **fix**: Class reference resolution now can be shown in the valid text range.
+- **feat**: Enhance method descriptor highlighting.
+- **chore**: Bump JAL implementation to 1.3.1 for better stability and performance.
+
 ### [1.4.1] - 2026/5/16
 
 JAL Implementation: 1.2.8
 
-- **chore*:: Bump JAL implementation to 1.2.8 for better stability and performance.
+- **chore**: Bump JAL implementation to 1.2.8 for better stability and performance.
 
 ### [1.4.0] - 2026/5/14
 
