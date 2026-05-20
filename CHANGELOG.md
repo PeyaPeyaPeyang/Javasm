@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.4.3] - 2026/5/21
+
+JAL Implementation: 1.3.1
+
+- **feat**: Added a code fence language for markdown code blocks to enable syntax highlighting for fragments of JVM instructions.
+- **chore**: Remove the hard `com.intellij.modules.java` dependency from the plugin, allowing it to be used in non-Java projects and improving compatibility with other IDEs.
+
 ### [1.4.2] - 2026/5/18
 
 JAL Implementation: 1.3.1
