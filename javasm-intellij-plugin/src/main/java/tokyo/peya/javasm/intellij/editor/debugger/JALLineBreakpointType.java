@@ -2,7 +2,9 @@ package tokyo.peya.javasm.intellij.editor.debugger;
 
 import com.intellij.debugger.ui.breakpoints.Breakpoint;
 import com.intellij.debugger.ui.breakpoints.JavaLineBreakpointTypeBase;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.util.Computable;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiElement;
 import com.intellij.xdebugger.breakpoints.XBreakpoint;
@@ -22,18 +24,20 @@ public class JALLineBreakpointType extends JavaLineBreakpointTypeBase<JavaLineBr
 
     @Override
     public boolean canPutAt(@NotNull VirtualFile file, int line, @NotNull Project project) {
-        if (file.getFileType() != JALFileType.INSTANCE)
-            return false;
+        return ApplicationManager.getApplication().runReadAction((Computable<Boolean>) () -> {
+            if (file.getFileType() != JALFileType.INSTANCE)
+                return false;
 
-        if (line < 0)
-            return false;
+            if (line < 0)
+                return false;
 
-        JALFile jalFile = JALFile.getJALFile(project, file);
-        if (jalFile == null)
-            return false;
+            JALFile jalFile = JALFile.getJALFile(project, file);
+            if (jalFile == null)
+                return false;
 
-        PsiElement element = jalFile.findInstructionRelatedElement(line);
-        return element != null;
+            PsiElement element = jalFile.findInstructionRelatedElement(line);
+            return element != null;
+        });
     }
 
     @Override
@@ -44,6 +48,8 @@ public class JALLineBreakpointType extends JavaLineBreakpointTypeBase<JavaLineBr
     @Override
     public @NotNull Breakpoint<JavaLineBreakpointProperties> createJavaBreakpoint(Project project,
                                                                                   XBreakpoint<JavaLineBreakpointProperties> xBreakpoint) {
-        return new JALLineBreakpoint(project, xBreakpoint);
+        return ApplicationManager.getApplication().runReadAction(
+                (Computable<Breakpoint<JavaLineBreakpointProperties>>) () -> new JALLineBreakpoint(project, xBreakpoint)
+        );
     }
 }
