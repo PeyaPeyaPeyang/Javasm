@@ -13,6 +13,7 @@
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.spellchecker</depends>
     <depends optional="true" config-file="withJava.xml">com.intellij.modules.java</depends>
     <depends optional="true" config-file="withMarkdown.xml">org.intellij.plugins.markdown</depends>
 
@@ -140,5 +141,7 @@
         <braceMatcher filetype="JVM Assembly Language File"
                       implementationClass="tokyo.peya.javasm.intellij.editor.JALPairedBraceMatcherAdapter"/>
         <fileDocumentManagerListener implementation="tokyo.peya.javasm.intellij.editor.document.JALSaveListener"/>
+        <spellchecker.bundledDictionaryProvider
+                implementation="tokyo.peya.javasm.intellij.editor.spellchecker.JALBundledDictionaryProvider"/>
     </extensions>
 </idea-plugin>
