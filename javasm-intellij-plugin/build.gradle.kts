@@ -41,7 +41,7 @@ dependencies {
     implementation("org.ow2.asm:asm-util:9.9.1")
 
     implementation(project(":javasm-jps-plugin"))
-    implementation("tokyo.peya:langjal:1.3.1")
+    implementation("tokyo.peya:langjal:1.4.0")
     implementation("org.antlr:antlr4-intellij-adaptor:0.1")
 }
 
