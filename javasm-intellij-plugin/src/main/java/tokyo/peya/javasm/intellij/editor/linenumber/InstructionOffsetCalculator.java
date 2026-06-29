@@ -25,13 +25,14 @@ public class InstructionOffsetCalculator {
         if (cached != null)
             return cached;
 
-        InstructionOffsetCalculator fresh;
-        methodNode.putUserData(KEY, fresh = new InstructionOffsetCalculator());
+        InstructionOffsetCalculator fresh = new InstructionOffsetCalculator();
         try {
             fresh.buildOffsets(methodNode);
         } catch (IllegalStateException ignored) {
             // これは，コードの記述が不完全だったり構文エラーのときにおきる。
+            return fresh;
         }
+        methodNode.putUserData(KEY, fresh);
         return fresh;
     }
 

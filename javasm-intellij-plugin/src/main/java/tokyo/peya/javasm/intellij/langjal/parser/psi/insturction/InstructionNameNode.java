@@ -3,6 +3,8 @@ package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
 import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
 public class InstructionNameNode extends ANTLRPsiLeafNode {
@@ -12,7 +14,12 @@ public class InstructionNameNode extends ANTLRPsiLeafNode {
 
     @NotNull
     public String getInstructionName() {
-        return this.getText();
+        String text = this.getText();
+        if (EOpcodes.findOpcode(text) >= 0)
+            return text;
+
+        String macroInstructionName = this.resolveMacroInstructionName();
+        return macroInstructionName == null ? text : macroInstructionName;
     }
 
     public int getOpcode() {
@@ -21,11 +28,34 @@ public class InstructionNameNode extends ANTLRPsiLeafNode {
     }
 
     public int getInstructionSize() {
-        return EOpcodes.getOpcodeSize(this.getOpcode());
+        String macroValue = JALPreprocessorDirectiveUtil.resolveMacroValue(this);
+        if (macroValue == null)
+            return EOpcodes.getOpcodeSize(this.getOpcode());
+
+        int size = 0;
+        for (String token : JALPreprocessorDirectiveUtil.tokenizeMacroValue(macroValue)) {
+            int opcode = EOpcodes.findOpcode(token);
+            if (opcode >= 0)
+                size += EOpcodes.getOpcodeSize(opcode);
+        }
+
+        return size == 0 ? EOpcodes.getOpcodeSize(this.getOpcode()) : size;
+    }
+
+    private @Nullable String resolveMacroInstructionName() {
+        String macroValue = JALPreprocessorDirectiveUtil.resolveMacroValue(this);
+        if (macroValue == null)
+            return null;
+
+        return JALPreprocessorDirectiveUtil.tokenizeMacroValue(macroValue)
+                                           .stream()
+                                           .filter(token -> EOpcodes.findOpcode(token) >= 0)
+                                           .findFirst()
+                                           .orElse(macroValue);
     }
 
     @NotNull
     public String toString() {
-        return "InstructionName(" + this.getText() + ")";
+        return "InstructionName(" + this.getInstructionName() + ")";
     }
 }

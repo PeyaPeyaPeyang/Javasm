@@ -1,6 +1,7 @@
 package tokyo.peya.javasm.intellij.langjal.preprocessor;
 
 import com.intellij.openapi.util.TextRange;
+import com.intellij.psi.PsiElement;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,6 +61,81 @@ public final class JALPreprocessorDirectiveUtil {
         }
 
         return null;
+    }
+
+    public static @Nullable String resolveMacroValueAt(@NotNull String text,
+                                                       int offset,
+                                                       @NotNull String macroName) {
+        String value = null;
+        for (DefineDirective directive : findDefineDirectives(text)) {
+            if (directive.range().getStartOffset() >= offset)
+                break;
+            if (macroName.equals(directive.macroName()))
+                value = normalizeMacroValue(directive.value());
+        }
+
+        return value;
+    }
+
+    public static @Nullable String resolveMacroValue(@NotNull PsiElement element) {
+        if (element.getContainingFile() == null)
+            return null;
+
+        return resolveMacroValueAt(
+                element.getContainingFile().getText(),
+                element.getTextRange().getStartOffset(),
+                element.getText()
+        );
+    }
+
+    public static @NotNull String normalizeMacroValue(@NotNull String value) {
+        return value.replace("\\\r\n", " ")
+                    .replace("\\\n", " ")
+                    .replace("\\\r", " ")
+                    .trim();
+    }
+
+    public static @NotNull List<String> tokenizeMacroValue(@NotNull String value) {
+        String normalized = normalizeMacroValue(value);
+        if (normalized.isEmpty())
+            return List.of();
+
+        List<String> tokens = new ArrayList<>();
+        int pos = 0;
+        while (pos < normalized.length()) {
+            while (pos < normalized.length() && Character.isWhitespace(normalized.charAt(pos)))
+                pos++;
+            if (pos >= normalized.length())
+                break;
+
+            int start = pos;
+            char quote = 0;
+            while (pos < normalized.length()) {
+                char c = normalized.charAt(pos);
+                if (quote != 0) {
+                    if (c == '\\' && pos + 1 < normalized.length()) {
+                        pos += 2;
+                        continue;
+                    }
+                    pos++;
+                    if (c == quote)
+                        quote = 0;
+                    continue;
+                }
+
+                if (c == '"' || c == '\'') {
+                    quote = c;
+                    pos++;
+                    continue;
+                }
+                if (Character.isWhitespace(c))
+                    break;
+                pos++;
+            }
+            tokens.add(normalized.substring(start, pos));
+        }
+
+        return tokens;
     }
 
     private static @Nullable DefineDirective parseDefineDirective(@NotNull String text, int directiveStart, int directiveEnd) {
