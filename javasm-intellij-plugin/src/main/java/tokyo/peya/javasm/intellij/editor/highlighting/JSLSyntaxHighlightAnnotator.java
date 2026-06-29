@@ -6,7 +6,10 @@ import com.intellij.lang.annotation.HighlightSeverity;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
+import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
+import tokyo.peya.javasm.intellij.langjal.JALFile;
+import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.LabelNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.clazz.ClassNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.FullQualifiedNameNode;
@@ -19,6 +22,24 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
 import tokyo.peya.langjal.compiler.jvm.DescriptorReader;
 
 public class JSLSyntaxHighlightAnnotator implements Annotator {
+    private static void highlightPreprocessorDirectives(@NotNull PsiFile file, @NotNull AnnotationHolder holder) {
+        if (!(file instanceof JALFile))
+            return;
+
+        for (JALPreprocessorDirectiveUtil.DefineDirective directive
+                : JALPreprocessorDirectiveUtil.findDefineDirectives(file.getText())) {
+            highlight(file, directive.keywordRange(), holder, JALSyntaxHighlighter.PREPROCESSOR_DIRECTIVE);
+
+            TextRange macroNameRange = directive.macroNameRange();
+            if (macroNameRange != null)
+                highlight(file, macroNameRange, holder, JALSyntaxHighlighter.MACRO_NAME);
+
+            TextRange valueRange = directive.valueRange();
+            if (valueRange != null)
+                highlight(file, valueRange, holder, JALSyntaxHighlighter.MACRO_VALUE);
+        }
+    }
+
     private static void highlightIdentifiers(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
         // クラス名, メソッド名
         if (element instanceof ClassNameNode className)
@@ -98,6 +119,9 @@ public class JSLSyntaxHighlightAnnotator implements Annotator {
 
     @Override
     public void annotate(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
+        if (element instanceof PsiFile file)
+            highlightPreprocessorDirectives(file, holder);
+
         highlightIdentifiers(element, holder);
     }
 }

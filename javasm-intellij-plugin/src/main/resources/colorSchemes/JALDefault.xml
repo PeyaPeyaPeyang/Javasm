@@ -133,6 +133,18 @@
             <option name="EFFECT_TYPE" value="1"/>
         </value>
     </option>
+    <option name="JAL_MACRO_NAME">
+        <value>
+            <option name="FOREGROUND" value="b87b00"/>
+            <option name="EFFECT_COLOR" value="b87b00"/>
+            <option name="EFFECT_TYPE" value="1"/>
+        </value>
+    </option>
+    <option name="JAL_MACRO_VALUE">
+        <value>
+            <option name="FOREGROUND" value="6a8759"/>
+        </value>
+    </option>
     <option name="JAL_NUMBER">
         <value>
             <option name="FOREGROUND" value="2d6ae3"/>
@@ -141,6 +153,12 @@
     <option name="JAL_PARAMETER">
         <value>
             <option name="FOREGROUND" value="2c7b9f"/>
+        </value>
+    </option>
+    <option name="JAL_PREPROCESSOR_DIRECTIVE">
+        <value>
+            <option name="FOREGROUND" value="7a4f9f"/>
+            <option name="FONT_TYPE" value="1"/>
         </value>
     </option>
 </list>

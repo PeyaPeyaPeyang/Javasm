@@ -8,6 +8,7 @@ import com.intellij.psi.PsiManager;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.InstructionNode;
 import tokyo.peya.javasm.intellij.utils.JALMessages;
@@ -122,6 +123,10 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
 
     @Override
     public @Nullable @Nls String generateDoc(PsiElement element, @Nullable PsiElement originalElement) {
+        String preprocessorDoc = generatePreprocessorDoc(originalElement != null ? originalElement : element);
+        if (preprocessorDoc != null)
+            return preprocessorDoc;
+
         if (!(originalElement instanceof InstructionNameNode instructionNameNode))
             return null;
         String instructionName = instructionNameNode.getInstructionName();
@@ -130,6 +135,54 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
             return null;
 
         return content.replace("{instruction}", instructionName);
+    }
+
+    private static @Nullable @Nls String generatePreprocessorDoc(@Nullable PsiElement element) {
+        if (element == null || element.getContainingFile() == null)
+            return null;
+
+        JALPreprocessorDirectiveUtil.DefineDirective directive =
+                JALPreprocessorDirectiveUtil.findDefineDirectiveAt(
+                        element.getContainingFile().getText(),
+                        element.getTextOffset()
+                );
+        if (directive == null)
+            return null;
+
+        String escapedMacroName = escapeHtml(directive.macroName().isEmpty() ? "<macro>" : directive.macroName());
+        String escapedValue = escapeHtml(directive.value().strip());
+
+        if ("ja".equals(JALMessages.getLocale().getLanguage())) {
+            return """
+                    <h2>#define</h2>
+                    <p>プリプロセッサのマクロ定義です。以降の行で同じ識別子が現れると、コンパイル前に定義値へ展開されます。</p>
+                    <pre>#define %s %s</pre>
+                    <ul>
+                      <li>行末の <code>\\</code> で定義を次の行へ継続できます。</li>
+                      <li>文字列リテラル、行コメント、ブロックコメント内の識別子は展開されません。</li>
+                      <li>再帰的な展開は循環を避けながら最大深さまで処理されます。</li>
+                    </ul>
+                    """.formatted(escapedMacroName, escapedValue);
+        }
+
+        return """
+                <h2>#define</h2>
+                <p>Defines a preprocessor macro. Later occurrences of the same identifier are expanded before compilation.</p>
+                <pre>#define %s %s</pre>
+                <ul>
+                  <li>A trailing <code>\\</code> continues the definition on the next line.</li>
+                  <li>Identifiers inside string literals, line comments, and block comments are not expanded.</li>
+                  <li>Recursive expansion is bounded and avoids cycles.</li>
+                </ul>
+                """.formatted(escapedMacroName, escapedValue);
+    }
+
+    @NotNull
+    private static String escapeHtml(@NotNull String text) {
+        return text.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\"", "&quot;");
     }
 
     @Override
@@ -147,6 +200,9 @@ public class JALInstructionDocumentProvider extends AbstractDocumentationProvide
     public @Nullable PsiElement getCustomDocumentationElement(@NotNull Editor editor, @NotNull PsiFile file,
                                                               @Nullable PsiElement contextElement, int targetOffset) {
         PsiElement element = file.findElementAt(targetOffset);
+        if (JALPreprocessorDirectiveUtil.findDefineDirectiveAt(file.getText(), targetOffset) != null)
+            return element;
+
         if (element instanceof InstructionNameNode instructionNameNode)
             return instructionNameNode;
         else if (element instanceof InstructionNode instructionNode)

@@ -5,11 +5,10 @@ import com.intellij.openapi.editor.DefaultLanguageHighlighterColors;
 import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.fileTypes.SyntaxHighlighterBase;
 import com.intellij.psi.tree.IElementType;
-import org.antlr.intellij.adaptor.lexer.ANTLRLexerAdaptor;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tokyo.peya.javasm.intellij.langjal.JALLanguage;
+import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorAwareLexer;
 import tokyo.peya.javasm.intellij.langjal.parser.JALParserDefinition;
 import tokyo.peya.langjal.compiler.JALLexer;
 
@@ -55,6 +54,12 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
             createTextAttributesKey("JAL_CLASS_NAME", DefaultLanguageHighlighterColors.CLASS_NAME);
     public static final TextAttributesKey FIELD_NAME =
             createTextAttributesKey("JAL_FIELD_NAME", DefaultLanguageHighlighterColors.INSTANCE_FIELD);
+    public static final TextAttributesKey PREPROCESSOR_DIRECTIVE =
+            createTextAttributesKey("JAL_PREPROCESSOR_DIRECTIVE", DefaultLanguageHighlighterColors.METADATA);
+    public static final TextAttributesKey MACRO_NAME =
+            createTextAttributesKey("JAL_MACRO_NAME", DefaultLanguageHighlighterColors.CONSTANT);
+    public static final TextAttributesKey MACRO_VALUE =
+            createTextAttributesKey("JAL_MACRO_VALUE", DefaultLanguageHighlighterColors.STRING);
     public static final TextAttributesKey DESC_BOOLEAN =
             createTextAttributesKey("JAL_DESC_BOOLEAN", DefaultLanguageHighlighterColors.KEYWORD);
     public static final TextAttributesKey DESC_BYTE =
@@ -118,7 +123,7 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
 
     @Override
     public @NotNull Lexer getHighlightingLexer() {
-        return new ANTLRLexerAdaptor(JALLanguage.INSTANCE, new JALLexer(null));
+        return new JALPreprocessorAwareLexer();
     }
 
     @Nullable

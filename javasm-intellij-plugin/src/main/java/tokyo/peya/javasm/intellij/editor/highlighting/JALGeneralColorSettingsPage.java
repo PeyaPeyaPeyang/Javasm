@@ -34,6 +34,9 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage {
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.field.name"), JALSyntaxHighlighter.FIELD_NAME),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.class.name"), JALSyntaxHighlighter.CLASS_NAME),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.members.parameter"), JALSyntaxHighlighter.PARAMETER),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.preprocessor.directive"), JALSyntaxHighlighter.PREPROCESSOR_DIRECTIVE),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.preprocessor.macro.name"), JALSyntaxHighlighter.MACRO_NAME),
+            new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.preprocessor.macro.value"), JALSyntaxHighlighter.MACRO_VALUE),
 
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.byte"), JALSyntaxHighlighter.DESC_BYTE),
             new AttributesDescriptor(JALMessages.message("jal.editor.highlight.settings.types.short"), JALSyntaxHighlighter.DESC_SHORT),
@@ -82,6 +85,10 @@ public class JALGeneralColorSettingsPage implements ColorSettingsPage {
     @Override
     public @NonNls @NotNull String getDemoText() {
         return """
+                #define GREETING "Hello, JAL!"
+                #define ENTRY_POINT \\
+                  public static main([Ljava/lang/String;)V
+                
                 public class TestClas (
                   major_version=65,
                   minor_version=0) {
