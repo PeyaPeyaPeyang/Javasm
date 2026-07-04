@@ -66,15 +66,25 @@ public final class JALPreprocessorDirectiveUtil {
     public static @Nullable String resolveMacroValueAt(@NotNull String text,
                                                        int offset,
                                                        @NotNull String macroName) {
-        String value = null;
+        DefineDirective directive = findActiveDefineDirectiveAt(text, offset, macroName);
+        if (directive == null)
+            return null;
+
+        return normalizeMacroValue(directive.value());
+    }
+
+    public static @Nullable DefineDirective findActiveDefineDirectiveAt(@NotNull String text,
+                                                                        int offset,
+                                                                        @NotNull String macroName) {
+        DefineDirective resolved = null;
         for (DefineDirective directive : findDefineDirectives(text)) {
             if (directive.range().getStartOffset() >= offset)
                 break;
             if (macroName.equals(directive.macroName()))
-                value = normalizeMacroValue(directive.value());
+                resolved = directive;
         }
 
-        return value;
+        return resolved;
     }
 
     public static @Nullable String resolveMacroValue(@NotNull PsiElement element) {

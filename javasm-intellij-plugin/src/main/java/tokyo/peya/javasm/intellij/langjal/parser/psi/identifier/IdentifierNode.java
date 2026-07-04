@@ -49,6 +49,10 @@ public class IdentifierNode extends ANTLRPsiLeafNode implements PsiNamedElement 
 
     @Override
     public PsiReference getReference() {
+        MacroReference macroReference = MacroReference.createIfMacro(this);
+        if (macroReference != null)
+            return macroReference;
+
         PsiElement parent = this.getParent();
         if (parent == null || parent.getNode() == null)
             return null;

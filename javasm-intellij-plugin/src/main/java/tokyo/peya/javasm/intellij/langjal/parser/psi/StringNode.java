@@ -1,9 +1,11 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi;
 
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.MacroReference;
 
 public class StringNode extends ANTLRPsiLeafNode {
     public StringNode(IElementType type, CharSequence text) {
@@ -28,5 +30,10 @@ public class StringNode extends ANTLRPsiLeafNode {
         String text = this.getText();
         String macroValue = JALPreprocessorDirectiveUtil.resolveMacroValue(this);
         return macroValue == null ? text : macroValue;
+    }
+
+    @Override
+    public PsiReference getReference() {
+        return MacroReference.createIfMacro(this);
     }
 }

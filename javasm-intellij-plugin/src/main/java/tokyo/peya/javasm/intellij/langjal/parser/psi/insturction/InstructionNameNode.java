@@ -1,10 +1,12 @@
 package tokyo.peya.javasm.intellij.langjal.parser.psi.insturction;
 
+import com.intellij.psi.PsiReference;
 import com.intellij.psi.tree.IElementType;
 import org.antlr.intellij.adaptor.psi.ANTLRPsiLeafNode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
+import tokyo.peya.javasm.intellij.langjal.parser.psi.refs.MacroReference;
 import tokyo.peya.langjal.compiler.jvm.EOpcodes;
 
 public class InstructionNameNode extends ANTLRPsiLeafNode {
@@ -52,6 +54,11 @@ public class InstructionNameNode extends ANTLRPsiLeafNode {
                                            .filter(token -> EOpcodes.findOpcode(token) >= 0)
                                            .findFirst()
                                            .orElse(macroValue);
+    }
+
+    @Override
+    public PsiReference getReference() {
+        return MacroReference.createIfMacro(this);
     }
 
     @NotNull
