@@ -7,6 +7,8 @@ import com.intellij.openapi.editor.colors.TextAttributesKey;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.Token;
 import org.jetbrains.annotations.NotNull;
 import tokyo.peya.javasm.intellij.langjal.JALFile;
 import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
@@ -19,6 +21,7 @@ import tokyo.peya.javasm.intellij.langjal.parser.psi.identifier.IdentifierNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.insturction.FieldReferenceNameNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodDescriptorNode;
 import tokyo.peya.javasm.intellij.langjal.parser.psi.method.MethodNameNode;
+import tokyo.peya.langjal.compiler.JALLexer;
 import tokyo.peya.langjal.compiler.jvm.DescriptorReader;
 
 public class JSLSyntaxHighlightAnnotator implements Annotator {
@@ -35,9 +38,55 @@ public class JSLSyntaxHighlightAnnotator implements Annotator {
                 highlight(file, macroNameRange, holder, JALSyntaxHighlighter.MACRO_NAME);
 
             TextRange valueRange = directive.valueRange();
-            if (valueRange != null)
+            if (valueRange != null) {
                 highlight(file, valueRange, holder, JALSyntaxHighlighter.MACRO_VALUE);
+                highlightMacroValueTokens(directive, holder);
+            }
         }
+    }
+
+    private static void highlightMacroValueTokens(
+            @NotNull JALPreprocessorDirectiveUtil.DefineDirective directive,
+            @NotNull AnnotationHolder holder
+    ) {
+        TextRange valueRange = directive.valueRange();
+        if (valueRange == null)
+            return;
+
+        JALLexer lexer = new JALLexer(CharStreams.fromString(maskLineContinuations(directive.value())));
+        while (true) {
+            Token token = lexer.nextToken();
+            if (token.getType() == Token.EOF)
+                return;
+
+            TextAttributesKey key = JALSyntaxHighlighter.getTokenHighlightKey(token.getType());
+            if (key == null)
+                continue;
+
+            highlight(TextRange.create(token.getStartIndex(), token.getStopIndex() + 1)
+                               .shiftRight(valueRange.getStartOffset()),
+                      holder,
+                      key);
+        }
+    }
+
+    private static @NotNull String maskLineContinuations(@NotNull String text) {
+        StringBuilder masked = new StringBuilder(text);
+        for (int i = 0; i < masked.length() - 1; i++) {
+            if (masked.charAt(i) != '\\')
+                continue;
+
+            char next = masked.charAt(i + 1);
+            if (next != '\r' && next != '\n')
+                continue;
+
+            masked.setCharAt(i, ' ');
+            masked.setCharAt(i + 1, ' ');
+            if (next == '\r' && i + 2 < masked.length() && masked.charAt(i + 2) == '\n')
+                masked.setCharAt(i + 2, ' ');
+        }
+
+        return masked.toString();
     }
 
     private static void highlightIdentifiers(@NotNull PsiElement element, @NotNull AnnotationHolder holder) {
@@ -113,6 +162,14 @@ public class JSLSyntaxHighlightAnnotator implements Annotator {
                                   @NotNull TextAttributesKey textAttributesKey) {
         holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
                 .range(element.getTextRange().cutOut(range))
+                .textAttributes(textAttributesKey)
+                .create();
+    }
+
+    private static void highlight(@NotNull TextRange range, @NotNull AnnotationHolder holder,
+                                  @NotNull TextAttributesKey textAttributesKey) {
+        holder.newSilentAnnotation(HighlightSeverity.INFORMATION)
+                .range(range)
                 .textAttributes(textAttributesKey)
                 .create();
     }

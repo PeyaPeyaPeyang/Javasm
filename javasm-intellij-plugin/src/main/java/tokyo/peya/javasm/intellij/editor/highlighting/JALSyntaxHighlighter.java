@@ -135,6 +135,11 @@ public class JALSyntaxHighlighter extends SyntaxHighlighterBase {
     }
 
     @Nullable
+    public static TextAttributesKey getTokenHighlightKey(int tokenType) {
+        return highlightsInstructionTokenType(tokenType);
+    }
+
+    @Nullable
     private static TextAttributesKey highlightsInstructionTokenType(int tokenType) {
         return switch (tokenType) {
             case JALLexer.ID -> ID;
