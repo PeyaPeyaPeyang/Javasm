@@ -13,6 +13,7 @@ import org.antlr.intellij.adaptor.lexer.RuleIElementType;
 import org.antlr.intellij.adaptor.lexer.TokenIElementType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import tokyo.peya.javasm.intellij.langjal.preprocessor.JALPreprocessorDirectiveUtil;
 import tokyo.peya.langjal.compiler.JALParser;
 
 import java.util.ArrayList;
@@ -65,6 +66,13 @@ public class JALBlock extends AbstractBlock {
     @Override
     public Indent getIndent() {
         IElementType type = this.myNode.getElementType();
+        if (type instanceof TokenIElementType token) {
+            if (isDefineContinuationToken(token))
+                return Indent.getNormalIndent();
+
+            return Indent.getNoneIndent();
+        }
+
         if (!(type instanceof RuleIElementType rule))
             return Indent.getNoneIndent();
 
@@ -82,6 +90,35 @@ public class JALBlock extends AbstractBlock {
             return Indent.getLabelIndent();
 
         return Indent.getNoneIndent();
+    }
+
+    private boolean isDefineContinuationToken(@NotNull TokenIElementType token) {
+        if (token.getANTLRTokenType() != JALParser.LINE_COMMENT)
+            return false;
+
+        PsiElement psi = this.myNode.getPsi();
+        if (psi == null || psi.getContainingFile() == null)
+            return false;
+
+        String text = psi.getContainingFile().getText();
+        int offset = this.myNode.getTextRange().getStartOffset();
+        JALPreprocessorDirectiveUtil.DefineDirective directive =
+                JALPreprocessorDirectiveUtil.findDefineDirectiveAt(text, offset);
+        if (directive == null)
+            return false;
+
+        return containsLineBreak(text, directive.range().getStartOffset(), offset);
+    }
+
+    private static boolean containsLineBreak(@NotNull String text, int start, int end) {
+        int limit = Math.min(end, text.length());
+        for (int i = Math.max(0, start); i < limit; i++) {
+            char c = text.charAt(i);
+            if (c == '\r' || c == '\n')
+                return true;
+        }
+
+        return false;
     }
 
     @Override
