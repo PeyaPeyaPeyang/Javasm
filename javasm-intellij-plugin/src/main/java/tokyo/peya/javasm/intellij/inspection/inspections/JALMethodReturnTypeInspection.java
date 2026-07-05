@@ -38,13 +38,30 @@ public class JALMethodReturnTypeInspection extends AbstractJALInspection {
         MethodDescriptor methodDesc = method.getMethodDescriptor();
         TypeDescriptor expectedReturnType = methodDesc.getReturnType();
 
-        if (expectedReturnType.getBaseType().getDescriptor().startsWith("L") &&
-                actualReturnType.equals(TypeDescriptor.OBJECT))
-            return;  // Object 型はそれ以上チェックできないので，良しとする。
-
-        // それ以外の場合はチェックして報告。
-        if (!expectedReturnType.equals(actualReturnType))
+        if (!isCompatibleReturnType(expectedReturnType, actualReturnType))
             registerTypeMismatchProblem(holder, node, expectedReturnType, actualReturnType);
+    }
+
+    private static boolean isCompatibleReturnType(
+            @NotNull TypeDescriptor expectedType,
+            @NotNull TypeDescriptor actualType
+    ) {
+        // boolean/byte/char/short/int は，すべて ireturn
+        if (actualType.equals(TypeDescriptor.INTEGER))
+            return isIntReturnType(expectedType);
+
+        // 参照型は areturn
+        if (actualType.equals(TypeDescriptor.OBJECT))
+            return !expectedType.getBaseType().isPrimitive();
+
+        return expectedType.equals(actualType);
+    }
+
+    private static boolean isIntReturnType(@NotNull TypeDescriptor type) {
+        return switch (type.getBaseType().getDescriptor()) {
+            case "Z", "B", "C", "S", "I" -> true;
+            default -> false;
+        };
     }
 
     private static void registerTypeMismatchProblem(
