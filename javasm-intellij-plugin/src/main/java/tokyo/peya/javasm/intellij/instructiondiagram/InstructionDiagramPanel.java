@@ -37,6 +37,7 @@ public final class InstructionDiagramPanel extends JPanel {
     private static final float NODE_MIN_WIDTH = 110f;
     private static final float NODE_PADDING_X = 18f;
     private static final float ARROW_SIZE = 8f;
+    private static final float SIDE_EXIT_GAP = 32f;
     private static final float METHOD_BOX_PADDING_X = 24f;
     private static final float METHOD_BOX_PADDING_Y = 18f;
     private static final float METHOD_LABEL_HEIGHT = 30f;
@@ -297,22 +298,62 @@ public final class InstructionDiagramPanel extends JPanel {
                             @NotNull Map<DiagramNode, Integer> outgoingRenderedCounts) {
         List<DiagramEdge> orderedEdges = new ArrayList<>(this.edges);
         orderedEdges.sort(Comparator.comparing(DiagramEdge::kind).reversed());
+        Set<EdgeKey> dataEdgeKeys = this.dataEdgeKeys();
+        Set<DiagramNode> dataBottomSources = this.dataBottomSources();
         for (DiagramEdge edge : orderedEdges) {
+            if (this.shouldHideControlEdge(edge, dataEdgeKeys))
+                continue;
+
             g2.setStroke(new BasicStroke(2f));
             g2.setColor(this.edgeColor(edge.kind()));
             Rectangle2D.Float from = edge.from().bounds();
             Rectangle2D.Float to = edge.to().bounds();
-            OrthogonalRoute route = this.routeForEdge(edge, from, to);
-            float spreadOffset = this.nextSourceSpreadOffset(edge.from(), outgoingTotals, outgoingRenderedCounts);
+            OrthogonalRoute route = this.routeForEdge(edge, from, to, dataBottomSources);
+            float spreadOffset = edge.kind() == InstructionDependencyEdgeKind.DATA
+                    ? this.nextSourceSpreadOffset(edge.from(), outgoingTotals, outgoingRenderedCounts)
+                    : 0f;
             this.paintRoute(g2, this.offsetRouteNearSource(route, spreadOffset));
         }
     }
 
+    private @NotNull Set<EdgeKey> dataEdgeKeys() {
+        Set<EdgeKey> keys = new HashSet<>();
+        for (DiagramEdge edge : this.edges) {
+            if (edge.kind() == InstructionDependencyEdgeKind.DATA)
+                keys.add(new EdgeKey(edge.from(), edge.to()));
+        }
+        return keys;
+    }
+
+    private boolean shouldHideControlEdge(@NotNull DiagramEdge edge, @NotNull Set<EdgeKey> dataEdgeKeys) {
+        return edge.kind() == InstructionDependencyEdgeKind.CONTROL
+                && dataEdgeKeys.contains(new EdgeKey(edge.from(), edge.to()));
+    }
+
+    private @NotNull Set<DiagramNode> dataBottomSources() {
+        Set<DiagramNode> sources = new HashSet<>();
+        for (DiagramEdge edge : this.edges) {
+            if (edge.kind() != InstructionDependencyEdgeKind.DATA)
+                continue;
+            if (this.isDupInstruction(edge.from().entry()))
+                continue;
+            OrthogonalRoute route = this.routeOrthogonal(edge.from().bounds(), edge.to().bounds());
+            if (this.startsFromSide(route, ConnectionSide.BOTTOM))
+                sources.add(edge.from());
+        }
+        return sources;
+    }
+
     private @NotNull OrthogonalRoute routeForEdge(@NotNull DiagramEdge edge,
                                                   @NotNull Rectangle2D.Float from,
-                                                  @NotNull Rectangle2D.Float to) {
-        if (edge.kind() == InstructionDependencyEdgeKind.CONTROL && this.isIfInstruction(edge.from().entry()))
-            return this.routeFromBottom(from, to);
+                                                  @NotNull Rectangle2D.Float to,
+                                                  @NotNull Set<DiagramNode> dataBottomSources) {
+        if (edge.kind() == InstructionDependencyEdgeKind.CONTROL)
+            return dataBottomSources.contains(edge.from())
+                    ? this.routeControlFlowFromSide(from, to, this.controlFlowSide(from, to))
+                    : this.routeControlFlow(from, to);
+        if (edge.kind() == InstructionDependencyEdgeKind.DATA && this.isDupInstruction(edge.from().entry()))
+            return this.routeFromDupSide(from, edge, to);
         return this.routeOrthogonal(from, to);
     }
 
@@ -344,8 +385,11 @@ public final class InstructionDiagramPanel extends JPanel {
 
     private @NotNull Map<DiagramNode, Integer> outgoingTotals() {
         Map<DiagramNode, Integer> totals = new HashMap<>();
-        for (DiagramEdge edge : this.edges)
+        for (DiagramEdge edge : this.edges) {
+            if (edge.kind() != InstructionDependencyEdgeKind.DATA)
+                continue;
             totals.merge(edge.from(), 1, Integer::sum);
+        }
         for (DiagramJumpEdge jump : this.jumpEdges)
             totals.merge(jump.from(), 1, Integer::sum);
         return totals;
@@ -386,6 +430,13 @@ public final class InstructionDiagramPanel extends JPanel {
         }
 
         return this.createRoute(shifted);
+    }
+
+    private boolean startsFromSide(@NotNull OrthogonalRoute route, @NotNull ConnectionSide side) {
+        List<Point2D.Float> points = route.points();
+        if (points.size() < 2)
+            return false;
+        return this.leavesSide(points.get(0), points.get(1), side);
     }
 
     private @NotNull Color jumpEdgeColor(int lane) {
@@ -475,6 +526,75 @@ public final class InstructionDiagramPanel extends JPanel {
                 start,
                 new Point2D.Float(start.x, viaY),
                 new Point2D.Float(end.x, viaY),
+                end
+        ));
+    }
+
+    private @NotNull OrthogonalRoute routeControlFlow(@NotNull Rectangle2D.Float from,
+                                                      @NotNull Rectangle2D.Float to) {
+        Point2D.Float start = ConnectionSide.BOTTOM.anchor(from);
+        Point2D.Float end = ConnectionSide.TOP.anchor(to);
+
+        if (Math.abs(start.x - end.x) < 0.5f)
+            return this.createRoute(List.of(start, end));
+
+        float exitY = Math.min(start.y + LEVEL_GAP / 4f, to.y - SIDE_EXIT_GAP);
+        if (exitY <= start.y)
+            exitY = (start.y + end.y) / 2f;
+
+        return this.createRoute(List.of(
+                start,
+                new Point2D.Float(start.x, exitY),
+                new Point2D.Float(end.x, exitY),
+                end
+        ));
+    }
+
+    private @NotNull OrthogonalRoute routeControlFlowFromSide(@NotNull Rectangle2D.Float from,
+                                                              @NotNull Rectangle2D.Float to,
+                                                              @NotNull ConnectionSide sourceSide) {
+        Point2D.Float start = sourceSide.anchor(from);
+        Point2D.Float end = ConnectionSide.TOP.anchor(to);
+        float exitX = sourceSide == ConnectionSide.LEFT
+                ? from.x - SIDE_EXIT_GAP
+                : from.x + from.width + SIDE_EXIT_GAP;
+        float approachY = Math.min(start.y, to.y - SIDE_EXIT_GAP);
+
+        return this.createRoute(List.of(
+                start,
+                new Point2D.Float(exitX, start.y),
+                new Point2D.Float(exitX, approachY),
+                new Point2D.Float(end.x, approachY),
+                end
+        ));
+    }
+
+    private @NotNull ConnectionSide controlFlowSide(@NotNull Rectangle2D.Float from,
+                                                    @NotNull Rectangle2D.Float to) {
+        float fromCenterX = from.x + from.width / 2f;
+        float toCenterX = to.x + to.width / 2f;
+        return toCenterX < fromCenterX ? ConnectionSide.LEFT : ConnectionSide.RIGHT;
+    }
+
+    private @NotNull OrthogonalRoute routeFromDupSide(@NotNull Rectangle2D.Float from,
+                                                      @NotNull DiagramEdge edge,
+                                                      @NotNull Rectangle2D.Float to) {
+        ConnectionSide sourceSide = this.isDupInstruction(edge.to().entry()) ? ConnectionSide.LEFT : ConnectionSide.RIGHT;
+        return this.routeSideBus(from, to, sourceSide);
+    }
+
+    private @NotNull OrthogonalRoute routeSideBus(@NotNull Rectangle2D.Float from,
+                                                  @NotNull Rectangle2D.Float to,
+                                                  @NotNull ConnectionSide sourceSide) {
+        Point2D.Float start = sourceSide.anchor(from);
+        Point2D.Float end = ConnectionSide.LEFT.anchor(to);
+        float exitX = sourceSide == ConnectionSide.LEFT
+                ? from.x - SIDE_EXIT_GAP
+                : from.x + from.width + SIDE_EXIT_GAP;
+        return this.createRoute(List.of(
+                start,
+                new Point2D.Float(exitX, start.y),
+                new Point2D.Float(exitX, end.y),
                 end
         ));
     }
@@ -715,6 +835,10 @@ public final class InstructionDiagramPanel extends JPanel {
         return entry.instructionName().startsWith("goto");
     }
 
+    private boolean isDupInstruction(@NotNull InstructionDependencyEntry entry) {
+        return "dup".equals(entry.instructionName());
+    }
+
     private @NotNull Shape createIfDiamond(@NotNull Rectangle2D.Float bounds) {
         Path2D.Float diamond = new Path2D.Float();
         diamond.moveTo(bounds.x + bounds.width / 2f, bounds.y);
@@ -926,8 +1050,9 @@ public final class InstructionDiagramPanel extends JPanel {
 
                 Map<Integer, Float> xByLane = computeXByLane(widthByLane);
                 for (PlacedEntry placedEntry : placedEntries) {
+                    float laneWidth = widthByLane.getOrDefault(placedEntry.placement().lane(), placedEntry.width());
                     Rectangle2D.Float bounds = new Rectangle2D.Float(
-                            xByLane.getOrDefault(placedEntry.placement().lane(), 0f),
+                            xByLane.getOrDefault(placedEntry.placement().lane(), 0f) + (laneWidth - placedEntry.width()) / 2f,
                             placedEntry.y(),
                             placedEntry.width(),
                             NODE_HEIGHT
@@ -1227,7 +1352,8 @@ public final class InstructionDiagramPanel extends JPanel {
 
             if (entry.producedCount() > 0) {
                 this.increaseLaneCount(lane, 1);
-                for (int i = 1; i < entry.producedCount(); i++) {
+                int extraProducedCount = this.extraProducedLaneCount(entry);
+                for (int i = 0; i < extraProducedCount; i++) {
                     int extraLane = this.closestFreeLane(preferredLane);
                     this.increaseLaneCount(extraLane, 1);
                     this.lastLevelByLane.put(extraLane, level);
@@ -1235,6 +1361,12 @@ public final class InstructionDiagramPanel extends JPanel {
             }
 
             return new NodePlacement(level, lane);
+        }
+
+        private int extraProducedLaneCount(@NotNull InstructionDependencyEntry entry) {
+            if ("dup".equals(entry.instructionName()))
+                return 0;
+            return entry.producedCount() - 1;
         }
 
         private int closestFreeLane(int preferredLane) {
@@ -1321,6 +1453,9 @@ public final class InstructionDiagramPanel extends JPanel {
     }
 
     private record DiagramJumpEdge(@NotNull DiagramNode from, @NotNull InstructionSetBox to) {
+    }
+
+    private record EdgeKey(@NotNull DiagramNode from, @NotNull DiagramNode to) {
     }
 
     private record JumpLaneKey(@NotNull String methodName, @NotNull String methodDescriptor) {

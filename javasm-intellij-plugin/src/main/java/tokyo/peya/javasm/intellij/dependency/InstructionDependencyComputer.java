@@ -28,11 +28,12 @@ public final class InstructionDependencyComputer {
             int previousStackSize = 0;
 
             for (InstructionUIElement instruction : instructions) {
-                int producedCount = countStack(instruction, StackUIElement.DisplayType.PUSH);
+                StackEffect stackEffect = stackEffect(instruction);
+                int producedCount = stackEffect.producedCount();
                 int displayedConsumedCount = countStack(instruction, StackUIElement.DisplayType.POP);
                 int currentStackSize = instruction.stack().size();
                 int inferredConsumedCount = Math.max(0, previousStackSize + producedCount - currentStackSize);
-                int consumedCount = Math.max(displayedConsumedCount, inferredConsumedCount);
+                int consumedCount = Math.max(stackEffect.consumedCount(), Math.max(displayedConsumedCount, inferredConsumedCount));
                 previousStackSize = currentStackSize;
 
                 InstructionDependencyKind kind = detectKind(producedCount, consumedCount);
@@ -108,5 +109,69 @@ public final class InstructionDependencyComputer {
 
     private static int countStack(@NotNull InstructionUIElement instruction, @NotNull StackUIElement.DisplayType type) {
         return (int) instruction.stack().stream().filter(it -> it.displayType() == type).count();
+    }
+
+    private static @NotNull StackEffect stackEffect(@NotNull InstructionUIElement instruction) {
+        String instructionName = instruction.instruction().instruction();
+        if ("dup".equals(instructionName))
+            return new StackEffect(2, 1);
+
+        if (isBinaryStackOperation(instructionName))
+            return new StackEffect(1, 2);
+
+        if (isUnaryStackOperation(instructionName))
+            return new StackEffect(1, 1);
+
+        if (isArrayLoad(instructionName))
+            return new StackEffect(1, 2);
+
+        if (isArrayStore(instructionName))
+            return new StackEffect(0, 3);
+
+        return new StackEffect(countStack(instruction, StackUIElement.DisplayType.PUSH), 0);
+    }
+
+    private static boolean isBinaryStackOperation(@NotNull String instructionName) {
+        return switch (instructionName) {
+            case "iadd", "ladd", "fadd", "dadd",
+                 "isub", "lsub", "fsub", "dsub",
+                 "imul", "lmul", "fmul", "dmul",
+                 "idiv", "ldiv", "fdiv", "ddiv",
+                 "irem", "lrem", "frem", "drem",
+                 "iand", "land", "ior", "lor", "ixor", "lxor",
+                 "ishl", "lshl", "ishr", "lshr", "iushr", "lushr",
+                 "lcmp", "fcmpl", "fcmpg", "dcmpl", "dcmpg" -> true;
+            default -> false;
+        };
+    }
+
+    private static boolean isUnaryStackOperation(@NotNull String instructionName) {
+        return switch (instructionName) {
+            case "ineg", "lneg", "fneg", "dneg",
+                 "i2l", "i2f", "i2d",
+                 "l2i", "l2f", "l2d",
+                 "f2i", "f2l", "f2d",
+                 "d2i", "d2l", "d2f",
+                 "i2b", "i2c", "i2s",
+                 "arraylength", "checkcast", "instanceof" -> true;
+            default -> false;
+        };
+    }
+
+    private static boolean isArrayLoad(@NotNull String instructionName) {
+        return switch (instructionName) {
+            case "iaload", "laload", "faload", "daload", "aaload", "baload", "caload", "saload" -> true;
+            default -> false;
+        };
+    }
+
+    private static boolean isArrayStore(@NotNull String instructionName) {
+        return switch (instructionName) {
+            case "iastore", "lastore", "fastore", "dastore", "aastore", "bastore", "castore", "sastore" -> true;
+            default -> false;
+        };
+    }
+
+    private record StackEffect(int producedCount, int consumedCount) {
     }
 }
