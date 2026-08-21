@@ -27,8 +27,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Service(Service.Level.PROJECT)
 public final class InstructionDependencyService {
@@ -107,19 +109,22 @@ public final class InstructionDependencyService {
             ), entry);
         }
 
-        // PSI 上の命令を順番に見ていき，対応するエントリがない場合は NEUTRAL なエントリを追加する
+        Set<InstructionKey> psiInstructionKeys = new HashSet<>();
+        Map<InstructionDependencyEntry, InstructionDependencyEntry> psiBackedEntryByOriginal = new HashMap<>();
         List<InstructionDependencyEdge> edges = new ArrayList<>(result.edges());
         for (MethodDefinitionNode methodNode : PsiTreeUtil.findChildrenOfType(file, MethodDefinitionNode.class)) {
             String methodName = methodNode.getMethodName();
             String methodDescriptor = methodNode.getMethodDescriptor().getDescriptorString();
             List<InstructionWithEntry> methodEntries = new ArrayList<>();
 
+            // PSI 上の命令を順番に見ていき，対応するエントリがない場合は NEUTRAL なエントリを追加する
             for (InstructionNode instruction : PsiTreeUtil.findChildrenOfType(methodNode, InstructionNode.class)) {
                 Integer offset = this.tryGetInstructionOffset(instruction);
                 if (offset == null)
                     continue;
 
                 InstructionKey key = new InstructionKey(methodName, methodDescriptor, offset);
+                psiInstructionKeys.add(key);
                 InstructionDependencyEntry entry = entryByInstruction.get(key);
                 if (entry == null) {
                     entry = new InstructionDependencyEntry(
@@ -133,6 +138,14 @@ public final class InstructionDependencyService {
                     );
                     entries.get(InstructionDependencyKind.NEUTRAL).add(entry);
                     entryByInstruction.put(key, entry);
+                } else {
+                    InstructionDependencyEntry psiBackedEntry = this.withPsiInstructionName(entry, instruction);
+                    if (!psiBackedEntry.equals(entry)) {
+                        this.replaceEntry(entries, entry, psiBackedEntry);
+                        entryByInstruction.put(key, psiBackedEntry);
+                        psiBackedEntryByOriginal.put(entry, psiBackedEntry);
+                        entry = psiBackedEntry;
+                    }
                 }
                 methodEntries.add(new InstructionWithEntry(instruction, entry));
             }
@@ -152,6 +165,15 @@ public final class InstructionDependencyService {
             }
         }
 
+        edges.replaceAll(edge -> new InstructionDependencyEdge(
+                psiBackedEntryByOriginal.getOrDefault(edge.from(), edge.from()),
+                psiBackedEntryByOriginal.getOrDefault(edge.to(), edge.to()),
+                edge.kind()
+        ));
+        this.keepPsiBackedEntriesOnly(entries, psiInstructionKeys);
+        edges.removeIf(edge -> !psiInstructionKeys.contains(InstructionKey.from(edge.from()))
+                || !psiInstructionKeys.contains(InstructionKey.from(edge.to())));
+
         return new InstructionDependencyAnalysisResult(
                 entries,
                 edges,
@@ -160,13 +182,56 @@ public final class InstructionDependencyService {
         );
     }
 
-    private @NotNull String displayInstructionName(@NotNull InstructionNode instruction) {
-        String text = instruction.getText().trim();
-        if (!text.isEmpty())
-            return text;
+    private void keepPsiBackedEntriesOnly(@NotNull Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries,
+                                          @NotNull Set<InstructionKey> psiInstructionKeys) {
+        for (List<InstructionDependencyEntry> kindEntries : entries.values())
+            kindEntries.removeIf(entry -> !psiInstructionKeys.contains(InstructionKey.from(entry)));
+    }
 
+    private @NotNull InstructionDependencyEntry withPsiInstructionName(@NotNull InstructionDependencyEntry entry,
+                                                                       @NotNull InstructionNode instruction) {
+        String instructionName = this.displayInstructionName(instruction);
+        if (instructionName.equals(entry.instructionName()))
+            return entry;
+
+        return new InstructionDependencyEntry(
+                entry.methodName(),
+                entry.methodDescriptor(),
+                entry.instructionOffset(),
+                instructionName,
+                entry.producedCount(),
+                entry.consumedCount(),
+                entry.kind()
+        );
+    }
+
+    private void replaceEntry(@NotNull Map<InstructionDependencyKind, List<InstructionDependencyEntry>> entries,
+                              @NotNull InstructionDependencyEntry oldEntry,
+                              @NotNull InstructionDependencyEntry newEntry) {
+        List<InstructionDependencyEntry> kindEntries = entries.get(oldEntry.kind());
+        if (kindEntries == null)
+            return;
+        int index = kindEntries.indexOf(oldEntry);
+        if (index >= 0)
+            kindEntries.set(index, newEntry);
+    }
+
+    private @NotNull String displayInstructionName(@NotNull InstructionNode instruction) {
         String instructionName = instruction.getInstructionName();
-        return instructionName == null ? "<instruction>" : instructionName;
+        if (instructionName == null)
+            return "<instruction>";
+
+        if (this.shouldShowOperands(instruction)) {
+            String text = instruction.getText().trim();
+            if (!text.isEmpty())
+                return text.lines().findFirst().orElse(instructionName).trim();
+        }
+
+        return instructionName;
+    }
+
+    private boolean shouldShowOperands(@NotNull InstructionNode instruction) {
+        return instruction instanceof InstructionJumpNode;
     }
 
     private boolean fallsThrough(@NotNull InstructionNode instruction) {
@@ -243,7 +308,7 @@ public final class InstructionDependencyService {
                         continue;
 
                     for (LabelNameNode label : this.getJumpLabels(instruction)) {
-                        InstructionSetDependencyGroup target = groupByLabel.get(label.getText());
+                        InstructionSetDependencyGroup target = groupByLabel.get(label.getName());
                         if (target != null)
                             jumps.add(new InstructionSetJumpEdge(from, target));
                     }
@@ -277,6 +342,7 @@ public final class InstructionDependencyService {
                 LabelNameNode[] branchLabels = tableSwitchNode.getBranchLabels();
                 if (branchLabels != null)
                     labels.addAll(List.of(branchLabels));
+                this.addSwitchLabelsFallback(tableSwitchNode, labels);
             }
             case InstructionLookupSwitchNode lookupSwitchNode -> {
                 LabelNameNode defaultLabel = lookupSwitchNode.getDefaultBranchLabelName();
@@ -290,6 +356,7 @@ public final class InstructionDependencyService {
                             labels.add(label);
                     }
                 }
+                this.addSwitchLabelsFallback(lookupSwitchNode, labels);
             }
             default -> {
             }
@@ -297,7 +364,18 @@ public final class InstructionDependencyService {
         return labels;
     }
 
+    private void addSwitchLabelsFallback(@NotNull InstructionNode instruction,
+                                         @NotNull List<LabelNameNode> labels) {
+        for (LabelNameNode label : PsiTreeUtil.findChildrenOfType(instruction, LabelNameNode.class)) {
+            if (!labels.contains(label))
+                labels.add(label);
+        }
+    }
+
     private record InstructionKey(@NotNull String methodName, @NotNull String methodDescriptor, int instructionOffset) {
+        private static @NotNull InstructionKey from(@NotNull InstructionDependencyEntry entry) {
+            return new InstructionKey(entry.methodName(), entry.methodDescriptor(), entry.instructionOffset());
+        }
     }
 
     private record AnalysisInput(@NotNull String content, @NotNull JALFile file) {

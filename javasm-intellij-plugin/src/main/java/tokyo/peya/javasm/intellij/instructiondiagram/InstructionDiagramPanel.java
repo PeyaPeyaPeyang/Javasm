@@ -13,6 +13,8 @@ import tokyo.peya.javasm.intellij.utils.JALMessages;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -48,6 +50,7 @@ public final class InstructionDiagramPanel extends JPanel {
     private static final float SELF_JUMP_MARGIN = 28f;
     private static final float SELF_JUMP_SPACING = 14f;
     private static final float JUMP_OVERLAP_OFFSET = 10f;
+    private static final float VIEWPORT_EDGE_MARGIN = 96f;
     private final java.util.function.Consumer<InstructionDependencyEntry> onNavigate;
     private final List<MethodBox> methodBoxes;
     private final List<InstructionSetBox> instructionSetBoxes;
@@ -78,6 +81,7 @@ public final class InstructionDiagramPanel extends JPanel {
         this.setBorder(JBUI.Borders.customLine(JBColor.border(), 1));
         this.setToolTipText("");
         this.installInteractions();
+        this.installViewportBoundsUpdater();
     }
 
     public void applySettings(@NotNull InstructionDiagramSettings settings) {
@@ -109,6 +113,7 @@ public final class InstructionDiagramPanel extends JPanel {
         Map<InstructionSetDependencyGroup, InstructionSetBox> instructionSetBoxMap = this.buildInstructionSetBoxMap();
         this.populateDependencyEdges(result, nodeMap);
         this.populateJumpEdges(result, nodeMap, instructionSetBoxMap);
+        this.constrainViewTransform();
 
         this.revalidate();
         this.repaint();
@@ -118,6 +123,7 @@ public final class InstructionDiagramPanel extends JPanel {
         this.scale = INITIAL_SCALE;
         this.translateX = INITIAL_TRANSLATE;
         this.translateY = INITIAL_TRANSLATE;
+        this.constrainViewTransform();
     }
 
     private void clearDiagramData() {
@@ -335,7 +341,7 @@ public final class InstructionDiagramPanel extends JPanel {
         for (DiagramEdge edge : this.edges) {
             if (edge.kind() != InstructionDependencyEdgeKind.DATA)
                 continue;
-            if (this.isDupInstruction(edge.from().entry()))
+            if (this.isStackRearrangementInstruction(edge.from().entry()))
                 continue;
             OrthogonalRoute route = this.routeOrthogonal(edge.from().bounds(), edge.to().bounds());
             if (this.startsFromSide(route, ConnectionSide.BOTTOM))
@@ -352,8 +358,8 @@ public final class InstructionDiagramPanel extends JPanel {
             return dataBottomSources.contains(edge.from())
                     ? this.routeControlFlowFromSide(from, to, this.controlFlowSide(from, to))
                     : this.routeControlFlow(from, to);
-        if (edge.kind() == InstructionDependencyEdgeKind.DATA && this.isDupInstruction(edge.from().entry()))
-            return this.routeFromDupSide(from, edge, to);
+        if (edge.kind() == InstructionDependencyEdgeKind.DATA && this.isStackRearrangementInstruction(edge.from().entry()))
+            return this.routeFromStackRearrangementSide(from, edge, to);
         return this.routeOrthogonal(from, to);
     }
 
@@ -373,7 +379,7 @@ public final class InstructionDiagramPanel extends JPanel {
         for (DiagramJumpEdge edge : this.jumpEdges) {
             Rectangle2D.Float from = edge.from().bounds();
             int lane = this.jumpLane(edge.to(), laneByTarget);
-            boolean leftSideJump = this.isIfInstruction(edge.from().entry()) || this.isGotoInstruction(edge.from().entry());
+            boolean leftSideJump = this.isSideJumpInstruction(edge.from().entry());
             OrthogonalRoute route = leftSideJump
                     ? this.routeJumpFromSide(from, edge.to(), lane)
                     : this.routeJumpFromBottom(from, edge.to(), lane);
@@ -576,18 +582,36 @@ public final class InstructionDiagramPanel extends JPanel {
         return toCenterX < fromCenterX ? ConnectionSide.LEFT : ConnectionSide.RIGHT;
     }
 
-    private @NotNull OrthogonalRoute routeFromDupSide(@NotNull Rectangle2D.Float from,
-                                                      @NotNull DiagramEdge edge,
-                                                      @NotNull Rectangle2D.Float to) {
-        ConnectionSide sourceSide = this.isDupInstruction(edge.to().entry()) ? ConnectionSide.LEFT : ConnectionSide.RIGHT;
+    private @NotNull OrthogonalRoute routeFromStackRearrangementSide(@NotNull Rectangle2D.Float from,
+                                                                     @NotNull DiagramEdge edge,
+                                                                     @NotNull Rectangle2D.Float to) {
+        if (this.shouldRouteStackRearrangementDown(from, to))
+            return this.routeOrthogonal(from, to);
+
+        ConnectionSide sourceSide = this.isStackRearrangementInstruction(edge.to().entry())
+                ? ConnectionSide.LEFT
+                : ConnectionSide.RIGHT;
         return this.routeSideBus(from, to, sourceSide);
+    }
+
+    private boolean shouldRouteStackRearrangementDown(@NotNull Rectangle2D.Float from,
+                                                      @NotNull Rectangle2D.Float to) {
+        if (to.y < from.y + from.height)
+            return false;
+
+        float overlapLeft = Math.max(from.x, to.x);
+        float overlapRight = Math.min(from.x + from.width, to.x + to.width);
+        if (overlapLeft > overlapRight)
+            return false;
+
+        return to.y - (from.y + from.height) <= LEVEL_GAP;
     }
 
     private @NotNull OrthogonalRoute routeSideBus(@NotNull Rectangle2D.Float from,
                                                   @NotNull Rectangle2D.Float to,
                                                   @NotNull ConnectionSide sourceSide) {
         Point2D.Float start = sourceSide.anchor(from);
-        Point2D.Float end = ConnectionSide.LEFT.anchor(to);
+        Point2D.Float end = sourceSide.anchor(to);
         float exitX = sourceSide == ConnectionSide.LEFT
                 ? from.x - SIDE_EXIT_GAP
                 : from.x + from.width + SIDE_EXIT_GAP;
@@ -620,14 +644,18 @@ public final class InstructionDiagramPanel extends JPanel {
     private @NotNull OrthogonalRoute routeOrthogonal(@NotNull Rectangle2D.Float from,
                                                      @NotNull Rectangle2D.Float to) {
         OrthogonalRoute route = this.routeDirect(from, to);
-        if (route != null)
+        if (route != null && !this.routeIntersectsNode(route, from, to))
             return route;
 
         route = this.routeOneBend(from, to);
-        if (route != null)
+        if (route != null && !this.routeIntersectsNode(route, from, to))
             return route;
 
-        return this.routeTwoBends(from, to);
+        route = this.routeTwoBends(from, to);
+        if (!this.routeIntersectsNode(route, from, to))
+            return route;
+
+        return this.routeSideBus(from, to, this.controlFlowSide(from, to));
     }
 
     private OrthogonalRoute routeDirect(@NotNull Rectangle2D.Float from, @NotNull Rectangle2D.Float to) {
@@ -687,6 +715,8 @@ public final class InstructionDiagramPanel extends JPanel {
                     continue;
                 if (!this.entersSide(route.points().get(route.points().size() - 2), route.points().getLast(), toSide))
                     continue;
+                if (this.routeIntersectsNode(route, from, to))
+                    continue;
                 if (best == null || route.compareTo(best) < 0)
                     best = route;
             }
@@ -712,6 +742,24 @@ public final class InstructionDiagramPanel extends JPanel {
                 new Point2D.Float(end.x, midY),
                 end
         ));
+    }
+
+    private boolean routeIntersectsNode(@NotNull OrthogonalRoute route,
+                                        @NotNull Rectangle2D.Float from,
+                                        @NotNull Rectangle2D.Float to) {
+        List<Point2D.Float> points = route.points();
+        for (int i = 1; i < points.size(); i++) {
+            Point2D.Float start = points.get(i - 1);
+            Point2D.Float end = points.get(i);
+            for (DiagramNode node : this.nodes) {
+                Rectangle2D.Float bounds = node.bounds();
+                if (bounds == from || bounds == to)
+                    continue;
+                if (bounds.intersectsLine(start.x, start.y, end.x, end.y))
+                    return true;
+            }
+        }
+        return false;
     }
 
     private boolean leavesSide(@NotNull Point2D.Float start,
@@ -835,8 +883,18 @@ public final class InstructionDiagramPanel extends JPanel {
         return entry.instructionName().startsWith("goto");
     }
 
-    private boolean isDupInstruction(@NotNull InstructionDependencyEntry entry) {
-        return "dup".equals(entry.instructionName());
+    private boolean isSideJumpInstruction(@NotNull InstructionDependencyEntry entry) {
+        return this.isIfInstruction(entry)
+                || this.isGotoInstruction(entry)
+                || this.isSwitchInstruction(entry);
+    }
+
+    private boolean isSwitchInstruction(@NotNull InstructionDependencyEntry entry) {
+        return "tableswitch".equals(entry.instructionName()) || "lookupswitch".equals(entry.instructionName());
+    }
+
+    private boolean isStackRearrangementInstruction(@NotNull InstructionDependencyEntry entry) {
+        return InstructionDependencyComputer.isStackRearrangementInstruction(entry.instructionName());
     }
 
     private @NotNull Shape createIfDiamond(@NotNull Rectangle2D.Float bounds) {
@@ -921,6 +979,16 @@ public final class InstructionDiagramPanel extends JPanel {
         this.addMouseWheelListener(adapter);
     }
 
+    private void installViewportBoundsUpdater() {
+        this.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (InstructionDiagramPanel.this.constrainViewTransform())
+                    InstructionDiagramPanel.this.repaint();
+            }
+        });
+    }
+
     private void handleMousePressed(@NotNull MouseEvent event) {
         this.dragStart = event.getPoint();
         this.selectedNode = this.findNode(event.getPoint());
@@ -934,6 +1002,7 @@ public final class InstructionDiagramPanel extends JPanel {
         Point current = event.getPoint();
         this.translateX += current.x - this.dragStart.x;
         this.translateY += current.y - this.dragStart.y;
+        this.constrainViewTransform();
         this.dragStart = current;
         this.repaint();
     }
@@ -967,7 +1036,70 @@ public final class InstructionDiagramPanel extends JPanel {
         Point2D.Float worldBefore = this.toWorld(event.getPoint(), oldScale);
         this.translateX = event.getPoint().x - worldBefore.x * this.scale;
         this.translateY = event.getPoint().y - worldBefore.y * this.scale;
+        this.constrainViewTransform();
         this.repaint();
+    }
+
+    private boolean constrainViewTransform() {
+        Rectangle2D.Float bounds = this.diagramBounds();
+        if (bounds == null || this.getWidth() <= 0 || this.getHeight() <= 0)
+            return false;
+
+        float oldTranslateX = this.translateX;
+        float oldTranslateY = this.translateY;
+        this.translateX = constrainAxis(
+                this.translateX,
+                bounds.x,
+                bounds.x + bounds.width,
+                this.getWidth(),
+                this.scale
+        );
+        this.translateY = constrainAxis(
+                this.translateY,
+                bounds.y,
+                bounds.y + bounds.height,
+                this.getHeight(),
+                this.scale
+        );
+        return Math.abs(oldTranslateX - this.translateX) > 0.1f
+                || Math.abs(oldTranslateY - this.translateY) > 0.1f;
+    }
+
+    private static float constrainAxis(
+            float translate,
+            float contentMin,
+            float contentMax,
+            int viewportSize,
+            float activeScale
+    ) {
+        float minTranslate = viewportSize - VIEWPORT_EDGE_MARGIN - contentMax * activeScale;
+        float maxTranslate = VIEWPORT_EDGE_MARGIN - contentMin * activeScale;
+        if (minTranslate > maxTranslate)
+            return (minTranslate + maxTranslate) / 2f;
+        return Math.max(minTranslate, Math.min(maxTranslate, translate));
+    }
+
+    private @Nullable Rectangle2D.Float diagramBounds() {
+        Rectangle2D.Float bounds = null;
+        for (MethodBox methodBox : this.methodBoxes)
+            bounds = union(bounds, methodBox.bounds());
+        for (InstructionSetBox instructionSetBox : this.instructionSetBoxes)
+            bounds = union(bounds, instructionSetBox.bounds());
+        for (DiagramNode node : this.nodes)
+            bounds = union(bounds, node.bounds());
+        return bounds;
+    }
+
+    private static @NotNull Rectangle2D.Float union(@Nullable Rectangle2D.Float current,
+                                                    @NotNull Rectangle2D.Float addition) {
+        if (current == null)
+            return new Rectangle2D.Float(addition.x, addition.y, addition.width, addition.height);
+
+        float minX = Math.min(current.x, addition.x);
+        float minY = Math.min(current.y, addition.y);
+        float maxX = Math.max(current.x + current.width, addition.x + addition.width);
+        float maxY = Math.max(current.y + current.height, addition.y + addition.height);
+        return new Rectangle2D.Float(minX, minY, maxX - minX, maxY - minY);
     }
 
     private DiagramNode findNode(@NotNull Point point) {
@@ -1012,7 +1144,12 @@ public final class InstructionDiagramPanel extends JPanel {
         private static @NotNull DiagramLayout compute(@NotNull InstructionDependencyAnalysisResult result,
                                                       @NotNull FontMetrics metrics) {
             Map<MethodKey, List<InstructionDependencyEntry>> methodEntries = groupEntriesByMethod(result);
-            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> incomingEdges = groupIncomingEdges(result);
+            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> placementIncomingEdges =
+                    groupPlacementIncomingEdges(result);
+            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataIncomingEdges =
+                    groupDataIncomingEdges(result);
+            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataOutgoingEdges =
+                    groupDataOutgoingEdges(result);
             List<Map.Entry<MethodKey, List<InstructionDependencyEntry>>> methods = new ArrayList<>(methodEntries.entrySet());
             methods.sort(Map.Entry.comparingByKey());
 
@@ -1035,7 +1172,10 @@ public final class InstructionDiagramPanel extends JPanel {
                 for (InstructionDependencyEntry entry : ordered) {
                     NodePlacement placement = state.place(
                             entry,
-                            incomingEdges.getOrDefault(entry, List.of()),
+                            placementIncomingEdges.getOrDefault(entry, List.of()),
+                            dataIncomingEdges.getOrDefault(entry, List.of()),
+                            dataOutgoingEdges.getOrDefault(entry, List.of()),
+                            dataOutgoingEdges,
                             previousPlacement,
                             placements
                     );
@@ -1293,7 +1433,39 @@ public final class InstructionDiagramPanel extends JPanel {
             return methodEntries;
         }
 
-        private static @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> groupIncomingEdges(
+        private static @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> groupPlacementIncomingEdges(
+                @NotNull InstructionDependencyAnalysisResult result
+        ) {
+            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> incomingEdges = new HashMap<>();
+            for (InstructionDependencyEdge edge : result.edges())
+                incomingEdges.computeIfAbsent(edge.to(), ignored -> new ArrayList<>()).add(edge);
+
+            Map<InstructionKey, InstructionDependencyEntry> entryByInstruction = new HashMap<>();
+            for (InstructionDependencyEntry entry : result.getAllEntries()) {
+                entryByInstruction.put(new InstructionKey(
+                        entry.methodName(),
+                        entry.methodDescriptor(),
+                        entry.instructionOffset()
+                ), entry);
+            }
+            for (InstructionSetJumpEdge jump : result.instructionSetJumps()) {
+                InstructionSetDependencyGroup targetGroup = jump.to();
+                if (targetGroup.instructionOffsets().isEmpty())
+                    continue;
+                InstructionDependencyEntry targetEntry = entryByInstruction.get(new InstructionKey(
+                        targetGroup.methodName(),
+                        targetGroup.methodDescriptor(),
+                        targetGroup.instructionOffsets().getFirst()
+                ));
+                if (targetEntry != null)
+                    incomingEdges.computeIfAbsent(targetEntry, ignored -> new ArrayList<>()).add(
+                            new InstructionDependencyEdge(jump.from(), targetEntry, InstructionDependencyEdgeKind.CONTROL)
+                    );
+            }
+            return incomingEdges;
+        }
+
+        private static @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> groupDataIncomingEdges(
                 @NotNull InstructionDependencyAnalysisResult result
         ) {
             Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> incomingEdges = new HashMap<>();
@@ -1303,6 +1475,18 @@ public final class InstructionDiagramPanel extends JPanel {
                 incomingEdges.computeIfAbsent(edge.to(), ignored -> new ArrayList<>()).add(edge);
             }
             return incomingEdges;
+        }
+
+        private static @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> groupDataOutgoingEdges(
+                @NotNull InstructionDependencyAnalysisResult result
+        ) {
+            Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> outgoingEdges = new HashMap<>();
+            for (InstructionDependencyEdge edge : result.edges()) {
+                if (edge.kind() != InstructionDependencyEdgeKind.DATA)
+                    continue;
+                outgoingEdges.computeIfAbsent(edge.from(), ignored -> new ArrayList<>()).add(edge);
+            }
+            return outgoingEdges;
         }
     }
 
@@ -1318,23 +1502,34 @@ public final class InstructionDiagramPanel extends JPanel {
         }
 
         private @NotNull NodePlacement place(@NotNull InstructionDependencyEntry entry,
-                                             @NotNull List<InstructionDependencyEdge> incomingEdges,
+                                             @NotNull List<InstructionDependencyEdge> placementIncomingEdges,
+                                             @NotNull List<InstructionDependencyEdge> dataIncomingEdges,
+                                             @NotNull List<InstructionDependencyEdge> dataOutgoingEdges,
+                                             @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataOutgoingEdgesByEntry,
                                              @Nullable NodePlacement previousPlacement,
                                              @NotNull Map<InstructionDependencyEntry, NodePlacement> placements) {
             List<NodePlacement> incomingPlacements = new ArrayList<>();
-            for (InstructionDependencyEdge edge : incomingEdges) {
+            for (InstructionDependencyEdge edge : placementIncomingEdges) {
                 NodePlacement placement = placements.get(edge.from());
                 if (placement != null)
                     incomingPlacements.add(placement);
             }
 
             incomingPlacements.sort(Comparator.comparingInt(NodePlacement::lane));
-            int preferredLane = !incomingPlacements.isEmpty()
-                    ? incomingPlacements.get((incomingPlacements.size() - 1) / 2).lane()
-                    : previousPlacement != null ? previousPlacement.lane() : 0;
-            int lane = !incomingPlacements.isEmpty()
-                    ? preferredLane
-                    : entry.producedCount() > 0 ? this.closestFreeLane(preferredLane) : preferredLane;
+            int preferredLane = this.preferredLane(
+                    dataIncomingEdges,
+                    incomingPlacements,
+                    previousPlacement,
+                    placements
+            );
+            int lane = this.selectLane(
+                    entry,
+                    dataIncomingEdges,
+                    dataOutgoingEdges,
+                    dataOutgoingEdgesByEntry,
+                    preferredLane,
+                    !incomingPlacements.isEmpty()
+            );
             int dependencyLevel = 0;
             for (NodePlacement incomingPlacement : incomingPlacements)
                 dependencyLevel = Math.max(dependencyLevel, incomingPlacement.level() + 1);
@@ -1345,8 +1540,11 @@ public final class InstructionDiagramPanel extends JPanel {
             this.lastLevel = Math.max(this.lastLevel, level);
 
             Map<Integer, Integer> consumedCountByLane = new HashMap<>();
-            for (NodePlacement incomingPlacement : incomingPlacements)
-                consumedCountByLane.merge(incomingPlacement.lane(), 1, Integer::sum);
+            for (InstructionDependencyEdge edge : dataIncomingEdges) {
+                NodePlacement placement = placements.get(edge.from());
+                if (placement != null)
+                    consumedCountByLane.merge(placement.lane(), 1, Integer::sum);
+            }
             for (Map.Entry<Integer, Integer> consumed : consumedCountByLane.entrySet())
                 this.decreaseLaneCount(consumed.getKey(), consumed.getValue());
 
@@ -1363,8 +1561,84 @@ public final class InstructionDiagramPanel extends JPanel {
             return new NodePlacement(level, lane);
         }
 
+        private int preferredLane(@NotNull List<InstructionDependencyEdge> dataIncomingEdges,
+                                  @NotNull List<NodePlacement> incomingPlacements,
+                                  @Nullable NodePlacement previousPlacement,
+                                  @NotNull Map<InstructionDependencyEntry, NodePlacement> placements) {
+            NodePlacement primaryDataPlacement = this.primaryDataPlacement(dataIncomingEdges, placements);
+            if (primaryDataPlacement != null)
+                return primaryDataPlacement.lane();
+            if (!incomingPlacements.isEmpty())
+                return incomingPlacements.get((incomingPlacements.size() - 1) / 2).lane();
+            return previousPlacement != null ? previousPlacement.lane() : 0;
+        }
+
+        private NodePlacement primaryDataPlacement(@NotNull List<InstructionDependencyEdge> dataIncomingEdges,
+                                                   @NotNull Map<InstructionDependencyEntry, NodePlacement> placements) {
+            InstructionDependencyEdge primaryEdge = null;
+            for (InstructionDependencyEdge edge : dataIncomingEdges) {
+                if (!placements.containsKey(edge.from()))
+                    continue;
+                if (primaryEdge == null || edge.from().instructionOffset() < primaryEdge.from().instructionOffset())
+                    primaryEdge = edge;
+            }
+            return primaryEdge == null ? null : placements.get(primaryEdge.from());
+        }
+
+        private int selectLane(@NotNull InstructionDependencyEntry entry,
+                               @NotNull List<InstructionDependencyEdge> dataIncomingEdges,
+                               @NotNull List<InstructionDependencyEdge> dataOutgoingEdges,
+                               @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataOutgoingEdgesByEntry,
+                               int preferredLane,
+                               boolean hasIncomingPlacement) {
+            if (shouldAvoidOccupiedPreferredLane(
+                    entry,
+                    dataIncomingEdges,
+                    dataOutgoingEdges,
+                    dataOutgoingEdgesByEntry,
+                    hasIncomingPlacement
+            ))
+                return this.closestFreeLane(preferredLane);
+            if (hasIncomingPlacement)
+                return preferredLane;
+            return entry.producedCount() > 0 ? this.closestFreeLane(preferredLane) : preferredLane;
+        }
+
+        private static boolean shouldAvoidOccupiedPreferredLane(@NotNull InstructionDependencyEntry entry,
+                                                               @NotNull List<InstructionDependencyEdge> dataIncomingEdges,
+                                                               @NotNull List<InstructionDependencyEdge> dataOutgoingEdges,
+                                                               @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataOutgoingEdgesByEntry,
+                                                               boolean hasIncomingPlacement) {
+            if (!hasIncomingPlacement)
+                return false;
+            if (entry.producedCount() <= 0 || entry.consumedCount() > 0)
+                return false;
+            if (!dataIncomingEdges.isEmpty() || dataOutgoingEdges.size() != 1)
+                return false;
+
+            return feedsFutureMultiInputConsumer(entry, dataOutgoingEdges.getFirst().to(), dataOutgoingEdgesByEntry);
+        }
+
+        private static boolean feedsFutureMultiInputConsumer(
+                @NotNull InstructionDependencyEntry source,
+                @NotNull InstructionDependencyEntry consumer,
+                @NotNull Map<InstructionDependencyEntry, List<InstructionDependencyEdge>> dataOutgoingEdgesByEntry
+        ) {
+            if (consumer.instructionOffset() <= source.instructionOffset())
+                return false;
+            if (consumer.consumedCount() > 1)
+                return true;
+            if (consumer.producedCount() != 1)
+                return false;
+
+            List<InstructionDependencyEdge> outgoing = dataOutgoingEdgesByEntry.getOrDefault(consumer, List.of());
+            if (outgoing.size() != 1)
+                return false;
+            return feedsFutureMultiInputConsumer(source, outgoing.getFirst().to(), dataOutgoingEdgesByEntry);
+        }
+
         private int extraProducedLaneCount(@NotNull InstructionDependencyEntry entry) {
-            if ("dup".equals(entry.instructionName()))
+            if (InstructionDependencyComputer.isStackRearrangementInstruction(entry.instructionName()))
                 return 0;
             return entry.producedCount() - 1;
         }
