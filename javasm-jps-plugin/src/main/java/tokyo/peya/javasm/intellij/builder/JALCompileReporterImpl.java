@@ -75,6 +75,11 @@ public class JALCompileReporterImpl implements CompileReporter {
     }
 
     @Override
+    public void postDebug(@NotNull String message, @Nullable Path sourcePath) {
+        // Debug messages are not posted to the compile context in this implementation.
+    }
+
+    @Override
     public void postError(@NotNull String message, @NotNull CompileErrorException e, @Nullable Path sourcePath) {
         assert sourcePath != null : "Source path must not be null for error messages";
 

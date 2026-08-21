@@ -25,6 +25,11 @@ public class InlineCompileReporter implements CompileReporter {
     }
 
     @Override
+    public void postDebug(@NotNull String message, @Nullable Path sourcePath) {
+        // Debug messages are ignored in this implementation.
+    }
+
+    @Override
     public void postError(@NotNull String message, @Nullable Path sourcePath) {
         this.messageConsumer.accept("Error: " + message);
     }
