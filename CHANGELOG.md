@@ -1,5 +1,20 @@
 # Changelog
 
+### [1.5.0] - 2026/8/22
+
+JAL Implementation: 1.4.2
+
+This release includes preprocessor and macro support, editor quality improvements, and compatibility fixes.
+
+- **feat**: Added JAL preprocessor support, including multi-line preprocessor directives.
+- **feat**: Added macro reference resolution and improved macro value highlighting.
+- **feat**: Added bundled spellchecker dictionary support for JAL files.
+- **feat**: Improved instruction completion with localised instruction messages.
+- **feat**: Improved formatting indentation for `define` blocks.
+- **fix**: Prevented a StackOverflowError when calculating instruction offsets on broken syntax.
+- **fix**: Improved return type compatibility checks in JAL method inspections.
+- **chore**: Bump JAL implementation to 1.4.2 for better stability and performance.
+
 ### [1.4.3] - 2026/5/21
 
 JAL Implementation: 1.3.1

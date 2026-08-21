@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "tokyo.peya.plugin"
-version = "1.4.3"
+version = "1.5.0"
 
 repositories {
     mavenCentral()
