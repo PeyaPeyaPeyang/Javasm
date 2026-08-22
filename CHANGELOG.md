@@ -1,5 +1,14 @@
 # Changelog
 
+### [1.5.1] - 2026/8/23
+
+JAL Implementation: 1.4.2
+
+This release improves instruction dependency diagrams and stack effect analysis.
+
+- **feat**: Enhanced stack effect calculations for instruction dependency analysis.
+- **feat**: Improved edge routing in instruction diagrams for clearer visualisation.
+
 ### [1.5.0] - 2026/8/22
 
 JAL Implementation: 1.4.2
